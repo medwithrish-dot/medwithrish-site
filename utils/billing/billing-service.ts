@@ -11,6 +11,7 @@ import { findOrCreateStripeCustomer, customerExists } from "@/utils/billing/stri
 import { resolvePremiumPriceId } from "@/utils/billing/stripe-prices";
 import { createCustomerPortalSession } from "@/utils/billing/stripe-portal";
 import { createPremiumCheckoutSession } from "@/utils/billing/stripe-checkout";
+import { getBillingReturnPath, type CheckoutReturnArea } from "@/utils/billing/return-destination";
 import {
   billingActionStatuses,
   paidSubscriptionStatuses,
@@ -36,11 +37,13 @@ export type CheckoutSessionOutcome =
 export async function preparePremiumCheckout({
   user,
   siteUrl,
+  returnArea = "ucat",
   stripe: providedStripe,
   admin: providedAdmin,
 }: {
   user: AuthenticatedUser;
   siteUrl: string;
+  returnArea?: CheckoutReturnArea;
   stripe?: Stripe;
   admin?: AdminSupabase;
 }): Promise<CheckoutSessionOutcome> {
@@ -61,7 +64,7 @@ export async function preparePremiumCheckout({
       const portalUrl = await createCustomerPortalSession(
         stripe,
         activeCustomerId,
-        `${siteUrl}/medicforest/account`
+        `${siteUrl}${getBillingReturnPath(siteUrl, returnArea, "portal")}`
       );
       return { kind: "portal", url: portalUrl };
     }
@@ -81,7 +84,7 @@ export async function preparePremiumCheckout({
       const portalUrl = await createCustomerPortalSession(
         stripe,
         customerIdForPortal,
-        `${siteUrl}/medicforest/account`
+        `${siteUrl}${getBillingReturnPath(siteUrl, returnArea, "portal")}`
       );
       return { kind: "portal", url: portalUrl };
     }
@@ -112,6 +115,7 @@ export async function preparePremiumCheckout({
     userId: user.id,
     priceId,
     siteUrl,
+    returnArea,
   });
 
   return { kind: "checkout", url: checkoutUrl };

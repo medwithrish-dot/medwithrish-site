@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X } from "lucide-react";
 import { MedicForestLandingShell } from "@/app/medicforest/ucat/_components/MedicForestLandingShell";
+import { MEDICFOREST_PREMIUM_MONTHLY_PRICE } from "@/utils/medicforest/premium-price";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
+import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
 
 
 const INTERVIEW_FREE_FEATURES = [
@@ -96,16 +99,66 @@ function PricingComparisonValue({
 
 export function MedicForestPricingPage() {
   const router = useRouter();
+  const pathname = useVisiblePathname();
   const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
   const [premiumCheckoutError, setPremiumCheckoutError] = useState<string | null>(null);
+  const [checkoutReturnStatus, setCheckoutReturnStatus] = useState<"idle" | "syncing" | "error">("idle");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") !== "success") return;
+
+    const controller = new AbortController();
+    const sessionId = params.get("session_id");
+    if (!sessionId) {
+      queueMicrotask(() => {
+        if (!controller.signal.aborted) setCheckoutReturnStatus("error");
+      });
+      return () => controller.abort();
+    }
+
+    queueMicrotask(() => {
+      if (!controller.signal.aborted) setCheckoutReturnStatus("syncing");
+    });
+
+    async function confirmCheckout() {
+      try {
+        const response = await fetch("/api/stripe/sync-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+          signal: controller.signal,
+        });
+        const result = (await response.json()) as { currentPlan?: string };
+        if (!response.ok || result.currentPlan !== "premium") {
+          throw new Error("Checkout is still being confirmed.");
+        }
+        if (!controller.signal.aborted) {
+          router.replace(
+            window.location.hostname === "medicforest.com"
+              ? "/interviews/dashboard"
+              : "/medicforest/interview/dashboard"
+          );
+        }
+      } catch {
+        if (!controller.signal.aborted) setCheckoutReturnStatus("error");
+      }
+    }
+
+    void confirmCheckout();
+    return () => controller.abort();
+  }, [router]);
 
   const handlePremiumCheckout = async () => {
+    if (new URLSearchParams(window.location.search).get("checkout") === "success") return;
     setPremiumCheckoutLoading(true);
     setPremiumCheckoutError(null);
 
     try {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ returnTo: "interviews" }),
       });
       const data = (await response.json()) as {
         url?: string;
@@ -138,7 +191,7 @@ export function MedicForestPricingPage() {
         <section className="bg-[#050b1f] px-5 py-6 text-white lg:px-6">
           <div className="mx-auto max-w-5xl">
             <Link
-              href="/interviews"
+              href={medicForestPublicHref(pathname, "/interviews")}
               className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -164,7 +217,7 @@ export function MedicForestPricingPage() {
                   Premium
                 </p>
                 <div className="mt-2 flex items-end gap-2">
-                  <span className="text-3xl font-black">GBP 14.99</span>
+                  <span className="text-3xl font-black">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
                   <span className="pb-1 text-sm font-bold text-slate-300">
                     / month
                   </span>
@@ -179,6 +232,16 @@ export function MedicForestPricingPage() {
         </section>
 
         <section className="mx-auto max-w-6xl px-5 py-6 lg:px-6">
+          {checkoutReturnStatus === "syncing" && (
+            <p role="status" className="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm font-bold text-blue-900">
+              Confirming your Premium access…
+            </p>
+          )}
+          {checkoutReturnStatus === "error" && (
+            <p role="alert" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900">
+              Your checkout could not be confirmed yet. Refresh this page to try syncing it again before starting another payment.
+            </p>
+          )}
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="flex flex-col rounded-xl border border-blue-200 bg-white p-5 shadow-sm">
               <div className="flex items-center justify-between gap-4">
@@ -218,7 +281,7 @@ export function MedicForestPricingPage() {
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-                <span className="text-4xl font-black">GBP 14.99</span>
+                <span className="text-4xl font-black">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
                 <span className="pb-2 text-base font-black text-slate-500">
                   / month
                 </span>
@@ -238,7 +301,7 @@ export function MedicForestPricingPage() {
               <button
                 type="button"
                 onClick={() => void handlePremiumCheckout()}
-                disabled={premiumCheckoutLoading}
+                disabled={premiumCheckoutLoading || checkoutReturnStatus !== "idle"}
                 className="mt-auto h-11 rounded-lg bg-blue-600 px-5 text-sm font-black text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
@@ -19,6 +19,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 
 type SidebarMode = "interview" | "landing";
 
@@ -123,7 +124,7 @@ export function getLandingActiveLabel(pathname: string) {
   if (path.startsWith("/resources")) return "Resources";
   if (path.startsWith("/feedback")) return "Feedback";
   if (path.startsWith("/contact")) return "Contact us";
-  if (path === "/" || path.startsWith("/ucat")) return "UCAT (WIP)";
+  if (path.startsWith("/ucat")) return "UCAT (WIP)";
 
   return "";
 }
@@ -195,7 +196,7 @@ export function InterviewSidebar({
   showPremiumCard: boolean;
   mode?: SidebarMode;
 }) {
-  const pathname = usePathname();
+  const pathname = useVisiblePathname();
   const primaryItems =
     mode === "landing" ? landingPrimaryItems : interviewPrimaryItems;
   const sections = mode === "landing" ? landingSections : interviewSections;
@@ -214,7 +215,7 @@ export function InterviewSidebar({
             key={item.label}
             icon={item.icon}
             label={item.label}
-            href={item.href}
+            href={mode === "landing" ? medicForestPublicHref(pathname, item.href) : item.href}
             active={resolvedActiveLabel === item.label}
           />
         ))}
@@ -232,7 +233,7 @@ export function InterviewSidebar({
                   key={item.label}
                   icon={item.icon}
                   label={item.label}
-                  href={item.href}
+                  href={mode === "landing" ? medicForestPublicHref(pathname, item.href) : item.href}
                   active={resolvedActiveLabel === item.label}
                 />
               ))}
@@ -257,7 +258,7 @@ export function InterviewSidebar({
               : "Unlock more interview stations, deeper analytics and guided practice."}
           </p>
           <Link
-            href={mode === "landing" ? "/interviews" : "/medicforest/pricing"}
+            href={mode === "landing" ? medicForestPublicHref(pathname, "/interviews") : "/medicforest/pricing"}
             className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
           >
             {mode === "landing" ? "Start free" : "Upgrade to Premium"}

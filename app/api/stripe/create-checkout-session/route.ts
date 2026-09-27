@@ -17,8 +17,24 @@ export async function POST(request: Request) {
       return Response.json({ error: "Log in before upgrading." }, { status: 401 });
     }
 
+    let returnArea: "ucat" | "interviews" = "ucat";
+    const bodyText = await request.text();
+    if (bodyText) {
+      let body: unknown;
+      try {
+        body = JSON.parse(bodyText);
+      } catch {
+        return Response.json({ error: "Invalid request body." }, { status: 400 });
+      }
+      if (!body || typeof body !== "object" || !("returnTo" in body) ||
+          (body.returnTo !== "interviews" && body.returnTo !== "ucat")) {
+        return Response.json({ error: "Invalid return destination." }, { status: 400 });
+      }
+      returnArea = body.returnTo;
+    }
+
     const siteUrl = getRequiredSiteUrl(request);
-    const outcome = await preparePremiumCheckout({ user, siteUrl });
+    const outcome = await preparePremiumCheckout({ user, siteUrl, returnArea });
 
     return Response.json({ url: outcome.url });
   } catch (error) {

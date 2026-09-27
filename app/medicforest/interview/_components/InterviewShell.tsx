@@ -4,20 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getMedicForestEntitlements } from "@/utils/medicforest/premium-access";
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import { InterviewSidebar } from "./InterviewSidebar";
-import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
-
-const mobileLinks = [
-  ["Dashboard", "/medicforest/interview/dashboard"],
-  ["AI Interviews", "/medicforest/interview/ai-interviews"],
-  ["Question Bank", "/medicforest/interview/question-bank"],
-  ["Guides", "/medicforest/interview/guides"],
-  ["1-1 Tutoring", "/medicforest/interview/tutoring"],
-  ["Groups", "/medicforest/interview/groups"],
-  ["Leaderboard", "/medicforest/interview/leaderboard"],
-  ["Progress", "/medicforest/interview/progress"],
-  ["Plan", "/medicforest/interview/plan"],
-  ["Reports", "/medicforest/interview/reports"],
-] as const;
+import { InterviewMobileNav } from "./InterviewMobileNav";
 
 export type InterviewShellProps = {
   title: string;
@@ -44,14 +31,7 @@ export async function InterviewShell({
       <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-full lg:min-h-0 lg:grid-cols-[230px_1fr]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />
         <div data-interview-shell-main className="min-w-0 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
-          <InterviewDeviceBanner />
-          <nav aria-label="Interview navigation" className="flex gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden">
-            {mobileLinks.map(([label, href]) => (
-              <Link key={href} href={href} aria-current={activeLabel === label ? "page" : undefined} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${activeLabel === label ? "bg-[#159a9d] text-white" : "text-[#cde1df] hover:bg-white/10 hover:text-white"}`}>
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <InterviewMobileNav activeLabel={activeLabel} />
           <section id="interview-content" className="mx-auto w-full max-w-[1600px] px-5 py-7 sm:px-7 lg:px-9 lg:py-9">
             <header className={`flex flex-col gap-5 sm:flex-row sm:justify-between ${heroHeader ? "sm:items-center" : "border-b border-[#d3dfe1] pb-7 sm:items-start"}`}>
               <div className="min-w-0">

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
 import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
 import { getLandingActiveLabel } from "./InterviewSidebar";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 
 const interviewLinks = [
   ["Dashboard", "/medicforest/interview/dashboard"],
@@ -21,7 +22,7 @@ const interviewLinks = [
 const landingLinks = [
   ["About", "/about"],
   ["Pricing", "/pricing"],
-  ["UCAT", "/ucat"],
+  ["UCAT (WIP)", "/ucat"],
   ["Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
   ["Feedback", "/feedback"],
@@ -35,7 +36,7 @@ export function InterviewMobileNav({
   activeLabel?: string;
   mode?: "interview" | "landing";
 }) {
-  const pathname = usePathname();
+  const pathname = useVisiblePathname();
   const links = mode === "landing" ? landingLinks : interviewLinks;
   const currentActive =
     activeLabel || (mode === "landing" ? getLandingActiveLabel(pathname) : "");
@@ -52,7 +53,7 @@ export function InterviewMobileNav({
         {links.map(([label, href]) => (
           <Link
             key={href}
-            href={href}
+            href={mode === "landing" ? medicForestPublicHref(pathname, href) : href}
             aria-current={currentActive === label ? "page" : undefined}
             className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
               currentActive === label

@@ -1,4 +1,5 @@
 import type Stripe from "stripe";
+import { getBillingReturnPath, type CheckoutReturnArea } from "@/utils/billing/return-destination";
 
 export async function createPremiumCheckoutSession(
   stripe: Stripe,
@@ -7,13 +8,16 @@ export async function createPremiumCheckoutSession(
     userId,
     priceId,
     siteUrl,
+    returnArea = "ucat",
   }: {
     customerId: string;
     userId: string;
     priceId: string;
     siteUrl: string;
+    returnArea?: CheckoutReturnArea;
   }
 ): Promise<string> {
+  const returnPath = getBillingReturnPath(siteUrl, returnArea, "checkout");
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
@@ -28,8 +32,8 @@ export async function createPremiumCheckoutSession(
         message: `I agree to the [Terms and Conditions](${siteUrl}/terms-and-conditions) and confirm I have read the [Privacy Policy](${siteUrl}/privacy-policy).`,
       },
     },
-    success_url: `${siteUrl}/medicforest/ucat/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${siteUrl}/medicforest/ucat/dashboard?checkout=cancelled`,
+    success_url: `${siteUrl}${returnPath}?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${siteUrl}${returnPath}?checkout=cancelled`,
     metadata: {
       supabase_user_id: userId,
     },

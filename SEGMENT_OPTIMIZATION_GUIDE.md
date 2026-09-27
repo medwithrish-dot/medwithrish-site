@@ -43,7 +43,7 @@ npm run build
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Re-audited | Scoring and visuals remain separated. Fixed duplicate shortcut handling, stale timeout submission, zero-second resume resets, invalid saved-answer scoring, and multi-part answer-change reporting; added runner tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
 | **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview tokens expire server-side after 30 days, with redirect checks covered. The UCAT-backed account page is outside this pass. |
-| **Segment 10** | MedicForest Public Marketing & Shell | 📋 Pending | Public marketing layer, navigation shells, trust badges, pricing page. |
+| **Segment 10** | MedicForest Public Marketing & Shell | ✅ Re-audited outside UCAT | Corrected Premium price to the configured live Stripe amount, protected checkout from price drift, returned interview upgrades to the interview flow, and fixed shared desktop/mobile navigation. Existing two-offering About page was verified. |
 | **Segment 11** | MedWithRish.com Core & Resources Hub | 📋 Pending | Primary brand website, admissions advice, guides, tutoring booking. |
 | **Segment 12** | Infrastructure, Routing & Build Configuration | 📋 Pending | Next.js configuration, middleware, proxy auth refresh, security headers, SEO. |
 
@@ -326,6 +326,18 @@ The menu now hydrates from Supabase's `INITIAL_SESSION` event, loads the active 
 Preview access now issues versioned HMAC tokens with a signed issue time. The server rejects tokens after 30 days, tokens from more than 60 seconds in the future, and the previous timeless token format. Existing preview users will need to enter the password once after deployment. Route tests confirm wrong passwords set no cookie, external redirect targets are rejected, issued cookies validate, tokens reject tampering and expiry, and changing the server secret invalidates old tokens. The account page and account switcher are implemented in the UCAT component and were deliberately excluded from this non-UCAT pass.
 
 Verification: `node --test scripts/test-profile-security.mjs scripts/test-server-routes.mjs scripts/test-interview-leaderboard.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+
+---
+
+### Segment 10: MedicForest Public Marketing & Shell — non-UCAT re-audit (2026-09-27)
+
+The About page already has the requested two-card Interview Practice and 1-to-1 Tutoring layout, a subtle UCAT work-in-progress note, founder section, and interview/tutoring calls to action. The pricing and landing pages, however, advertised GBP 14.99 while the configured live Stripe Price returned GBP 14.90 per month. Both pages now use one shared price definition. Checkout verifies the Stripe amount, GBP currency, and monthly interval before creating a payment session, so a later Stripe price change cannot silently disagree with the public copy. A new price requires updating the shared definition before checkout can resume.
+
+Interview customers previously returned from Stripe to the UCAT dashboard. The interview pricing button now requests a validated interview return destination. Checkout and portal sessions return to the pricing page; successful checkouts are synchronised to the signed-in account before navigation to the interview dashboard. If confirmation fails, the page shows a retry instruction and disables another checkout. Existing UCAT callers retain their previous return path.
+
+The interview shell now reuses the shared mobile navigation instead of maintaining a second link list. Public shell links keep users on MedicForest whether they use clean medicforest.com paths or `/medicforest/...` paths on the shared site. A stable first pathname snapshot avoids hydration mismatches on the rewritten static pages. The landing page no longer highlights UCAT as the active section, and the area switcher uses a click disclosure that closes on focus exit or Escape. Shared MedicForest metadata now describes the active interview and tutoring offering, and About has its own social preview. No UCAT platform files changed.
+
+Verification: `node --test scripts/test-domain-routing.mjs scripts/test-billing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (249 passing), and `npm run build` (184 static pages).
 
 ---
 

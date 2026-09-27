@@ -133,8 +133,8 @@ npm run build
 ### Segment 10: MedicForest Public Marketing & Shell
 - **Domain**: `app/medicforest/about/`, `app/medicforest/pricing/`, `app/medicforest/_components/`, navigation shell.
 - **Scope**: About page polish (compact 2-card offering: Interview Practice & 1-to-1 Tutoring; subtle UCAT WIP), pricing tiers, layout sidebar, responsive mobile menu.
-- **Verification**: `npm run build`.
-- **Status**: 📋 Pending.
+- **Verification**: `node --test scripts/test-domain-routing.mjs scripts/test-billing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+- **Status**: ✅ Re-audited outside UCAT. Public price, interview checkout return, and shared navigation were corrected; the two-offering About layout was verified.
 
 ### Segment 11: MedWithRish.com Core & Resources Hub
 - **Domain**: `app/page.tsx` (MedWithRish homepage), `app/about/`, `app/contact/`, `app/resources/`, `app/interviews/`.

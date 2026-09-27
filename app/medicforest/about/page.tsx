@@ -21,6 +21,14 @@ export const metadata: Metadata = {
   description:
     "Learn about MedicForest — realistic medical school interview practice with 550+ free questions, AI feedback, and personalised 1-to-1 tutoring by @medwithrish.",
   alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About MedicForest | Growing a Community of Future Medics",
+    description:
+      "Meet MedicForest: free medical school interview questions, realistic practice and personalised tutoring.",
+    url: "/about",
+    siteName: "MedicForest",
+    type: "website",
+  },
 };
 
 export default function MedicForestAboutPage() {

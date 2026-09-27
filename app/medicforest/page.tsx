@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  openGraph: {
+    title: "MedicForest | Medical Admissions Preparation",
+    description:
+      "Explore interview practice, free questions and personalised tutoring with MedicForest.",
+    url: "/",
+    siteName: "MedicForest",
+    type: "website",
+  },
 };
 
 export default async function Page({

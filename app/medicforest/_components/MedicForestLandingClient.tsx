@@ -25,6 +25,7 @@ import {
 } from "@/utils/supabase/client";
 import { MedicForestLandingShell } from "@/app/medicforest/ucat/_components/MedicForestLandingShell";
 import { MedicForestLogo as MedicForestBrandLogo } from "@/app/medicforest/_components/MedicForestLogo";
+import { MEDICFOREST_PREMIUM_MONTHLY_PRICE } from "@/utils/medicforest/premium-price";
 
 const MEDICFOREST_FREE_FEATURES = [
   "Question bank practice",
@@ -469,7 +470,7 @@ function RedesignedTutorHero() {
               </span>
             </div>
             <div className="mt-2 flex flex-wrap items-end gap-x-2 gap-y-1">
-              <span className="text-3xl font-black text-slate-950">GBP 14.99</span>
+              <span className="text-3xl font-black text-slate-950">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
               <span className="pb-1 text-sm font-bold text-slate-500">/ month</span>
             </div>
             <p className="mt-2 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getProductSiteUrl()),
   title: "MedicForest",
   description:
-    "AI-powered UCAT preparation with practice questions, mock exams, diagnostics, study tasks and skills trainers.",
+    "Medical school interview practice, free questions and personalised admissions tutoring.",
   alternates: {
     canonical: "/",
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MedicForest",
     description:
-      "AI-powered UCAT preparation with mock exams, diagnostics and practice questions.",
+      "Medical school interview practice, free questions and personalised admissions tutoring.",
     url: "/",
     siteName: "MedicForest",
     type: "website",

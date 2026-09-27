@@ -2,6 +2,15 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import nextConfig from "../next.config.ts";
 import { isPublicMedicForestPath } from "../utils/medicforest/public-paths.ts";
+import { medicForestPublicHref } from "../utils/medicforest/public-navigation.ts";
+
+test("public shell links stay on MedicForest on both supported path forms", () => {
+  assert.equal(medicForestPublicHref("/about", "/pricing"), "/pricing");
+  assert.equal(medicForestPublicHref("/medicforest/about", "/pricing"), "/medicforest/pricing");
+  assert.equal(medicForestPublicHref("/medicforest", "/"), "/medicforest");
+  assert.equal(medicForestPublicHref("/medicforest/about", "/medicforest/ucat/dashboard"), "/medicforest/ucat/dashboard");
+  assert.equal(medicForestPublicHref("/medicforest-extra", "/about"), "/about");
+});
 
 test("Medic Forest serves the product landing page without changing the visible URL", async () => {
   const rewrites = await nextConfig.rewrites();

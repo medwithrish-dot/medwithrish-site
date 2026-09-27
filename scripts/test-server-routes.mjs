@@ -67,6 +67,23 @@ test("checkout synchronization rejects non-string session IDs before contacting 
   }
 });
 
+test("checkout accepts only named return destinations", async () => {
+  const calls = [];
+  const { POST } = load("app/api/stripe/create-checkout-session/route.ts", {
+    "@/utils/supabase/server": auth,
+    "@/utils/site-url": { getRequiredSiteUrl: () => "https://medicforest.com" },
+    "@/utils/billing/billing-service": { preparePremiumCheckout: async (args) => {
+      calls.push(args.returnArea);
+      return { kind: "checkout", url: "https://checkout.stripe.com/pay/cs_123" };
+    } },
+  });
+
+  assert.equal((await POST(jsonRequest({ returnTo: "https://attacker.example" }))).status, 400);
+  assert.equal((await POST(jsonRequest({ returnTo: "interviews" }))).status, 200);
+  assert.equal((await POST(new Request("https://example.test/api/stripe/create-checkout-session", { method: "POST" }))).status, 200);
+  assert.deepEqual(calls, ["interviews", "ucat"]);
+});
+
 test("site URLs are validated and production checkout cannot use a caller's localhost Origin", async () => {
   const { getRequiredSiteUrl, getPublicSiteUrl, getProductSiteUrl } = load("utils/site-url.ts");
   const request = new Request("https://example.test", { headers: { Origin: "http://localhost:9999" } });

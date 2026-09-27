@@ -75,6 +75,54 @@ test("billing config validates environment variables", async () => {
   });
 });
 
+test("checkout price matches the Premium amount, currency and monthly interval shown publicly", async () => {
+  const { resolvePremiumPriceId } = load("utils/billing/stripe-prices.ts");
+  const price = {
+    id: "price_123",
+    active: true,
+    product: "prod_123",
+    unit_amount: 1490,
+    currency: "gbp",
+    recurring: { interval: "month" },
+  };
+  const stripe = { prices: { retrieve: async () => price } };
+
+  await withEnv({ STRIPE_PREMIUM_PRICE_ID: price.id, STRIPE_PREMIUM_PRODUCT_ID: price.product }, async () => {
+    assert.equal(await resolvePremiumPriceId(stripe), price.id);
+    for (const mismatch of [
+      { unit_amount: 1499 },
+      { currency: "usd" },
+      { recurring: { interval: "year" } },
+    ]) {
+      stripe.prices.retrieve = async () => ({ ...price, ...mismatch });
+      await assert.rejects(resolvePremiumPriceId(stripe), /does not match the advertised Premium monthly price/);
+    }
+  });
+});
+
+test("interview checkout returns to pricing for confirmation and UCAT checkout keeps its dashboard", async () => {
+  const { createPremiumCheckoutSession } = load("utils/billing/stripe-checkout.ts");
+  const { getBillingReturnPath } = load("utils/billing/return-destination.ts");
+  const created = [];
+  const stripe = { checkout: { sessions: { create: async (params) => {
+    created.push(params);
+    return { url: "https://checkout.stripe.com/pay/cs_123" };
+  } } } };
+  const base = { customerId: "cus_123", userId: "user-1", priceId: "price_123", siteUrl: "https://medicforest.com" };
+
+  await createPremiumCheckoutSession(stripe, { ...base, returnArea: "interviews" });
+  assert.equal(created[0].success_url, "https://medicforest.com/pricing?checkout=success&session_id={CHECKOUT_SESSION_ID}");
+  assert.equal(created[0].cancel_url, "https://medicforest.com/pricing?checkout=cancelled");
+
+  await createPremiumCheckoutSession(stripe, { ...base, siteUrl: "https://www.medwithrish.com", returnArea: "interviews" });
+  assert.match(created[1].success_url, /^https:\/\/www\.medwithrish\.com\/medicforest\/pricing\?/);
+
+  await createPremiumCheckoutSession(stripe, base);
+  assert.match(created[2].success_url, /^https:\/\/medicforest\.com\/medicforest\/ucat\/dashboard\?/);
+  assert.equal(getBillingReturnPath(base.siteUrl, "interviews", "portal"), "/pricing");
+  assert.equal(getBillingReturnPath(base.siteUrl, "ucat", "portal"), "/medicforest/account");
+});
+
 test("checkout redirects to portal when user already has active Stripe subscription", async () => {
   const { preparePremiumCheckout } = load("utils/billing/billing-service.ts", {
     "@/utils/billing/billing-repository": {
@@ -170,6 +218,7 @@ test("checkout creates customer and session for eligible free users", async () =
         assert.equal(params.customerId, "cus_new_123");
         assert.equal(params.userId, "user-new");
         assert.equal(params.priceId, "price_premium_123");
+        assert.equal(params.returnArea, "interviews");
         createdSession = true;
         return "https://checkout.stripe.com/pay/cs_123";
       },
@@ -182,6 +231,7 @@ test("checkout creates customer and session for eligible free users", async () =
   const outcome = await preparePremiumCheckout({
     user: { id: "user-new", email: "student@example.test" },
     siteUrl: "https://medicforest.com",
+    returnArea: "interviews",
     stripe: {},
     admin: {},
   });
