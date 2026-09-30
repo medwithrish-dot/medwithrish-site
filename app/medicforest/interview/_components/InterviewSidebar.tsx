@@ -102,6 +102,7 @@ const landingSections = [
         icon: UserRoundCheck,
         href: "/tutoring",
       },
+      { label: "Resources", icon: BookOpen, href: "/resources" },
     ],
   },
   {

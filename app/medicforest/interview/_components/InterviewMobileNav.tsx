@@ -25,6 +25,7 @@ const landingLinks = [
   ["UCAT (WIP)", "/ucat"],
   ["Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
+  ["Resources", "/resources"],
   ["Feedback", "/feedback"],
   ["Contact us", "/contact"],
 ] as const;
