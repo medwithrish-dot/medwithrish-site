@@ -147,7 +147,7 @@ function SidebarLink({
       aria-current={active ? "page" : undefined}
       className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
         active
-          ? "bg-white/[0.07] text-[#8be5df]"
+          ? "bg-[#123f3b] text-[#89e4df] shadow-sm"
           : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
       }`}
     >

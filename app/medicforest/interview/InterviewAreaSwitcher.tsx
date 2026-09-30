@@ -1,40 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
 import { MedicForestLogo } from "../_components/MedicForestLogo";
-import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import {
   Brain,
   ChevronDown,
-  Home,
   MessageSquare,
 } from "lucide-react";
-
-const admissionsSwitchItems = [
-  {
-    area: "admissions",
-    label: "MedicForest",
-    eyebrow: "Medical admissions",
-    href: "/",
-    icon: Home,
-  },
-  {
-    area: "ucat",
-    label: "UCAT",
-    eyebrow: "Question bank and mocks",
-    href: "/medicforest/ucat/dashboard",
-    icon: Brain,
-  },
-  {
-    area: "interviews",
-    label: "Med Interviews",
-    eyebrow: "Interview preparation",
-    href: "/interviews",
-    icon: MessageSquare,
-  },
-] as const;
 
 const interviewSwitchItems = [
   {
@@ -59,18 +32,49 @@ export function InterviewAreaSwitcher({
   area?: "admissions" | "interviews";
 }) {
   const [open, setOpen] = useState(false);
-  const pathname = useVisiblePathname();
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const isAdmissions = area === "admissions";
-  const switchItems = isAdmissions
-    ? admissionsSwitchItems
-    : interviewSwitchItems;
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearCloseTimer = () => {
+    if (!closeTimerRef.current) return;
+    clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+  };
+
+  const openSwitcher = () => {
+    clearCloseTimer();
+    setOpen(true);
+  };
+
+  const closeSwitcherSoon = () => {
+    clearCloseTimer();
+    closeTimerRef.current = setTimeout(() => {
+      setOpen(false);
+      closeTimerRef.current = null;
+    }, 180);
+  };
+
+  useEffect(() => clearCloseTimer, []);
+
+  if (area === "admissions") {
+    return (
+      <div
+        data-medicforest-static-brand
+        className="flex w-full items-center rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 shadow-sm"
+      >
+        <MedicForestLogo className="h-10 w-[148px]" onDark />
+      </div>
+    );
+  }
 
   return (
     <div
       className="relative"
+      onMouseEnter={openSwitcher}
+      onMouseLeave={closeSwitcherSoon}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
+          clearCloseTimer();
           setOpen(false);
         }
       }}
@@ -85,7 +89,9 @@ export function InterviewAreaSwitcher({
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((current) => !current)}
+        onFocus={openSwitcher}
         aria-label="Switch MedicForest area"
+        aria-haspopup="menu"
         aria-expanded={open}
         aria-controls="interview-area-switcher"
         className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
@@ -104,15 +110,17 @@ export function InterviewAreaSwitcher({
       {open && (
         <div
           id="interview-area-switcher"
+          role="menu"
           className="absolute left-0 z-30 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
         >
-          {switchItems.map((item) => {
+          {interviewSwitchItems.map((item) => {
             const Icon = item.icon;
             const current = item.area === area;
             return (
               <Link
                 key={item.label}
-                href={isAdmissions ? medicForestPublicHref(pathname, item.href) : item.href}
+                href={item.href}
+                role="menuitem"
                 aria-current={current ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
