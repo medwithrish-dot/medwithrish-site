@@ -33,11 +33,11 @@ const stories = [
   },
   {
     src: "/success-stories/story-2340-b2.png",
-    alt: "Student UCAT score 2340 Band 2",
+    alt: "Student UCAT score 2340 Band 2 with QR 900",
     tag: "UCAT Score",
     isOffer: false,
-    caption: "2340 Band 2",
-    detail: "Top 4% nationally with exceptional section breakdown",
+    caption: "2340 B2 (QR 900!)",
+    detail: "Top 4% nationally with 900 in Quantitative Reasoning",
   },
   {
     src: "/success-stories/story3.jpeg",

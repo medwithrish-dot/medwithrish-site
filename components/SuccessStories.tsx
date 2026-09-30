@@ -17,8 +17,8 @@ const stories = [
   },
   {
     src: "/success-stories/story-2340-b2.png",
-    alt: "Student UCAT score 2340 Band 2",
-    caption: "2340 b2!!",
+    alt: "Student UCAT score 2340 Band 2 with QR 900",
+    caption: "2340 B2 (QR 900!)",
   },
   {
     src: "/success-stories/story-2170-b2.png",
