@@ -57,11 +57,11 @@ const stories = [
   },
   {
     src: "/success-stories/story5.jpeg",
-    alt: "Oxbridge medicine offer success story",
-    tag: "Medicine Offer",
-    isOffer: true,
-    caption: "Oxbridge Medicine Offer",
-    detail: "Secured prestigious medicine offer after 1-1 coaching",
+    alt: "Student UCAT score 2370 Band 2",
+    tag: "UCAT Score",
+    isOffer: false,
+    caption: "2370 B2!",
+    detail: "Achieved 2370 Band 2 after 1-1 coaching",
   },
 ];
 
