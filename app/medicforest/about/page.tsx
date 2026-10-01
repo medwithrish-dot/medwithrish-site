@@ -26,15 +26,115 @@ export const metadata: Metadata = {
   },
 };
 
+const PINE_TREE_PATH =
+  "M18 3 C18 3 13.5 10.5 10 14 C12 14.5 13.8 14.5 14.5 14.5 C12 18.5 8 22 5.5 24.5 C7.8 25 10 25 11.5 25 C8 29 4 33 2 34.5 C6.5 34.5 13.5 34.5 16 34.5 L16 39.5 C16 40 16.5 40.5 17 40.5 L19 40.5 C19.5 40.5 20 40 20 39.5 L20 34.5 C22.5 34.5 29.5 34.5 34 34.5 C32 33 28 29 24.5 25 C26 25 28.2 25 30.5 24.5 C28 22 24 18.5 21.5 14.5 C22.2 14.5 24 14.5 26 14 C22.5 10.5 18 3 18 3 Z";
+
+function PineTree({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <svg
+      viewBox="0 0 36 42"
+      fill="currentColor"
+      aria-hidden="true"
+      className={className}
+      style={style}
+    >
+      <path d={PINE_TREE_PATH} />
+    </svg>
+  );
+}
+
+function FadedForestBackground() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden select-none"
+      aria-hidden="true"
+    >
+      {/* ── Top Left Grove (framing the Hero section) ── */}
+      <div className="absolute -left-12 top-6 flex items-end -space-x-8 text-emerald-950/[0.045] lg:left-2 xl:left-8">
+        <PineTree className="h-44 w-36 opacity-70" />
+        <PineTree className="h-60 w-48 opacity-90" />
+        <PineTree className="h-52 w-40 opacity-60" />
+        <PineTree className="hidden h-36 w-28 opacity-40 xl:block" />
+      </div>
+
+      {/* ── Top Right Grove (framing the Hero section) ── */}
+      <div className="absolute -right-16 top-12 flex items-end -space-x-10 text-teal-950/[0.045] lg:right-2 xl:right-10">
+        <PineTree className="hidden h-40 w-32 opacity-40 xl:block" />
+        <PineTree className="h-56 w-44 opacity-80" />
+        <PineTree className="h-72 w-56 opacity-95" />
+        <PineTree className="h-48 w-36 opacity-60" />
+      </div>
+
+      {/* ── Mid Left Grove (beside Founder & Proof sections) ── */}
+      <div className="absolute -left-16 top-[720px] flex items-end -space-x-10 text-teal-950/[0.04] lg:left-2 xl:left-10">
+        <PineTree className="h-64 w-48 opacity-85" />
+        <PineTree className="h-80 w-60 opacity-95" />
+        <PineTree className="h-52 w-40 opacity-70" />
+      </div>
+
+      {/* ── Mid Right Grove (beside Proof & Ecosystem) ── */}
+      <div className="absolute -right-20 top-[1150px] flex items-end -space-x-8 text-emerald-950/[0.04] lg:right-2 xl:right-12">
+        <PineTree className="h-48 w-36 opacity-60" />
+        <PineTree className="h-72 w-56 opacity-90" />
+        <PineTree className="h-56 w-44 opacity-75" />
+      </div>
+
+      {/* ── Lower Left Grove (beside Ecosystem & Why MedicForest) ── */}
+      <div className="absolute -left-12 top-[1620px] flex items-end -space-x-8 text-teal-950/[0.04] lg:left-4 xl:left-14">
+        <PineTree className="h-56 w-44 opacity-80" />
+        <PineTree className="h-76 w-58 opacity-95" />
+        <PineTree className="h-44 w-32 opacity-50" />
+      </div>
+
+      {/* ── Lower Right Grove (beside Why MedicForest & Final CTA) ── */}
+      <div className="absolute -right-12 top-[1980px] flex items-end -space-x-10 text-emerald-950/[0.045] lg:right-4 xl:right-10">
+        <PineTree className="h-48 w-36 opacity-60" />
+        <PineTree className="h-80 w-60 opacity-90" />
+        <PineTree className="h-60 w-44 opacity-75" />
+      </div>
+
+      {/* ── Bottom Forest Horizon Skyline ── */}
+      <div className="absolute bottom-0 inset-x-0 h-44 overflow-hidden [mask-image:linear-gradient(to_top,black_40%,transparent_100%)]">
+        <div className="flex w-full items-end justify-between -space-x-6 text-teal-950/[0.035] px-2">
+          <PineTree className="h-28 w-24" />
+          <PineTree className="h-36 w-28 -mb-2" />
+          <PineTree className="h-24 w-20" />
+          <PineTree className="h-44 w-36 -mb-4" />
+          <PineTree className="h-32 w-24" />
+          <PineTree className="h-28 w-20" />
+          <PineTree className="h-40 w-32 -mb-2" />
+          <PineTree className="h-24 w-18" />
+          <PineTree className="h-48 w-36 -mb-6" />
+          <PineTree className="h-32 w-24" />
+          <PineTree className="h-28 w-20" />
+          <PineTree className="h-36 w-28 -mb-3" />
+          <PineTree className="h-44 w-36 -mb-5" />
+          <PineTree className="h-24 w-18" />
+          <PineTree className="h-36 w-28" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MedicForestAboutPage() {
   return (
     <MedicForestLandingShell>
-      <div className="relative min-h-screen bg-gradient-to-b from-[#f2f8f5] via-[#f7faf8] to-[#eef6f2] text-slate-900 pb-20">
+      <div className="relative min-h-screen bg-gradient-to-b from-[#f2f8f5] via-[#f7faf8] to-[#eef6f2] text-slate-900 pb-20 overflow-hidden">
         {/* Soft atmospheric green gradient glows */}
         <div
           className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -z-10 h-[500px] w-full max-w-6xl bg-gradient-to-b from-teal-200/30 via-emerald-100/20 to-transparent blur-3xl"
           aria-hidden="true"
         />
+
+        {/* Faded Pine Trees Background Layer */}
+        <FadedForestBackground />
 
         <main className="mx-auto max-w-4xl px-5 pt-10 sm:px-8 sm:pt-14">
           {/* ─────────────────────────────────────────────────────────────
@@ -334,8 +434,28 @@ export default function MedicForestAboutPage() {
               5. WHY MEDICFOREST EXISTS
               Moved down below Platform Ecosystem card as requested.
           ───────────────────────────────────────────────────────────── */}
-          <section className="mt-14 rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/40 p-7 shadow-xs sm:p-10">
-            <div className="max-w-2xl">
+          <section className="relative overflow-hidden mt-14 rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/40 p-7 shadow-xs sm:p-10">
+            {/* Thematic Tree Watermark: Solitary tree vs Forest grove */}
+            <div
+              className="pointer-events-none absolute -bottom-4 -right-4 hidden select-none md:flex items-end gap-3 text-teal-950/[0.07]"
+              aria-hidden="true"
+            >
+              {/* Solitary fragile tree */}
+              <div className="flex flex-col items-center">
+                <PineTree className="h-20 w-16 opacity-50 text-slate-400" />
+              </div>
+              {/* Subtle gap indicator */}
+              <div className="mb-3 h-8 w-px border-r border-dashed border-teal-900/20" />
+              {/* Dense united forest */}
+              <div className="flex items-end -space-x-4 text-emerald-950/[0.12]">
+                <PineTree className="h-28 w-22" />
+                <PineTree className="h-36 w-28 -mb-1" />
+                <PineTree className="h-30 w-24" />
+                <PineTree className="h-24 w-18" />
+              </div>
+            </div>
+
+            <div className="relative max-w-2xl">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
                 Why MedicForest Exists
               </span>
@@ -360,15 +480,29 @@ export default function MedicForestAboutPage() {
               Ready to start preparing? Start practising · Explore tutoring
           ───────────────────────────────────────────────────────────── */}
           <section className="mt-14 text-center">
-            <div className="mx-auto max-w-xl rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/20 to-emerald-50/30 p-8 shadow-xs sm:p-10">
-              <h2 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+            <div className="relative overflow-hidden mx-auto max-w-xl rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/20 to-emerald-50/30 p-8 shadow-xs sm:p-10">
+              {/* Faint corner pine silhouettes inside the CTA box */}
+              <div
+                className="pointer-events-none absolute -bottom-6 -left-6 select-none text-emerald-950/[0.045]"
+                aria-hidden="true"
+              >
+                <PineTree className="h-28 w-24" />
+              </div>
+              <div
+                className="pointer-events-none absolute -bottom-6 -right-6 select-none text-teal-950/[0.045]"
+                aria-hidden="true"
+              >
+                <PineTree className="h-28 w-24" />
+              </div>
+
+              <h2 className="relative text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
                 Ready to start preparing?
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="relative mt-2 text-sm text-slate-600">
                 Explore free interview practice or get personalised support.
               </p>
 
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <div className="relative mt-6 flex flex-wrap items-center justify-center gap-3">
                 <Link
                   href="/interviews"
                   className="inline-flex items-center gap-2 rounded-xl bg-[#0c6b5e] px-6 py-3 text-xs font-bold text-white shadow-xs transition hover:bg-[#084e45]"
@@ -385,7 +519,7 @@ export default function MedicForestAboutPage() {
                 </Link>
               </div>
 
-              <p className="mt-4 text-[11px] text-slate-400">
+              <p className="relative mt-4 text-[11px] text-slate-400">
                 550+ free Med interview questions • No card required
               </p>
             </div>
