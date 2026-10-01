@@ -3,28 +3,27 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  CheckCircle2,
+  ArrowUpRight,
+  BookOpen,
   GraduationCap,
   MessageSquare,
-  Mic,
   Quote,
   Sparkles,
-  TreePine,
+  Star,
   Trees,
-  TrendingUp,
   UserRoundCheck,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 
 export const metadata: Metadata = {
-  title: "About MedicForest | Growing a Community of Future Medics",
+  title: "About MedicForest | Structured Medical Admissions & Mentorship",
   description:
-    "Learn about MedicForest - realistic medical school Med interview practice with 550+ free questions, AI feedback, and personalised 1-to-1 tutoring by @medwithrish.",
+    "Learn about MedicForest — realistic medical interview practice, useful feedback and personalised 1–to–1 tutoring founded by Rish (@medwithrish).",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About MedicForest | Growing a Community of Future Medics",
+    title: "About MedicForest | Structured Medical Admissions & Mentorship",
     description:
-      "Meet MedicForest: free medical school Med interview questions, realistic practice and personalised tutoring.",
+      "Helping future medics prepare with more structure, confidence and support. Founded from real admissions experience by Rish.",
     url: "/about",
     siteName: "MedicForest",
     type: "website",
@@ -34,289 +33,370 @@ export const metadata: Metadata = {
 export default function MedicForestAboutPage() {
   return (
     <MedicForestLandingShell>
-      <div className="bg-[#f7faf9] text-[#123a3c]">
-        {/* 1. HERO */}
-        <section className="relative overflow-hidden border-b border-[#0e3b37] bg-gradient-to-b from-[#021f1c] via-[#042724] to-[#06332f] px-5 py-12 text-white sm:px-8 sm:py-14">
-          <div className="relative mx-auto max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-950/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#8be5df]">
-              <Trees className="h-3.5 w-3.5 text-teal-300" />
-              <span>The MedicForest Story</span>
+      <div className="relative min-h-screen bg-gradient-to-b from-[#f2f8f5] via-[#f7faf8] to-[#eef6f2] text-slate-900 pb-20">
+        {/* Soft atmospheric green gradient glows */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -z-10 h-[500px] w-full max-w-6xl bg-gradient-to-b from-teal-200/30 via-emerald-100/20 to-transparent blur-3xl"
+          aria-hidden="true"
+        />
+
+        <main className="mx-auto max-w-4xl px-5 pt-10 sm:px-8 sm:pt-14">
+          {/* ─────────────────────────────────────────────────────────────
+              1. HERO / WHAT MEDICFOREST IS
+              One strong headline, one paragraph, one CTA.
+          ───────────────────────────────────────────────────────────── */}
+          <section className="text-center sm:text-left">
+            <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50/90 px-3.5 py-1 text-xs font-bold text-teal-800 shadow-2xs">
+              <Trees className="h-3.5 w-3.5 text-teal-600" />
+              <span>About MedicForest</span>
             </div>
 
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              Growing a community of medics -{" "}
-              <span className="text-[#8be5df]">like a forest of trees.</span>
+            <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-5xl lg:leading-[1.15]">
+              Helping future medics prepare with more structure, confidence and support.
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#c6dbd7] sm:text-base">
-              MedicForest helps medical applicants prepare more confidently through realistic Med interview practice,
-              useful feedback and personalised support - turning an isolating admissions process into a collaborative journey.
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              MedicForest combines realistic interview practice, useful feedback and personalised guidance to make medical admissions feel less overwhelming.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <a
-                href="#offers"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#b9f4db] px-5 py-2.5 text-sm font-bold text-[#042724] shadow-xs transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+              <Link
+                href="/interviews"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#0c6b5e] px-6 py-3.5 text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
               >
-                <span>Explore the Platform</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <a
-                href="#philosophy"
-                className="inline-flex items-center gap-2 rounded-xl border border-teal-400/30 bg-teal-900/30 px-5 py-2.5 text-sm font-semibold text-[#cde6e2] transition hover:border-teal-300 hover:bg-teal-900/60 hover:text-white"
-              >
-                <span>Our Philosophy</span>
-              </a>
-            </div>
-          </div>
-        </section>
+                <span>Explore the platform</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
 
-        {/* 2. WHAT MEDICFOREST OFFERS */}
-        <section id="offers" className="border-b border-[#e5eeec] bg-white px-5 py-12 sm:px-8 sm:py-14">
-          <div className="mx-auto max-w-4xl">
-            <div className="text-center">
-              <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#08787b]">
-                What We Do
+              <Link
+                href="/medicforest/tutoring"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+              >
+                <span>1–to–1 Tutoring</span>
+              </Link>
+            </div>
+          </section>
+
+          {/* ─────────────────────────────────────────────────────────────
+              2. WHY MEDICFOREST EXISTS
+              The forest philosophy: community, clarity, no guesswork.
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14 rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/40 p-7 shadow-xs sm:p-10">
+            <div className="max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                Why MedicForest Exists
               </span>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[#042724] sm:text-3xl">
-                What MedicForest offers
+
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                A solitary tree stands fragile.{" "}
+                <span className="text-teal-700">A forest stands unbreakable.</span>
               </h2>
+
+              <p className="mt-4 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Medical admissions can feel isolating. Between strict grade thresholds, high–stakes aptitude exams, and intense MMI stations, applicants are often left navigating the process alone with generic advice.
+              </p>
+
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                MedicForest was created to replace guesswork with clearer preparation, better feedback and support throughout the process — helping each applicant grow within a strong, supportive forest of peers and mentors.
+              </p>
             </div>
+          </section>
 
-            <div className="mt-8 grid gap-5 md:grid-cols-2">
-              {/* CARD 1: Med Interview Practice */}
-              <div className="flex flex-col justify-between rounded-2xl border border-[#dbe6e4] bg-[#fbfdfc] p-6 shadow-xs transition hover:border-[#159a9d]">
-                <div>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf7f5] text-[#08787b]">
-                      <Mic className="h-5 w-5" />
-                    </span>
-                    <span className="inline-flex items-center rounded-full border border-[#a8eccf] bg-[#dcf6ec] px-2.5 py-1 text-xs font-bold text-[#044a3e]">
-                      550+ FREE practice questions
-                    </span>
-                  </div>
-
-                  <h3 className="mt-4 text-lg font-bold text-[#042724]">Med Interview Practice</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#4b6368]">
-                    Prepare for medical school interviews through structured practice and realistic feedback.
-                  </p>
-
-                  <ul className="mt-4 space-y-2 text-xs font-medium text-[#374e53]">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>MMI + panel preparation</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>AI Med interview practice</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>Personalised feedback</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mt-6 pt-2">
-                  <Link
-                    href="/medicforest/interview/ai-interviews"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#042724]"
-                  >
-                    <span>Explore Med Interview Practice</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* CARD 2: 1-to-1 Tutoring */}
-              <div className="flex flex-col justify-between rounded-2xl border border-[#dbe6e4] bg-[#fbfdfc] p-6 shadow-xs transition hover:border-[#159a9d]">
-                <div>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf7f5] text-[#08787b]">
-                      <UserRoundCheck className="h-5 w-5" />
-                    </span>
-                    <span className="inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-xs font-bold text-teal-800">
-                      Personalised 1-on-1
-                    </span>
-                  </div>
-
-                  <h3 className="mt-4 text-lg font-bold text-[#042724]">1-to-1 Tutoring</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#4b6368]">
-                    Personalised support based on your individual application and preparation needs.
-                  </p>
-
-                  <ul className="mt-4 space-y-2 text-xs font-medium text-[#374e53]">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>Med Interview coaching</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>Personal statement support</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#08787b]" />
-                      <span>Individual feedback</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mt-6 pt-2">
-                  <Link
-                    href="/medicforest/tutoring"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#042724]"
-                  >
-                    <span>Explore Tutoring</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Subtle UCAT mention */}
-            <p className="mt-5 text-center text-xs text-[#62777e]">
-              UCAT practice tools are currently in development.
-            </p>
-          </div>
-        </section>
-
-        {/* 3. WHY MEDICFOREST */}
-        <section id="philosophy" className="border-b border-[#e5eeec] bg-[#f7faf9] px-5 py-12 sm:px-8 sm:py-14">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-100 bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-800">
-              <TreePine className="h-3.5 w-3.5 text-teal-600" />
-              <span>Our Philosophy</span>
-            </span>
-
-            <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-[#042724] sm:text-3xl">
-              A solitary tree stands fragile.{" "}
-              <span className="text-[#08787b]">A forest stands unbreakable.</span>
-            </h2>
-
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-[#4b6368]">
-              Medical admissions can feel isolating and overwhelming. MedicForest was created to make preparation more structured, supportive and useful - replacing solitary guesswork with clear progression and shared strength.
-            </p>
-
-            {/* Simple process: Practise -> Get Feedback -> Improve */}
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-3">
-              <div className="flex items-center gap-2 rounded-xl border border-[#dce6e5] bg-white px-4 py-2.5 shadow-2xs">
-                <Sparkles className="h-4 w-4 text-[#08787b]" />
-                <span className="text-xs font-bold text-[#042724]">Practise</span>
-              </div>
-              <ArrowRight className="hidden h-3.5 w-3.5 text-[#8bab9f] sm:block" />
-              <div className="flex items-center gap-2 rounded-xl border border-[#dce6e5] bg-white px-4 py-2.5 shadow-2xs">
-                <MessageSquare className="h-4 w-4 text-[#08787b]" />
-                <span className="text-xs font-bold text-[#042724]">Get Feedback</span>
-              </div>
-              <ArrowRight className="hidden h-3.5 w-3.5 text-[#8bab9f] sm:block" />
-              <div className="flex items-center gap-2 rounded-xl border border-[#dce6e5] bg-white px-4 py-2.5 shadow-2xs">
-                <TrendingUp className="h-4 w-4 text-[#08787b]" />
-                <span className="text-xs font-bold text-[#042724]">Improve</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. FOUNDER */}
-        <section className="border-b border-[#e5eeec] bg-white px-5 py-12 sm:px-8 sm:py-14">
-          <div className="mx-auto max-w-4xl">
-            <div className="grid items-center gap-8 md:grid-cols-[200px_minmax(0,1fr)] lg:gap-10">
-              {/* Photo */}
-              <div className="relative mx-auto w-40 md:w-full">
-                <div className="overflow-hidden rounded-2xl border border-[#dbe6e4] bg-[#fbfdfc] p-2 shadow-xs">
+          {/* ─────────────────────────────────────────────────────────────
+              3. FOUNDER SECTION
+              Built from real admissions experience by Rish.
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14 rounded-3xl border border-slate-200/80 bg-white p-7 shadow-2xs sm:p-10">
+            <div className="grid gap-8 md:grid-cols-[200px_1fr] md:items-center">
+              {/* Rish Photo */}
+              <div className="mx-auto w-40 md:w-full">
+                <div className="relative overflow-hidden rounded-2xl border border-teal-200/80 bg-teal-50/50 p-2 shadow-xs">
                   <Image
                     src="/rish-profile.jpg"
-                    alt="Rish - founder of MedicForest and MedWithRish"
+                    alt="Rish — founder of MedicForest and MedWithRish"
                     width={400}
                     height={400}
                     className="aspect-square w-full rounded-xl object-cover object-center"
                     priority
                   />
                   <div className="mt-2 text-center">
-                    <p className="text-sm font-bold text-[#042724]">Rish</p>
-                    <p className="text-[11px] font-semibold text-[#08787b]">Founder - @medwithrish</p>
+                    <p className="text-sm font-bold text-slate-950">Rish</p>
+                    <p className="text-xs font-semibold text-teal-700">@medwithrish</p>
                   </div>
-                </div>
-                <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-white shadow-xs">
-                  <GraduationCap className="h-4 w-4" />
                 </div>
               </div>
 
-              {/* Bio */}
-              <div>
-                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#08787b]">
-                  Founder
-                </span>
-                <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-[#042724]">
-                  Built from real admissions experience - by @medwithrish
-                </h2>
-
-                <p className="mt-3 text-sm leading-relaxed text-[#4b6368]">
-                  MedicForest was founded by <strong>Rish</strong>, an admissions mentor and creator trusted by hundreds of aspiring doctors across the UK. Having guided applicants into top medical schools, he saw that students were often left with unhelpful generic question sets rather than targeted, actionable feedback.
-                </p>
-
-                <div className="mt-3">
-                  <p className="text-xs font-semibold text-[#042724]">Experience helping students with:</p>
-                  <div className="mt-1.5 flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-lg bg-[#edf7f5] px-2.5 py-1 font-semibold text-[#08787b]">Medical school interviews</span>
-                    <span className="rounded-lg bg-[#edf7f5] px-2.5 py-1 font-semibold text-[#08787b]">Personal statements</span>
-                    <span className="rounded-lg bg-[#edf7f5] px-2.5 py-1 font-semibold text-[#08787b]">Medical admissions</span>
-                    <span className="rounded-lg bg-[#edf7f5] px-2.5 py-1 font-semibold text-[#08787b]">1-to-1 mentoring</span>
-                  </div>
+              {/* Founder Bio */}
+              <div className="space-y-4">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                    Founder
+                  </span>
+                  <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                    Built from real admissions experience.
+                  </h2>
                 </div>
 
-                <div className="mt-4 rounded-xl border-l-3 border-[#08787b] bg-[#edf7f5]/80 p-3">
-                  <div className="flex items-start gap-2">
-                    <Quote className="h-4 w-4 shrink-0 text-[#08787b]" />
-                    <p className="text-xs italic leading-relaxed text-[#042724]">
-                      &ldquo;My mission has always been simple - demystify the medical school journey, replace anxious guesswork with structured practice, and nurture a community where every dedicated applicant can flourish.&rdquo;
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
+                  I&apos;m <strong>Rish</strong>, an admissions mentor and creator behind <strong>@medwithrish</strong>. Having personally guided hundreds of aspiring medical students across the UK into top medical schools, I saw that students were consistently held back by vague markschemes, generic advice, and solitary guesswork.
+                </p>
+
+                <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
+                  I built MedicForest to provide what students were missing: realistic interview simulations, structured rubrics, and direct 1–to–1 feedback that actually moves the needle.
+                </p>
+
+                {/* 3 Credibility Tags */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-3 py-1.5 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
+                    Medical interviews
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-3 py-1.5 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
+                    Personal statements
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-3 py-1.5 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
+                    1–to–1 mentoring
+                  </span>
+                </div>
+
+                {/* Shortened Quote */}
+                <div className="rounded-xl border-l-4 border-teal-600 bg-teal-50/70 p-3.5">
+                  <div className="flex items-start gap-2.5">
+                    <Quote className="h-4 w-4 shrink-0 text-teal-700 mt-0.5" />
+                    <p className="text-xs italic leading-relaxed text-slate-800">
+                      &ldquo;My mission is simple: demystify the medical school journey, replace anxious guesswork with structured practice, and help dedicated applicants secure their offers.&rdquo;
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
 
-                <div className="mt-4">
-                  <Link
-                    href="/medicforest/tutoring"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#042724]"
-                  >
-                    <span>1-to-1 Tutoring with Rish</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
+          {/* ─────────────────────────────────────────────────────────────
+              4. STUDENT RESULTS / PROOF
+              3 key results + short testimonial quotes with real context.
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14">
+            <div className="text-center sm:text-left">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                Proven Track Record
+              </span>
+              <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                Built to help students make real progress.
+              </h2>
+              <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+                Real outcomes achieved by students preparing with MedWithRish and MedicForest.
+              </p>
+            </div>
+
+            {/* 3 Metric Cards */}
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
+                <div className="text-3xl font-black tracking-tight text-slate-950">
+                  2370 B2
+                </div>
+                <p className="mt-1 text-xs font-bold text-teal-700">
+                  UCAT result after tutoring
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Mastered timing pacing and Decision Making syllogisms under exam pressure.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
+                <div className="text-3xl font-black tracking-tight text-slate-950">
+                  Medicine offer
+                </div>
+                <p className="mt-1 text-xs font-bold text-teal-700">
+                  Offer secured after interview preparation
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Multiple offers secured following intensive MMI station coaching and model reflections.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-3xl font-black tracking-tight text-slate-950">
+                    4.8 / 5
+                  </span>
+                  <div className="flex text-amber-400">
+                    <Star className="h-4 w-4 fill-amber-400" />
+                  </div>
+                </div>
+                <p className="mt-1 text-xs font-bold text-teal-700">
+                  Average student feedback
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Rated consistently for high–yield feedback, clear rubrics, and supportive mentoring.
+                </p>
+              </div>
+            </div>
+
+            {/* 2 Short Testimonial Proof Cards */}
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="flex flex-col justify-between rounded-2xl border border-teal-100 bg-white p-5 shadow-2xs">
+                <div className="flex items-start gap-2">
+                  <Quote className="h-4 w-4 shrink-0 text-teal-600 mt-0.5" />
+                  <p className="text-xs leading-relaxed text-slate-700 font-medium">
+                    &ldquo;I had never felt confident answering ethical dilemmas or station questions until working through the markschemes and 1–to–1 mocks. I got offers from all my interview choices!&rdquo;
+                  </p>
+                </div>
+                <div className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-3">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-teal-200 bg-teal-50">
+                    <Image
+                      src="/success-stories/story1.jpeg"
+                      alt="Student success story thumbnail"
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">Medical School Applicant</p>
+                    <p className="text-[11px] font-semibold text-teal-700">Secured 4 / 4 Medicine Offers</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-between rounded-2xl border border-teal-100 bg-white p-5 shadow-2xs">
+                <div className="flex items-start gap-2">
+                  <Quote className="h-4 w-4 shrink-0 text-teal-600 mt-0.5" />
+                  <p className="text-xs leading-relaxed text-slate-700 font-medium">
+                    &ldquo;The Decision Making and QR shortcuts helped push my score into the top percentile. The structured frameworks completely transformed my preparation.&rdquo;
+                  </p>
+                </div>
+                <div className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-3">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-teal-200 bg-teal-50">
+                    <Image
+                      src="/success-stories/story5.jpeg"
+                      alt="Student success story thumbnail"
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">UCAT &amp; Interview Student</p>
+                    <p className="text-[11px] font-semibold text-teal-700">Top Percentile &amp; Offer Holder</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* 5. FINAL CTA */}
-        <section className="bg-[#edf7f5] px-5 py-10 text-center sm:px-8 sm:py-12">
-          <div className="mx-auto max-w-2xl">
-            <h2 className="text-2xl font-extrabold tracking-tight text-[#042724] sm:text-3xl">
-              Start preparing with MedicForest
-            </h2>
-            <p className="mt-2 text-sm text-[#4b6368]">
-              Practise for interviews or get personalised support when you need it.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/medicforest/interview/ai-interviews"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#042724]"
-              >
-                <span>Start Med Interview Practice</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <Link
-                href="/medicforest/tutoring"
-                className="inline-flex items-center gap-2 rounded-xl border border-[#dbe6e4] bg-white px-5 py-2.5 text-xs font-bold text-[#042724] shadow-2xs transition hover:border-[#159a9d] hover:text-[#08787b]"
-              >
-                <span>Explore Tutoring</span>
-              </Link>
+          {/* ─────────────────────────────────────────────────────────────
+              5. SMALL "WHAT WE OFFER" STRIP
+              Interviews / Tutoring / Resources
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xs sm:p-7">
+            <div className="text-center sm:text-left">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                Platform Ecosystem
+              </span>
+              <h2 className="mt-1 text-lg font-bold text-slate-950 sm:text-xl">
+                What we offer
+              </h2>
             </div>
-            <p className="mt-4 text-[11px] text-[#62777e]">
-              550+ free Med interview questions • No card required
-            </p>
-          </div>
-        </section>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 divide-y divide-slate-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              {/* Interviews */}
+              <div className="pt-3 first:pt-0 sm:pt-0 sm:px-4 first:sm:pl-0">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                    <MessageSquare className="h-4 w-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-950">Med Interviews</h3>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  550+ questions, MMI station rubrics, AI feedback loops and university–specific station checklists.
+                </p>
+                <Link
+                  href="/interviews"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-teal-700 hover:underline"
+                >
+                  <span>Explore practice</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+
+              {/* Tutoring */}
+              <div className="pt-3 sm:pt-0 sm:px-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                    <UserRoundCheck className="h-4 w-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-950">1–to–1 Tutoring</h3>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Intensive crash courses and mock interviews with Rish and MedicForest specialists.
+                </p>
+                <Link
+                  href="/medicforest/tutoring"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-teal-700 hover:underline"
+                >
+                  <span>Explore tuition</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+
+              {/* Resources */}
+              <div className="pt-3 sm:pt-0 sm:px-4 last:sm:pr-0">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                    <BookOpen className="h-4 w-4" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-950">Admissions Resources</h3>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Free Medicine interview guide, UCAT mock difficulty sheets and week–by–week timelines.
+                </p>
+                <Link
+                  href="/resources"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-teal-700 hover:underline"
+                >
+                  <span>View resources</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* ─────────────────────────────────────────────────────────────
+              6. SMALL FINAL CTA
+              Ready to start preparing? Start practising · Explore tutoring
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14 text-center">
+            <div className="mx-auto max-w-xl rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/20 to-emerald-50/30 p-8 shadow-xs sm:p-10">
+              <h2 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                Ready to start preparing?
+              </h2>
+              <p className="mt-2 text-sm text-slate-600">
+                Explore free interview practice or get personalised support.
+              </p>
+
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  href="/interviews"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0c6b5e] px-6 py-3 text-xs font-bold text-white shadow-xs transition hover:bg-[#084e45]"
+                >
+                  <span>Start practising</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+
+                <Link
+                  href="/medicforest/tutoring"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-800 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+                >
+                  <span>Explore tutoring</span>
+                </Link>
+              </div>
+
+              <p className="mt-4 text-[11px] text-slate-400">
+                550+ free Med interview questions • No card required
+              </p>
+            </div>
+          </section>
+        </main>
       </div>
     </MedicForestLandingShell>
   );
