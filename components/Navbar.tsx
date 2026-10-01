@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Lock } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
@@ -31,6 +31,7 @@ const navItems: {
   {
     label: "Med Interviews",
     href: "/interviews",
+    badge: "NEW!",
     items: [
       { label: "Med Interview Hub", href: "/interviews" },
       { label: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
@@ -105,6 +106,12 @@ export default function Navbar() {
                       className="flex items-center gap-1.5 text-gray-700 transition hover:text-blue-600"
                     >
                       <span>{item.label}</span>
+                      {item.badge && (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-2xs">
+                          <Sparkles className="h-2.5 w-2.5" />
+                          <span>{item.badge}</span>
+                        </span>
+                      )}
                       <span className="transition-transform duration-200 group-hover:rotate-180">
                         <Chevron />
                       </span>
@@ -235,7 +242,15 @@ export default function Navbar() {
                         aria-expanded={isOpen}
                         className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-gray-800"
                       >
-                        <span>{item.label}</span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <span>{item.label}</span>
+                          {item.badge && (
+                            <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-2xs">
+                              <Sparkles className="h-2.5 w-2.5" />
+                              <span>{item.badge}</span>
+                            </span>
+                          )}
+                        </span>
                         <span className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
                           <Chevron />
                         </span>

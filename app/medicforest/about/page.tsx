@@ -3,13 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
   BookOpen,
-  GraduationCap,
   MessageSquare,
   Quote,
-  Sparkles,
-  Star,
   Trees,
   UserRoundCheck,
 } from "lucide-react";
@@ -78,32 +74,7 @@ export default function MedicForestAboutPage() {
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
-              2. WHY MEDICFOREST EXISTS
-              The forest philosophy: community, clarity, no guesswork.
-          ───────────────────────────────────────────────────────────── */}
-          <section className="mt-14 rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/40 p-7 shadow-xs sm:p-10">
-            <div className="max-w-2xl">
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
-                Why MedicForest Exists
-              </span>
-
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                A solitary tree stands fragile.{" "}
-                <span className="text-teal-700">A forest stands unbreakable.</span>
-              </h2>
-
-              <p className="mt-4 text-sm leading-relaxed text-slate-600 sm:text-base">
-                Medical admissions can feel isolating. Between strict grade thresholds, high–stakes aptitude exams, and intense MMI stations, applicants are often left navigating the process alone with generic advice.
-              </p>
-
-              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-                MedicForest was created to replace guesswork with clearer preparation, better feedback and support throughout the process — helping each applicant grow within a strong, supportive forest of peers and mentors.
-              </p>
-            </div>
-          </section>
-
-          {/* ─────────────────────────────────────────────────────────────
-              3. FOUNDER SECTION
+              2. FOUNDER SECTION
               Built from real admissions experience by Rish.
           ───────────────────────────────────────────────────────────── */}
           <section className="mt-14 rounded-3xl border border-slate-200/80 bg-white p-7 shadow-2xs sm:p-10">
@@ -121,7 +92,7 @@ export default function MedicForestAboutPage() {
                   />
                   <div className="mt-2 text-center">
                     <p className="text-sm font-bold text-slate-950">Rish</p>
-                    <p className="text-xs font-semibold text-teal-700">@medwithrish</p>
+                    <p className="text-xs font-semibold text-teal-700">@medwithrish_</p>
                   </div>
                 </div>
               </div>
@@ -172,8 +143,8 @@ export default function MedicForestAboutPage() {
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
-              4. STUDENT RESULTS / PROOF
-              3 key results + short testimonial quotes with real context.
+              3. STUDENT RESULTS / PROOF
+              Multiple 2300–2400+ scores · Multiple Oxbridge offers · 100–200 point increases
           ───────────────────────────────────────────────────────────── */}
           <section className="mt-14">
             <div className="text-center sm:text-left">
@@ -190,44 +161,42 @@ export default function MedicForestAboutPage() {
 
             {/* 3 Metric Cards */}
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {/* Card 1: Multiple 2300-2400+ scores every season */}
               <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
-                <div className="text-3xl font-black tracking-tight text-slate-950">
-                  2370 B2
+                <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                  2300–2400+
                 </div>
                 <p className="mt-1 text-xs font-bold text-teal-700">
-                  UCAT result after tutoring
+                  Multiple 2300–2400+ scores every season
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  Mastered timing pacing and Decision Making syllogisms under exam pressure.
+                  Consistent top percentile scoring driven by disciplined subtest pacing, timing shortcuts, and Decision Making logic trees.
                 </p>
               </div>
 
+              {/* Card 2: Multiple Oxbridge offers */}
               <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
-                <div className="text-3xl font-black tracking-tight text-slate-950">
-                  Medicine offer
+                <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                  Oxbridge Offers
                 </div>
                 <p className="mt-1 text-xs font-bold text-teal-700">
-                  Offer secured after interview preparation
+                  Multiple Oxbridge &amp; top medical school offers
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  Multiple offers secured following intensive MMI station coaching and model reflections.
+                  Offers secured following intensive MMI circuit coaching, university–specific rubrics, and reflective STARR model answers.
                 </p>
               </div>
 
+              {/* Card 3: 100-200 points increase in each section */}
               <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-3xl font-black tracking-tight text-slate-950">
-                    4.8 / 5
-                  </span>
-                  <div className="flex text-amber-400">
-                    <Star className="h-4 w-4 fill-amber-400" />
-                  </div>
+                <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                  +100–200 points
                 </div>
                 <p className="mt-1 text-xs font-bold text-teal-700">
-                  Average student feedback
+                  Consistently seeing 100–200 points increase in each section
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                  Rated consistently for high–yield feedback, clear rubrics, and supportive mentoring.
+                  Achieved with correct practice, targeted drills, and systematic error correction to rapidly eliminate score plateaus.
                 </p>
               </div>
             </div>
@@ -277,7 +246,7 @@ export default function MedicForestAboutPage() {
                   </div>
                   <div>
                     <p className="text-xs font-bold text-slate-900">UCAT &amp; Interview Student</p>
-                    <p className="text-[11px] font-semibold text-teal-700">Top Percentile &amp; Offer Holder</p>
+                    <p className="text-[11px] font-semibold text-teal-700">Top Percentile &amp; Oxbridge Offer Holder</p>
                   </div>
                 </div>
               </div>
@@ -285,7 +254,7 @@ export default function MedicForestAboutPage() {
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
-              5. SMALL "WHAT WE OFFER" STRIP
+              4. PLATFORM ECOSYSTEM ("WHAT WE OFFER")
               Interviews / Tutoring / Resources
           ───────────────────────────────────────────────────────────── */}
           <section className="mt-14 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xs sm:p-7">
@@ -358,6 +327,31 @@ export default function MedicForestAboutPage() {
                   <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
+            </div>
+          </section>
+
+          {/* ─────────────────────────────────────────────────────────────
+              5. WHY MEDICFOREST EXISTS
+              Moved down below Platform Ecosystem card as requested.
+          ───────────────────────────────────────────────────────────── */}
+          <section className="mt-14 rounded-3xl border border-teal-900/10 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/40 p-7 shadow-xs sm:p-10">
+            <div className="max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                Why MedicForest Exists
+              </span>
+
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                A solitary tree stands fragile.{" "}
+                <span className="text-teal-700">A forest stands unbreakable.</span>
+              </h2>
+
+              <p className="mt-4 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Medical admissions can feel isolating. Between strict grade thresholds, high–stakes aptitude exams, and intense MMI stations, applicants are often left navigating the process alone with generic advice.
+              </p>
+
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                MedicForest was created to replace guesswork with clearer preparation, better feedback and support throughout the process — helping each applicant grow within a strong, supportive forest of peers and mentors.
+              </p>
             </div>
           </section>
 
