@@ -5874,7 +5874,7 @@ MISTAKES
 
 iq-10-033-critical-thinking
 Data, Research & Critical Thinking / Critical Thinking
-Question: Design one question you would use to interview a medical-school applicant. Explain what you would hope to learn from their answer.
+Question: Design one question you would use to Med interview a medical-school applicant. Explain what you would hope to learn from their answer.
 GENERAL
 - Answers the specific task with clear, relevant reasoning
 - Supports claims with examples or evidence appropriate to this question
@@ -11174,7 +11174,7 @@ iq-18-006-graphs-and-trends
 Data, Research & Critical Thinking / Graphs & Trends
 Question: In what ways could the graph be misleading?
 Image: /medicforest/interview-stimuli/iq-18-006-graphs-and-trends.png
-Source facts: Hospital communications headline: Patient satisfaction rises sharply. 2024 inpatient survey bar chart: Hospital A 82%, Hospital B 86%; vertical axis runs from 80% to 87%. Measure: overall satisfaction with inpatient care. Hospital A: 2,000 invitations, 500 responses, 410 answered yes; anonymous postal form, January–March. Hospital B: 1,000 invitations, 100 responses, 86 answered yes; interview with ward staff, October–December. Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided. Fictional communications extract.
+Source facts: Hospital communications headline: Patient satisfaction rises sharply. 2024 inpatient survey bar chart: Hospital A 82%, Hospital B 86%; vertical axis runs from 80% to 87%. Measure: overall satisfaction with inpatient care. Hospital A: 2,000 invitations, 500 responses, 410 answered yes; anonymous postal form, January–March. Hospital B: 1,000 invitations, 100 responses, 86 answered yes; Med interview with ward staff, October–December. Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided. Fictional communications extract.
 GENERAL
 - Answers the specific task with clear, relevant reasoning
 - Supports claims with examples or evidence appropriate to this question
@@ -11679,7 +11679,7 @@ iq-20-001-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
 Question: How would you decide which patients need attention most urgently, and communicate your reasoning?
 Image: /medicforest/interview-stimuli/iq-20-001-prioritisation-stations.png
-Source facts: Five people need attention; clinical help is available. A: sudden facial droop and slurred speech, last well 15 minutes ago. B: mild rash for three weeks, no breathing difficulty. C: worsening breathlessness and blue lips, deteriorating over five minutes. D: routine medication refill, supply lasts three more days. E: deep cut, bleeding controlled by pressure. Fictional interview scenario.
+Source facts: Five people need attention; clinical help is available. A: sudden facial droop and slurred speech, last well 15 minutes ago. B: mild rash for three weeks, no breathing difficulty. C: worsening breathlessness and blue lips, deteriorating over five minutes. D: routine medication refill, supply lasts three more days. E: deep cut, bleeding controlled by pressure. Fictional Med interview scenario.
 GENERAL
 - Answers the specific task with clear, relevant reasoning
 - Supports claims with examples or evidence appropriate to this question
@@ -11884,7 +11884,7 @@ iq-20-009-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
 Question: Prioritise how you would handle responses during an emergency situation.
 Image: /medicforest/interview-stimuli/iq-20-009-prioritisation-stations.png
-Source facts: Hospital corridor; you are a student on placement. A: smoke visible at a closed store-room door. B: a visitor has collapsed nearby. C: another visitor is filming. D: a colleague asks you to fetch confidential notes. E: the fire alarm has not sounded. Fictional interview scenario.
+Source facts: Hospital corridor; you are a student on placement. A: smoke visible at a closed store-room door. B: a visitor has collapsed nearby. C: another visitor is filming. D: a colleague asks you to fetch confidential notes. E: the fire alarm has not sounded. Fictional Med interview scenario.
 GENERAL
 - Answers the specific task with clear, relevant reasoning
 - Supports claims with examples or evidence appropriate to this question

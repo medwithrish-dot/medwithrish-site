@@ -84,7 +84,7 @@ test("old MedicForest-prefixed URLs normalize to clean product URLs", async () =
     && rule.destination === "https://medicforest.com/ucat/:path+"));
 });
 
-test("MedicForest interview URLs open the real platform under clean routes", async () => {
+test("MedicForest Med interview URLs open the real platform under clean routes", async () => {
   const redirects = await nextConfig.redirects();
   const rewrites = await nextConfig.rewrites();
   assert.ok(!Array.isArray(rewrites));
@@ -98,7 +98,7 @@ test("MedicForest interview URLs open the real platform under clean routes", asy
     && rule.destination === "/medicforest/interview/:path+"));
 });
 
-test("public interview resources bypass the MedicForest preview gate", () => {
+test("public Med interview resources bypass the MedicForest preview gate", () => {
   assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-001-data-stations.png"), true);
   assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-015-article-analysis.png"), true);
   assert.equal(isPublicMedicForestPath("/medicforest/interview/leaderboard"), true);

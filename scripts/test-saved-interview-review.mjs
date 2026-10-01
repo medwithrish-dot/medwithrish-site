@@ -166,7 +166,7 @@ test("an active saved station offers Resume and uses the server clock despite lo
   assert.ok(find(page.tree(), node => node.props?.href?.includes("ai-interviews?attempt=")));
 });
 
-test("an unrelated active interview is offered for resume without replacing the saved review", async () => {
+test("an unrelated active Med interview is offered for resume without replacing the saved review", async () => {
   const page = await savedReview({ onRequest: (request, state) => request.method === "POST" ? Response.json({ attempt: { ...state.attempt, id: "active-other", circuitId: "different-circuit" } }) : undefined });
   const original = page.review().attempt.id;
   page.review().onRetry(); await page.flush();

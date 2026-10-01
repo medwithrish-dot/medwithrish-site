@@ -60,7 +60,7 @@ function guide(input: GuideInput): InterviewGuide {
     tags: [...new Set([input.slug, guideTag(input.category), ...input.subcategories.map(guideTag), ...topics.map(guideTag), ...tags])],
     sections: [
       { title: "Understand the topic", text: understand },
-      { title: "How to discuss it in interview", text: approach },
+      { title: "How to discuss it in Med interview", text: approach },
       { title: "Put it into words", text: example },
     ],
     sources: sourceKeys.map((key) => sources[key]),
@@ -303,7 +303,7 @@ export const interviewGuides: readonly InterviewGuide[] = [
     subcategories: ["New Treatments & Innovation"], tags: ["innovation", "clinical-trials", "benefit-harm", "access"],
     summary: "Ask whether an innovation produces meaningful benefit and can be delivered fairly.",
     understand: "A promising mechanism or early study is a reason to investigate a treatment. It does not establish that it improves patients' lives. Licensing, guideline recommendations, funding decisions and local delivery answer different questions and should not be treated as interchangeable.",
-    approach: "Identify the patient group, comparator and outcome. Examine benefit size, harms, study quality and follow-up. Then consider training, monitoring, cost and equitable access. Explain what evidence would change your view. Do not turn an interview answer about research into a treatment recommendation for a person.",
+    approach: "Identify the patient group, comparator and outcome. Examine benefit size, harms, study quality and follow-up. Then consider training, monitoring, cost and equitable access. Explain what evidence would change your view. Do not turn a Med interview answer about research into a treatment recommendation for a person.",
     example: "A treatment may improve a laboratory marker without demonstrating better survival or quality of life. I would ask whether the marker is a reliable substitute and whether longer follow-up reveals benefits or harms that the initial trial missed.",
     practiceQuestion: "What questions would you ask about a headline claiming a new treatment is a breakthrough?",
     avoid: "Treating approval as proof that a treatment is best for everyone or ignoring the alternative treatment used in the study.",

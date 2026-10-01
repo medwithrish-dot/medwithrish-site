@@ -1,4 +1,4 @@
-# Interview stations that still need product input
+# Med Interview stations that still need product input
 
 This note records the station types that are not yet specified enough to build confidently. It is intentionally separate from the question bank: the questions should remain original, but they need to follow the format and assessment rules agreed here.
 

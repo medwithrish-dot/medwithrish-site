@@ -67,7 +67,7 @@ function completedOn(date, overrides = {}) {
   return attempt({ startedAt: `${date}T09:00:00Z`, completedAt: `${date}T09:08:00Z`, ...overrides });
 }
 
-test("desktop interview shell retains the full viewport height after client updates", () => {
+test("desktop Med interview shell retains the full viewport height after client updates", () => {
   assert.match(interviewShellSource, /lg:h-\[100dvh\]/);
   assert.doesNotMatch(interviewShellSource, /lg:h-auto/);
 });
@@ -80,7 +80,7 @@ test("dashboard pairs its expandable plan with a saved daily-question calendar",
   assert.match(dashboardDataSource, /interview_daily_questions/);
 });
 
-test("interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
+test("Med interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
   const progress = deriveInterviewQuestionProgress([
     { question_id: "iq-01-001-motivation-for-medicine", status: "completed" },
     { question_id: "iq-01-001-motivation-for-medicine", status: "completed" },

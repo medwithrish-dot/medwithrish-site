@@ -106,7 +106,7 @@ const stationThemes: Record<string, InterviewTheme> = {
 /** A London calendar date; invalid input is rejected rather than silently becoming today. */
 export function londonDate(date: Date | string): string {
   const value = date instanceof Date ? date : new Date(date);
-  if (!Number.isFinite(value.getTime())) throw new RangeError("Invalid interview date");
+  if (!Number.isFinite(value.getTime())) throw new RangeError("Invalid Med interview date");
   const parts = formatter.formatToParts(value);
   const part = (name: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === name)!.value;
   return `${part("year")}-${part("month")}-${part("day")}`;
@@ -262,7 +262,7 @@ export function deriveDashboard(
   const lastReport = previousDays.find((attempt) => scoreOf(attempt) !== null);
   const guideId = `${today}:guide:${guideTheme}`;
   const reviewId = `${today}:review:${lastReport?.id ?? "personal-reflection"}`;
-  const guideTask: DashboardTask = { id: guideId, title: "Read an interview preparation guide", description: `Choose one idea to apply to ${THEME_LABELS[guideTheme].toLowerCase()} questions.`, kind: "guide", theme: guideTheme, stationSlug: null, href: "/medicforest/interview/guides", minutes: 5, completed: manualCompleted.has(guideId) };
+  const guideTask: DashboardTask = { id: guideId, title: "Read a Med interview preparation guide", description: `Choose one idea to apply to ${THEME_LABELS[guideTheme].toLowerCase()} questions.`, kind: "guide", theme: guideTheme, stationSlug: null, href: "/medicforest/interview/guides", minutes: 5, completed: manualCompleted.has(guideId) };
   const reviewTask: DashboardTask = { id: reviewId, title: lastReport ? "Reflect on your latest feedback" : "Reflect on one caring experience", description: lastReport ? "Choose one specific change for your next attempt." : "Write down what happened, what you learnt, and how it affected your understanding of care.", kind: "review", theme: lastReport ? interviewTheme(lastReport) ?? "reflection" : "reflection", stationSlug: null, href: lastReport ? `/medicforest/interview/reports/${lastReport.id}` : "/medicforest/interview/question-bank", minutes: 5, completed: manualCompleted.has(reviewId) };
   const dailyStationCount = isPremium && weeklyTarget >= 8 ? 2 : 1;
   const todayPlan: DashboardTask[] = [
@@ -282,12 +282,12 @@ export function deriveDashboard(
   let nextAction: DashboardAnalytics["nextAction"];
   if (active) {
     nextAction = active.status === "grading"
-      ? { title: "Check your interview feedback", description: `Your ${active.title} feedback is being prepared. Return to check its progress.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" }
-      : { title: "Return to your interview", description: `Continue ${active.title} and review your saved answers.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" };
+      ? { title: "Check your Med interview feedback", description: `Your ${active.title} feedback is being prepared. Return to check its progress.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" }
+      : { title: "Return to your Med interview", description: `Continue ${active.title} and review your saved answers.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" };
   } else if (!completed.length) {
     nextAction = { title: "Start with Why medicine?", description: "Get your first feedback, then choose one thing to improve.", href: stationHref("why-medicine"), reason: "first-station" };
   } else if (soon && isPremium) {
-    nextAction = { title: `Practise for ${soon.name}`, description: soon.daysUntil === 0 ? "Your interview date is today. Use a short, familiar rehearsal if it would help." : `Your interview is in ${soon.daysUntil} ${soon.daysUntil === 1 ? "day" : "days"}. Check its format and plan a focused rehearsal.`, href: `/medicforest/interview/ai-interviews?university=${soon.universitySlug}`, reason: "interview-soon" };
+    nextAction = { title: `Practise for ${soon.name}`, description: soon.daysUntil === 0 ? "Your Med interview date is today. Use a short, familiar rehearsal if it would help." : `Your Med interview is in ${soon.daysUntil} ${soon.daysUntil === 1 ? "day" : "days"}. Check its format and plan a focused rehearsal.`, href: `/medicforest/interview/ai-interviews?university=${soon.universitySlug}`, reason: "interview-soon" };
   } else if (!isPremium) {
     nextAction = { title: "Develop your Why medicine? answer", description: "Return to the free station and apply one idea from your feedback.", href: stationHref("why-medicine"), reason: "focus" };
   } else {

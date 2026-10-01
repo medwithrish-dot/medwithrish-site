@@ -44,7 +44,7 @@ test("every station has a specific framework and the shared question-bank rubric
   assert.equal(frameworks.size, 9, "Stations should not fall back to one generic model framework");
 });
 
-test("the interview builder shows one ethical dilemma and no group station", () => {
+test("the Med interview builder shows one ethical dilemma and no group station", () => {
   assert.equal(interviewSetupStations.filter((station) => station.lobbyTitle === "Ethical dilemma").length, 1);
   assert.equal(interviewSetupStations.some((station) => station.lobbyTitle === "Group station"), false);
 });
@@ -182,7 +182,7 @@ test("AI marking receives the exact source facts and criteria, including legacy 
   assert.equal(assessmentGuidance([{ question: "Older wording", id: question.id }])[0].questionId, question.id);
 });
 
-test("every data interview has visuals and all 15 data sources can be selected", () => {
+test("every data Med interview has visuals and all 15 data sources can be selected", () => {
   const { findReviewQuestion } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
   for (const text of interviewStations.find(station => station.slug === "data-analysis").questions) {
     assert.ok(getQuestionStimulus(findReviewQuestion(null, text)?.id), "The preview also needs a matching image");

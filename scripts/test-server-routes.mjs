@@ -298,7 +298,7 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   }
 });
 
-test("preview proxy gates clean product interview paths while keeping public paths open", async () => {
+test("preview proxy gates clean product Med interview paths while keeping public paths open", async () => {
   const { NextRequest } = require("next/server");
   const { proxy } = load("proxy.ts", {
     "@supabase/ssr": { createServerClient: () => assert.fail("public or denied requests must not refresh auth") },
@@ -324,7 +324,7 @@ test("preview proxy gates clean product interview paths while keeping public pat
   });
 });
 
-test("valid preview access still refreshes auth on protected interview pages", async () => {
+test("valid preview access still refreshes auth on protected Med interview pages", async () => {
   const { NextRequest } = require("next/server");
   let claimReads = 0;
   const { proxy } = load("proxy.ts", {

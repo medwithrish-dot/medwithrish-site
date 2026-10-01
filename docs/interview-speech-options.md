@@ -1,10 +1,10 @@
-# Interview speech options
+# Med Interview speech options
 
 Last checked: 25 September 2026. Prices are USD, exclude tax, hosting and storage, and can change. Check the linked pricing page before implementation.
 
 ## Two different features
 
-- **Speech-to-text (STT):** turns the candidate's spoken answer into a transcript. This is the accuracy issue in the interview room.
+- **Speech-to-text (STT):** turns the candidate's spoken answer into a transcript. This is the accuracy issue in the Med interview room.
 - **Text-to-speech (TTS):** reads the interviewer's written questions aloud. This affects how natural the interviewer sounds, not transcript accuracy.
 
 ## Current MedicForest setup

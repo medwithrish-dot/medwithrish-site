@@ -4502,7 +4502,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-033-critical-thinking",
-    text: "Design one question you would use to interview a medical-school applicant. Explain what you would hope to learn from their answer.",
+    text: "Design one question you would use to Med interview a medical-school applicant. Explain what you would hope to learn from their answer.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,

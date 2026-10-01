@@ -32,9 +32,9 @@ const navItems: {
     label: "Interviews",
     href: "/interviews",
     items: [
-      { label: "Interview Hub", href: "/interviews" },
-      { label: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
-      { label: "Medicine/Dentistry Interview Tutoring", href: "/interview-tutoring" },
+      { label: "Med Interview Hub", href: "/interviews" },
+      { label: "FREE Medicine Med Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
+      { label: "Medicine/Dentistry Med Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
 

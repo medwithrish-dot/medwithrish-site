@@ -34,8 +34,8 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
   // ===== PASTE NEW SJT QUESTIONS BELOW THIS LINE =====
 
   // Each object is either:
-  //   kind: "single"  — one standalone SJT question
-  //   kind: "set"     — 3-5 questions sharing one scenario (recommended)
+  //   kind: "single"  - one standalone SJT question
+  //   kind: "set"     - 3-5 questions sharing one scenario (recommended)
   //
   // answer uses the UCAT SJT rubric:
   //   sjt-appropriateness: A=very appropriate, B=appropriate not ideal,
@@ -48,7 +48,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
   //   "integrity" | "justice" | "non-maleficence" | "patient-safety" |
   //   "professional-boundaries" | "respect-dignity" | "scope-of-practice" | "teamwork"
 
-  // ----- Set 1: A&E — medication allergy near-miss -----
+  // ----- Set 1: A&E - medication allergy near-miss -----
   {
     kind: "set",
     setId: "ae-allergy-near-miss",
@@ -63,7 +63,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Calmly but immediately interrupt the nurse, state that you noticed a penicillin allergy in the triage notes, and ask her to check the allergy wristband before proceeding.",
         answer: "A",
         explanation:
-          "Stopping a potential allergic reaction before it occurs is the clearest possible patient-safety priority. Speaking up immediately — even to a senior colleague — is expected of all members of the clinical team, including students. Waiting or deferring would allow an avoidable, potentially fatal error to proceed.",
+          "Stopping a potential allergic reaction before it occurs is the clearest possible patient-safety priority. Speaking up immediately - even to a senior colleague - is expected of all members of the clinical team, including students. Waiting or deferring would allow an avoidable, potentially fatal error to proceed.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -71,7 +71,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Once the immediate situation is safely resolved, complete a near-miss incident report through the hospital's electronic reporting system.",
         answer: "A",
         explanation:
-          "Near-miss reporting is a core component of hospital safety culture. Documenting this event allows the risk team to identify systemic factors — such as high workload or inadequate allergy-checking protocols — and implement preventive measures. Failing to report wastes the learning opportunity the near-miss provides.",
+          "Near-miss reporting is a core component of hospital safety culture. Documenting this event allows the risk team to identify systemic factors - such as high workload or inadequate allergy-checking protocols - and implement preventive measures. Failing to report wastes the learning opportunity the near-miss provides.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -95,12 +95,12 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "How important is it to cross-reference the patient's allergy wristband with the medication being prepared before every drug administration, even under significant time pressure in A&E?",
         answer: "A",
         explanation:
-          "Allergy verification is a non-negotiable safety step: co-amoxiclav contains amoxicillin, a penicillin, and administering it to a penicillin-allergic patient can cause anaphylaxis within minutes. Time pressure never overrides this check — NHS Never Events classification includes wrong-drug-to-allergic-patient errors precisely because they are always preventable.",
+          "Allergy verification is a non-negotiable safety step: co-amoxiclav contains amoxicillin, a penicillin, and administering it to a penicillin-allergic patient can cause anaphylaxis within minutes. Time pressure never overrides this check - NHS Never Events classification includes wrong-drug-to-allergic-patient errors precisely because they are always preventable.",
       },
     ],
   },
 
-  // ----- Set 2: GP surgery — under-16 patient confidentiality -----
+  // ----- Set 2: GP surgery - under-16 patient confidentiality -----
   {
     kind: "set",
     setId: "gp-under16-confidentiality",
@@ -112,7 +112,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
       {
         subtype: "sjt-appropriateness",
         question:
-          "Inform the mother — with the supervising GP's agreement — that all patient consultations are confidential and that you cannot share any details of her daughter's appointment without her daughter's explicit consent.",
+          "Inform the mother - with the supervising GP's agreement - that all patient consultations are confidential and that you cannot share any details of her daughter's appointment without her daughter's explicit consent.",
         answer: "A",
         explanation:
           "A Gillick-competent patient has the same right to confidentiality as an adult. Disclosing consultation details to a parent without the patient's consent would be a breach of GMC confidentiality guidance and could damage the therapeutic relationship, deterring the patient from seeking sexual health care in future.",
@@ -131,7 +131,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Tell the mother her daughter appeared well and suggest she discuss any concerns directly with her daughter, without confirming or denying any details of the consultation.",
         answer: "B",
         explanation:
-          "Redirecting the parent to her daughter is a reasonable middle ground that avoids a direct breach of confidentiality while still engaging with the caller. However, it does not clearly explain to the mother why the practice cannot share information, which an ideal response would do — making this appropriate but less than ideal.",
+          "Redirecting the parent to her daughter is a reasonable middle ground that avoids a direct breach of confidentiality while still engaging with the caller. However, it does not clearly explain to the mother why the practice cannot share information, which an ideal response would do - making this appropriate but less than ideal.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -139,7 +139,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Disclose to the mother that her daughter was prescribed contraception, on the basis that a parent has a responsibility for their minor child's welfare.",
         answer: "D",
         explanation:
-          "A Gillick-competent 16-year-old has a legally and ethically recognised right to confidential sexual health care. Disclosing this information without consent violates GMC guidance, breaches the patient's trust, and could cause serious harm — including deterring young people from accessing contraception, thereby increasing the risk of unwanted pregnancy or STIs.",
+          "A Gillick-competent 16-year-old has a legally and ethically recognised right to confidential sexual health care. Disclosing this information without consent violates GMC guidance, breaches the patient's trust, and could cause serious harm - including deterring young people from accessing contraception, thereby increasing the risk of unwanted pregnancy or STIs.",
       },
       {
         subtype: "sjt-importance",
@@ -147,18 +147,18 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "How important is it for a medical student on a GP placement to understand the Fraser guidelines before participating in consultations involving patients under 16 seeking contraception?",
         answer: "A",
         explanation:
-          "The Fraser guidelines define the specific criteria a clinician must satisfy before providing contraception to a patient under 16 without parental knowledge. Without understanding these criteria, a student cannot meaningfully contribute to — or safely observe — such consultations, and may fail to recognise when a referral or safeguarding concern is warranted.",
+          "The Fraser guidelines define the specific criteria a clinician must satisfy before providing contraception to a patient under 16 without parental knowledge. Without understanding these criteria, a student cannot meaningfully contribute to - or safely observe - such consultations, and may fail to recognise when a referral or safeguarding concern is warranted.",
       },
     ],
   },
 
-  // ----- Set 3: Care home — covert medication and capacity -----
+  // ----- Set 3: Care home - covert medication and capacity -----
   {
     kind: "set",
     setId: "care-home-covert-medication",
     issueTags: ["capacity-consent", "respect-dignity"],
     stimulus: [
-      "You are a 3rd-year medical student on a care home placement with your supervising consultant geriatrician. An 82-year-old woman with moderate-to-severe vascular dementia, Mrs Ellis, refuses to take her daily warfarin tablet, pushing the nurse's hand away and saying 'Leave me alone.' The nurse then tells you: 'She's like this every morning — we just crush it into her yoghurt without telling her. She doesn't know the difference and she needs her anticoagulation.' No formal best-interests meeting has been documented in the notes.",
+      "You are a 3rd-year medical student on a care home placement with your supervising consultant geriatrician. An 82-year-old woman with moderate-to-severe vascular dementia, Mrs Ellis, refuses to take her daily warfarin tablet, pushing the nurse's hand away and saying 'Leave me alone.' The nurse then tells you: 'She's like this every morning - we just crush it into her yoghurt without telling her. She doesn't know the difference and she needs her anticoagulation.' No formal best-interests meeting has been documented in the notes.",
     ],
     questions: [
       {
@@ -175,7 +175,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Before any decision about medication is made, attempt to communicate with Mrs Ellis using simple language, calm tone, and non-verbal reassurance to explore the reason for her refusal.",
         answer: "A",
         explanation:
-          "The Mental Capacity Act requires that all practicable steps be taken to help a person make a decision before concluding they lack capacity. Mrs Ellis's refusal may reflect a time-specific reason — pain, nausea, or distress — that communication might resolve. Respecting her expressed wish and attempting engagement upholds her dignity and may render covert administration unnecessary.",
+          "The Mental Capacity Act requires that all practicable steps be taken to help a person make a decision before concluding they lack capacity. Mrs Ellis's refusal may reflect a time-specific reason - pain, nausea, or distress - that communication might resolve. Respecting her expressed wish and attempting engagement upholds her dignity and may render covert administration unnecessary.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -191,12 +191,12 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Help the nurse crush the tablet and mix it into Mrs Ellis's yoghurt, reasoning that she needs her anticoagulation and the nurse must know best.",
         answer: "D",
         explanation:
-          "Actively participating in covert medication administration without a valid best-interests decision makes you complicit in a practice that may violate the Mental Capacity Act and the patient's right to bodily autonomy. Deferring to seniority does not absolve a student of ethical responsibility; the GMC's guidance on Good Medical Practice requires all members of the team — including students — to raise patient safety and dignity concerns.",
+          "Actively participating in covert medication administration without a valid best-interests decision makes you complicit in a practice that may violate the Mental Capacity Act and the patient's right to bodily autonomy. Deferring to seniority does not absolve a student of ethical responsibility; the GMC's guidance on Good Medical Practice requires all members of the team - including students - to raise patient safety and dignity concerns.",
       },
       {
         subtype: "sjt-importance",
         question:
-          "How important is it for a formal best-interests decision — documented and involving the multidisciplinary team — to be made before covert medication administration to a patient who may lack capacity?",
+          "How important is it for a formal best-interests decision - documented and involving the multidisciplinary team - to be made before covert medication administration to a patient who may lack capacity?",
         answer: "A",
         explanation:
           "The Mental Capacity Act 2005 makes the best-interests framework a legal requirement, not a guideline. Undocumented covert administration can constitute assault and exposes the care home and clinicians to regulatory action by the CQC and potential criminal liability. Ensuring this process is followed protects both the patient's rights and the legal standing of every professional involved in her care.",
@@ -204,13 +204,13 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
     ],
   },
 
-  // ----- Set 4: Surgical ward — colleague falsifying observations -----
+  // ----- Set 4: Surgical ward - colleague falsifying observations -----
   {
     kind: "set",
     setId: "ward-falsified-observations",
     issueTags: ["integrity", "patient-safety", "candour"],
     stimulus: [
-      "You are a final-year medical student on a busy surgical ward. While reviewing the bedside chart of Mr Okafor, a 58-year-old man who is one day post-operative following a laparotomy, you notice that a set of observations — including a respiratory rate of 14 and an oxygen saturation of 98% — has been entered for 14:00 today, signed by your fellow medical student Sam. You are certain Sam did not take these observations: you saw Sam leave for lunch at 13:45 and return at 14:30, and you were present on the ward the entire time. Mr Okafor's NEWS2 score from this morning was 4 and you can see he looks more breathless now.",
+      "You are a final-year medical student on a busy surgical ward. While reviewing the bedside chart of Mr Okafor, a 58-year-old man who is one day post-operative following a laparotomy, you notice that a set of observations - including a respiratory rate of 14 and an oxygen saturation of 98% - has been entered for 14:00 today, signed by your fellow medical student Sam. You are certain Sam did not take these observations: you saw Sam leave for lunch at 13:45 and return at 14:30, and you were present on the ward the entire time. Mr Okafor's NEWS2 score from this morning was 4 and you can see he looks more breathless now.",
     ],
     questions: [
       {
@@ -227,7 +227,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Approach Sam privately before speaking to any senior, explain what you observed, and give Sam the opportunity to correct the chart entry themselves before you escalate.",
         answer: "C",
         explanation:
-          "Giving a colleague the chance to self-correct can seem fair, but with a potentially deteriorating patient it introduces a dangerous delay to both clinical review and proper escalation. Integrity concerns involving patient harm require prompt reporting to a senior, not peer mediation first. This approach is not entirely without merit — avoiding a false accusation is a legitimate consideration — but patient safety must take priority over collegial loyalty.",
+          "Giving a colleague the chance to self-correct can seem fair, but with a potentially deteriorating patient it introduces a dangerous delay to both clinical review and proper escalation. Integrity concerns involving patient harm require prompt reporting to a senior, not peer mediation first. This approach is not entirely without merit - avoiding a false accusation is a legitimate consideration - but patient safety must take priority over collegial loyalty.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -235,7 +235,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Do nothing and assume Sam may have taken the observations in a way you did not notice, to avoid making a serious allegation against a colleague.",
         answer: "D",
         explanation:
-          "Ignoring credible evidence of falsified clinical data in a deteriorating patient places Mr Okafor at direct risk of harm — a missed NEWS2 escalation can lead to avoidable cardiac arrest or intensive care admission. The GMC's Good Medical Practice requires honesty and raises the concept that doctors must not allow their concerns about colleagues to compromise patient safety.",
+          "Ignoring credible evidence of falsified clinical data in a deteriorating patient places Mr Okafor at direct risk of harm - a missed NEWS2 escalation can lead to avoidable cardiac arrest or intensive care admission. The GMC's Good Medical Practice requires honesty and raises the concept that doctors must not allow their concerns about colleagues to compromise patient safety.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -256,13 +256,13 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
     ],
   },
 
-  // ----- Set 5: Neurology clinic — student documentation error -----
+  // ----- Set 5: Neurology clinic - student documentation error -----
   {
     kind: "set",
     setId: "neurology-clinic-documentation-error",
     issueTags: ["candour", "integrity", "non-maleficence"],
     stimulus: [
-      "You are a 4th-year medical student in a neurology outpatient clinic. The registrar asks you to take a history from Mr Holt, a 45-year-old man attending for possible epilepsy, and enter it into the clinic system. Twenty minutes later, as the registrar is about to call Mr Holt back in to discuss management, you recheck your entry and realise you have recorded his seizure frequency as '2 episodes per month' when he clearly told you '2 episodes per week' — a clinically significant difference that could directly influence whether anti-epileptic medication is initiated today.",
+      "You are a 4th-year medical student in a neurology outpatient clinic. The registrar asks you to take a history from Mr Holt, a 45-year-old man attending for possible epilepsy, and enter it into the clinic system. Twenty minutes later, as the registrar is about to call Mr Holt back in to discuss management, you recheck your entry and realise you have recorded his seizure frequency as '2 episodes per month' when he clearly told you '2 episodes per week' - a clinically significant difference that could directly influence whether anti-epileptic medication is initiated today.",
     ],
     questions: [
       {
@@ -276,7 +276,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
       {
         subtype: "sjt-appropriateness",
         question:
-          "Add a transparent, dated correction to the notes — recording the error, the correct information, and the time of amendment — and simultaneously inform the registrar before the consultation resumes.",
+          "Add a transparent, dated correction to the notes - recording the error, the correct information, and the time of amendment - and simultaneously inform the registrar before the consultation resumes.",
         answer: "A",
         explanation:
           "Correcting documentation in a transparent, auditable way is standard practice for all clinical records errors. Doing this alongside verbal disclosure ensures the record is accurate and the registrar is not relying on incorrect data. Both actions together represent the thorough and honest conduct expected of all members of the healthcare team.",
@@ -287,7 +287,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Wait to see whether the registrar picks up the discrepancy when re-interviewing Mr Holt, and only mention your error if you are directly questioned.",
         answer: "C",
         explanation:
-          "The registrar may not repeat a full history and may act on the documented information, meaning the error could influence the treatment decision uncorrected. Waiting passively is not wholly unreasonable — errors are sometimes caught downstream — but it fails the duty of candour and risks the patient receiving management based on incorrect data. Proactive disclosure is expected of all clinical team members.",
+          "The registrar may not repeat a full history and may act on the documented information, meaning the error could influence the treatment decision uncorrected. Waiting passively is not wholly unreasonable - errors are sometimes caught downstream - but it fails the duty of candour and risks the patient receiving management based on incorrect data. Proactive disclosure is expected of all clinical team members.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -295,7 +295,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Leave the notes as they are, reasoning that the registrar will carry out their own assessment and will likely discover the correct seizure frequency independently.",
         answer: "D",
         explanation:
-          "Leaving a known, clinically significant error uncorrected is a direct breach of the duty of candour and may result in patient harm if the registrar acts on the recorded — rather than actual — seizure frequency. GMC guidance is unambiguous: clinicians must be open and honest when they make mistakes; failing to correct a known error is itself an act of dishonesty with potential fitness-to-practise implications.",
+          "Leaving a known, clinically significant error uncorrected is a direct breach of the duty of candour and may result in patient harm if the registrar acts on the recorded - rather than actual - seizure frequency. GMC guidance is unambiguous: clinicians must be open and honest when they make mistakes; failing to correct a known error is itself an act of dishonesty with potential fitness-to-practise implications.",
       },
       {
         subtype: "sjt-importance",
@@ -303,12 +303,12 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "How important is it for a medical student to immediately disclose a documentation error to the supervising clinician when the error involves clinically significant information that could directly influence a treatment decision?",
         answer: "A",
         explanation:
-          "Clinical decisions in specialties like neurology depend heavily on accurate symptom-frequency data — a wrong seizure frequency could mean a patient is not started on anti-epileptic medication when indicated, risking breakthrough seizures, or is started when not needed, exposing them to unnecessary drug side effects. The GMC's duty of candour applies to all members of the team, including students, and proactive error disclosure is the foundation of a safe and honest clinical culture.",
+          "Clinical decisions in specialties like neurology depend heavily on accurate symptom-frequency data - a wrong seizure frequency could mean a patient is not started on anti-epileptic medication when indicated, risking breakthrough seizures, or is started when not needed, exposing them to unnecessary drug side effects. The GMC's duty of candour applies to all members of the team, including students, and proactive error disclosure is the foundation of a safe and honest clinical culture.",
       },
     ],
   },
 
-  // ----- Set 6: Psychiatric ward — professional boundaries -----
+  // ----- Set 6: Psychiatric ward - professional boundaries -----
   {
     kind: "set",
     setId: "psych-ward-professional-boundaries",
@@ -323,7 +323,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Decline James's request kindly but clearly, explain that professional boundaries prevent sharing personal contact details, and immediately speak to your FY1 supervisor so the interaction can be documented and considered in James's discharge plan.",
         answer: "A",
         explanation:
-          "GMC Good Medical Practice explicitly prohibits personal relationships with patients that could compromise care or objectivity. Disclosing the request to the FY1 allows the team to ensure James has adequate community support before discharge — his note may signal he lacks it, which is clinically important on a psychiatric ward. Documenting the interaction creates an appropriate record and protects both James and the student.",
+          "GMC Good Medical Practice explicitly prohibits personal relationships with patients that could compromise care or objectivity. Disclosing the request to the FY1 allows the team to ensure James has adequate community support before discharge - his note may signal he lacks it, which is clinically important on a psychiatric ward. Documenting the interaction creates an appropriate record and protects both James and the student.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -331,7 +331,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Decline James's request, but say nothing to your supervisor, reasoning that it was probably an impulsive gesture and he is already being discharged.",
         answer: "C",
         explanation:
-          "Declining is appropriate, but failing to disclose the interaction means a clinically relevant signal — that James may feel isolated and lack a support network at home — is not incorporated into the discharge plan. In psychiatry, attachment to a student carer can indicate unmet emotional needs that warrant review before the patient leaves the ward. Silence, while understandable, falls short of best practice.",
+          "Declining is appropriate, but failing to disclose the interaction means a clinically relevant signal - that James may feel isolated and lack a support network at home - is not incorporated into the discharge plan. In psychiatry, attachment to a student carer can indicate unmet emotional needs that warrant review before the patient leaves the ward. Silence, while understandable, falls short of best practice.",
       },
       {
         subtype: "sjt-appropriateness",
@@ -5432,7 +5432,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
 // ─── RAW FORMAT (paste Gemini output directly) ────────────────────────────────
 //
 // Use USER_RAW_SJT_INPUTS for paste-in batches.
-// Format matches Gemini output exactly — no field renaming needed.
+// Format matches Gemini output exactly - no field renaming needed.
 
 export type SjtRawInput = {
   id: string;
@@ -5456,7 +5456,7 @@ export const USER_RAW_SJT_INPUTS: SjtRawInput[] = [
   //   title:    "Short display title"
   //   setting:  "outpatient clinic" | "ward" | "GP surgery" | etc.
   //   stem:     "Full scenario text..."
-  //   issueTags?: optional — add later if desired
+  //   issueTags?: optional - add later if desired
   //   questions: [ { subtype, question, answer, explanation }, ... ]
   //
   // answer uses the UCAT SJT rubric:
@@ -5813,7 +5813,7 @@ explanation: "This is the most appropriate action. It transparently informs the 
 subtype: "sjt-importance",
 question: "Whether the nephew's role as the resident's court-appointed financial deputy might provide a legal basis for the transactions described.",
 answer: "D",
-explanation: "A deputyship order authorises management of funds strictly in the best interests of the donor — it does not permit misappropriation for the deputy's personal debts. The described conduct exceeds any legitimate deputyship authority, and the existence of a formal legal role does not reduce the obligation to escalate suspected financial abuse."
+explanation: "A deputyship order authorises management of funds strictly in the best interests of the donor - it does not permit misappropriation for the deputy's personal debts. The described conduct exceeds any legitimate deputyship authority, and the existence of a formal legal role does not reduce the obligation to escalate suspected financial abuse."
 }
 ]
 },
@@ -5939,7 +5939,7 @@ explanation: "This is highly appropriate. It maintains professional boundaries a
 },
 {
 subtype: "sjt-importance",
-question: "Whether sharing a brief, non-clinical update — such as confirming the patient is currently stable — might de-escalate the father's distress without technically disclosing treatment details.",
+question: "Whether sharing a brief, non-clinical update - such as confirming the patient is currently stable - might de-escalate the father's distress without technically disclosing treatment details.",
 answer: "D",
 explanation: "Any disclosure that allows an unauthorised third party to draw inferences about a patient's condition or care violates confidentiality regardless of how it is framed. An adult patient's explicit refusal to involve a family member cannot be circumvented through indirect or 'soft' disclosures aimed at managing the relative's behaviour."
 }
@@ -7269,7 +7269,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Focus entirely on prescribing safe breastfeeding-compatible antidepressants and defer the relationship issues to her health visitor's next routine visit.",
 answer: "D",
-explanation: "Ignoring a disclosure of physical violence—especially choking, which is a major predictor of lethality—presents an unacceptable risk to patient safety. Deferring this critical danger to a later routine visit is a severe failure of duty."
+explanation: "Ignoring a disclosure of physical violence-especially choking, which is a major predictor of lethality-presents an unacceptable risk to patient safety. Deferring this critical danger to a later routine visit is a severe failure of duty."
 },
 {
 subtype: "sjt-importance",
@@ -8018,7 +8018,7 @@ explanation: "This is very important because it confirms that the patient's weig
 subtype: "sjt-appropriateness",
 question: "Prescribe high-calorie nutritional shakes for Reginald and send him back to the care home, assuming the staff will ensure he drinks them.",
 answer: "D",
-explanation: "This is a very inappropriate response. Returning a starving, neglected patient to the exact environment causing the harm—without addressing the staff's admitted inability to feed residents—puts the patient's health and life at continued serious risk."
+explanation: "This is a very inappropriate response. Returning a starving, neglected patient to the exact environment causing the harm-without addressing the staff's admitted inability to feed residents-puts the patient's health and life at continued serious risk."
 },
 {
 subtype: "sjt-importance",
@@ -12617,7 +12617,7 @@ explanation: "This is not important at all and is clinically dangerous. An acute
 id: "sjt-13-handover-discharge-summary-delay",
 title: "Delayed Discharge Summary Handover to GP",
 setting: "ward",
-stem: "You are an FY1 doctor working on a care of the elderly ward. A complex patient is being discharged today to a rehabilitation facility. The consultant requests that a highly specific medication change—halving the patient's dose of digoxin and checking their renal function in one week—be communicated clearly to the GP. The ward is extremely busy, and you are being pressured by the discharge coordinator to sign off the paperwork quickly so the patient's bed can be freed up.",
+stem: "You are an FY1 doctor working on a care of the elderly ward. A complex patient is being discharged today to a rehabilitation facility. The consultant requests that a highly specific medication change-halving the patient's dose of digoxin and checking their renal function in one week-be communicated clearly to the GP. The ward is extremely busy, and you are being pressured by the discharge coordinator to sign off the paperwork quickly so the patient's bed can be freed up.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -16495,7 +16495,7 @@ explanation: "This is a very important consideration because an impaired consult
 id: "sjt-05-safety-escalation-paediatric-prescribing-error",
 title: "An ambiguous prescription for a paediatric patient",
 setting: "ward",
-stem: "You are an FY1 doctor on a paediatric ward. A staff nurse asks you to re-write an overnight prescription for an intravenous antibiotic for a 4-year-old child. On reviewing the chart, you notice that the dose written by the daytime registrar seems unusually high—approximately ten times the standard dose for a child of this weight. The registrar has left the hospital for the day, and the child is due for their next dose in one hour. The patient currently appears clinically stable.",
+stem: "You are an FY1 doctor on a paediatric ward. A staff nurse asks you to re-write an overnight prescription for an intravenous antibiotic for a 4-year-old child. On reviewing the chart, you notice that the dose written by the daytime registrar seems unusually high-approximately ten times the standard dose for a child of this weight. The registrar has left the hospital for the day, and the child is due for their next dose in one hour. The patient currently appears clinically stable.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -17398,7 +17398,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Initiate the local integrated care pathway for Diabetic Ketoacidosis (DKA), commencing aggressive intravenous fluid resuscitation and a fixed-rate insulin infusion.",
 answer: "A",
-explanation: "The patient meets the diagnostic criteria for severe DKA. Immediate management using structured guidelines—focusing on fluid restoration and fixed-rate insulin—is safe, appropriate, and required to correct the metabolic acidosis."
+explanation: "The patient meets the diagnostic criteria for severe DKA. Immediate management using structured guidelines-focusing on fluid restoration and fixed-rate insulin-is safe, appropriate, and required to correct the metabolic acidosis."
 },
 {
 subtype: "sjt-importance",

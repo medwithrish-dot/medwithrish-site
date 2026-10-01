@@ -26,10 +26,10 @@ function feedbackFailureMessage(error: unknown) {
 
 export async function generateInterviewFeedback(attemptId: unknown): Promise<InterviewAttempt> {
   const { user, admin } = await interviewContext();
-  if (!validId(attemptId)) throw new InterviewError("Invalid interview ID");
+  if (!validId(attemptId)) throw new InterviewError("Invalid Med interview ID");
   const { data: row, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
   if (error) databaseError(error);
-  if (!row) throw new InterviewError("Interview not found", 404);
+  if (!row) throw new InterviewError("Med Interview not found", 404);
   if (row.status === "completed") return toInterviewAttempt(row);
   requireSubmittedAttempt(row);
   if (!interviewAiConfigured()) throw new InterviewError("Free AI feedback is not enabled yet. Your answers are saved.", 503);

@@ -1,4 +1,4 @@
-# Interview markscheme methodology
+# Med Interview markscheme methodology
 
 ## Purpose and limits
 
@@ -17,11 +17,11 @@ The downloadable text and PDF are generated from the same source with `node scri
 
 Each criterion receives a score from 0 to 100.
 
-1. **Relevance and motivation** — for motivation stations, this means a convincing and realistic reason for medicine. For other stations, “motivation” is interpreted as relevance to that station and direct engagement with the task.
-2. **Evidence and reflection** — specific examples, facts or observations are used appropriately, followed by explanation of what they mean or what was learnt.
-3. **Reasoning and balance** — competing considerations, uncertainty, consequences and reasonable alternatives are weighed rather than merely listed.
-4. **Structure and clarity** — the answer is easy to follow, answers the question directly and develops ideas coherently. A named framework is not required.
-5. **Insight and professionalism** — the response shows judgement, humility, respect, appropriate boundaries, patient awareness and willingness to seek help.
+1. **Relevance and motivation** - for motivation stations, this means a convincing and realistic reason for medicine. For other stations, “motivation” is interpreted as relevance to that station and direct engagement with the task.
+2. **Evidence and reflection** - specific examples, facts or observations are used appropriately, followed by explanation of what they mean or what was learnt.
+3. **Reasoning and balance** - competing considerations, uncertainty, consequences and reasonable alternatives are weighed rather than merely listed.
+4. **Structure and clarity** - the answer is easy to follow, answers the question directly and develops ideas coherently. A named framework is not required.
+5. **Insight and professionalism** - the response shows judgement, humility, respect, appropriate boundaries, patient awareness and willingness to seek help.
 
 The scoring anchors currently used by the assessor are:
 
@@ -114,7 +114,7 @@ Feedback contains a short summary, one to three specific strengths, one to three
 
 ## Question-bank completion
 
-Interview stations draw coherent question clusters from the question bank at roughly one substantive question per 2.5 minutes (three questions for an eight-minute station). When a saved station is submitted, each bank question with a non-empty answer is upserted as `completed` in `interview_question_progress`. AI-generated probes are not question-bank items and are therefore not marked complete in the bank.
+Med Interview stations draw coherent question clusters from the question bank at roughly one substantive question per 2.5 minutes (three questions for an eight-minute station). When a saved station is submitted, each bank question with a non-empty answer is upserted as `completed` in `interview_question_progress`. AI-generated probes are not question-bank items and are therefore not marked complete in the bank.
 
 ## Reference checks for authoring
 

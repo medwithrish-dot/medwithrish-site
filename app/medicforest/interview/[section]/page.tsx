@@ -12,14 +12,14 @@ import { InterviewGuides } from "../_components/InterviewGuides";
 import { isAcademicInterview } from "../_data/university-stations";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
-  "ai-interviews": { title: "Start AI Interview Practice", subtitle: "Choose the free station, a university preset, or a focused interview topic.", activeLabel: "AI Interviews" },
-  "question-bank": { title: "Question Bank", subtitle: "Explore interview questions and practise your answers.", activeLabel: "Question Bank" },
+  "ai-interviews": { title: "Start AI Med Interview Practice", subtitle: "Choose the free station, a university preset, or a focused Med interview topic.", activeLabel: "AI Interviews" },
+  "question-bank": { title: "Question Bank", subtitle: "Explore Med interview questions and practise your answers.", activeLabel: "Question Bank" },
   groups: { title: "Better practice, together.", subtitle: "Bring your friends into a study group and build your confidence as a team.", activeLabel: "Groups" },
-  leaderboard: { title: "The free AI interview challenge", subtitle: "Try the Why Medicine? station and beat Medwithrish’s score of 96%.", activeLabel: "Leaderboard" },
-  guides: { title: "Interview guide library", subtitle: "Search explanations, station techniques and hot topics. Start with a featured guide or explore a subject.", activeLabel: "Guides" },
-  progress: { title: "See how far you have come.", subtitle: "Your saved interview feedback, brought together. Practice scores are capped at 99%.", activeLabel: "Progress" },
+  leaderboard: { title: "The free AI Med interview challenge", subtitle: "Try the Why Medicine? station and beat Medwithrish’s score of 96%.", activeLabel: "Leaderboard" },
+  guides: { title: "Med Interview guide library", subtitle: "Search explanations, station techniques and hot topics. Start with a featured guide or explore a subject.", activeLabel: "Guides" },
+  progress: { title: "See how far you have come.", subtitle: "Your saved Med interview feedback, brought together. Practice scores are capped at 99%.", activeLabel: "Progress" },
   plan: { title: "One station at a time.", subtitle: "Master seven core stations with guides and practice questions, then move on to mock interviews.", activeLabel: "Plan" },
-  notifications: { title: "Your interview updates.", subtitle: "Pick up a station or explore your latest feedback.", activeLabel: "Dashboard" },
+  notifications: { title: "Your Med interview updates.", subtitle: "Pick up a station or explore your latest feedback.", activeLabel: "Dashboard" },
 };
 type Search = Record<string, string | string[] | undefined>;
 const single = (value: string | string[] | undefined) => Array.isArray(value) ? value[0] : value;
@@ -33,7 +33,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   if (!config) notFound();
   const search = await searchParams;
   if (section === "ai-interviews" && isAcademicInterview(single(search.university)) && !single(search.attempt)) {
-    return <InterviewShell {...config}><p className="mb-5 text-sm text-[#526b72]">Oxford and Cambridge academic interviews will have a separate interview format.</p><AIInterviewLanding /></InterviewShell>;
+    return <InterviewShell {...config}><p className="mb-5 text-sm text-[#526b72]">Oxford and Cambridge academic interviews will have a separate Med interview format.</p><AIInterviewLanding /></InterviewShell>;
   }
   if (section === "question-bank") {
     const { isPremium } = await getMedicForestEntitlements();

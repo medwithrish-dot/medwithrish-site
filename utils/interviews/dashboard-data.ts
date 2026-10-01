@@ -37,7 +37,7 @@ export const getInterviewDashboardData = cache(async () => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      message = "Sign in to save your university choices, interview dates and preparation plan.";
+      message = "Sign in to save your university choices, Med interview dates and preparation plan.";
     } else {
       signedIn = true;
       const monthStart = `${londonDate(now).slice(0, 8)}01`;
@@ -62,13 +62,13 @@ export const getInterviewDashboardData = cache(async () => {
         dailyActivity = [...counts].map(([practice_date, questions]) => ({ practice_date, questions }));
         activityAvailable = true;
       }
-      if (!available) message = "Your saved interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
+      if (!available) message = "Your saved Med interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
 
       // No answer text or microphone metrics are transferred for a dashboard view.
       // A bounded recent history supplies details; the RPC supplies exact lifetime totals.
       const columns = "id,mode,university_slug,station_slug,title,status,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback,started_at,completed_at";
       const history = await supabase.from("interview_attempts").select(`${columns}${available ? ",answer_submitted_at" : ""}`).eq("user_id", user.id).order("started_at", { ascending: false }).order("id", { ascending: false }).limit(500);
-      if (history.error) message = "Your interview history could not be loaded. Please try again shortly.";
+      if (history.error) message = "Your Med interview history could not be loaded. Please try again shortly.";
       else attempts = (history.data ?? []).map((row) => toInterviewAttempt({ ...(row as unknown as Record<string, unknown>), questions: [], answers: [], metrics: {} }));
     }
   } catch {

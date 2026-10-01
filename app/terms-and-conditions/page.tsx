@@ -19,7 +19,7 @@ const terms = [
   {
     title: "2. Educational support only",
     body: [
-      "MedWithRish and MedicForest provide educational and admissions preparation support. They do not guarantee UCAT scores, interview outcomes, offers, admission to any university or any professional outcome.",
+      "MedWithRish and MedicForest provide educational and admissions preparation support. They do not guarantee UCAT scores, Med interview outcomes, offers, admission to any university or any professional outcome.",
       "AI feedback, diagnostics and progress estimates are learning tools. They may be incomplete or inaccurate and should be checked against your own judgement and official guidance.",
     ],
   },

@@ -8,7 +8,7 @@ import { interviewPercentage, validateFeedback, RUBRIC_CRITERIA } from "../utils
 
 const require = createRequire(import.meta.url);
 
-test("the practice rubric uses five stable interview criteria", () => {
+test("the practice rubric uses five stable Med interview criteria", () => {
   assert.equal(RUBRIC_CRITERIA.length, 5);
   assert.deepEqual(RUBRIC_CRITERIA, [
     "Relevance and motivation",

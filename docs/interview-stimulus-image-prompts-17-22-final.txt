@@ -1,4 +1,4 @@
-MEDICFOREST INTERVIEW STIMULI 17–22 — FINAL PROMPTS AND REVIEW
+MEDICFOREST INTERVIEW STIMULI 17–22 - FINAL PROMPTS AND REVIEW
 
 Generated and edited with the built-in imagegen tool.
 These final prompts supersede original prompts 17–22.
@@ -20,7 +20,7 @@ No material content corrections identified in 11–16. Full-size images should b
 ============================================================
 17. iq-19-002-group-tasks.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a clean finance ledger in pale mint, charcoal and forest green. Large budget figure at top left, thin ruled table across the lower two-thirds; professional serif title and tabular numerals. No cards, icons or decorative charts.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a clean finance ledger in pale mint, charcoal and forest green. Large budget figure at top left, thin ruled table across the lower two-thirds; professional serif title and tabular numerals. No cards, icons or decorative charts.
 Title "Allocate an NHS improvement budget".
 Budget display "£10 million".
 Small brief "Choose whole projects. Total spending must not exceed £10m."
@@ -38,7 +38,7 @@ Do not preselect rows, total any package, show a budget already allocated or add
 ============================================================
 18. iq-19-003-group-tasks.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: illustrated outdoor equipment inventory on off-white paper, very faint contour lines behind the margins, dark olive headings. Ten realistic illustrated objects in a tidy TWO-ROW by FIVE-COLUMN grid. All objects equally prominent with generous spacing; no item highlighted. Each labelled once underneath. No card boxes, paragraphs or extra equipment.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: illustrated outdoor equipment inventory on off-white paper, very faint contour lines behind the margins, dark olive headings. Ten realistic illustrated objects in a tidy TWO-ROW by FIVE-COLUMN grid. All objects equally prominent with generous spacing; no item highlighted. Each labelled once underneath. No card boxes, paragraphs or extra equipment.
 Title "Overnight on the mountain".
 Short context line "Four adults • Rain • 3°C overnight • Dusk in 30 minutes".
 Instruction "You can keep five items. Agree your choices."
@@ -64,7 +64,7 @@ Correct the background and typography only. Replace ALL backdrop, including the 
 ============================================================
 19. iq-19-008-group-tasks.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: four paper patient files in an evenly spaced 2×2 layout on a pale cool-grey desk background. Small slate-blue binder clips; dark ink and burgundy letter tabs A–D, same size and styling for all. Crisp readable text; no portraits, clinical equipment, coloured triage flags or extra icons.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: four paper patient files in an evenly spaced 2×2 layout on a pale cool-grey desk background. Small slate-blue binder clips; dark ink and burgundy letter tabs A–D, same size and styling for all. Crisp readable text; no portraits, clinical equipment, coloured triage flags or extra icons.
 Title "Who should be assessed first?"
 Subtitle "You are a student on placement. A clinician is nearby."
 File A:
@@ -94,7 +94,7 @@ Do not order by severity or add diagnoses, vital signs, treatment, red warning m
 ============================================================
 20. iq-20-001-prioritisation-stations.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a high-contrast hospital assessment board, dark navy background, white text, thin steel-blue separators. Five equal horizontal rows, styled like a clear arrivals display. Use plain letter IDs A–E in identical neutral badges. No cards, photos or colour-coded urgency. Large column labels and generous spacing.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a high-contrast hospital assessment board, dark navy background, white text, thin steel-blue separators. Five equal horizontal rows, styled like a clear arrivals display. Use plain letter IDs A–E in identical neutral badges. No cards, photos or colour-coded urgency. Large column labels and generous spacing.
 Title "Prioritise the assessment queue".
 Subtitle "Five people need attention. Clinical help is available."
 Columns "ID" | "Reported concern" | "Known detail".
@@ -105,13 +105,13 @@ Rows:
 "D" | "Routine medication refill" | "Supply lasts three more days"
 "E" | "Deep cut" | "Bleeding controlled by pressure"
 Bottom task "Explain priorities, immediate safety actions and how you would communicate delays."
-Small footer "Fictional interview scenario • Do not diagnose".
+Small footer "Fictional Med interview scenario • Do not diagnose".
 Keep all five rows equally styled. No urgency labels, alert triangles, diagnoses, medical treatment or ranked numbering.
 
 ============================================================
 21. iq-20-002-prioritisation-stations.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a student's cork noticeboard with five pale-yellow notes pinned in a deliberately NON-SEQUENTIAL arrangement, all equal size and readable upright. Thin charcoal handwritten-style print, consistent font size. Small abstract room backdrop only; text dominates. All notes same colour and prominence. No checked boxes, arrows, calendars or rankings.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a student's cork noticeboard with five pale-yellow notes pinned in a deliberately NON-SEQUENTIAL arrangement, all equal size and readable upright. Thin charcoal handwritten-style print, consistent font size. Small abstract room backdrop only; text dominates. All notes same colour and prominence. No checked boxes, arrows, calendars or rankings.
 Title on a white strip "Five tasks. Three immediate actions."
 Small subtitle "You are a student on placement."
 Five distinct notes with identifiers A–E and exactly these words:
@@ -131,7 +131,7 @@ Change only the areas OUTSIDE the wooden noticeboard frame. Remove all writing o
 ============================================================
 22. iq-20-003-prioritisation-stations.png
 
-Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a realistic desktop team-inbox interface on a white background with pale lavender sidebar and subtle violet separators. This is a flat UI screenshot, not a phone mockup. Compact sender avatars with initials, a slim time column and short message previews. Five rows identical styling; none flagged urgent, selected, pinned or highlighted. Crisp sans-serif type.
+Use case: scientific-educational. Create one finished medical-school Med interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a realistic desktop team-inbox interface on a white background with pale lavender sidebar and subtle violet separators. This is a flat UI screenshot, not a phone mockup. Compact sender avatars with initials, a slim time column and short message previews. Five rows identical styling; none flagged urgent, selected, pinned or highlighted. Crisp sans-serif type.
 Header "Team inbox".
 Subheading "Requests arriving at 10:00".
 Five rows, each timestamp "10:00":

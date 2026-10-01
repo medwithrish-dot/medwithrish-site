@@ -2,7 +2,7 @@ import { INTERVIEW_QUESTIONS } from "../_data/interviewQuestionBank";
 
 export type InterviewerVoice = "female" | "male";
 
-// questions.csv rows 1-561 are the interview bank in this exact order. The
+// questions.csv rows 1-561 are the Med interview bank in this exact order. The
 // remaining rows are authored station/guide prompts that do not have bank IDs.
 const SUPPLEMENTAL_AUDIO_QUESTIONS = [
   "Why do you want to study medicine and become a doctor?",

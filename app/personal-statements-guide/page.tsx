@@ -80,7 +80,7 @@ export default function PersonalStatementsGuidePage() {
 
           <div className="mt-5 space-y-5 text-base leading-8 text-gray-700">
             <p>
-              For medicine, many universities do not heavily score the personal statement. However, it can still matter for certain universities and may be used as a discussion point at interview.
+              For medicine, many universities do not heavily score the personal statement. However, it can still matter for certain universities and may be used as a discussion point at Med interview.
             </p>
 
             <p>

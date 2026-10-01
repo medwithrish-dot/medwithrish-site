@@ -1756,7 +1756,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "Both statements confirm no overlap exists between the two groups. Two completely separate circles represent this mutual exclusion. Option B shows overlap, and Options C and D show one set contained within the other — none of which are consistent with 'no radiographer is a surgeon'.",
+        "Both statements confirm no overlap exists between the two groups. Two completely separate circles represent this mutual exclusion. Option B shows overlap, and Options C and D show one set contained within the other - none of which are consistent with 'no radiographer is a surgeon'.",
     },
     {
       id: "dm-venn-select-002",
@@ -1830,7 +1830,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "B",
       explanation:
-        "'All ward nurses are registered nurses' means every ward nurse belongs to the registered nurse group — so the Ward Nurses circle must sit entirely inside the Registered Nurses circle. 'Some registered nurses are not ward nurses' confirms registered nurses is the larger set. Option B shows Ward Nurses (small) inside Registered Nurses (large). Option C reverses the containment, Option A shows overlap only, and Option D shows complete separation.",
+        "'All ward nurses are registered nurses' means every ward nurse belongs to the registered nurse group - so the Ward Nurses circle must sit entirely inside the Registered Nurses circle. 'Some registered nurses are not ward nurses' confirms registered nurses is the larger set. Option B shows Ward Nurses (small) inside Registered Nurses (large). Option C reverses the containment, Option A shows overlap only, and Option D shows complete separation.",
     },
     {
       id: "dm-venn-select-003",
@@ -1905,7 +1905,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "C",
       explanation:
-        "'Some cardiologists do not hold grants' rules out containment (not all cardiologists are inside the grant circle). 'Some grant holders are not cardiologists' rules out the reverse containment. Only partial overlap satisfies both conditions. Option C shows two overlapping circles with regions outside each — the correct representation. Options A and B show containment, Option D shows complete separation.",
+        "'Some cardiologists do not hold grants' rules out containment (not all cardiologists are inside the grant circle). 'Some grant holders are not cardiologists' rules out the reverse containment. Only partial overlap satisfies both conditions. Option C shows two overlapping circles with regions outside each - the correct representation. Options A and B show containment, Option D shows complete separation.",
     },
     {
       id: "dm-venn-select-004",
@@ -2064,7 +2064,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "'All trauma surgeons are surgeons' puts the Trauma circle inside Surgeons. 'No trauma surgeon is a GP' means Trauma and GP circles must not touch. 'Some surgeons are GPs' means the GP circle overlaps with Surgeons (but extends outside since not all surgeons are GPs). Option A shows Trauma inside Surgeons with GPs overlapping Surgeons but not touching Trauma. Option B puts both Trauma and GPs inside Surgeons as non-overlapping subsets — wrong because 'some surgeons are GPs' only means partial overlap, not full containment. Option C shows all three separate. Option D shows Trauma and GPs overlapping inside Surgeons, violating 'no trauma surgeon is a GP'.",
+        "'All trauma surgeons are surgeons' puts the Trauma circle inside Surgeons. 'No trauma surgeon is a GP' means Trauma and GP circles must not touch. 'Some surgeons are GPs' means the GP circle overlaps with Surgeons (but extends outside since not all surgeons are GPs). Option A shows Trauma inside Surgeons with GPs overlapping Surgeons but not touching Trauma. Option B puts both Trauma and GPs inside Surgeons as non-overlapping subsets - wrong because 'some surgeons are GPs' only means partial overlap, not full containment. Option C shows all three separate. Option D shows Trauma and GPs overlapping inside Surgeons, violating 'no trauma surgeon is a GP'.",
     },
 
     {
@@ -2383,7 +2383,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "'All clinical psychologists are psychologists' puts Clinical Psychologists inside Psychologists. 'No clinical psychologist is a psychiatrist' means the Clinical Psychologists and Psychiatrists circles must not touch. The statements say nothing about the relationship between Psychologists and Psychiatrists, so they may or may not overlap. Option A shows Clinical Psychologists inside Psychologists, with Psychiatrists completely separate from both. Option B places Psychiatrists inside Psychologists overlapping with Clinical Psychologists — violating the third statement. Option C shows all three as separate circles. Option D places Clinical Psychologists in the overlap between Psychologists and Psychiatrists, violating the third statement.",
+        "'All clinical psychologists are psychologists' puts Clinical Psychologists inside Psychologists. 'No clinical psychologist is a psychiatrist' means the Clinical Psychologists and Psychiatrists circles must not touch. The statements say nothing about the relationship between Psychologists and Psychiatrists, so they may or may not overlap. Option A shows Clinical Psychologists inside Psychologists, with Psychiatrists completely separate from both. Option B places Psychiatrists inside Psychologists overlapping with Clinical Psychologists - violating the third statement. Option C shows all three as separate circles. Option D places Clinical Psychologists in the overlap between Psychologists and Psychiatrists, violating the third statement.",
     },
     {
       id: "dm-venn-select-010",
@@ -2463,7 +2463,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "B",
       explanation:
-        "'All ICU nurses work night shifts' places ICU Nurses entirely inside Night Shift Workers. 'Some ward nurses work night shifts' and 'some do not' means Ward Nurses partially overlaps Night Shift Workers. 'No ICU nurse is a general ward nurse' means ICU Nurses and Ward Nurses circles must not touch. Option B shows ICU Nurses (small, inside Night Shift), with Ward Nurses partially overlapping Night Shift Workers from the other side, keeping clear of ICU Nurses. Option A puts both ICU and Ward Nurses as separate, fully contained subsets of Night Shift Workers — violating 'some ward nurses do not work night shifts'. Option D shows Ward Nurses overlapping both Night Shift Workers and ICU Nurses, violating the fourth statement. Option C shows all three separate.",
+        "'All ICU nurses work night shifts' places ICU Nurses entirely inside Night Shift Workers. 'Some ward nurses work night shifts' and 'some do not' means Ward Nurses partially overlaps Night Shift Workers. 'No ICU nurse is a general ward nurse' means ICU Nurses and Ward Nurses circles must not touch. Option B shows ICU Nurses (small, inside Night Shift), with Ward Nurses partially overlapping Night Shift Workers from the other side, keeping clear of ICU Nurses. Option A puts both ICU and Ward Nurses as separate, fully contained subsets of Night Shift Workers - violating 'some ward nurses do not work night shifts'. Option D shows Ward Nurses overlapping both Night Shift Workers and ICU Nurses, violating the fourth statement. Option C shows all three separate.",
     },
 
     // ── dm-venn-select: numerical data diagram selection ────────────────────
@@ -2555,7 +2555,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "C",
       explanation:
-        "Biology-only = 60 − 25 = 35. Chemistry-only = 50 − 25 = 25. Both = 25. Option C correctly shows 35 | 25 | 25. Option A uses 35 as the overlap value instead of 25 — a common error of using the Biology-only count in the wrong region. Option B places the raw totals (60 and 50) as region values, forgetting to subtract the overlap. Option D swaps the overlap (25) and the Biology-only (35) values.",
+        "Biology-only = 60 − 25 = 35. Chemistry-only = 50 − 25 = 25. Both = 25. Option C correctly shows 35 | 25 | 25. Option A uses 35 as the overlap value instead of 25 - a common error of using the Biology-only count in the wrong region. Option B places the raw totals (60 and 50) as region values, forgetting to subtract the overlap. Option D swaps the overlap (25) and the Biology-only (35) values.",
     },
     {
       id: "dm-venn-select-012",
@@ -2644,7 +2644,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "IV-only = 54 − 18 = 36. Venepuncture-only = 42 − 18 = 24. Both = 18. Option A correctly shows 36 | 18 | 24. Option B places the raw totals (54 and 42) as region values — a common trap of forgetting to subtract the overlap. Option C uses 36 for both 'only' regions (treating the two groups as equal size, which is wrong). Option D swaps the overlap and IV-only values.",
+        "IV-only = 54 − 18 = 36. Venepuncture-only = 42 − 18 = 24. Both = 18. Option A correctly shows 36 | 18 | 24. Option B places the raw totals (54 and 42) as region values - a common trap of forgetting to subtract the overlap. Option C uses 36 for both 'only' regions (treating the two groups as equal size, which is wrong). Option D swaps the overlap and IV-only values.",
     },
     {
       id: "dm-venn-select-013",
@@ -2755,7 +2755,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "T2D-only = 72 − 18 − 12 − 8 = 34. HTN-only = 90 − 18 − 20 − 8 = 44. HC-only = 55 − 12 − 20 − 8 = 15. Option A correctly shows 34 | 44 | 15 for the 'only' regions with the stated overlap values. Option B uses the raw condition totals (72, 90, 55) as the 'only' region values — forgetting to subtract all overlaps. Option C swaps the T2D+HTN-only (18) with the all-three (8) values. Option D uses 52 for HTN-only instead of 44 — an arithmetic error.",
+        "T2D-only = 72 − 18 − 12 − 8 = 34. HTN-only = 90 − 18 − 20 − 8 = 44. HC-only = 55 − 12 − 20 − 8 = 15. Option A correctly shows 34 | 44 | 15 for the 'only' regions with the stated overlap values. Option B uses the raw condition totals (72, 90, 55) as the 'only' region values - forgetting to subtract all overlaps. Option C swaps the T2D+HTN-only (18) with the all-three (8) values. Option D uses 52 for HTN-only instead of 44 - an arithmetic error.",
     },
     {
       id: "dm-venn-select-014",
@@ -2956,7 +2956,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "Half of 92 cardiothoracic = 46 prefer combining with transplant → C∩T only = 46. C-only = 92 − 46 = 46. P∩T only = 15. P-only = 35 − 15 = 20. T-only = 78 − 46 − 15 = 17. No all-three stated, so all-three = 0. Option A shows these values correctly. Option B adds a spurious all-three value of 5, distorting the counts. Option C uses the raw plastic total (35) as Plastic-only rather than subtracting the P∩T overlap (35 − 15 = 20). Option D uses 32 for Transplant-only instead of 17 — failing to subtract both overlaps.",
+        "Half of 92 cardiothoracic = 46 prefer combining with transplant → C∩T only = 46. C-only = 92 − 46 = 46. P∩T only = 15. P-only = 35 − 15 = 20. T-only = 78 − 46 − 15 = 17. No all-three stated, so all-three = 0. Option A shows these values correctly. Option B adds a spurious all-three value of 5, distorting the counts. Option C uses the raw plastic total (35) as Plastic-only rather than subtracting the P∩T overlap (35 − 15 = 20). Option D uses 32 for Transplant-only instead of 17 - failing to subtract both overlaps.",
     },
 
     {
@@ -3137,7 +3137,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "HTN-only = 88 − 30 = 58. T2D-only = 72 − 30 = 42. Both = 30. Neither = 160 − (58 + 30 + 42) = 160 − 130 = 30. Option A correctly shows 58 | 30 | 42. Option B places the raw totals (88 and 72) as region values — the classic trap of forgetting to subtract the overlap. Option C swaps the T2D-only (42) and Both (30) values. Option D swaps HTN-only (58) with Both (30).",
+        "HTN-only = 88 − 30 = 58. T2D-only = 72 − 30 = 42. Both = 30. Neither = 160 − (58 + 30 + 42) = 160 − 130 = 30. Option A correctly shows 58 | 30 | 42. Option B places the raw totals (88 and 72) as region values - the classic trap of forgetting to subtract the overlap. Option C swaps the T2D-only (42) and Both (30) values. Option D swaps HTN-only (58) with Both (30).",
     },
     {
       id: "dm-venn-select-018",
@@ -3338,7 +3338,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "L-only = 75 − 20 − 15 − 5 = 35. R-only = 60 − 20 − 12 − 5 = 23. CG-only = 55 − 15 − 12 − 5 = 23. All-three = 5. Option A shows these correct values. Option B uses raw programme totals (75, 60, 55) in the 'only' regions. Option C uses 15 for all-three instead of 5 — a confusion with the L∩CG-only value. Option D uses 28 for R-only (60 − 20 − 12 = 28, forgetting to subtract the all-three component of 5).",
+        "L-only = 75 − 20 − 15 − 5 = 35. R-only = 60 − 20 − 12 − 5 = 23. CG-only = 55 − 15 − 12 − 5 = 23. All-three = 5. Option A shows these correct values. Option B uses raw programme totals (75, 60, 55) in the 'only' regions. Option C uses 15 for all-three instead of 5 - a confusion with the L∩CG-only value. Option D uses 28 for R-only (60 − 20 − 12 = 28, forgetting to subtract the all-three component of 5).",
     },
     {
       id: "dm-venn-select-020",
@@ -3428,7 +3428,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "Published-only = 90 − 45 = 45. Presented-only = 105 − 45 = 60. Both = 45. Option A correctly shows 45 | 45 | 60. Option B uses the raw totals (90 and 105) as region values. Option C uses 60 as the overlap rather than 45, and 45 as Presented-only rather than 60 — swapping the two values. Option D halves the overlap to 30 and uses 60 for both 'only' regions, which is internally inconsistent (60+30+60=150, leaving 50 unaccounted of the 200 total).",
+        "Published-only = 90 − 45 = 45. Presented-only = 105 − 45 = 60. Both = 45. Option A correctly shows 45 | 45 | 60. Option B uses the raw totals (90 and 105) as region values. Option C uses 60 as the overlap rather than 45, and 45 as Presented-only rather than 60 - swapping the two values. Option D halves the overlap to 30 and uses 60 for both 'only' regions, which is internally inconsistent (60+30+60=150, leaving 50 unaccounted of the 200 total).",
     },
 
     {
@@ -3536,7 +3536,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "R-only = 85 − 22 − 15 − 8 = 40. V-only = 70 − 22 − 18 − 8 = 22. S-only = 60 − 15 − 18 − 8 = 19. All-three = 8. Option A shows these correct values. Option B puts the raw set totals (85, 70, 60) in the 'only' regions — forgetting to subtract overlaps. Option C subtracts the pairwise overlaps but forgets to subtract the all-three value (e.g. R-only = 85 − 22 − 15 = 48 instead of 40). Option D uses 5 as the all-three value instead of the stated 8.",
+        "R-only = 85 − 22 − 15 − 8 = 40. V-only = 70 − 22 − 18 − 8 = 22. S-only = 60 − 15 − 18 − 8 = 19. All-three = 8. Option A shows these correct values. Option B puts the raw set totals (85, 70, 60) in the 'only' regions - forgetting to subtract overlaps. Option C subtracts the pairwise overlaps but forgets to subtract the all-three value (e.g. R-only = 85 − 22 − 15 = 48 instead of 40). Option D uses 5 as the all-three value instead of the stated 8.",
     },
     {
       id: "dm-venn-select-022",
@@ -3622,7 +3622,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "CL-only = 110 − 35 = 75. RA-only = 80 − 35 = 45. Both = 35. Option A correctly shows 75 | 35 | 45. Option B places the raw set totals (110 and 80) as the 'only' region values. Option C swaps CL-only (75) and Both (35). Option D swaps the RA-only (45) and Both (35) values — using 45 as the overlap and 35 as the RA-only region.",
+        "CL-only = 110 − 35 = 75. RA-only = 80 − 35 = 45. Both = 35. Option A correctly shows 75 | 35 | 45. Option B places the raw set totals (110 and 80) as the 'only' region values. Option C swaps CL-only (75) and Both (35). Option D swaps the RA-only (45) and Both (35) values - using 45 as the overlap and 35 as the RA-only region.",
     },
     {
       id: "dm-venn-select-023",
@@ -3729,7 +3729,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "H-only = 60 − 14 − 10 − 5 = 31. D-only = 50 − 14 − 8 − 5 = 23. O-only = 40 − 10 − 8 − 5 = 17. All-three = 5. Option A shows the correct values. Option B uses raw condition totals in the 'only' regions. Option C subtracts only pairwise overlaps without the all-three: H-only = 60 − 14 − 10 = 36. Option D replaces all-three (5) with 8 — confusing it with the D∩O-only value.",
+        "H-only = 60 − 14 − 10 − 5 = 31. D-only = 50 − 14 − 8 − 5 = 23. O-only = 40 − 10 − 8 − 5 = 17. All-three = 5. Option A shows the correct values. Option B uses raw condition totals in the 'only' regions. Option C subtracts only pairwise overlaps without the all-three: H-only = 60 − 14 − 10 = 36. Option D replaces all-three (5) with 8 - confusing it with the D∩O-only value.",
     },
     {
       id: "dm-venn-select-024",
@@ -3923,7 +3923,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "AAA-only = 100 − 18 − 14 − 6 = 62. WE-only = 70 − 18 − 10 − 6 = 36. UCAT-only = 65 − 14 − 10 − 6 = 35. All-three = 6. Option A is correct. Option B places raw criterion totals in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: AAA-only = 100 − 18 − 14 = 68. Option D changes all-three from 6 to 10 — confusing it with the WE∩UCAT-only value.",
+        "AAA-only = 100 − 18 − 14 − 6 = 62. WE-only = 70 − 18 − 10 − 6 = 36. UCAT-only = 65 − 14 − 10 − 6 = 35. All-three = 6. Option A is correct. Option B places raw criterion totals in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: AAA-only = 100 − 18 − 14 = 68. Option D changes all-three from 6 to 10 - confusing it with the WE∩UCAT-only value.",
     },
     {
       id: "dm-venn-select-026",
@@ -4009,7 +4009,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "Prescription-only = 140 − 45 = 95. HealthScreening-only = 100 − 45 = 55. Both = 45. Option A shows 95 | 45 | 55 — correct. Option B places the raw service totals as region values. Option C swaps the two 'only' values (putting Prescription-only where HS-only should be and vice versa). Option D swaps the HS-only (55) with the overlap (45).",
+        "Prescription-only = 140 − 45 = 95. HealthScreening-only = 100 − 45 = 55. Both = 45. Option A shows 95 | 45 | 55 - correct. Option B places the raw service totals as region values. Option C swaps the two 'only' values (putting Prescription-only where HS-only should be and vice versa). Option D swaps the HS-only (55) with the overlap (45).",
     },
     {
       id: "dm-venn-select-027",
@@ -4116,7 +4116,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "C-only = 65 − 18 − 12 − 6 = 29. R-only = 55 − 18 − 10 − 6 = 21. GS-only = 50 − 12 − 10 − 6 = 22. All-three = 6. Option A is correct. Option B uses raw rotation totals. Option C subtracts only the pairwise overlaps (ignoring all-three): C-only = 65 − 18 − 12 = 35. Option D replaces all-three (6) with 12 — confusing it with the C∩GS-only value.",
+        "C-only = 65 − 18 − 12 − 6 = 29. R-only = 55 − 18 − 10 − 6 = 21. GS-only = 50 − 12 − 10 − 6 = 22. All-three = 6. Option A is correct. Option B uses raw rotation totals. Option C subtracts only the pairwise overlaps (ignoring all-three): C-only = 65 − 18 − 12 = 35. Option D replaces all-three (6) with 12 - confusing it with the C∩GS-only value.",
     },
     {
       id: "dm-venn-select-028",
@@ -4309,7 +4309,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "AC-only = 80 − 15 − 10 − 5 = 50. CM-only = 75 − 15 − 12 − 5 = 43. MH-only = 60 − 10 − 12 − 5 = 33. All-three = 5. Option A is correct. Option B uses the raw placement totals (80, 75, 60). Option C subtracts only the two pairwise overlaps per set without the all-three: AC-only = 80 − 15 − 10 = 55. Option D changes all-three to 10 — confusing it with the AC∩MH-only value.",
+        "AC-only = 80 − 15 − 10 − 5 = 50. CM-only = 75 − 15 − 12 − 5 = 43. MH-only = 60 − 10 − 12 − 5 = 33. All-three = 5. Option A is correct. Option B uses the raw placement totals (80, 75, 60). Option C subtracts only the two pairwise overlaps per set without the all-three: AC-only = 80 − 15 − 10 = 55. Option D changes all-three to 10 - confusing it with the AC∩MH-only value.",
     },
     {
       id: "dm-venn-select-030",
@@ -4416,7 +4416,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "A",
       explanation:
-        "CPR-only = 95 − 20 − 15 − 5 = 55. SG-only = 70 − 20 − 10 − 5 = 35. FS-only = 60 − 15 − 10 − 5 = 30. All-three = 5. Option A is correct. Option B places the raw training totals (95, 70, 60) in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: CPR-only = 95 − 20 − 15 = 60. Option D replaces all-three (5) with 20 — confusing it with the CPR∩SG-only value.",
+        "CPR-only = 95 − 20 − 15 − 5 = 55. SG-only = 70 − 20 − 10 − 5 = 35. FS-only = 60 − 15 − 10 − 5 = 30. All-three = 5. Option A is correct. Option B places the raw training totals (95, 70, 60) in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: CPR-only = 95 − 20 − 15 = 60. Option D replaces all-three (5) with 20 - confusing it with the CPR∩SG-only value.",
     },
 
     {

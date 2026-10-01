@@ -50,7 +50,7 @@ def generate_audio(client, question_id, question, voice_type, voice_name, *, for
         return
 
     if dry_run:
-        print(f"Would create {voice_type}: {filename.name} — {question}")
+        print(f"Would create {voice_type}: {filename.name} - {question}")
         return
 
     synthesis_input = texttospeech.SynthesisInput(text=question)

@@ -11,7 +11,7 @@ const stages = [
     number: "01",
     title: "GCSEs",
     description:
-      "Build strong academic foundations early and keep as many options open as possible for medicine or dentistry. High-end unis often require strong GCSE's to progress to an interview and weigh them heavily. Other unis only ask for a minimum set of GCSE grades in order to progress to the next cutoff stage. Click below to find out more!",
+      "Build strong academic foundations early and keep as many options open as possible for medicine or dentistry. High-end unis often require strong GCSE's to progress to a Med interview and weigh them heavily. Other unis only ask for a minimum set of GCSE grades in order to progress to the next cutoff stage. Click below to find out more!",
     buttons: [
       {
         label: "Click here to access the GCSE revision guide",
@@ -29,7 +29,7 @@ const stages = [
     number: "02",
     title: "Work Experience & Supercurriculars",
     description:
-      "Gain insight into healthcare, develop reflection skills, and begin showing commitment to medicine or dentistry. Often people misunderstand what work experience and supercurriculars are needed for your application - it is only useful within your personal statement which is disregarded by most med/dent schools, and also as talking points for interview. Click below to find out what you actually need to learn within work experience!",
+      "Gain insight into healthcare, develop reflection skills, and begin showing commitment to medicine or dentistry. Often people misunderstand what work experience and supercurriculars are needed for your application - it is only useful within your personal statement which is disregarded by most med/dent schools, and also as talking points for Med interview. Click below to find out what you actually need to learn within work experience!",
     buttons: [
       {
         label: "Click here to access the work experience guide",
@@ -60,7 +60,7 @@ const stages = [
     number: "04",
     title: "UCAT",
     description:
-      "The UCAT is one of the most important parts of the application and can heavily influence interview chances. It is often HEAVILY weighted and a difficult exam testing logic, critical thinking, ethical reasoning and accuracy under time pressure. It is important to aim at a minimum of the top 70% for med, and top 40% for dentistry as a minimum. This is with strategic applications. Often, most universities have automated UCAT cut-offs and reject anybody below, as well as anybody who doesn't meet the SJT band minimum. Click below for highly specialised UCAT notes.",
+      "The UCAT is one of the most important parts of the application and can heavily influence Med interview chances. It is often HEAVILY weighted and a difficult exam testing logic, critical thinking, ethical reasoning and accuracy under time pressure. It is important to aim at a minimum of the top 70% for med, and top 40% for dentistry as a minimum. This is with strategic applications. Often, most universities have automated UCAT cut-offs and reject anybody below, as well as anybody who doesn't meet the SJT band minimum. Click below for highly specialised UCAT notes.",
     featured: true,
     buttons: [
        {
@@ -110,10 +110,10 @@ const stages = [
     number: "06",
     title: "Interviews",
     description:
-      "Strong interview preparation helps students communicate clearly, think ethically, and perform confidently under pressure. Medicine/dentistry interviews are a hurdle students are unfamiliar with and often fail at. It is highly important to prepare carefully and invest a lot of time into practice. Interviews test communication, personality and critical thinking generally. Fortunately, we've prepared a FREE medicine interviews guide that has helped 300+ students. Click below for more!",
+      "Strong Med interview preparation helps students communicate clearly, think ethically, and perform confidently under pressure. Medicine/dentistry interviews are a hurdle students are unfamiliar with and often fail at. It is highly important to prepare carefully and invest a lot of time into practice. Interviews test communication, personality and critical thinking generally. Fortunately, we've prepared a FREE medicine interviews guide that has helped 300+ students. Click below for more!",
     buttons: [
       {
-        label: "Click here for the interview prep hub",
+        label: "Click here for the Med interview prep hub",
         href: "/interviews",
         variant: "primary",
       },
@@ -123,7 +123,7 @@ const stages = [
         variant: "secondary",
       },
       {
-        label: "Click here for medicine interview tutoring",
+        label: "Click here for medicine Med interview tutoring",
         href: "/interview-tutoring",
         variant: "tutoring",
       },

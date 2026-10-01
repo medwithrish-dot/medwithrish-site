@@ -24,7 +24,7 @@ export function groupSavedInterviews(attempts: SavedInterviewSummary[]) {
     const scores = stations.flatMap((station) => station.feedbackScore === null ? [] : [station.feedbackScore]);
     return {
       ...first,
-      title: `Interview - ${stations.length} of ${first.stationCount ?? stations.length} stations saved`,
+      title: `Med Interview - ${stations.length} of ${first.stationCount ?? stations.length} stations saved`,
       stationTitles: ordered.map((station) => station.title),
       feedbackScore: scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null,
     };

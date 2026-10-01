@@ -69,7 +69,7 @@
             <input id="users" type="number" min="1" max="100000000" step="1" value="1000" required>
           </div>
           <div>
-            <label for="feedback">Interview feedback / user / month</label>
+            <label for="feedback">Med Interview feedback / user / month</label>
             <input id="feedback" type="number" min="0" max="1000000" step="1" value="20" required aria-describedby="feedback-tokens">
             <span class="help" id="feedback-tokens">3,000 input + 1,000 output tokens per feedback.</span>
           </div>
@@ -79,7 +79,7 @@
             <span class="help" id="diagnostic-tokens">4,000 input + 1,200 output tokens per report.</span>
           </div>
           <div class="wide">
-            <label for="feedback-model">Interview feedback model</label>
+            <label for="feedback-model">Med Interview feedback model</label>
             <select id="feedback-model" aria-describedby="feedback-rate">
               <option value="gemini35">Gemini 3.5 Flash-Lite</option>
               <option value="gemini25">Gemini 2.5 Flash-Lite</option>
@@ -167,7 +167,7 @@
         <div class="breakdown">
           <h2>AI cost per user, before contingency</h2>
           <dl>
-            <div class="row"><dt>Interview feedback</dt><dd><output id="feedback-cost">£0.0510</output></dd></div>
+            <div class="row"><dt>Med Interview feedback</dt><dd><output id="feedback-cost">£0.0510</output></dd></div>
             <div class="row"><dt>Diagnostic reports</dt><dd><output id="diagnostic-cost">£0.0600</output></dd></div>
             <div class="row"><dt>Final transcription</dt><dd><output id="transcription-cost">£0.2700</output></dd></div>
             <div class="row"><dt>New voice generation</dt><dd><output id="voice-cost">£0.0000</output></dd></div>
@@ -179,7 +179,7 @@
           <h2>One free feedback credit</h2>
           <p class="subtle">One feedback report + six minutes of final transcription, including AI contingency.</p>
           <p class="credit-value"><output id="free-credit">£0.0193</output></p>
-          <p class="subtle">Text only: <output id="text-credit">£0.0031</output>. A credit is a platform usage allowance, not a single model token. Both estimates use the selected interview model and exclude shared infrastructure.</p>
+          <p class="subtle">Text only: <output id="text-credit">£0.0031</output>. A credit is a platform usage allowance, not a single model token. Both estimates use the selected Med interview model and exclude shared infrastructure.</p>
         </div>
       </div>
     </section>
@@ -187,7 +187,7 @@
 
   <aside class="notes" aria-labelledby="notes-heading">
     <h2 id="notes-heading">Read the assumptions with the numbers</h2>
-    <p>These are scenarios, not measured production usage or quotes. Output-token allowances must include all billable reasoning tokens; a long thinking response will cost more. Final transcription is billed once per recording in this scenario. Live conversational voice, streaming transcription, dynamic interview follow-up text, batch/cache discounts and one-time library narration are not included. For an adaptive interview, increase the feedback count or model its additional calls separately.</p>
+    <p>These are scenarios, not measured production usage or quotes. Output-token allowances must include all billable reasoning tokens; a long thinking response will cost more. Final transcription is billed once per recording in this scenario. Live conversational voice, streaming transcription, dynamic Med interview follow-up text, batch/cache discounts and one-time library narration are not included. For an adaptive Med interview, increase the feedback count or model its additional calls separately.</p>
     <p>The infrastructure allowance must be reviewed as traffic and retained recordings grow. Cached playback still uses storage and bandwidth. Tax, payment fees, support, content work, marketing and other business costs are excluded. No quality ranking is implied by model prices; compare feedback with human marking before switching.</p>
     <p>Formula: monthly AI = users × (feedback + diagnostics + transcription + new voice costs per user) × exchange rate × (1 + contingency). Total = monthly AI + infrastructure. Published provider prices were checked on 8 September 2026; recheck them before budgeting.</p>
     <ul class="sources" aria-label="Official pricing sources">

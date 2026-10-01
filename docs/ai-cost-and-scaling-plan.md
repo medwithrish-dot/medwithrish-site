@@ -1,8 +1,8 @@
 AI operating and cost plan · 8 September 2026
 
-The practical launch approach is inexpensive text grading, polished question recordings served from a cache, and browser recording/playback. Add dependable paid transcription where needed. Choose the marking model by testing it against human-marked answers. Provider brands alone cannot establish which model gives the most useful, consistent interview feedback.
+The practical launch approach is inexpensive text grading, polished question recordings served from a cache, and browser recording/playback. Add dependable paid transcription where needed. Choose the marking model by testing it against human-marked answers. Provider brands alone cannot establish which model gives the most useful, consistent Med interview feedback.
 
-**12 September update:** the owner confirmed Free Tier, and personal Gemini 3.5 Flash-Lite feedback and answer-specific probes are enabled in the ignored local environment file. Other environments remain disabled until their matching key and `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true` are configured. 3.5 has free developer quota and passed a generation check; the cheaper 2.5 model rejected this key as unavailable to new users. Keep the key's project unlinked from billing; there is no automatic paid fallback. The inventory and cost estimates below are a historical 8 September snapshot and exclude the new probes. See [interview AI setup and follow-up costs](interview-ai-setup.md) for activation, tier verification and a current comparison.
+**12 September update:** the owner confirmed Free Tier, and personal Gemini 3.5 Flash-Lite feedback and answer-specific probes are enabled in the ignored local environment file. Other environments remain disabled until their matching key and `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true` are configured. 3.5 has free developer quota and passed a generation check; the cheaper 2.5 model rejected this key as unavailable to new users. Keep the key's project unlinked from billing; there is no automatic paid fallback. The inventory and cost estimates below are a historical 8 September snapshot and exclude the new probes. See [Med interview AI setup and follow-up costs](interview-ai-setup.md) for activation, tier verification and a current comparison.
 
 This document is a proposal and cost model. The accompanying practice-pathway work changes the learning plan; it does not switch providers, add paid speech, install a queue, change allowances or establish production capacity. The figures are estimates, not measured bills. The [interactive calculator](ai-cost-calculator.html) lets you change usage and prices.
 
@@ -10,17 +10,17 @@ This document is a proposal and cost model. The accompanying practice-pathway wo
 
 | Feature | Current implementation | Per-use model charge? |
 | --- | --- | --- |
-| AI interview feedback | Server-side Gemini `gemini-3.5-flash-lite`, configurable through an environment variable; one assessment after a station | Yes |
+| AI Med interview feedback | Server-side Gemini `gemini-3.5-flash-lite`, configurable through an environment variable; one assessment after a station | Yes |
 | UCAT diagnostic report | Server-side `claude-haiku-4-5-20251001`; can combine sections from a saved mock | Yes |
-| Interview questions and follow-ups | A predefined catalogue at this snapshot; see the 12 September update for generated probes | No at this snapshot |
-| Interview question-bank marking | Manual checklist; the AI Feedback button is currently disabled | No |
+| Med Interview questions and follow-ups | A predefined catalogue at this snapshot; see the 12 September update for generated probes | No at this snapshot |
+| Med Interview question-bank marking | Manual checklist; the AI Feedback button is currently disabled | No |
 | Guides and seven-stage learning pathway | Curated content and deterministic progression | No |
 | Recording, playback, mic meter and speech hints | Browser APIs and local heuristics | No paid model integration |
 | Speech recognition/read-aloud | Browser Web Speech APIs | No API bill to the platform; availability and quality depend on the browser/service |
 | Rishbot sample question | Static API response | No |
 | One-to-one personal statement tutoring | Human-led session; no submission or payment workflow in this site | No |
 
-The current interview allowances are **free: 2 starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days**. These count starts, including abandoned attempts. Each mock station counts separately. UCAT is separate: one lifetime free diagnostic credit, or one premium credit per 24 hours. A seven-station mock therefore consumes seven interview attempts, not one. These are not a single shared AI-credit wallet.
+The current Med interview allowances are **free: 2 starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days**. These count starts, including abandoned attempts. Each mock station counts separately. UCAT is separate: one lifetime free diagnostic credit, or one premium credit per 24 hours. A seven-station mock therefore consumes seven Med interview attempts, not one. These are not a single shared AI-credit wallet.
 
 **Model choice and the price of one credit**
 
@@ -30,7 +30,7 @@ Define a product credit as one completed feedback report. The provider's tokens 
 | --- | ---: | ---: | ---: |
 | Gemini 2.5 Flash-Lite | $0.10 / $0.40 | $0.00070 | $0.00088 |
 | OpenAI GPT-5.6 Luna | $0.20 / $1.20 | $0.00180 | $0.00224 |
-| Gemini 3.5 Flash-Lite (current interview model) | $0.30 / $2.50 | $0.00340 | $0.00420 |
+| Gemini 3.5 Flash-Lite (current Med interview model) | $0.30 / $2.50 | $0.00340 | $0.00420 |
 | Claude Haiku 4.5 (current diagnostic model) | $1.00 / $5.00 | $0.00800 | $0.01000 |
 
 These are ordinary uncached text rates, without tools, premium processing or batch discounts. Official sources: [Google pricing](https://ai.google.dev/gemini-api/docs/pricing?hl=en), [OpenAI Luna pricing and capabilities](https://developers.openai.com/api/docs/models/gpt-5.6-luna), [Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing). Recheck [Google model retirement dates](https://ai.google.dev/gemini-api/docs/deprecations) before adopting an older model.
@@ -39,11 +39,11 @@ For launch, retain Gemini 3.5 Flash-Lite for interviews and the existing Haiku d
 
 The current Gemini report is about **0.26p** at the planning assumption $1 = £0.75. With a 20% retry/usage reserve, allow roughly **0.31p** for text grading. Adding six minutes of final transcription at the published OpenAI mini-transcribe estimate of $0.003/min gives about **1.93p** for the station, assuming the examiner's audio is already cached. A budget of **1p per text-only credit or 2–5p per spoken trial** is a useful initial allowance, before shared hosting. A free UCAT diagnostic currently costs about 0.75p before the reserve. [OpenAI transcription pricing](https://developers.openai.com/api/docs/pricing)
 
-Actual cost formula: `(input tokens × input rate + billable output tokens × output rate) / 1,000,000`. Retry attempts can be billed even when the product does not produce a usable report. The current interview output cap is 1,800 tokens and the UCAT cap is 1,200; these examples are averages, not maximum-cost guarantees. Log actual usage rather than estimating from transcript characters indefinitely.
+Actual cost formula: `(input tokens × input rate + billable output tokens × output rate) / 1,000,000`. Retry attempts can be billed even when the product does not produce a usable report. The current Med interview output cap is 1,800 tokens and the UCAT cap is 1,200; these examples are averages, not maximum-cost guarantees. Log actual usage rather than estimating from transcript characters indefinitely.
 
 **Monthly user costs**
 
-The following uses the existing Gemini interview and Haiku diagnostic models. Each station contains six minutes of candidate speech. The improved-voice scenario adds one final transcription pass; it does not run a conversational voice model throughout the interview. Stock question audio is generated once and cached. GBP conversions use **$1 = £0.75 as a budgeting assumption, not a current exchange-rate quote**. The speech column includes a 20% usage/retry reserve.
+The following uses the existing Gemini Med interview and Haiku diagnostic models. Each station contains six minutes of candidate speech. The improved-voice scenario adds one final transcription pass; it does not run a conversational voice model throughout the Med interview. Stock question audio is generated once and cached. GBP conversions use **$1 = £0.75 as a budgeting assumption, not a current exchange-rate quote**. The speech column includes a 20% usage/retry reserve.
 
 | Monthly usage per person | Current text-model spend, USD | With final transcription and reserve, GBP |
 | --- | ---: | ---: |
@@ -90,7 +90,7 @@ Browser speech recognition may use an external browser-vendor service; it is not
 
 **Handling a busy launch**
 
-The repo already has authenticated server marking, bounded interview transcripts, database-enforced per-user quotas, grading locks, schema validation and reuse of finished feedback. Keep those. The main additions should be:
+The repo already has authenticated server marking, bounded Med interview transcripts, database-enforced per-user quotas, grading locks, schema validation and reuse of finished feedback. Keep those. The main additions should be:
 
 1. Save the final answer and create a durable assessment job. Return a saved/queued state quickly so closing or refreshing the page cannot lose the job. A queue still needs an actual worker and recovery mechanism; a fire-and-forget promise in a serverless request is insufficient. [Supabase Queues](https://supabase.com/docs/guides/queues) fits the existing database stack.
 2. Limit total jobs against each provider's requests and tokens per minute, with a small controlled worker pool. Retry transient 429/5xx/network errors with delay and jitter, respect `retry-after`, and cap retries. Queueing absorbs bursts but does not create extra provider capacity. Request higher account limits before launch. [OpenAI limits](https://developers.openai.com/api/docs/guides/rate-limits), [Google limits](https://ai.google.dev/gemini-api/docs/rate-limits), [Anthropic limits](https://platform.claude.com/docs/en/api/rate-limits)

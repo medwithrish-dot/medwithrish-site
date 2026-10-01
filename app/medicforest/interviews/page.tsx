@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     absolute: "MedicForest Interviews | 550+ free questions with markschemes",
   },
   description:
-    "Start practising immediately with 550+ free medicine and dentistry interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
+    "Start practising immediately with 550+ free medicine and dentistry Med interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
   alternates: { canonical: "/interviews" },
 };
 
@@ -39,7 +39,7 @@ const sampleHref = `${bankHref}?question=iq-01-001-motivation-for-medicine`;
 const features = [
   {
     title: "550+ free questions",
-    text: "Practise medicine and dentistry interview questions across a wide range of topics and station styles.",
+    text: "Practise medicine and dentistry Med interview questions across a wide range of topics and station styles.",
     icon: BookOpen,
     tone: "blue",
   },
@@ -57,7 +57,7 @@ const features = [
   },
   {
     title: "Personalised feedback",
-    text: "Understand your strengths, find areas to improve and put your AI interview feedback into practice.",
+    text: "Understand your strengths, find areas to improve and put your AI Med interview feedback into practice.",
     icon: Target,
     tone: "gold",
   },
@@ -110,7 +110,7 @@ function PracticeLinks() {
   return (
     <div className={styles.actions}>
       <Link className={styles.primary} href={bankHref}>
-        Start free interview practice{" "}
+        Start free Med interview practice{" "}
         <ArrowRight size={16} aria-hidden="true" />
       </Link>
       <Link className={styles.secondary} href={platformHref}>
@@ -133,7 +133,7 @@ function InterviewPreview() {
             <div>
               <h2>Background to medicine</h2>
               <p>
-                Station 1 of 7 <span>&middot;</span> AI interview
+                Station 1 of 7 <span>&middot;</span> AI Med interview
               </p>
             </div>
             <span className={styles.timer}>
@@ -245,10 +245,10 @@ export default function InterviewsPage() {
             <div className={styles.heroCopy}>
               <p className={styles.eyebrowPill}>
                 <Sparkles size={15} aria-hidden="true" />
-                <span>Medicine &amp; dentistry interview preparation</span>
+                <span>Medicine &amp; dentistry Med interview preparation</span>
               </p>
               <h1>
-                Medicine and Dentistry interview practice,
+                Medicine and Dentistry Med interview practice,
                 <br />
                 <span>made for you.</span>
               </h1>
@@ -261,7 +261,7 @@ export default function InterviewsPage() {
                 <BookOpen size={20} aria-hidden="true" />
                 <p>
                   <strong>
-                    550+ FREE interview questions with markschemes.
+                    550+ FREE Med interview questions with markschemes.
                   </strong>
                   <span>
                     Start practising immediately. Completely free of charge.
@@ -289,7 +289,7 @@ export default function InterviewsPage() {
         <section
           id="features"
           className={styles.features}
-          aria-label="Interview preparation features"
+          aria-label="Med Interview preparation features"
         >
           <div className={`${styles.container} ${styles.featureGrid}`}>
             {features.map(({ title, text, icon: Icon, tone }) => (
@@ -308,7 +308,7 @@ export default function InterviewsPage() {
           <div className={styles.container}>
             <div className={styles.sectionHeading}>
               <p className={styles.eyebrow}>
-                A clearer path to interview success
+                A clearer path to Med interview success
               </p>
               <h2>How it works</h2>
               <p>
@@ -345,7 +345,7 @@ export default function InterviewsPage() {
                 One less thing to worry about.
               </h2>
               <p className={styles.bankDescription}>
-                Your interview preparation starts here. Open the question bank,
+                Your Med interview preparation starts here. Open the question bank,
                 choose a topic and practise with a markscheme to guide you.
               </p>
               <div className={styles.stats}>
@@ -405,9 +405,9 @@ export default function InterviewsPage() {
           <Waves />
           <div className={styles.container}>
             <p className={styles.eyebrow}>Ready to practise?</p>
-            <h2>Start your free interview practice today</h2>
+            <h2>Start your free Med interview practice today</h2>
             <p>
-              Get immediate access to 550+ FREE interview questions with
+              Get immediate access to 550+ FREE Med interview questions with
               markschemes.
               <br />
               No subscription. No payment. Just open the bank and start.

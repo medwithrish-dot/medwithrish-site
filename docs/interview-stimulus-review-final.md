@@ -1,4 +1,4 @@
-# Interview stimuli: final review
+# Med Interview stimuli: final review
 
 Reviewed 19 September 2026. All 27 saved PNGs were visually inspected. Seventeen required editing; ten were already suitable and left unchanged. Edits used the built-in imagegen tool, not the API/CLI.
 

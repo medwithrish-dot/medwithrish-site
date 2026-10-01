@@ -192,7 +192,7 @@ export function InterviewPathwayChecklist({
       </ol>
       <p className="mt-4 text-xs text-[#687d80]">
         {progress.allComplete
-          ? "Pathway complete — you are ready to bring it together in mock interviews."
+          ? "Pathway complete - you are ready to bring it together in mock interviews."
           : "Tick each step in order. Your progress is saved and carries over each day."}
       </p>
       {!userId && (

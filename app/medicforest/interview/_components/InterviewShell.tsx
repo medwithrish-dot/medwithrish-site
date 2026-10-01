@@ -36,7 +36,7 @@ export async function InterviewShell({
             <header className={`flex flex-col gap-5 sm:flex-row sm:justify-between ${heroHeader ? "sm:items-center" : "border-b border-[#d3dfe1] pb-7 sm:items-start"}`}>
               <div className="min-w-0">
                 {activeLabel !== "Dashboard" && <Link href="/medicforest/interview/dashboard" className="inline-flex items-center gap-2 text-xs font-bold text-[#08787b] hover:text-[#042724]">
-                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Interview dashboard
+                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Med Interview dashboard
                 </Link>}
                 {!heroHeader && <>
                 <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#08787b]">{eyebrow}</p>

@@ -59,7 +59,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("bristol", "University of Bristol", "https://www.bristol.ac.uk/medical-school/", {
     stationCount: 6, stationSeconds: 300, breakSeconds: 0,
-    timingNote: "Bristol calls its process a structured interview: Available format guidance reports six stations and approximately 30 minutes overall. Five minutes per station is our practice allocation, not a separately published station duration.",
+    timingNote: "Bristol calls its process a structured Med interview: Available format guidance reports six stations and approximately 30 minutes overall. Five minutes per station is our practice allocation, not a separately published station duration.",
   }),
   university("buckingham", "University of Buckingham", "https://medvle.buckingham.ac.uk/", {
     stationCount: 4,
@@ -98,7 +98,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("glasgow", "University of Glasgow", "https://www.gla.ac.uk/colleges/mvls/", {
     format: "Panel", stationCount: 2, stationSeconds: 900, breakSeconds: 0,
-    timingNote: "Available format guidance reports a roughly 30-minute interview split between Panel A and Panel B. Dividing this equally into two 15-minute discussions is a practice allocation; the guide does not specify equal time for each panel.",
+    timingNote: "Available format guidance reports a roughly 30-minute Med interview split between Panel A and Panel B. Dividing this equally into two 15-minute discussions is a practice allocation; the guide does not specify equal time for each panel.",
   }),
   university("imperial-college-london", "Imperial College London", "https://www.imperial.ac.uk/medicine/", {
     stationCount: 7, stationSeconds: 300, preparationSeconds: 60, breakSeconds: 0, timingStatus: "published",
@@ -133,11 +133,11 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("london", "University of London", "https://www.london.ac.uk/federation", {
     format: "Unconfirmed", sourceUrl: "https://www.london.ac.uk/federation",
-    timingNote: "This is an awarding/federation entry, not a single medical-school admissions process. Select the relevant member medical school for its interview format. This entry launches general medicine practice: five 8-minute stations and 2-minute intervals.",
+    timingNote: "This is an awarding/federation entry, not a single medical-school admissions process. Select the relevant member medical school for its Med interview format. This entry launches general medicine practice: five 8-minute stations and 2-minute intervals.",
   }),
   university("manchester", "University of Manchester", "https://www.manchester.ac.uk/study/undergraduate/courses/2026/01428/mbchb-medicine/", {
     timingStatus: "published",
-    timingNote: "Available format guidance reports five MMI stations, each lasting 8 minutes, with a 2-minute gap between stations. There is no added preparation timer. Follow your official interview invitation if its arrangements differ.",
+    timingNote: "Available format guidance reports five MMI stations, each lasting 8 minutes, with a 2-minute gap between stations. There is no added preparation timer. Follow your official Med interview invitation if its arrangements differ.",
   }),
   university("newcastle", "Newcastle University", "https://www.ncl.ac.uk/undergraduate/degrees/a100/", {
     stationCount: 7, stationSeconds: 420,
@@ -145,7 +145,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("nottingham", "University of Nottingham", "https://www.nottingham.ac.uk/mhs/", {
     stationCount: 6, stationSeconds: 300, breakSeconds: 0, timingStatus: "published",
-    timingNote: "Available format guidance cites six online 5-minute scenarios in the 2026 admissions policy. The real interview also begins with a 1-minute unscored ice-breaker; this rehearsal covers the six assessed scenarios and adds no interval.",
+    timingNote: "Available format guidance cites six online 5-minute scenarios in the 2026 admissions policy. The real Med interview also begins with a 1-minute unscored ice-breaker; this rehearsal covers the six assessed scenarios and adds no interval.",
   }),
   university("oxford", "University of Oxford", "https://www.medsci.ox.ac.uk/", {
     format: "Panel", stationCount: 2, stationSeconds: 1200,
@@ -156,7 +156,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("queen-mary", "Queen Mary University of London", "https://www.qmul.ac.uk/fmd/", {
     format: "Panel", stationCount: 1, stationSeconds: 1200, breakSeconds: 0,
-    timingNote: "Barts and The London uses a panel interview. Available format guidance says the duration is not officially published; around 20 minutes is a third-party estimate used here for practice. Article discussion may be part of your invitation's instructions.",
+    timingNote: "Barts and The London uses a panel Med interview. Available format guidance says the duration is not officially published; around 20 minutes is a third-party estimate used here for practice. Article discussion may be part of your invitation's instructions.",
   }),
   university("queens-belfast", "Queen’s University Belfast", "https://www.qub.ac.uk/schools/mdbs/", {
     stationCount: 9, stationSeconds: 300, preparationSeconds: 60, breakSeconds: 0,
@@ -176,7 +176,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   }),
   university("swansea", "Swansea University", "https://www.swansea.ac.uk/medicine/", {
     format: "Mixed", stationCount: 3, stationSeconds: 1200,
-    timingNote: "Available format guidance reports three face-to-face graduate-entry stations of 20–30 minutes, including interview, presentation and role-play tasks. This rehearsal chooses 20-minute blocks with 2-minute intervals; it does not reproduce every assessment-day task.",
+    timingNote: "Available format guidance reports three face-to-face graduate-entry stations of 20–30 minutes, including Med interview, presentation and role-play tasks. This rehearsal chooses 20-minute blocks with 2-minute intervals; it does not reproduce every assessment-day task.",
   }),
   university("ucl", "University College London", "https://www.ucl.ac.uk/medical-school/", {
     stationCount: 8, stationSeconds: 300, preparationSeconds: 60, breakSeconds: 0,
@@ -201,7 +201,7 @@ export const interviewUniversities: readonly InterviewUniversity[] = [
   university("scotgem", "Scottish Graduate Entry Medicine (Dundee and St Andrews)", "https://www.st-andrews.ac.uk/subjects/medicine/scotgem-mbchb/", {
     sourceUrl: "https://www.st-andrews.ac.uk/subjects/medicine/scotgem-mbchb/selection/",
     stationCount: 6, stationSeconds: 420, breakSeconds: 30,
-    timingNote: "The official ScotGEM selection page describes 7-minute MMI stations and 30-second breaks. The station count is not specified, so six is a practice choice. This differs from Dundee's standard undergraduate group interview.",
+    timingNote: "The official ScotGEM selection page describes 7-minute MMI stations and 30-second breaks. The station count is not specified, so six is a practice choice. This differs from Dundee's standard undergraduate group Med interview.",
   }),
   university("hull-york", "Hull York Medical School", "https://www.hyms.ac.uk/", {
     format: "Mixed", stationCount: 5, stationSeconds: 480,

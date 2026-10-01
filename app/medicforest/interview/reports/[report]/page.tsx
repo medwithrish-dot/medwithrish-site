@@ -7,16 +7,16 @@ import { InterviewShell } from "../../_components/InterviewShell";
 import { SavedInterviewReview } from "../../_components/SavedInterviewReview";
 import { findInterviewStation } from "../../_data/interview-stations";
 
-export const metadata = { title: "Your saved interview review | MedicForest" };
+export const metadata = { title: "Your saved Med interview review | MedicForest" };
 
 export default async function Page({ params }: { params: Promise<{ report: string }> }) {
   const { report } = await params;
   if (!validId(report)) notFound();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return <InterviewShell title="Your private interview review" subtitle="Sign in to view your saved interview." activeLabel="Reports"><Link className="font-bold text-teal-700 underline" href="/medicforest/account">Sign in to your account</Link></InterviewShell>;
+  if (!user) return <InterviewShell title="Your private Med interview review" subtitle="Sign in to view your saved Med interview." activeLabel="Reports"><Link className="font-bold text-teal-700 underline" href="/medicforest/account">Sign in to your account</Link></InterviewShell>;
   const { data, error } = await supabase.from("interview_attempts").select("*").eq("id", report).eq("user_id", user.id).maybeSingle();
-  if (error) return <InterviewShell title="Your interview review" subtitle="Your saved interview could not be loaded right now. Please try again shortly." activeLabel="Reports"><Link href="/medicforest/interview/reports" className="font-bold text-teal-700 underline">Back to saved interviews</Link></InterviewShell>;
+  if (error) return <InterviewShell title="Your Med interview review" subtitle="Your saved Med interview could not be loaded right now. Please try again shortly." activeLabel="Reports"><Link href="/medicforest/interview/reports" className="font-bold text-teal-700 underline">Back to saved interviews</Link></InterviewShell>;
   if (!data) notFound();
   const attempt = toInterviewAttempt(data);
   const { data: stations, error: stationsError } = await supabase.from("interview_attempts")
@@ -24,9 +24,9 @@ export default async function Page({ params }: { params: Promise<{ report: strin
   const currentIndex = stations?.findIndex((station) => station.id === attempt.id) ?? -1;
   const previous = stations?.[currentIndex - 1];
   const next = stations?.[currentIndex + 1];
-  return <InterviewShell title={attempt.stationCount > 1 ? "Your interview" : attempt.title} subtitle="Your saved transcript, answer framework and optional AI feedback." activeLabel="Reports" heroHeader>
+  return <InterviewShell title={attempt.stationCount > 1 ? "Your Med interview" : attempt.title} subtitle="Your saved transcript, answer framework and optional AI feedback." activeLabel="Reports" heroHeader>
     {stationsError && <p role="alert" className="mb-4 text-sm">The other stations could not be loaded. Refresh to try again.</p>}
-    {stations && attempt.stationCount > 1 && <nav aria-label="Interview stations" className="mb-6 border-y border-[#d7e3e1] bg-white p-4">
+    {stations && attempt.stationCount > 1 && <nav aria-label="Med Interview stations" className="mb-6 border-y border-[#d7e3e1] bg-white p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-sm"><strong>{stations.length} of {attempt.stationCount} stations saved</strong><div className="flex gap-4">
         {previous && <Link className="font-semibold text-[#08787b] underline" href={`/medicforest/interview/reports/${previous.id}`}>Previous station</Link>}
         {next && <Link className="font-semibold text-[#08787b] underline" href={`/medicforest/interview/reports/${next.id}`}>Next station</Link>}

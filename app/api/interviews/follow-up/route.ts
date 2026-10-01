@@ -11,12 +11,12 @@ export async function POST(request: Request) {
   try {
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
-    if (!validId(body.attemptId) || typeof body.question !== "string" || body.question.length > 500) throw new InterviewError("Choose a valid interview question");
+    if (!validId(body.attemptId) || typeof body.question !== "string" || body.question.length > 500) throw new InterviewError("Choose a valid Med interview question");
 
     const loadAttempt = async () => {
       const { data, error } = await admin.from("interview_attempts").select("*").eq("id", body.attemptId).eq("user_id", user.id).maybeSingle();
       if (error) databaseError(error);
-      if (!data) throw new InterviewError("Interview not found", 404);
+      if (!data) throw new InterviewError("Med Interview not found", 404);
       return data;
     };
     let row = await loadAttempt();
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       if (current.status !== "in_progress") throw new InterviewError("This station is already submitted.", 409);
       const readyAt = Date.parse(current.started_at) + Number(current.preparation_seconds) * 1000;
       const endsAt = readyAt + Number(current.station_seconds) * 1000;
-      if (!Number.isFinite(readyAt) || !Number.isFinite(endsAt)) throw new InterviewError("The interview timing could not be checked.", 409);
+      if (!Number.isFinite(readyAt) || !Number.isFinite(endsAt)) throw new InterviewError("The Med interview timing could not be checked.", 409);
       if (Date.now() < readyAt) throw new InterviewError("Preparation is still running.", 409);
       if (Date.now() >= endsAt) throw new InterviewError("The answer window has closed. Submit your saved answers for feedback.", 409);
     };
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     claim = row.last_error == null ? claim.is("last_error", null) : claim.eq("last_error", row.last_error);
     const { data: claimed, error: claimError } = await claim.select("id").maybeSingle();
     if (claimError) databaseError(claimError);
-    if (!claimed) throw new InterviewError("Another interview update is running. Please try again.", 409);
+    if (!claimed) throw new InterviewError("Another Med interview update is running. Please try again.", 409);
 
     let source: "ai" | "practice" = "practice";
     let followUp = practiceFollowUp(answer, questionNumber);
@@ -87,12 +87,12 @@ export async function POST(request: Request) {
       const saved = existingFollowUp(row.questions, question, originals);
       if (saved) return reply(row, saved, "saved");
       const questions = [...row.questions];
-      if (questions.length >= originals.length * 2 || questions.includes(followUp)) throw new InterviewError("Continue with the remaining interview questions.", 409);
+      if (questions.length >= originals.length * 2 || questions.includes(followUp)) throw new InterviewError("Continue with the remaining Med interview questions.", 409);
       questions.splice(questions.indexOf(question) + 1, 0, followUp);
       const { data, error } = await admin.from("interview_attempts").update({ questions }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("questions", JSON.stringify(row.questions)).select().maybeSingle();
       if (error) databaseError(error);
       if (data) return reply(data, followUp, source);
     }
-    throw new InterviewError("Your interview changed while the follow-up was being saved. Refresh to continue.", 409);
+    throw new InterviewError("Your Med interview changed while the follow-up was being saved. Refresh to continue.", 409);
   } catch (error) { return interviewFailure(error); }
 }

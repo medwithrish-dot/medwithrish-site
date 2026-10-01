@@ -3,7 +3,7 @@ import { InterviewShell } from "../../_components/InterviewShell";
 export default function ReportDetailLoading() {
   return (
     <InterviewShell
-      title="Loading your interview report…"
+      title="Loading your Med interview report…"
       subtitle="Retrieving your conversation transcript, markschemes and feedback."
       activeLabel="Reports"
       heroHeader

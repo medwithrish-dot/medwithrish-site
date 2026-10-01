@@ -35,12 +35,12 @@ export default function TopBanner() {
         <h2 className="max-w-4xl text-2xl font-extrabold leading-tight tracking-tight md:text-4xl">
           UCAT Notes +{" "}
           <span className="text-yellow-300">FREE</span>{" "}
-          Medicine Interview Guide
+          Medicine Med Interview Guide
         </h2>
 
         {/* Subtext */}
         <p className="mt-4 max-w-3xl text-sm leading-7 text-white/92 md:text-base">
-          Everything you need to ace the UCAT + a FREE 20-page Medicine interview guide.
+          Everything you need to ace the UCAT + a FREE 20-page Medicine Med interview guide.
   
         </p>
 

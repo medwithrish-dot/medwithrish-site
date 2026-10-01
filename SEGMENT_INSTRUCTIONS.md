@@ -88,37 +88,37 @@ npm run build
 - **Domain**: Personal statement submissions.
 - **Status**: 🗑️ Scrapped per owner directive (completely removed).
 
-### Segment 3: AI Interview Platform — Call & Speech Engine
+### Segment 3: AI Med Interview Platform - Call & Speech Engine
 - **Domain**: `app/medicforest/interview/`, `app/api/interviews/speech/`, audio timers, microphone hooks.
-- **Scope**: Audio recorder lifecycle, silence detection, pause flushing, speech recognition error recovery, interview room UI.
+- **Scope**: Audio recorder lifecycle, silence detection, pause flushing, speech recognition error recovery, Med interview room UI.
 - **Verification**: `npm run test:interviews:room` (50+ tests).
 - **Status**: ✅ Re-audited.
 
-### Segment 4: AI Interview Platform — Scoring & Feedback Reports
+### Segment 4: AI Med Interview Platform - Scoring & Feedback Reports
 - **Domain**: `app/medicforest/interview/_lib/`, `app/api/interviews/feedback/`, `InterviewHistoryViews.tsx`.
 - **Scope**: Feedback generation, practice rubrics, saved reports, retry state preservation, timeout safety.
 - **Verification**: `node --test scripts/test-interview-feedback-reports.mjs scripts/test-interview-scoring.mjs scripts/test-interview-review.mjs scripts/test-saved-interview-review.mjs`, `npm run test:interviews:db`, and `node scripts/test-interview-dashboard-db.mjs`.
 - **Status**: ✅ Re-audited.
 
-### Segment 5: AI Interview Platform — Community (Groups, Leaderboard, Pathway)
+### Segment 5: AI Med Interview Platform - Community (Groups, Leaderboard, Pathway)
 - **Domain**: `app/medicforest/interview/groups/`, `app/medicforest/interview/leaderboard/`, `app/medicforest/interview/pathway/`.
 - **Scope**: Study circles/groups, public leaderboard guest viewing (fix 401 unauth issues), pathway task progression, offensive name sanitization.
 - **Verification**: `node --test scripts/test-interview-public-names.mjs scripts/test-interview-leaderboard.mjs scripts/test-interview-groups-route.mjs scripts/test-interview-pathway.mjs` and `npm run test:interviews:db`.
 - **Status**: ✅ Re-audited.
 
-### Segment 6: MedicForest UCAT Platform — Client Monolith & State
+### Segment 6: MedicForest UCAT Platform - Client Monolith & State
 - **Domain**: `app/medicforest/ucat/_components/MedicForestClient.tsx`, public marketing splits.
 - **Scope**: Route public pages directly to their isolated clients, defer dashboard question-bank lookups, fix calculator shortcuts and elapsed timing, isolate account credit countdown updates, and correct links and mock redirects.
 - **Verification**: `node --test scripts/test-ucat-client-state.mjs scripts/test-ucat-account.mjs scripts/test-ucat-quality.mjs scripts/test-domain-routing.mjs`, `node scripts/auditUcatQuestionBank.cjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
 - **Status**: ✅ Re-audited.
 
-### Segment 7: MedicForest UCAT Platform — Question Bank Engine
+### Segment 7: MedicForest UCAT Platform - Question Bank Engine
 - **Domain**: `app/medicforest/ucat/_components/UCATQuestionBankClient.tsx`, `_lib/ucatScoring.ts`, `_components/UCATQuestionVisuals.tsx`.
 - **Scope**: Question scoring and visual rendering, reliable exam shortcuts, latest-answer timer completion, saved time restoration, answer-change reporting, and App Router exit navigation.
 - **Verification**: `node --test scripts/test-ucat-engine.mjs scripts/test-ucat-runner.mjs`, `node --test scripts/test-ucat-quality.mjs`, `node scripts/auditUcatQuestionBank.cjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
 - **Status**: ✅ Re-audited.
 
-### Segment 8: MedicForest UCAT Platform — Diagnostics & AI Feedback
+### Segment 8: MedicForest UCAT Platform - Diagnostics & AI Feedback
 - **Domain**: `app/medicforest/ucat/_lib/ucatDiagnostics.ts`, `app/medicforest/ucat/_components/UCATDiagnosticContent.tsx`, `app/medicforest/ucat/_components/UCATReportContent.tsx`, `app/api/ai/diagnostic-feedback/route.ts`.
 - **Scope**: Diagnostic scoring, mock conversion (VR -> DM -> QR -> SJT canonical sort), 24h AI credit cooldown isolation, report issue cards, study plan task filters.
 - **Verification**: `npx tsc --noEmit && node --test scripts/test-server-routes.mjs`.
@@ -132,21 +132,21 @@ npm run build
 
 ### Segment 10: MedicForest Public Marketing & Shell
 - **Domain**: `app/medicforest/about/`, `app/medicforest/pricing/`, `app/medicforest/_components/`, navigation shell.
-- **Scope**: About page polish (compact 2-card offering: Interview Practice & 1-to-1 Tutoring; subtle UCAT WIP), pricing tiers, layout sidebar, responsive mobile menu.
+- **Scope**: About page polish (compact 2-card offering: Med Interview Practice & 1-to-1 Tutoring; subtle UCAT WIP), pricing tiers, layout sidebar, responsive mobile menu.
 - **Verification**: `node --test scripts/test-domain-routing.mjs scripts/test-billing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
-- **Status**: ✅ Re-audited outside UCAT. Public price, interview checkout return, and shared navigation were corrected; the two-offering About layout was verified.
+- **Status**: ✅ Re-audited outside UCAT. Public price, Med interview checkout return, and shared navigation were corrected; the two-offering About layout was verified.
 
 ### Segment 11: MedWithRish.com Core & Resources Hub
 - **Domain**: `app/page.tsx` (MedWithRish homepage), `app/about/`, `app/contact/`, `app/resources/`, `app/interviews/`.
 - **Scope**: Main admissions journey, tutoring booking flows, success stories, remove deprecated PS review mentions, clean dead links.
 - **Verification**: `node --test scripts/test-medwithrish-journey.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
-- **Status**: ✅ Re-audited outside UCAT. Direct interview guide links, contextual tutoring enquiries, useful About routes, and desktop navigation were corrected. Success story assets and internal routes were verified; no live PS review offer remains.
+- **Status**: ✅ Re-audited outside UCAT. Direct Med interview guide links, contextual tutoring enquiries, useful About routes, and desktop navigation were corrected. Success story assets and internal routes were verified; no live PS review offer remains.
 
 ### Segment 12: Infrastructure, Routing & Build Configuration
 - **Domain**: `next.config.ts`, `proxy.ts`, `app/layout.tsx`, security headers, redirects.
 - **Scope**: Route rewrites, domain proxying, cache headers, preview tokens, bundle optimization, clean production build.
 - **Verification**: `node --test scripts/test-domain-routing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, `npm run build`, and local production responses for both hosts.
-- **Status**: ✅ Re-audited outside UCAT. Preview gating now covers clean product interview URLs before rewrites, public routes skip claim refresh, both domains have their own crawler files, and shared security/API cache headers are applied.
+- **Status**: ✅ Re-audited outside UCAT. Preview gating now covers clean product Med interview URLs before rewrites, public routes skip claim refresh, both domains have their own crawler files, and shared security/API cache headers are applied.
 
 ---
 

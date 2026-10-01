@@ -1,7 +1,7 @@
 # MedWithRish
 
 Next.js App Router website for admissions resources, personal statement tutoring,
-MedicForest UCAT practice and interview preparation.
+MedicForest UCAT practice and Med interview preparation.
 
 ## Local development
 
@@ -25,7 +25,7 @@ Optional integrations:
 - Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` and
   `STRIPE_PREMIUM_PRICE_ID`.
 - UCAT feedback: `ANTHROPIC_API_KEY`.
-- Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
+- Med Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
 - Preview access: `MEDICFOREST_PREVIEW_PASSWORD` and `MEDICFOREST_PREVIEW_TOKEN_SECRET`.
 
 Database setup and feature configuration are documented in

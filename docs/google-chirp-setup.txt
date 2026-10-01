@@ -3,7 +3,7 @@ GOOGLE CHIRP SETUP FOR MEDICFOREST INTERVIEWS
 
 Purpose
 -------
-This enables Google Cloud Chirp to read AI-generated interview follow-up
+This enables Google Cloud Chirp to read AI-generated Med interview follow-up
 questions aloud. Stored questions and prompts continue to use the MP3 files in
 public/audio.
 
@@ -109,7 +109,7 @@ OPTION C - VERCEL OR ANOTHER NON-GOOGLE HOST
 HOW TO TEST IT
 ==============
 
-1. Start a normal scored interview rather than the setup preview.
+1. Start a normal scored Med interview rather than the setup preview.
 2. Enable the microphone and answer a question with at least 20 words.
 3. Stop talking for about four seconds.
 4. The interviewer should play "Done? Say yes or no."
@@ -119,7 +119,7 @@ HOW TO TEST IT
 
 Expected fallbacks:
 - If Chirp is disabled or fails, the browser voice reads the generated probe.
-- If Gemini is unavailable, the interview can use its built-in guided probe.
+- If Gemini is unavailable, the Med interview can use its built-in guided probe.
 - The manual "Done answering" and Yes/No buttons remain available.
 - Typed answers use the manual completion control because microphone silence
   detection applies only while speaking.

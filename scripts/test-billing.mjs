@@ -100,7 +100,7 @@ test("checkout price matches the Premium amount, currency and monthly interval s
   });
 });
 
-test("interview checkout returns to pricing for confirmation and UCAT checkout keeps its dashboard", async () => {
+test("Med interview checkout returns to pricing for confirmation and UCAT checkout keeps its dashboard", async () => {
   const { createPremiumCheckoutSession } = load("utils/billing/stripe-checkout.ts");
   const { getBillingReturnPath } = load("utils/billing/return-destination.ts");
   const created = [];

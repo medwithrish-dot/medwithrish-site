@@ -33,8 +33,8 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
           <Search size={18} aria-hidden="true" />
           <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search university or medical school..." />
         </label>
-        <select aria-label="Interview format" value={format} onChange={(event) => setFormat(event.target.value)}>
-          <option value="All">All interview formats</option>
+        <select aria-label="Med Interview format" value={format} onChange={(event) => setFormat(event.target.value)}>
+          <option value="All">All Med interview formats</option>
           <option value="MMI">MMI</option>
           <option value="Panel">Panel</option>
           <option value="Mixed">Mixed / group assessment</option>
@@ -58,9 +58,9 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
               <p className={styles.preparation}>{entry.preparationSeconds > 0 ? `${entry.preparationSeconds}s preparation per block` : "No separate preparation timer"}{entry.breakSeconds > 0 ? ` · ${entry.breakSeconds}s intervals` : ""}</p>
               <div className={styles.cardFooter}>
                 {recentAttempt ? <div className={styles.cardActions}>
-                  <Link href={recentAttempt.href} className={styles.primaryAction} aria-label={`Review your last ${entry.name} interview`}><BookOpenCheck size={16} aria-hidden="true" />View previous<ArrowRight size={16} aria-hidden="true" /></Link>
-                  <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.cardRetryAction} aria-label={`Retry AI interview for ${entry.name}`}><RotateCcw size={14} aria-hidden="true" />Retry</Link>
-                </div> : <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI interview<ArrowRight size={16} aria-hidden="true" /></Link>}
+                  <Link href={recentAttempt.href} className={styles.primaryAction} aria-label={`Review your last ${entry.name} Med interview`}><BookOpenCheck size={16} aria-hidden="true" />View previous<ArrowRight size={16} aria-hidden="true" /></Link>
+                  <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.cardRetryAction} aria-label={`Retry AI Med interview for ${entry.name}`}><RotateCcw size={14} aria-hidden="true" />Retry</Link>
+                </div> : <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI Med interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI Med interview<ArrowRight size={16} aria-hidden="true" /></Link>}
                 <div className={styles.details}><span>{recentAttempt ? `Last attempt ${new Date(recentAttempt.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}` : entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span><Link href={`/medicforest/interview/universities/${entry.slug}`} aria-label={`View format and sources for ${entry.name}`}>Format &amp; sources</Link></div>
               </div>
             </article>;
@@ -80,7 +80,7 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search university or medical school" className="w-full rounded-xl border border-[#cbd7dc] bg-white py-3 pl-12 pr-4 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/20" />
         </label>
         <label>
-          <span className="sr-only">Interview format</span>
+          <span className="sr-only">Med Interview format</span>
           <select value={format} onChange={(event) => setFormat(event.target.value)} className="w-full rounded-xl border border-[#cbd7dc] bg-white px-4 py-3 text-sm sm:w-auto">
             <option value="All">All formats</option>
             <option value="MMI">MMI</option>
@@ -115,7 +115,7 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
               <div className="mt-5 flex flex-wrap items-center gap-4 border-t border-[#edf1f2] pt-4">
                 {practiceMode ? (
                   <>
-                    <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className="inline-flex items-center gap-2 rounded-lg bg-[#08787b] px-3 py-2 text-sm font-bold text-white hover:bg-[#065f61]">Start AI interview <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+                    <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className="inline-flex items-center gap-2 rounded-lg bg-[#08787b] px-3 py-2 text-sm font-bold text-white hover:bg-[#065f61]">Start AI Med interview <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
                     <Link href={`/medicforest/interview/universities/${entry.slug}`} className="text-xs font-bold text-[#08787b]">Format &amp; sources</Link>
                   </>
                 ) : (

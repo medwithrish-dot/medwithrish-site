@@ -4508,7 +4508,7 @@ function DashboardFeedbackPanel({
             </div>
           )}
 
-          {/* Clickable section tabs — each reflects its own latest diagnostic */}
+          {/* Clickable section tabs - each reflects its own latest diagnostic */}
           <div className="mt-5 flex flex-wrap gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
             {sectionTabs.map((tab) => {
               const hasSectionData = perSectionMap.has(tab.code);
@@ -4537,7 +4537,7 @@ function DashboardFeedbackPanel({
 
           {activeDiagnostic ? (
             <>
-              {/* Per-section AI feedback — collapsible */}
+              {/* Per-section AI feedback - collapsible */}
               {activeDiagnostic.aiFeedbackText && (
                 <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
                   <div className="flex items-center gap-2">
@@ -4646,7 +4646,7 @@ function DashboardFeedbackPanel({
             </>
           ) : (
             <div className="mt-4 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-xs font-bold text-slate-500">
-              <span>{selectedSection} — not yet diagnosed</span>
+              <span>{selectedSection} - not yet diagnosed</span>
               <Link
                 href="/medicforest/ucat/mocks/full"
                 className="text-blue-600 hover:text-blue-700"
@@ -4664,7 +4664,7 @@ function DashboardFeedbackPanel({
                 key={tab.code}
                 className="mt-2 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500"
               >
-                <span>{tab.code} — {tab.label} not yet diagnosed</span>
+                <span>{tab.code} - {tab.label} not yet diagnosed</span>
                 <Link
                   href="/medicforest/ucat/mocks/full"
                   className="text-blue-600 hover:text-blue-700"

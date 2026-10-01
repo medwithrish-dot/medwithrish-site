@@ -13,12 +13,12 @@ Every entry is a `QrCuratedInput` of `kind: "set"`:
   kind: "set",
   setId: "kebab-case-unique-id",
   stimulus: ["One sentence describing what the data shows."],
-  visual: { /* table or chart — see below */ },
+  visual: { /* table or chart - see below */ },
   questions: [ /* exactly 4 questions */ ],
 }
 ```
 
-A `kind: "single"` (no shared visual) is also valid but rare — prefer sets.
+A `kind: "single"` (no shared visual) is also valid but rare - prefer sets.
 
 ---
 
@@ -44,7 +44,7 @@ visual: {
 - All values are **strings** (even numbers).
 - Optionally include a `note` field for thresholds or units.
 
-**Typical shapes:** 4 data rows × 4 data columns is common, but vary it — use 3 rows, 5 columns, 3 months instead of 4, etc. to avoid structural clones.
+**Typical shapes:** 4 data rows × 4 data columns is common, but vary it - use 3 rows, 5 columns, 3 months instead of 4, etc. to avoid structural clones.
 
 ---
 
@@ -117,7 +117,7 @@ The bank already contains 80+ sets. **Never clone the template.** Specifically:
 2. **Q3 must not always be a mean with distractors (highest, lowest, ÷5).** Vary mean questions. Use median/mode occasionally. Use a different wrong-divisor distractor (÷2, ÷6, etc.).
 3. **Q4 must not always be "% more than" with the same three-error pattern.** Use % decrease, "what would the new total be", "what fraction of X comes from Y", etc.
 4. **Table shape:** don't always use 4 data rows × 4 data columns with a Totals row and column. Vary to 3 rows, 5 columns, 3 time periods, or use a bar/line chart.
-5. **Grand total:** aim for variety — 1000, 1200, 2000, 2500, 3000, 4000, 5000, 9000 etc., not always 3000.
+5. **Grand total:** aim for variety - 1000, 1200, 2000, 2500, 3000, 4000, 5000, 9000 etc., not always 3000.
 6. **The "40% first answer" pattern is overused.** The most common Q1 answer in the bank is 40% (largest row = 40% of total). Use other clean percentages: 50%, 30%, 25%, 33.3%, 60%.
 
 ---
@@ -130,7 +130,7 @@ For every set, verify **all** of the following:
 - [ ] Every data column sums to its stated total
 - [ ] Both totals agree at the grand total cell
 - [ ] `correct` answer for each question is arithmetically exact (show the working)
-- [ ] Each distractor arises from a **real, named calculation error** — not a random number
+- [ ] Each distractor arises from a **real, named calculation error** - not a random number
 - [ ] No two distractors are numerically equal to each other
 - [ ] No distractor equals the correct answer
 - [ ] The "divide by wrong number" distractor (common in mean questions) does **not** equal any actual data cell in the table
@@ -190,7 +190,7 @@ One plain sentence. State **what** the data shows, **who** collected it, and any
 
 ```
 "[Row/col] = X; [denominator] = Y. X÷Y×100=Z%. 
-Distractor A%: [one-line reason — what wrong calculation produces A%]. 
+Distractor A%: [one-line reason - what wrong calculation produces A%].
 Distractor B: [one-line reason]. 
 Distractor C: [one-line reason]."
 ```
@@ -210,7 +210,7 @@ Many sets use NHS/clinical contexts. Valid clinical contexts not yet heavily use
 - Dietitian caseload by condition
 - Physiotherapy session outcomes
 
-Avoid duplicate contexts — check existing setIds before choosing a new one.
+Avoid duplicate contexts - check existing setIds before choosing a new one.
 
 ---
 

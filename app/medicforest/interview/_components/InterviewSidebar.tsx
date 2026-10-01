@@ -255,8 +255,8 @@ export function InterviewSidebar({
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
             {mode === "landing"
-              ? "Start with free interview practice. No card needed."
-              : "Unlock more interview stations, deeper analytics and guided practice."}
+              ? "Start with free Med interview practice. No card needed."
+              : "Unlock more Med interview stations, deeper analytics and guided practice."}
           </p>
           <Link
             href={mode === "landing" ? medicForestPublicHref(pathname, "/interviews") : "/medicforest/pricing"}

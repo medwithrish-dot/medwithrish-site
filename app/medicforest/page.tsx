@@ -10,14 +10,14 @@ export const metadata: Metadata = {
     absolute: "MedicForest | AI-powered medical admissions preparation",
   },
   description:
-    "Explore MedicForest features and pricing, then choose UCAT or medicine interview preparation.",
+    "Explore MedicForest features and pricing, then choose UCAT or medicine Med interview preparation.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "MedicForest | Medical Admissions Preparation",
     description:
-      "Explore interview practice, free questions and personalised tutoring with MedicForest.",
+      "Explore Med interview practice, free questions and personalised tutoring with MedicForest.",
     url: "/",
     siteName: "MedicForest",
     type: "website",

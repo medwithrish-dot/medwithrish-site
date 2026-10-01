@@ -90,18 +90,18 @@ function RedesignedTutorHero() {
       active: true,
     },
     {
-      title: "Medicine Interview",
+      title: "Medicine Med Interview",
       status: "Work in progress",
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
-      action: "Open interview dashboard",
+      action: "Open Med interview dashboard",
       href: "/medicforest/interview/dashboard",
       active: true,
     },
     {
-      title: "Dentistry Interview",
+      title: "Dentistry Med Interview",
       status: "Coming Soon",
-      text: "Dentistry-specific interview practice with confidence scoring.",
+      text: "Dentistry-specific Med interview practice with confidence scoring.",
       icon: BadgeCheck,
       action: "Notify Me",
       active: false,
@@ -502,7 +502,7 @@ function RedesignedTutorHero() {
 
         <div className="mx-auto mt-4 max-w-4xl rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
           MedicForest is an independent educational tool. AI feedback and progress
-          estimates are not guarantees of UCAT, admissions or interview outcomes.
+          estimates are not guarantees of UCAT, admissions or Med interview outcomes.
           Practice telemetry is used to provide feedback and progress tracking. Read the{" "}
           <Link href="/privacy-policy" className="font-black underline">
             Privacy Policy
@@ -523,7 +523,7 @@ function RedesignedTutorHero() {
             Choose your preparation dashboard.
           </h2>
           <p className="mt-1.5 text-sm text-slate-600">
-            UCAT and medicine interview preparation are both in private preview.
+            UCAT and medicine Med interview preparation are both in private preview.
           </p>
         </div>
 
@@ -641,7 +641,7 @@ export function MedicForestLandingPage({
   const lockedDashboard =
     lockedArea === "interview"
       ? {
-          label: "Medicine interview dashboard",
+          label: "Medicine Med interview dashboard",
           next: "/medicforest/interview/dashboard",
         }
       : lockedArea === "ucat"

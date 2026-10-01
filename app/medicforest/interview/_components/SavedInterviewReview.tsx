@@ -87,11 +87,11 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
       if (current.status === "in_progress") {
         const latest = await reviewRequest(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
         applyResponse(latest);
-        if (!latest.attempt) throw new Error("Your saved interview could not be found.");
+        if (!latest.attempt) throw new Error("Your saved Med interview could not be found.");
         current = latest.attempt;
         if (current.status === "in_progress") {
           const deadline = Date.parse(current.startedAt) + (current.preparationSeconds + current.stationSeconds) * 1000;
-          if (Date.now() + offsetRef.current < deadline) throw new Error("This station is still running. Resume it to continue your interview.");
+          if (Date.now() + offsetRef.current < deadline) throw new Error("This station is still running. Resume it to continue your Med interview.");
           // Empty input preserves the latest account answers in the server's
           // merge, including changes made after this report was opened.
           const finished = await reviewRequest("/api/interviews/session", "PATCH", { attemptId: current.id, finish: true, answers: [], metrics: current.metrics });
@@ -124,7 +124,7 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
         if (!liveRef.current) return;
         if (response.attempt.circuitId !== circuitId) {
           setActiveAttemptId(response.attempt.id);
-          setNotice("You already have an active interview. Resume it before starting another attempt of this station.");
+          setNotice("You already have an active Med interview. Resume it before starting another attempt of this station.");
           return;
         }
         router.push(`/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(response.attempt.id)}`);
@@ -166,12 +166,12 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
       {errorStatus === 401 && <Link href="/medicforest/account" className="mt-2 inline-block font-bold underline">Sign in to your account</Link>}
       {errorStatus === 403 && <Link href="/medicforest/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
-    {notice && <div role="status" className="mb-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-4 text-sm leading-6 text-[#254f46]"><p>{notice}</p>{activeAttemptId && <Link href={`/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(activeAttemptId)}`} className="mt-2 inline-flex items-center gap-2 font-bold underline">Resume active interview <ArrowRight size={15} /></Link>}</div>}
+    {notice && <div role="status" className="mb-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-4 text-sm leading-6 text-[#254f46]"><p>{notice}</p>{activeAttemptId && <Link href={`/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(activeAttemptId)}`} className="mt-2 inline-flex items-center gap-2 font-bold underline">Resume active Med interview <ArrowRight size={15} /></Link>}</div>}
     {busy && <p role="status" className="mb-5 flex items-center gap-2 text-sm text-[#526b72]"><Loader2 size={17} className="animate-spin" />{busy}</p>}
-    {active ? <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><p className="text-xs font-bold uppercase tracking-widest text-[#08787b]">Interview in progress</p><h1 className="mt-3 text-2xl font-bold text-[#042724]">{attempt.title}</h1><p className="mt-3 text-sm leading-7 text-[#526b72]">Your station is still running. Resume your interview to continue; your transcript and answer framework will be ready when it ends.</p><Link href={interviewHref} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white">Resume station <ArrowRight size={16} /></Link></section> : <>
+    {active ? <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><p className="text-xs font-bold uppercase tracking-widest text-[#08787b]">Med Interview in progress</p><h1 className="mt-3 text-2xl font-bold text-[#042724]">{attempt.title}</h1><p className="mt-3 text-sm leading-7 text-[#526b72]">Your station is still running. Resume your Med interview to continue; your transcript and answer framework will be ready when it ends.</p><Link href={interviewHref} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white">Resume station <ArrowRight size={16} /></Link></section> : <>
       {abandoned && <p className="mb-5 rounded-xl bg-white p-4 text-sm leading-6 text-[#526b72]">This older attempt was ended without submission. Your saved transcript and study guide are available, and you can retry the station.</p>}
       <AIInterviewReview attempt={attempt} configured={configured && !abandoned} busy={Boolean(busy)} onGenerate={() => void runAction("generate")} onRetry={() => void runAction("retry")} />
-      {!hasLaterStation && !abandoned && attempt.completedAt && attempt.status !== "in_progress" && attempt.stationIndex + 1 < attempt.stationCount && <div className="mt-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-5 text-sm leading-6 text-[#254f46]"><p>Your interview has more stations. Continue whenever you are ready.</p><Link href={interviewHref} className="mt-2 inline-flex items-center gap-2 font-bold underline">Continue this interview <ArrowRight size={16} /></Link></div>}
+      {!hasLaterStation && !abandoned && attempt.completedAt && attempt.status !== "in_progress" && attempt.stationIndex + 1 < attempt.stationCount && <div className="mt-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-5 text-sm leading-6 text-[#254f46]"><p>Your Med interview has more stations. Continue whenever you are ready.</p><Link href={interviewHref} className="mt-2 inline-flex items-center gap-2 font-bold underline">Continue this Med interview <ArrowRight size={16} /></Link></div>}
     </>}
   </>;
 }

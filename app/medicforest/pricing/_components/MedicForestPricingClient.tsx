@@ -11,19 +11,19 @@ import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePath
 
 
 const INTERVIEW_FREE_FEATURES = [
-  "Unlimited interview question bank practice",
-  "1 free 'Why Medicine?' AI interview attempt",
+  "Unlimited Med interview question bank practice",
+  "1 free 'Why Medicine?' AI Med interview attempt",
   "Free study groups and room practice",
-  "University interview guides and station checklists",
+  "University Med interview guides and station checklists",
   "Public leaderboard and community practice tools",
   "Basic progress tracking across completed questions",
 ];
 
 const INTERVIEW_PREMIUM_FEATURES = [
-  "Full AI interview station library",
-  "Unlimited saved interview reports and transcripts",
+  "Full AI Med interview station library",
+  "Unlimited saved Med interview reports and transcripts",
   "AI feedback, scoring and mark scheme breakdowns",
-  "Personalised interview plan and revision tasks",
+  "Personalised Med interview plan and revision tasks",
   "MMI circuits, panel practice and university-specific stations",
   "Advanced analytics for timing, structure, confidence and improvement",
 ];
@@ -32,8 +32,8 @@ const INTERVIEW_PRICING_ROWS = [
   ["Question bank practice", "Unlimited", "Unlimited"],
   ["'Why Medicine?' AI attempt", "1 free attempt", "Full access"],
   ["Study groups", "Included", "Included"],
-  ["Interview guides", "Included", "Included"],
-  ["AI interview stations", "Starter attempt", "Full library"],
+  ["Med Interview guides", "Included", "Included"],
+  ["AI Med interview stations", "Starter attempt", "Full library"],
   ["Saved transcripts and reports", "Limited", "Unlimited"],
   ["AI scoring and mark schemes", "Sample feedback", "Full feedback"],
   ["MMI circuits", "Premium", "Included"],
@@ -200,15 +200,15 @@ export function MedicForestPricingPage() {
             <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_330px] lg:items-end">
               <div>
                 <p className="text-xs font-black uppercase tracking-wide text-cyan-200">
-                  Interview platform pricing
+                  Med Interview platform pricing
                 </p>
                 <h1 className="mt-2 max-w-2xl text-3xl font-black leading-tight sm:text-4xl">
                   See exactly what you get before you upgrade.
                 </h1>
                 <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-200">
                   Start with free question-bank practice, study groups and a
-                  Why Medicine? interview attempt. Upgrade when you want the
-                  full AI interview platform, saved reports and deeper
+                  Why Medicine? Med interview attempt. Upgrade when you want the
+                  full AI Med interview platform, saved reports and deeper
                   improvement analytics.
                 </p>
               </div>
@@ -224,7 +224,7 @@ export function MedicForestPricingPage() {
                 </div>
                 <p className="mt-2 text-xs font-semibold leading-5 text-slate-300">
                   Cancel through billing management. No card is needed for the
-                  free interview plan.
+                  free Med interview plan.
                 </p>
               </div>
             </div>
@@ -266,7 +266,7 @@ export function MedicForestPricingPage() {
                 href="/medicforest/interview/dashboard"
                 className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
-                Launch Interview Platform
+                Launch Med Interview Platform
               </Link>
             </div>
 
@@ -277,7 +277,7 @@ export function MedicForestPricingPage() {
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-lg font-black">MedicForest Premium</h2>
                 <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-black text-blue-700">
-                  Full interview prep
+                  Full Med interview prep
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
@@ -322,9 +322,9 @@ export function MedicForestPricingPage() {
             </div>
             <div className="border-b border-slate-100 px-4 py-3">
               <p className="text-xs font-semibold leading-5 text-slate-500">
-                The free plan is built for regular interview practice. Premium
+                The free plan is built for regular Med interview practice. Premium
                 adds the full AI feedback loop, saved reports, circuits and
-                advanced analytics for serious interview preparation.
+                advanced analytics for serious Med interview preparation.
               </p>
             </div>
             <div className="divide-y divide-slate-100">
@@ -347,7 +347,7 @@ export function MedicForestPricingPage() {
 
           <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
             MedicForest is an independent educational tool. AI feedback and progress
-            estimates are not guarantees of admissions or interview outcomes.
+            estimates are not guarantees of admissions or Med interview outcomes.
             Practice telemetry is used to
             provide feedback and progress tracking. Read the{" "}
             <Link href="/privacy-policy" className="font-black underline">

@@ -108,14 +108,14 @@ export function changePathwayStation(
   completed: unknown
 ) {
   if (typeof stationId !== "string" || typeof completed !== "boolean") {
-    throw new Error("Choose a station from your interview pathway.");
+    throw new Error("Choose a station from your Med interview pathway.");
   }
 
   const stationIndex = INTERVIEW_PATHWAY.findIndex(
     (station) => station.id === stationId
   );
   if (stationIndex < 0) {
-    throw new Error("Choose a station from your interview pathway.");
+    throw new Error("Choose a station from your Med interview pathway.");
   }
 
   const current = sanitisePathwayProgress(value);

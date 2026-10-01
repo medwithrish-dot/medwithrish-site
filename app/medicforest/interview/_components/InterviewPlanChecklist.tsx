@@ -36,7 +36,7 @@ export function InterviewPlanChecklist({ tasks, compact = false, available = tru
             <div className="min-w-0 flex-1">
               <Link href={task.href} className="group flex items-start justify-between gap-2 text-sm font-bold text-[#123c39] hover:text-[#08787b]"><span>{task.title}</span><ArrowUpRight className="mt-0.5 shrink-0" size={15} /></Link>
               {!compact && <p className="mt-2 text-sm leading-6 text-[#62777e]">{task.description}</p>}
-              <p className="mt-1 text-xs text-[#62777e]">{task.completed ? "Completed today" : `${task.minutes} min · ${task.kind === "station" ? "Interview practice" : task.kind === "guide" ? "Read and reflect" : "Review feedback"}`}</p>
+              <p className="mt-1 text-xs text-[#62777e]">{task.completed ? "Completed today" : `${task.minutes} min · ${task.kind === "station" ? "Med Interview practice" : task.kind === "guide" ? "Read and reflect" : "Review feedback"}`}</p>
               {task.kind !== "station" && <button type="button" disabled={!!busy || !available} onClick={() => void toggle(task)} className="mt-2 inline-flex min-h-8 items-center gap-2 text-xs font-semibold text-[#08787b] underline underline-offset-4 disabled:opacity-50">{busy === task.id ? <Loader2 size={13} className="animate-spin" /> : task.completed ? <Check size={13} /> : <Circle size={13} />}{task.completed ? "Mark as not done" : "Mark as done"}</button>}
             </div>
           </div>

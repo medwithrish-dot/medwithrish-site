@@ -166,7 +166,7 @@ components and add libraries only where they remove recurring complexity.
   timers and persistence into focused hooks.
 - [ ] Group related local state with `useReducer` when transitions matter.
 - [ ] Consider XState only for workflows with explicit states and transitions,
-  such as interview setup, recording, pausing, submission and review.
+  such as Med interview setup, recording, pausing, submission and review.
 - [ ] Consider TanStack Query when several components need client-side caching,
   retries, invalidation or request deduplication.
 - [ ] Use React Hook Form and Zod for complex forms with repeated validation; keep

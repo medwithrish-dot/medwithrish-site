@@ -47,7 +47,7 @@ export function InterviewMobileNav({
       <InterviewDeviceBanner />
       <nav
         aria-label={
-          mode === "landing" ? "MedicForest navigation" : "Interview navigation"
+          mode === "landing" ? "MedicForest navigation" : "Med Interview navigation"
         }
         className="flex gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden"
       >

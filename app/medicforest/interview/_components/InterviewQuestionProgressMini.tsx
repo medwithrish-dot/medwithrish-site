@@ -43,7 +43,7 @@ export function InterviewQuestionProgressMini({
     </div>
 
     {!signedIn && <p className="mt-4 text-[10px] leading-5 text-[#718486]">Sign in to show your saved question progress here.</p>}
-    {signedIn && !available && <p className="mt-4 text-[10px] leading-5 text-amber-700">Question progress will appear after the Supabase interview setup is run.</p>}
+    {signedIn && !available && <p className="mt-4 text-[10px] leading-5 text-amber-700">Question progress will appear after the Supabase Med interview setup is run.</p>}
     <Link href="/medicforest/interview/question-bank" className="mt-4 inline-flex items-center gap-1 text-[10px] font-bold text-[#08787b]">Continue questions <ArrowRight className="h-3 w-3" /></Link>
   </section>;
 }

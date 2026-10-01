@@ -30,7 +30,7 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
       <div className="border-b border-[#e6edec] bg-[#f7faf9] p-5 sm:p-6">
         <div className="grid items-end gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,.8fr)]">
           <div>
-            <label htmlFor="saved-interview-search" className="mb-2 block text-xs font-bold text-[#244b48]">Find an interview</label>
+            <label htmlFor="saved-interview-search" className="mb-2 block text-xs font-bold text-[#244b48]">Find a Med interview</label>
             <div className="relative">
               <Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-3.5 text-[#64807e]" />
               <input id="saved-interview-search" type="search" value={query} onChange={(event) => { setQuery(event.target.value); setVisibleCount(PAGE_SIZE); }} placeholder="Search station or university" className={`${fieldClass} pl-10`} />

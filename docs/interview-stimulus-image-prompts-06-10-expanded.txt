@@ -1,4 +1,4 @@
-MEDICFOREST INTERVIEW STIMULI 06–10 — EXPANDED PROMPTS AND REVIEW
+MEDICFOREST INTERVIEW STIMULI 06–10 - EXPANDED PROMPTS AND REVIEW
 
 Generated with the built-in imagegen tool. These prompts supersede original prompts 06–10.
 Final PNGs: public/medicforest/interview-stimuli/.
@@ -18,18 +18,18 @@ Existing generated images are 1586 x 992, approximately the requested 1600 x 100
 ============================================================
 06. iq-18-006-graphs-and-trends.png
 
-Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Patient satisfaction rises sharply".
+Use case: scientific-educational. Generate a detailed medical-school Med interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Patient satisfaction rises sharply".
 Subtitle: "Hospital communications briefing | 2024 inpatient survey".
 Left two-thirds: vertical bar chart with ONLY two equal-width teal bars labelled Hospital A and Hospital B. Values 82% and 86% clearly printed above bars. Y-axis "Satisfied respondents (%)" starts at 80%, ends at 87%, ticks at every integer percent 80 through 87. Both bars start exactly at 80, with heights 2 and 6 scale units. Intentionally use this truncated axis WITHOUT a break symbol and WITHOUT drawing attention to truncation. No zero axis. Right third: neutral box titled "Survey question" containing "Overall, were you satisfied with your inpatient care?" and below it "Percentages refer to respondents who answered yes."
 Below the chart, full-width table titled "Survey administration". Columns: Detail | Hospital A | Hospital B.
-Rows: Invitations sent | 2,000 | 1,000; Responses received | 500 | 100; Answered yes | 410 | 86; Survey method | Anonymous postal form | Interview with ward staff; Collection period | January–March | October–December.
+Rows: Invitations sent | 2,000 | 1,000; Responses received | 500 | 100; Answered yes | 410 | 86; Survey method | Anonymous postal form | Med Interview with ward staff; Collection period | January–March | October–December.
 Footnotes: "Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided." and "Fictional communications extract".
 The headline and truncated chart are deliberately part of a critical-appraisal exercise. Do not use the words misleading, bias or truncated anywhere in the image, and do not explain the problems.
 
 ============================================================
 07. iq-18-007-graphs-and-trends.png
 
-Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Childhood vaccination uptake".
+Use case: scientific-educational. Generate a detailed medical-school Med interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Childhood vaccination uptake".
 Subtitle: "Completed scheduled vaccinations by age two, 2018–2024".
 Main chart: two lines with seven points each. X-axis years 2018, 2019, 2020, 2021, 2022, 2023, 2024 equally spaced. Y-axis "Eligible children vaccinated (%)", linear 70–100 with ticks every 5.
 Teal circles legend "North district": 93, 92, 89, 86, 87, 89, 91.
@@ -47,7 +47,7 @@ Footer: "Fictional public-health audit". Do not attribute changes to a particula
 ============================================================
 08. iq-18-008-graphs-and-trends.png
 
-Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Average nightly sleep and exam score".
+Use case: scientific-educational. Generate a detailed medical-school Med interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Average nightly sleep and exam score".
 Subtitle: "Survey of 40 students sitting the same examination".
 Main scatter plot with x-axis "Self-reported sleep (hours/night)", linear 4 to 10, ticks every 1; y-axis "Exam score (%)", linear 40 to 100, ticks every 10.
 Exactly 40 separate data markers, 20 per category. All markers same visual size. Teal circles: "Revision under 10 hours/week". Coordinates: (4.3,46),(4.6,60),(4.9,51),(5.2,65),(5.5,49),(5.8,68),(6.1,56),(6.4,72),(6.7,59),(7.0,76),(7.3,62),(7.6,71),(7.9,65),(8.2,80),(8.5,68),(8.8,74),(9.1,70),(9.4,83),(9.7,73),(6.6,45).
@@ -62,7 +62,7 @@ Footer: "Fictional student survey". Do not state that sleep or revision caused t
 ============================================================
 09. iq-18-009-data-interpretation.png
 
-Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Chance of another heart event within five years".
+Use case: scientific-educational. Generate a detailed medical-school Med interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Chance of another heart event within five years".
 Subtitle: "A fictional treatment study: 1,000 adults in each group".
 Two equally sized side-by-side pictogram panels. Left heading "Standard care", right heading "Standard care + new treatment".
 Each panel is EXACTLY a 10-row by 10-column grid of 100 identical simple person icons, equally spaced. Left grid: exactly the first two rows (20 people) orange, remaining eight rows (80 people) light grey. Right grid: exactly first row (10 people) and first five icons of second row (5 people) teal, remaining 85 light grey. Do not add extra icons outside grids. Below left: "20 in 100 had another heart event". Below right: "15 in 100 had another heart event".
@@ -70,7 +70,7 @@ Neutral legend line: "Each person icon represents 1 in 100 people. Coloured icon
 Lower table titled "Other findings over the same five years", columns Outcome or treatment detail | Standard care | Standard care + new treatment.
 Rows: Major bleeding | 3 in 100 | 6 in 100; Extra daily tablets | None | One; Extra monitoring visits per year | None | Two.
 Footnotes: "Adults were randomly assigned to the two groups; five-year outcome data were complete." and "Heart events and major bleeding may affect the same person. Individual risks may differ."
-Footer: "Fictional example for interview practice".
+Footer: "Fictional example for Med interview practice".
 Do not calculate risk reductions or numbers needed to treat or recommend either option. Keep the 200-icon grid mathematically correct and readable. Use identical icon shapes and sizes throughout.
 
 CORRECTION APPLIED TO IMAGE 09:
@@ -79,7 +79,7 @@ Correct only the two pictogram grids in this image. There are currently ELEVEN c
 ============================================================
 10. iq-18-010-data-interpretation.png
 
-Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Recovery after two physiotherapy programmes".
+Use case: scientific-educational. Generate a detailed medical-school Med interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Recovery after two physiotherapy programmes".
 Subtitle: "200 adults randomly assigned: 100 to each programme".
 A clear worksheet with TWO stacked outcome tables and a smaller practical-details table. Use large readable text.
 Table 1 title: "How people felt after 12 weeks". Columns Outcome | Programme A | Programme B.

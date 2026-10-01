@@ -11,7 +11,7 @@ import Link from "next/link";
 const keyIdeas = [
   {
     title: "An anecdote tying in almost all good skills of a doctor",
-    text: "In a medical interview, most questions within the category of 'motivatoin for medicine' involves using the STARR structure, which involves using an anecdote - you should remember a specific situation to use in a lot of these STARR structures. For example, was it a specific patient that was dealt with by the doctor you shadowed?",
+    text: "In a medical Med interview, most questions within the category of 'motivatoin for medicine' involves using the STARR structure, which involves using an anecdote - you should remember a specific situation to use in a lot of these STARR structures. For example, was it a specific patient that was dealt with by the doctor you shadowed?",
   },
   {
     title: "You need to understand people, not just procedures",
@@ -164,7 +164,7 @@ export default function WorkExperienceGuidePage() {
           <div className="mt-5 space-y-5 text-base leading-8 text-gray-700">
             <p>
               Your work experience becomes useful later in two main places: your
-              personal statement and your interview answers.
+              personal statement and your Med interview answers.
             </p>
 
             <p>

@@ -31,7 +31,7 @@ export function validatePreparation(value: Record<string, unknown>) {
     seen.add(target.universitySlug);
     const date = target.interviewDate;
     if (date !== null) {
-      if (typeof date !== "string" || !/^20\d{2}-\d{2}-\d{2}$/.test(date)) throw new Error("Enter an interview date or choose date not confirmed.");
+      if (typeof date !== "string" || !/^20\d{2}-\d{2}-\d{2}$/.test(date)) throw new Error("Enter a Med interview date or choose date not confirmed.");
       const parsed = new Date(`${date}T12:00:00.000Z`);
       if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date) throw new Error("Enter a valid calendar date.");
     }

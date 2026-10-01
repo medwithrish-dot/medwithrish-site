@@ -14,8 +14,8 @@ export const FOLLOW_UP_STATIONS: readonly string[] = [
 ];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 
-// A short thinking interval for interview answers, followed by confirmation.
-// This is a product default, not a scientifically validated interview threshold.
+// A short thinking interval for Med interview answers, followed by confirmation.
+// This is a product default, not a scientifically validated Med interview threshold.
 export const ANSWER_SILENCE_MS = 4_000;
 export const DONE_PROMPT = "Done? Say yes or no.";
 

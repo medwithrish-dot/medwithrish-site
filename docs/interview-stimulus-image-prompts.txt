@@ -1,6 +1,6 @@
 MEDICFOREST INTERVIEW STIMULUS IMAGE PROMPTS
 
-SUPERSEDED GENERATION DRAFT — 19 September 2026
+SUPERSEDED GENERATION DRAFT - 19 September 2026
 The 27 final PNGs are indexed in interview-stimulus-review-final.md.
 Use interview-stimulus-image-prompts-cleanup-final.txt for the latest requirements.
 Do NOT reproduce questions, candidate tasks or instruction bars from this older draft inside images.

@@ -80,7 +80,7 @@ function extractProbabilityBlocks(content) {
 }
 
 function parseBlock(text) {
-  // stimulus — may be an array with multiple strings
+  // stimulus - may be an array with multiple strings
   const stimMatch = text.match(/stimulus:\s*\[([\s\S]*?)\]/);
   let stimulus = "";
   if (stimMatch) {

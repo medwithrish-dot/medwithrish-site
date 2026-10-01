@@ -7,7 +7,7 @@ import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwith
 export const metadata: Metadata = {
   title: "Resources | MedicForest",
   description:
-    "Free medical admissions resources — UCAT guides, interview prep, personal statement help and more.",
+    "Free medical admissions resources - UCAT guides, Med interview prep, personal statement help and more.",
   alternates: { canonical: "/resources" },
 };
 
@@ -28,7 +28,7 @@ const popularResources = [
     description: "Compare mock difficulty, average section scores, totals, and SJT bands.",
   },
   {
-    title: "Interview Prep Hub",
+    title: "Med Interview Prep Hub",
     href: "/interviews",
     description: "MMI, panel, ethics, motivation and reflection preparation.",
   },
@@ -83,7 +83,7 @@ const stages = [
     resources: [
       { title: "Medicine & Dentistry Interviews", href: "/interviews" },
       {
-        title: "FREE Medicine Interview Guide",
+        title: "FREE Medicine Med Interview Guide",
         href: FREE_INTERVIEW_GUIDE_URL,
         external: true,
       },

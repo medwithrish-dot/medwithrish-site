@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getProductSiteUrl()),
   title: "MedicForest",
   description:
-    "Medical school interview practice, free questions and personalised admissions tutoring.",
+    "Medical school Med interview practice, free questions and personalised admissions tutoring.",
   alternates: {
     canonical: "/",
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MedicForest",
     description:
-      "Medical school interview practice, free questions and personalised admissions tutoring.",
+      "Medical school Med interview practice, free questions and personalised admissions tutoring.",
     url: "/",
     siteName: "MedicForest",
     type: "website",

@@ -16,7 +16,7 @@ export type InterviewPreparationSetupProps = {
 };
 
 const experiences = [
-  { id: "starting", label: "Finding my feet", description: "I’m getting to know interview practice." },
+  { id: "starting", label: "Finding my feet", description: "I’m getting to know Med interview practice." },
   { id: "practising", label: "Building a routine", description: "I’ve started and want to improve." },
   { id: "polishing", label: "Fine-tuning", description: "I’m refining my answers and delivery." },
 ] as const;
@@ -119,7 +119,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
       setError("Choose up to 10 different universities."); return;
     }
     const invalidTarget = draft.targets.find((target) => !schoolNames.has(target.universitySlug) || (target.interviewDate !== null && !validDate(target.interviewDate)));
-    if (invalidTarget) { setError("Check your interview dates. Leave a date blank if it is not confirmed."); return; }
+    if (invalidTarget) { setError("Check your Med interview dates. Leave a date blank if it is not confirmed."); return; }
     if (!Number.isInteger(draft.weeklyTarget) || draft.weeklyTarget < 1 || draft.weeklyTarget > 14 || draft.focusThemes.length > 3) {
       setError("Choose 1–14 stations per week and up to three focus areas."); return;
     }
@@ -160,8 +160,8 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#cde5dc] bg-[#e6f3eb] text-[#08787b]" aria-hidden="true"><Settings2 size={21} /></span>
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6e8a79]">Your preparation, your pace</p>
-          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your interview plan</h2>
-          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, interview dates, application route and personal experience.</p>
+          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your Med interview plan</h2>
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, Med interview dates, application route and personal experience.</p>
           {savedProfile && !expanded && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-[#43625d]">
             <span className="inline-flex items-center gap-1.5"><GraduationCap size={14} aria-hidden="true" />{savedProfile.targets.length} {savedProfile.targets.length === 1 ? "university" : "universities"}</span>
             <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} aria-hidden="true" />{knownDateCount ? `${knownDateCount} ${knownDateCount === 1 ? "date" : "dates"} added` : "Dates to be confirmed"}</span>
@@ -191,15 +191,15 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
 
     {signedIn && <div id={editorId} className="grid transition-[grid-template-rows,opacity] duration-200 motion-reduce:transition-none" style={{ gridTemplateRows: expanded ? "1fr" : "0fr", opacity: expanded ? 1 : 0 }} inert={!expanded} aria-hidden={!expanded}><div className="min-h-0 overflow-hidden"><div className={variant === "compact" && !showFullEditor ? "max-h-[34rem] overflow-y-auto overscroll-contain [scrollbar-gutter:stable]" : ""}><form onSubmit={save} className="border-t border-[#deebe5]">
       <fieldset disabled={saving || !canSave} className="min-w-0 space-y-7 px-5 py-6 sm:px-6">
-        <legend className="sr-only">Your interview preparation preferences</legend>
+        <legend className="sr-only">Your Med interview preparation preferences</legend>
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 className="flex items-center gap-2 text-sm font-bold text-[#123a3c]"><GraduationCap size={17} className="text-[#08787b]" aria-hidden="true" /> Your universities</h3><span className="text-xs text-[#738882]">{draft.targets.length} / 10 selected</span></div>
           <p id={`${uniqueId}-university-help`} className="mt-2 text-xs leading-5 text-[#6a8180]">Add the places you’re preparing for. Dates are optional, and you can change or remove any choice later.</p>
           {draft.targets.length > 0 && <div className="mt-4 grid gap-3 2xl:grid-cols-2">
             {draft.targets.map((target) => <div key={target.universitySlug} className="min-w-0 rounded-xl border border-[#dce8e2] bg-white p-3.5">
               <div className="flex items-start justify-between gap-2"><p className="pt-1 text-sm font-bold leading-5 text-[#254b47]">{schoolNames.get(target.universitySlug) || target.universitySlug}</p><button type="button" onClick={() => { setDraft((current) => ({ ...current, targets: current.targets.filter((entry) => entry.universitySlug !== target.universitySlug) })); setNotice(""); }} className="shrink-0 rounded-lg p-1.5 text-[#738882] hover:bg-red-50 hover:text-red-700" aria-label={`Remove ${schoolNames.get(target.universitySlug)}`}><X size={16} aria-hidden="true" /></button></div>
-              <label htmlFor={`${uniqueId}-${target.universitySlug}-date`} className="mb-1.5 mt-3 block text-[11px] font-semibold text-[#6a8180]">Interview date <span className="font-normal">(optional)</span></label>
-              <div className="flex min-w-0 flex-wrap items-center gap-2"><input id={`${uniqueId}-${target.universitySlug}-date`} type="date" value={target.interviewDate ?? ""} min="2000-01-01" max="2099-12-31" onChange={(event) => changeDate(target.universitySlug, event.target.value || null)} className={`${field} max-w-[220px] flex-1`} />{target.interviewDate ? <button type="button" onClick={() => changeDate(target.universitySlug, null)} className="shrink-0 rounded-lg px-2 py-2 text-[11px] font-semibold text-[#58736b] hover:bg-[#edf7f3]" aria-label={`Clear interview date for ${schoolNames.get(target.universitySlug)}`}>Clear date</button> : <span className="text-[11px] text-[#84958f]">Date unknown is fine</span>}</div>
+              <label htmlFor={`${uniqueId}-${target.universitySlug}-date`} className="mb-1.5 mt-3 block text-[11px] font-semibold text-[#6a8180]">Med Interview date <span className="font-normal">(optional)</span></label>
+              <div className="flex min-w-0 flex-wrap items-center gap-2"><input id={`${uniqueId}-${target.universitySlug}-date`} type="date" value={target.interviewDate ?? ""} min="2000-01-01" max="2099-12-31" onChange={(event) => changeDate(target.universitySlug, event.target.value || null)} className={`${field} max-w-[220px] flex-1`} />{target.interviewDate ? <button type="button" onClick={() => changeDate(target.universitySlug, null)} className="shrink-0 rounded-lg px-2 py-2 text-[11px] font-semibold text-[#58736b] hover:bg-[#edf7f3]" aria-label={`Clear Med interview date for ${schoolNames.get(target.universitySlug)}`}>Clear date</button> : <span className="text-[11px] text-[#84958f]">Date unknown is fine</span>}</div>
             </div>)}
           </div>}
           {draft.targets.length < 10 && <div className="mt-4 rounded-xl border border-[#dce8e2] bg-white p-3">

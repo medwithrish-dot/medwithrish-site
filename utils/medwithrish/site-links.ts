@@ -11,8 +11,8 @@ const contactTopics = {
     subject: "A-Level tutoring enquiry",
   },
   "interview-tutoring": {
-    label: "interview tutoring",
-    subject: "Interview tutoring enquiry",
+    label: "Med interview tutoring",
+    subject: "Med Interview tutoring enquiry",
   },
   "personal-statement-session": {
     label: "a personal statement session",

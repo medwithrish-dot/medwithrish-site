@@ -38,7 +38,7 @@ const stories = [
   {
     src: "/success-stories/story3.jpeg",
     alt: "Student success story 2",
-    caption: "All it takes is one interview to get a medicine offer!",
+    caption: "All it takes is one Med interview to get a medicine offer!",
   },
   {
     src: "/success-stories/story4.jpeg",

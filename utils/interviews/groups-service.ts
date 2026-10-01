@@ -23,7 +23,7 @@ async function execute(action: string, groupId: string | null, payload: Record<s
   if (error?.code === "P0001") throw new GroupError(error.message);
   if (error?.code === "42501") throw new GroupError("This group is unavailable or you are no longer a member.", 403);
   if (error) {
-    console.error("Interview group request failed", { code: error.code });
+    console.error("Med Interview group request failed", { code: error.code });
     throw new GroupError("We could not update your study group. Please try again.", 500);
   }
   return data;

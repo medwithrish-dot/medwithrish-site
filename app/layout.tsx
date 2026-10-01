@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getPublicSiteUrl()),
   title: "MedWithRish",
   description:
-    "Medical and dental school admissions guides, interview preparation, tutoring and application resources from MedWithRish.",
+    "Medical and dental school admissions guides, Med interview preparation, tutoring and application resources from MedWithRish.",
 };
 
 export default function RootLayout({

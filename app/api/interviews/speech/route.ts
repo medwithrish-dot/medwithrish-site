@@ -16,11 +16,11 @@ export async function GET(request: Request) {
     const { user, admin } = await interviewContext();
     const { data, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
     if (error) databaseError(error);
-    if (!data) throw new InterviewError("Interview not found", 404);
-    if (data.status !== "in_progress") throw new InterviewError("This interview has ended", 409);
+    if (!data) throw new InterviewError("Med Interview not found", 404);
+    if (data.status !== "in_progress") throw new InterviewError("This Med interview has ended", 409);
     const questions = Array.isArray(data.questions) ? data.questions as string[] : [];
     const question = questions[index];
-    if (!question || question.length > 500) throw new InterviewError("Interview question not found", 404);
+    if (!question || question.length > 500) throw new InterviewError("Med Interview question not found", 404);
 
     // Generated probes are inserted immediately after a saved bank question.
     // Fixed questions already have local MP3s and must not spend Cloud TTS quota.

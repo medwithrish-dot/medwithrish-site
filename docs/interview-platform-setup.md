@@ -1,26 +1,26 @@
-# Interview platform setup and operating notes
+# Med Interview platform setup and operating notes
 
 ## Run the SQL
 
-If interview setup is already installed, run `supabase/medicforest_interview_grading_guard.sql` once to update `claim_interview_grading`. This patch changes only the claim function, so later leaderboard changes remain intact. The function now rejects feedback claims for active or abandoned stations; the API also checks submission before calling it. The SQL change has been tested locally but has not been applied to the hosted database. Fresh installs using either combined setup file already include the guard.
+If Med interview setup is already installed, run `supabase/medicforest_interview_grading_guard.sql` once to update `claim_interview_grading`. This patch changes only the claim function, so later leaderboard changes remain intact. The function now rejects feedback claims for active or abandoned stations; the API also checks submission before calling it. The SQL change has been tested locally but has not been applied to the hosted database. Fresh installs using either combined setup file already include the guard.
 
 For guest leaderboard viewing on an existing installation, also run `supabase/medicforest_interview_public_leaderboard.sql`. It grants anonymous access only to the public leaderboard RPC; attempts, preferences and groups remain private. Both combined setup files include this grant for fresh installs. This patch was tested locally and has not been applied to the hosted database.
 
-**Unsure which older scripts you ran?** Use `supabase/RUN_ALL_MEDICFOREST_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
+**Unsure which older scripts you ran?** Use `supabase/RUN_ALL_MEDICFOREST_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all Med interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
 
-**Single-paste option for the existing project:** open `supabase/RUN_ALL_INTERVIEW_SETUP.sql`, copy its complete contents into a new Supabase SQL Editor query, and run it once. It includes the security patch, question-bank progress, interview platform, groups and dashboard scripts in dependency order, inside one transaction. You do not also need to run the individual files below. The base `public.profiles` account table must already exist; for a new database follow the initial setup instructions below first.
+**Single-paste option for the existing project:** open `supabase/RUN_ALL_INTERVIEW_SETUP.sql`, copy its complete contents into a new Supabase SQL Editor query, and run it once. It includes the security patch, question-bank progress, Med interview platform, groups and dashboard scripts in dependency order, inside one transaction. You do not also need to run the individual files below. The base `public.profiles` account table must already exist; for a new database follow the initial setup instructions below first.
 
 For the existing MedicForest Supabase project, open **SQL Editor**, run each complete file separately, and wait for success before the next file:
 
-1. `supabase/medicforest_security_patch.sql` — protects the existing account plan from browser edits. Safe to rerun.
-2. `supabase/medicforest_interview_platform.sql` — private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
-3. `supabase/medicforest_interview_groups.sql` — study groups, membership, invitations and shared station rooms.
-4. `supabase/medicforest_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
-5. `supabase/medicforest_interview_name_moderation.sql` — blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
+1. `supabase/medicforest_security_patch.sql` - protects the existing account plan from browser edits. Safe to rerun.
+2. `supabase/medicforest_interview_platform.sql` - private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
+3. `supabase/medicforest_interview_groups.sql` - study groups, membership, invitations and shared station rooms.
+4. `supabase/medicforest_interview_dashboard.sql` - university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
+5. `supabase/medicforest_interview_name_moderation.sql` - blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
 
 6. `supabase/medicforest_interview_applicant_activity.sql` adds saved applicant confirmations and durable daily question activity. Run after both dashboard and question-progress setup. It is additive and rerunnable. Existing interviews and dates are preserved; applicant facts default to unconfirmed. The daily chart counts distinct completed bank questions per London day, including bank questions answered in interviews. Existing question-progress rows backfill their latest completion day; earlier overwritten bank completions cannot be reconstructed.
 
-If the question bank's existing account progress has never been set up, also run `supabase/medicforest_interview_question_progress.sql` before step 6. The interview scripts do not replace that feature.
+If the question bank's existing account progress has never been set up, also run `supabase/medicforest_interview_question_progress.sql` before step 6. The Med interview scripts do not replace that feature.
 
 For a completely new database, first run `supabase/medicforest_setup.sql`, `supabase/medicforest_practice_setup.sql`, `supabase/medicforest_stripe_setup.sql`, and `supabase/medicforest_interview_question_progress.sql`, then the numbered steps above. Use the SQL Editor's normal privileged database role. The new tables and functions are additive and rerunnable; they do not overwrite accounts or existing practice history.
 
@@ -28,7 +28,7 @@ The new migrations have been tested locally, but are deliberately **not applied 
 
 ## Server environment
 
-Keep the existing Supabase URL, publishable/anonymous key and `SUPABASE_SERVICE_ROLE_KEY`. Server grading and score writes require the service role; never put it in a `NEXT_PUBLIC_` variable. These interview routes use **only `GEMINI_API_KEY`** for AI. There is no Anthropic import, request or fallback anywhere in the new interview flow.
+Keep the existing Supabase URL, publishable/anonymous key and `SUPABASE_SERVICE_ROLE_KEY`. Server grading and score writes require the service role; never put it in a `NEXT_PUBLIC_` variable. These Med interview routes use **only `GEMINI_API_KEY`** for AI. There is no Anthropic import, request or fallback anywhere in the new Med interview flow.
 
 | Variable | Default / use |
 | --- | --- |
@@ -41,18 +41,18 @@ Keep the existing Supabase URL, publishable/anonymous key and `SUPABASE_SERVICE_
 | `INTERVIEW_PREMIUM_DAILY_LIMIT` | `20` station starts per rolling 24 hours |
 | `INTERVIEW_PREMIUM_MONTHLY_LIMIT` | `300` station starts per rolling 30 days |
 
-These are adjustable initial cost controls, not a promised unlimited plan. All station starts count, including ended attempts. Premium limits cover free and premium stations together. A university circuit uses one allowance per station. The owner confirmed Free Tier and Gemini is enabled in the ignored local environment file. Hosted environments require their own matching key and confirmation flag; without those, built-in follow-ups and saved practice remain available. For personal free AI, keep the API key's project on Free Tier with no linked billing account. Keep the model stable within a leaderboard rubric version; changing assessment behaviour should get a new version and deliberate leaderboard reset/migration. See [interview AI setup](interview-ai-setup.md) for activation steps, follow-up prices, and considerations before a wider rollout.
+These are adjustable initial cost controls, not a promised unlimited plan. All station starts count, including ended attempts. Premium limits cover free and premium stations together. A university circuit uses one allowance per station. The owner confirmed Free Tier and Gemini is enabled in the ignored local environment file. Hosted environments require their own matching key and confirmation flag; without those, built-in follow-ups and saved practice remain available. For personal free AI, keep the API key's project on Free Tier with no linked billing account. Keep the model stable within a leaderboard rubric version; changing assessment behaviour should get a new version and deliberate leaderboard reset/migration. See [Med interview AI setup](interview-ai-setup.md) for activation steps, follow-up prices, and considerations before a wider rollout.
 
 The existing preview-access gate remains active. For local preview use the existing `/medicforest/access` screen with `MEDICFOREST_PREVIEW_PASSWORD` configured for the local server. The platform is not made publicly accessible by this change. Existing Stripe billing is retained; **this work does not change the Stripe price to £15**. Configure that product/price when you choose to launch the £15 subscription.
 
-## How the interview works
+## How the Med interview works
 
 - Free **Why medicine?** appears first. It uses one minute of preparation, eight minutes of answering, and three original questions with optional follow-up probes. Voice and typed answers use identical questions and scoring.
 - All 42 requested university/awarding entries can launch a practice circuit. Formats, source links and uncertainties are in `docs/interview-university-sources.md`. A practice preset is not a claim that a university uses our questions or exact schedule. Panel/group assessments are clearly marked as adaptations.
 - The explicit five-station reference circuit is motivation, work experience, disability/access, equality/diversity/inclusion, and Ozempic. Each station is eight minutes with two-minute gaps. Manchester's sourced preset matches that overall timing.
 - The interviewer reads prompts with browser speech synthesis. Optional browser speech recognition transcribes the candidate's answer; the candidate can use the text box if their browser lacks it. The browser's speech service may process microphone audio outside the device, which the consent text explains. Saved text is sent to Gemini for requested follow-ups and feedback. No audio/video is uploaded to this application's server.
 - Original questions are curated. A completed answer can receive one short AI-generated probe grounded in that answer, up to three per attempt; the AI assesses the complete station separately. The user advances within the station clock. Generated follow-ups use a specialised interviewing prompt, not a fine-tuned model or a continuous voice connection.
-- The optional camera preview stays on the device. The interview runner does not assess gaze, fidgeting or faces. Optional filler/repeated-word hints are computed from text. These are not reliable stutter detection and never reduce the candidate's score. No disability, accent or speech difference is scored.
+- The optional camera preview stays on the device. The Med interview runner does not assess gaze, fidgeting or faces. Optional filler/repeated-word hints are computed from text. These are not reliable stutter detection and never reduce the candidate's score. No disability, accent or speech difference is scored.
 - Timer timestamps come from the server. Dirty transcripts save at most every 15 seconds plus transitions/submission. A local draft helps recover interrupted work. A 30-second transport grace accepts the final in-flight save; the interface still stops answers at the actual deadline.
 - A database claim prevents concurrent feedback calls. Calls time out after 25 seconds, output is schema-validated, and a station allows at most three feedback tries. Completed results are returned without generating another charge. Invalid/provider-failed output never receives a placeholder score.
 
@@ -78,7 +78,7 @@ The optional setup saves up to ten universities, dates (or “not confirmed”),
 - **Weekly insight:** compares the current seven UK calendar days with the preceding seven, requiring at least two scores in each. Changes are percentage points; different station mixes are disclosed. Weekly goal progress counts completed stations, not guide checkboxes.
 - **Bounded queries:** activity and theme detail uses the latest 500 lightweight attempt records. A note appears when history exceeds this; lifetime totals still include every saved attempt. Personalisation is deterministic and makes no additional AI requests.
 
-After the dashboard SQL, check two accounts: save/remove schools, clear a known date to unknown, refresh and verify persistence; record a real interview and check today's task, recent score and totals; mark/unmark a reading task and verify that it is private to the current account. Dates are personal planning information and do not schedule emails or change any university's actual interview arrangements.
+After the dashboard SQL, check two accounts: save/remove schools, clear a known date to unknown, refresh and verify persistence; record a real Med interview and check today's task, recent score and totals; mark/unmark a reading task and verify that it is private to the current account. Dates are personal planning information and do not schedule emails or change any university's actual Med interview arrangements.
 
 Five equally weighted rubric dimensions are assessed from 0 to 100. The server, not the browser or model's claimed percentage, converts their average `r` to:
 
@@ -97,4 +97,4 @@ Google's [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) lists f
 Run `npm run lint`, `npx tsc --noEmit`, `npm run build`, `node --experimental-strip-types scripts/test-interview-scoring.mjs`, and `npm run test:interviews:db`.
 For dashboard date calculations, recommendations, validation and database access tests, also run `npm run test:interviews:dashboard`.
 
-After applying SQL, use two separate signed-in test accounts: create/join a group, compare a saved Why medicine? personal best, start a shared room, contribute answers, and confirm non-members cannot open it. Complete a free interview, view its private report, opt into the leaderboard, and opt out again. Verify a free account cannot start paid circuits. A local PostgreSQL test suite covers permissions, quota/retry logic and group flows; a real hosted two-account pass is still needed after the migration.
+After applying SQL, use two separate signed-in test accounts: create/join a group, compare a saved Why medicine? personal best, start a shared room, contribute answers, and confirm non-members cannot open it. Complete a free Med interview, view its private report, opt into the leaderboard, and opt out again. Verify a free account cannot start paid circuits. A local PostgreSQL test suite covers permissions, quota/retry logic and group flows; a real hosted two-account pass is still needed after the migration.

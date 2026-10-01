@@ -35,7 +35,7 @@ async function seedAttempt(user, values = {}) {
   await db.query(`insert into public.interview_attempts(
     id,user_id,mode,station_slug,title,status,circuit_id,preparation_seconds,station_seconds,break_seconds,
     questions,answers,score,started_at,completed_at,answer_submitted_at,rubric_version)
-    values($1,$2,$3,$4,'Interview practice',$5,$6,$7,$8,0,'["Why medicine?"]',$9::jsonb,$10,$11,$12,$13,$14)`, [
+    values($1,$2,$3,$4,'Med Interview practice',$5,$6,$7,$8,0,'["Why medicine?"]',$9::jsonb,$10,$11,$12,$13,$14)`, [
     id, user, values.mode || "free", values.stationSlug || "why-medicine", values.status || "completed", randomUUID(),
     values.preparationSeconds ?? 60, values.stationSeconds ?? 480,
     JSON.stringify([{ question: "Why medicine?", answer: transcript }]), values.score ?? null,
@@ -59,12 +59,12 @@ try {
   const beforeMigration = randomUUID();
   await db.query(`insert into public.interview_attempts(id,user_id,mode,station_slug,title,status,circuit_id,
     preparation_seconds,station_seconds,break_seconds,questions,score,started_at,completed_at)
-    values($1,$2,'free','why-medicine','Existing interview','completed',$3,60,480,0,'[]',75,
+    values($1,$2,'free','why-medicine','Existing Med interview','completed',$3,60,480,0,'[]',75,
       '2026-01-01T10:00:00Z','2026-01-01T10:03:00Z')`, [beforeMigration, legacyUser, randomUUID()]);
   await check("dashboard migration is additive and can be rerun", async () => {
     await db.exec(dashboardSql); await db.exec(dashboardSql);
     const row = (await db.query("select title,score,answer_submitted_at from public.interview_attempts where id=$1", [beforeMigration])).rows[0];
-    assert.equal(row.title, "Existing interview"); assert.equal(Number(row.score), 75); assert.equal(row.answer_submitted_at, null);
+    assert.equal(row.title, "Existing Med interview"); assert.equal(Number(row.score), 75); assert.equal(row.answer_submitted_at, null);
   });
 
   const initialTargets = [{ universitySlug: "oxford", interviewDate: "2026-12-10" }, { universitySlug: "aberdeen", interviewDate: null }];

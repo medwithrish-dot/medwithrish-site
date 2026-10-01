@@ -59,7 +59,7 @@ function EmptyHistory() {
     <div className="px-6 py-14 text-center">
       <BookOpen className="mx-auto text-[#9bb4b1]" size={32} />
       <h3 className="mt-5 font-bold">Ready when you are</h3>
-      <p className="mt-2 text-sm text-[#62777e]">Complete your first interview to start building your progress.</p>
+      <p className="mt-2 text-sm text-[#62777e]">Complete your first Med interview to start building your progress.</p>
       <Link href="/medicforest/interview/ai-interviews" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white">
         Try the free station <ArrowRight size={16} />
       </Link>

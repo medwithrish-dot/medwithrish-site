@@ -1,4 +1,4 @@
-/** Coaching heuristics only; these never contribute to an interview score. */
+/** Coaching heuristics only; these never contribute to a Med interview score. */
 export const SPEECH_PAUSE_SECONDS = 3;
 export const SPEECH_WINDOW_SECONDS = 7;
 const pausePattern = /\[\s*(\d+(?:\.\d+)?)\s*(?:s|seconds?)\s+pause\s*\]/gi;

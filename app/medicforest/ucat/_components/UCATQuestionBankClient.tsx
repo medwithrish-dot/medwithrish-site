@@ -3225,7 +3225,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50/40 p-5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-black text-slate-950">
-                Choose section — Subtest mock
+                Choose section - Subtest mock
               </h2>
               <button
                 type="button"

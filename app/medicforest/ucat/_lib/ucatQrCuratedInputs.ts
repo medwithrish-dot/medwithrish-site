@@ -49,8 +49,8 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
   // ===== PASTE NEW QR QUESTIONS BELOW THIS LINE =====
 
   // Each object is either:
-  //   kind: "single"  — one standalone question (no shared table)
-  //   kind: "set"     — 3-4 questions sharing one table/visual (recommended)
+  //   kind: "single"  - one standalone question (no shared table)
+  //   kind: "set"     - 3-4 questions sharing one table/visual (recommended)
   //
   // Verify every answer with arithmetic before writing.
   // Distractors must be plausible errors, not random numbers.
@@ -10883,7 +10883,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "13:10",
         distractors: ["4:3", "31:30", "5:4"],
         explanation:
-          "March total = 780; January total = 600. GCD(780,600)=60, so 780:600 = 13:10. Distractor 4:3: uses the Electronics row only (320:240=4:3). Distractor 31:30: compares Feb to Jan instead of Mar to Jan (620:600=31:30). Distractor 5:4: estimation error — rounds 780 down to 750, giving 750:600=5:4.",
+          "March total = 780; January total = 600. GCD(780,600)=60, so 780:600 = 13:10. Distractor 4:3: uses the Electronics row only (320:240=4:3). Distractor 31:30: compares Feb to Jan instead of Mar to Jan (620:600=31:30). Distractor 5:4: estimation error - rounds 780 down to 750, giving 750:600=5:4.",
       },
     ],
   },
@@ -10932,7 +10932,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:1", "7:4", "5:3"],
         explanation:
-          "Route 12 Morning Peak = 480; Daytime = 320. GCD(480,320)=160, so 480:320 = 3:2. Distractor 2:1: reads Route 24 instead (300:150=2:1) — off-by-one row. Distractor 7:4: reads Route 35 instead (280:160=7:4) — off-by-one row. Distractor 5:3: approximation error, confusing 3:2 with 5:3 (≈1.67 vs 1.50).",
+          "Route 12 Morning Peak = 480; Daytime = 320. GCD(480,320)=160, so 480:320 = 3:2. Distractor 2:1: reads Route 24 instead (300:150=2:1) - off-by-one row. Distractor 7:4: reads Route 35 instead (280:160=7:4) - off-by-one row. Distractor 5:3: approximation error, confusing 3:2 with 5:3 (≈1.67 vs 1.50).",
       },
       {
         subtype: "qr-estimation",
@@ -10941,7 +10941,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "36%",
         distractors: ["40%", "24%", "48%"],
         explanation:
-          "Route 35 + Route 47 total = 600+300 = 900; grand total = 2500. 900 ÷ 2500 × 100 = 36%. Distractor 40%: overestimates by rounding 900 to 1000 (1000/2500=40%). Distractor 24%: uses Route 35 alone (600/2500=24%) — forgets Route 47. Distractor 48%: uses Routes 24+35 instead (600+600=1200, 1200/2500=48%) — off-by-one route selection.",
+          "Route 35 + Route 47 total = 600+300 = 900; grand total = 2500. 900 ÷ 2500 × 100 = 36%. Distractor 40%: overestimates by rounding 900 to 1000 (1000/2500=40%). Distractor 24%: uses Route 35 alone (600/2500=24%) - forgets Route 47. Distractor 48%: uses Routes 24+35 instead (600+600=1200, 1200/2500=48%) - off-by-one route selection.",
       },
     ],
   },
@@ -10990,7 +10990,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "13:3",
         distractors: ["5:1", "4:1", "15:4"],
         explanation:
-          "West Monday = 65; South Monday = 15. GCD(65,15)=5, so 65:15 = 13:3. Distractor 5:1: uses Friday readings instead (50:10=5:1) — off by one day. Distractor 4:1: approximation error (65÷15≈4.33, rounded down to 4:1). Distractor 15:4: uses Thursday readings (75:20; GCD=5, giving 15:4) — off by one day.",
+          "West Monday = 65; South Monday = 15. GCD(65,15)=5, so 65:15 = 13:3. Distractor 5:1: uses Friday readings instead (50:10=5:1) - off by one day. Distractor 4:1: approximation error (65÷15≈4.33, rounded down to 4:1). Distractor 15:4: uses Thursday readings (75:20; GCD=5, giving 15:4) - off by one day.",
       },
       {
         subtype: "qr-estimation",
@@ -10999,7 +10999,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "4",
         distractors: ["5", "3", "2"],
         explanation:
-          "North readings: Mon=42, Tue=38, Wed=45, Thu=50, Fri=35. Days strictly above 35: Mon(42), Tue(38), Wed(45), Thu(50) = 4 days. Fri=35 equals the threshold — it does not exceed it. Distractor 5: incorrectly includes Friday (reads ≥35 rather than >35). Distractor 3: counts only values above 40 — Mon(42), Wed(45), Thu(50). Distractor 2: counts only values ≥45 — Wed(45), Thu(50).",
+          "North readings: Mon=42, Tue=38, Wed=45, Thu=50, Fri=35. Days strictly above 35: Mon(42), Tue(38), Wed(45), Thu(50) = 4 days. Fri=35 equals the threshold - it does not exceed it. Distractor 5: incorrectly includes Friday (reads ≥35 rather than >35). Distractor 3: counts only values above 40 - Mon(42), Wed(45), Thu(50). Distractor 2: counts only values ≥45 - Wed(45), Thu(50).",
       },
     ],
   },
@@ -11039,7 +11039,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:2",
         distractors: ["2:5", "5:3", "3:1"],
         explanation:
-          "Customer A Personal Loan = 600; Customer C Personal Loan = 240. GCD(600,240)=120. 600÷120=5, 240÷120=2. Ratio = 5:2. Distractor 2:5: ratio reversed. Distractor 5:3: reads Credit Card row (A=300, C=180, 300:180=5:3) — wrong product row. Distractor 3:1: rounds 600÷240≈2.5 and incorrectly simplifies to 3:1.",
+          "Customer A Personal Loan = 600; Customer C Personal Loan = 240. GCD(600,240)=120. 600÷120=5, 240÷120=2. Ratio = 5:2. Distractor 2:5: ratio reversed. Distractor 5:3: reads Credit Card row (A=300, C=180, 300:180=5:3) - wrong product row. Distractor 3:1: rounds 600÷240≈2.5 and incorrectly simplifies to 3:1.",
       },
       {
         subtype: "qr-averages",
@@ -11097,7 +11097,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:1",
         distractors: ["1:3", "2:1", "3:2"],
         explanation:
-          "Clothing total = 900; Toys total = 300. 900 ÷ 300 = 3, so ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 2:1: uses May values only (Clothing=300, Toys=150, 300:150=2:1) — one month instead of total. Distractor 3:2: uses Homeware instead of Toys as denominator (900:600=3:2) — wrong category.",
+          "Clothing total = 900; Toys total = 300. 900 ÷ 300 = 3, so ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 2:1: uses May values only (Clothing=300, Toys=150, 300:150=2:1) - one month instead of total. Distractor 3:2: uses Homeware instead of Toys as denominator (900:600=3:2) - wrong category.",
       },
       {
         subtype: "qr-averages",
@@ -11155,7 +11155,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "3:1", "2:1"],
         explanation:
-          "City total = 18; United total = 12. GCD(18,12)=6. 18÷6=3, 12÷6=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: uses City vs Athletic (18:6=3:1) — wrong denominator team. Distractor 2:1: uses United vs Athletic (12:6=2:1) — shifts down one row.",
+          "City total = 18; United total = 12. GCD(18,12)=6. 18÷6=3, 12÷6=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: uses City vs Athletic (18:6=3:1) - wrong denominator team. Distractor 2:1: uses United vs Athletic (12:6=2:1) - shifts down one row.",
       },
       {
         subtype: "qr-averages",
@@ -11173,7 +11173,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "62.5%",
         distractors: ["66.7%", "41.7%", "37.5%"],
         explanation:
-          "Rovers Match 3 + City Match 3 = 6+4=10; Match 3 total = 16. 10÷16×100=62.5%. Distractor 66.7%: uses Match 1 or 2 total (15) as denominator (10÷15×100=66.7%). Distractor 41.7%: uses Rovers season total (24) as denominator (10÷24×100=41.7%). Distractor 37.5%: calculates United+Athletic in Match 3 instead — the complement (4+2=6, 6÷16×100=37.5%).",
+          "Rovers Match 3 + City Match 3 = 6+4=10; Match 3 total = 16. 10÷16×100=62.5%. Distractor 66.7%: uses Match 1 or 2 total (15) as denominator (10÷15×100=66.7%). Distractor 41.7%: uses Rovers season total (24) as denominator (10÷24×100=41.7%). Distractor 37.5%: calculates United+Athletic in Match 3 instead - the complement (4+2=6, 6÷16×100=37.5%).",
       },
     ],
   },
@@ -11262,7 +11262,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "50%",
         distractors: ["40%", "30%", "12.5%"],
         explanation:
-          "Combo Resolved = 100; Combo total = 200. 100÷200×100=50%. Distractor 40%: reads High Dose Resolved (80/200=40%) as if it were Combo — off-by-one arm. Distractor 30%: reads Combo Improved (60) instead of Resolved (60/200=30%) — wrong column. Distractor 12.5%: uses grand total as denominator (100÷800×100=12.5%).",
+          "Combo Resolved = 100; Combo total = 200. 100÷200×100=50%. Distractor 40%: reads High Dose Resolved (80/200=40%) as if it were Combo - off-by-one arm. Distractor 30%: reads Combo Improved (60) instead of Resolved (60/200=30%) - wrong column. Distractor 12.5%: uses grand total as denominator (100÷800×100=12.5%).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -11271,7 +11271,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "4:1",
         distractors: ["1:4", "2:1", "5:1"],
         explanation:
-          "High Dose Resolved = 80; Placebo Resolved = 20. 80÷20=4, so ratio = 4:1. Distractor 1:4: ratio reversed. Distractor 2:1: uses Low Dose Resolved (40) instead of High Dose (40:20=2:1) — off-by-one arm. Distractor 5:1: uses Combo Resolved (100) instead of High Dose (100:20=5:1) — off-by-one arm.",
+          "High Dose Resolved = 80; Placebo Resolved = 20. 80÷20=4, so ratio = 4:1. Distractor 1:4: ratio reversed. Distractor 2:1: uses Low Dose Resolved (40) instead of High Dose (40:20=2:1) - off-by-one arm. Distractor 5:1: uses Combo Resolved (100) instead of High Dose (100:20=5:1) - off-by-one arm.",
       },
       {
         subtype: "qr-averages",
@@ -11289,7 +11289,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "60%",
         distractors: ["30%", "40%", "50%"],
         explanation:
-          "Resolved + Improved = 240+240=480; grand total = 800. 480÷800×100=60%. Distractor 30%: uses Resolved column alone (240/800=30%). Distractor 40%: calculates Unchanged+Worsened instead — the complement (180+140=320, 320/800=40%). Distractor 50%: rounds 480 down to 400 (400/800=50%).",
+          "Resolved + Improved = 240+240=480; grand total = 800. 480÷800×100=60%. Distractor 30%: uses Resolved column alone (240/800=30%). Distractor 40%: calculates Unchanged+Worsened instead - the complement (180+140=320, 320/800=40%). Distractor 50%: rounds 480 down to 400 (400/800=50%).",
       },
     ],
   },
@@ -11329,7 +11329,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:1",
         distractors: ["1:5", "5:3", "4:1"],
         explanation:
-          "Adult Social Care total = 2000; Libraries total = 400. GCD(2000,400)=400. 2000÷400=5, 400÷400=1. Ratio = 5:1. Distractor 1:5: ratio reversed. Distractor 5:3: uses Highways total as Libraries (2000:1200=5:3). Distractor 4:1: approximation error — rounds Adult Social Care down to 1600 (1600:400=4:1).",
+          "Adult Social Care total = 2000; Libraries total = 400. GCD(2000,400)=400. 2000÷400=5, 400÷400=1. Ratio = 5:1. Distractor 1:5: ratio reversed. Distractor 5:3: uses Highways total as Libraries (2000:1200=5:3). Distractor 4:1: approximation error - rounds Adult Social Care down to 1600 (1600:400=4:1).",
       },
       {
         subtype: "qr-averages",
@@ -11387,7 +11387,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:1",
         distractors: ["1:3", "3:2", "1:1"],
         explanation:
-          "Line B total = 18; Line D total = 6. 18÷6=3, so ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 3:2: uses Line C instead of Line D as denominator (18:12=3:2). Distractor 1:1: reads the Afternoon shift only, where Line B=4 and Line D=4 (4:4=1:1) — uses one shift instead of the total.",
+          "Line B total = 18; Line D total = 6. 18÷6=3, so ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 3:2: uses Line C instead of Line D as denominator (18:12=3:2). Distractor 1:1: reads the Afternoon shift only, where Line B=4 and Line D=4 (4:4=1:1) - uses one shift instead of the total.",
       },
       {
         subtype: "qr-averages",
@@ -11561,7 +11561,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "1:1",
         distractors: ["3:2", "2:1", "4:3"],
         explanation:
-          "Norovirus total = 60; E.coli total = 60. 60:60 = 1:1. Distractor 3:2: reads one department only — Medical Norovirus (30) vs Medical E.coli (20) = 3:2, using a single department instead of full totals. Distractor 2:1: substitutes MRSA total (120) for Norovirus total (120:60=2:1). Distractor 4:3: reads Influenza:MRSA instead of Norovirus:E.coli (160:120; GCD=40, giving 4:3) — off-by-two rows.",
+          "Norovirus total = 60; E.coli total = 60. 60:60 = 1:1. Distractor 3:2: reads one department only - Medical Norovirus (30) vs Medical E.coli (20) = 3:2, using a single department instead of full totals. Distractor 2:1: substitutes MRSA total (120) for Norovirus total (120:60=2:1). Distractor 4:3: reads Influenza:MRSA instead of Norovirus:E.coli (160:120; GCD=40, giving 4:3) - off-by-two rows.",
       },
       {
         subtype: "qr-averages",
@@ -11579,7 +11579,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "25%",
         distractors: ["50%", "36.4%", "10%"],
         explanation:
-          "Influenza Emergency = 40; Influenza total = 160. 40÷160×100=25%. Distractor 50%: reads Medical Influenza (80) as if it were Emergency (80/160=50%) — off-by-row. Distractor 36.4%: uses the Emergency department total as denominator instead of Influenza total (40÷110×100=36.4%). Distractor 10%: uses the grand total as denominator (40÷400×100=10%).",
+          "Influenza Emergency = 40; Influenza total = 160. 40÷160×100=25%. Distractor 50%: reads Medical Influenza (80) as if it were Emergency (80/160=50%) - off-by-row. Distractor 36.4%: uses the Emergency department total as denominator instead of Influenza total (40÷110×100=36.4%). Distractor 10%: uses the grand total as denominator (40÷400×100=10%).",
       },
     ],
   },
@@ -11610,7 +11610,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "50%",
         distractors: ["40%", "25%", "10%"],
         explanation:
-          "Permanent total = 200; grand total = 400. 200÷400×100=50%. Distractor 40%: reads ITU total (160/400=40%) — confuses ward total with employment-type column. Distractor 25%: reads Bank total (100/400=25%). Distractor 10%: reads Paediatrics total (40/400=10%).",
+          "Permanent total = 200; grand total = 400. 200÷400×100=50%. Distractor 40%: reads ITU total (160/400=40%) - confuses ward total with employment-type column. Distractor 25%: reads Bank total (100/400=25%). Distractor 10%: reads Paediatrics total (40/400=10%).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -11927,7 +11927,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "59%",
         distractors: ["41%", "60%", "50%"],
         explanation:
-          "Non-Medicine 2024 = Engineering+Law+Arts = 300+200+90=590; 2024 total = 1000. 590÷1000×100=59%. Distractor 41%: reads Medicine 2024 alone (410/1000=41%) — gives Medicine's share rather than 'other than Medicine'. Distractor 60%: rounds 590 up to 600 (600/1000=60%). Distractor 50%: omits Arts from the non-Medicine total (Engineering+Law only: 300+200=500, 500/1000=50%).",
+          "Non-Medicine 2024 = Engineering+Law+Arts = 300+200+90=590; 2024 total = 1000. 590÷1000×100=59%. Distractor 41%: reads Medicine 2024 alone (410/1000=41%) - gives Medicine's share rather than 'other than Medicine'. Distractor 60%: rounds 590 up to 600 (600/1000=60%). Distractor 50%: omits Arts from the non-Medicine total (Engineering+Law only: 300+200=500, 500/1000=50%).",
       },
     ],
   },
@@ -12025,7 +12025,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "6:1",
         distractors: ["1:6", "5:3", "3:1"],
         explanation:
-          "Route B total = 2400; Route D total = 400. GCD(2400,400)=400. 2400÷400=6, 400÷400=1. Ratio = 6:1. Distractor 1:6: ratio reversed. Distractor 5:3: reads Route A:Route B (4000:2400; GCD=800, giving 5:3) — wrong pair. Distractor 3:1: reads Route C:Route D (1200:400=3:1) — wrong numerator.",
+          "Route B total = 2400; Route D total = 400. GCD(2400,400)=400. 2400÷400=6, 400÷400=1. Ratio = 6:1. Distractor 1:6: ratio reversed. Distractor 5:3: reads Route A:Route B (4000:2400; GCD=800, giving 5:3) - wrong pair. Distractor 3:1: reads Route C:Route D (1200:400=3:1) - wrong numerator.",
       },
       {
         subtype: "qr-averages",
@@ -12217,7 +12217,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "45%",
         distractors: ["40%", "30%", "18%"],
         explanation:
-          "Northtown Easy Access = 180; Easy Access total = 400. 180÷400×100=45%. Distractor 40%: reads Northtown's share of all accounts (400/1000=40%) — uses total accounts rather than Easy Access column. Distractor 30%: reads Eastville Easy Access (120/400=30%). Distractor 18%: uses grand total as denominator (180÷1000×100=18%).",
+          "Northtown Easy Access = 180; Easy Access total = 400. 180÷400×100=45%. Distractor 40%: reads Northtown's share of all accounts (400/1000=40%) - uses total accounts rather than Easy Access column. Distractor 30%: reads Eastville Easy Access (120/400=30%). Distractor 18%: uses grand total as denominator (180÷1000×100=18%).",
       },
     ],
   },
@@ -12315,7 +12315,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "3:1", "2:1"],
         explanation:
-          "Chen total = 12; Torres total = 8. GCD(12,8)=4. 12÷4=3, 8÷4=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: reads Chen:Mehta (12:4=3:1) — wrong denominator player. Distractor 2:1: reads Okafor:Torres (16:8=2:1) — wrong numerator player.",
+          "Chen total = 12; Torres total = 8. GCD(12,8)=4. 12÷4=3, 8÷4=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: reads Chen:Mehta (12:4=3:1) - wrong denominator player. Distractor 2:1: reads Okafor:Torres (16:8=2:1) - wrong numerator player.",
       },
       {
         subtype: "qr-averages",
@@ -12373,7 +12373,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "5:4", "3:1"],
         explanation:
-          "Southmoor total = 240; Eastfields total = 160. GCD(240,160)=80. 240÷80=3, 160÷80=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 5:4: reads Northgate:Eastfields (200:160; GCD=40, giving 5:4). Distractor 3:1: approximation error — rounds 240÷160≈1.5 and wrongly simplifies to 3:1.",
+          "Southmoor total = 240; Eastfields total = 160. GCD(240,160)=80. 240÷80=3, 160÷80=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 5:4: reads Northgate:Eastfields (200:160; GCD=40, giving 5:4). Distractor 3:1: approximation error - rounds 240÷160≈1.5 and wrongly simplifies to 3:1.",
       },
       {
         subtype: "qr-averages",
@@ -12449,7 +12449,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "60%",
         distractors: ["40%", "18%", "70%"],
         explanation:
-          "Protocol B Excellent + Good = 60+120=180; Protocol B total = 300. 180÷300×100=60%. Distractor 40%: uses Protocol A's Excellent+Good (40+80=120) as numerator (120/300=40%). Distractor 18%: uses grand total as denominator (180÷1000×100=18%). Distractor 70%: reads Protocol C Excellent+Good (120+160=280) as proportion of Protocol C (280/400=70%) — wrong protocol.",
+          "Protocol B Excellent + Good = 60+120=180; Protocol B total = 300. 180÷300×100=60%. Distractor 40%: uses Protocol A's Excellent+Good (40+80=120) as numerator (120/300=40%). Distractor 18%: uses grand total as denominator (180÷1000×100=18%). Distractor 70%: reads Protocol C Excellent+Good (120+160=280) as proportion of Protocol C (280/400=70%) - wrong protocol.",
       },
     ],
   },
@@ -12663,7 +12663,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "4:3", "3:1"],
         explanation:
-          "Alpha total = 400; Gamma total = 200. 400÷200=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Alpha:Beta (400:300=4:3). Distractor 3:1: reads Beta:Delta (300:100=3:1) — wrong stations.",
+          "Alpha total = 400; Gamma total = 200. 400÷200=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Alpha:Beta (400:300=4:3). Distractor 3:1: reads Beta:Delta (300:100=3:1) - wrong stations.",
       },
       {
         subtype: "qr-averages",
@@ -12672,7 +12672,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "50",
         distractors: ["80", "30", "40"],
         explanation:
-          "Road Accident total = 200; 4 stations. 200÷4=50. Distractor 80: reads Alpha Road Accident (the highest). Distractor 30: reads Gamma Road Accident — stops at one station's value rather than averaging across all four. Distractor 40: divides by 5 instead of 4 (200÷5=40).",
+          "Road Accident total = 200; 4 stations. 200÷4=50. Distractor 80: reads Alpha Road Accident (the highest). Distractor 30: reads Gamma Road Accident - stops at one station's value rather than averaging across all four. Distractor 40: divides by 5 instead of 4 (200÷5=40).",
       },
       {
         subtype: "qr-percentages",
@@ -12681,7 +12681,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "25%",
         distractors: ["20%", "10%", "29%"],
         explanation:
-          "Alpha False Alarm = 100; Alpha total = 400. 100÷400×100=25%. Distractor 20%: reads Alpha Road Accident (80/400=20%). Distractor 10%: reads Alpha Flooding (40/400=10%). Distractor 29%: reads False Alarm total/grand total (290/1000=29%) — uses column total instead of station row.",
+          "Alpha False Alarm = 100; Alpha total = 400. 100÷400×100=25%. Distractor 20%: reads Alpha Road Accident (80/400=20%). Distractor 10%: reads Alpha Flooding (40/400=10%). Distractor 29%: reads False Alarm total/grand total (290/1000=29%) - uses column total instead of station row.",
       },
     ],
   },
@@ -13359,7 +13359,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "3:1", "2:1"],
         explanation:
-          "Medium total = 3000; Low total = 2000. GCD(3000,2000)=1000. 3000÷1000=3, 2000÷1000=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: reads Medium:Very High (3000:1000=3:1). Distractor 2:1: reads High:Low (4000:2000=2:1) — uses High income instead of Medium.",
+          "Medium total = 3000; Low total = 2000. GCD(3000,2000)=1000. 3000÷1000=3, 2000÷1000=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 3:1: reads Medium:Very High (3000:1000=3:1). Distractor 2:1: reads High:Low (4000:2000=2:1) - uses High income instead of Medium.",
       },
       {
         subtype: "qr-averages",
@@ -13649,7 +13649,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "6:5", "3:1"],
         explanation:
-          "East total = 300; West total = 200. GCD(300,200)=100. 300÷100=3, 200÷100=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 6:5: reads East:North or East:South (300:250; GCD=50, giving 6:5). Distractor 3:1: reads East:65+ total (300:100=3:1) — uses the age-group column total as if it were a regional total.",
+          "East total = 300; West total = 200. GCD(300,200)=100. 300÷100=3, 200÷100=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 6:5: reads East:North or East:South (300:250; GCD=50, giving 6:5). Distractor 3:1: reads East:65+ total (300:100=3:1) - uses the age-group column total as if it were a regional total.",
       },
       {
         subtype: "qr-percentages",
@@ -13658,7 +13658,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "44%",
         distractors: ["40%", "24%", "11%"],
         explanation:
-          "South 18–44 = 110; South total = 250. 110÷250×100=44%. Distractor 40%: reads North 18–44 (100/250=40%) — off-by-one authority. Distractor 24%: reads South 45–64 (60/250=24%) — wrong age group. Distractor 11%: uses grand total as denominator (110÷1000×100=11%).",
+          "South 18–44 = 110; South total = 250. 110÷250×100=44%. Distractor 40%: reads North 18–44 (100/250=40%) - off-by-one authority. Distractor 24%: reads South 45–64 (60/250=24%) - wrong age group. Distractor 11%: uses grand total as denominator (110÷1000×100=11%).",
       },
       {
         subtype: "qr-percentages",
@@ -13667,7 +13667,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "32%",
         distractors: ["24%", "8%", "20%"],
         explanation:
-          "East 0–17 = 80; 0–17 total = 250. 80÷250×100=32%. Distractor 24%: reads West 0–17 (60/250=24%). Distractor 8%: uses grand total as denominator (80÷1000×100=8%). Distractor 20%: reads North 0–17 (50/250=20%) — off-by-one authority.",
+          "East 0–17 = 80; 0–17 total = 250. 80÷250×100=32%. Distractor 24%: reads West 0–17 (60/250=24%). Distractor 8%: uses grand total as denominator (80÷1000×100=8%). Distractor 20%: reads North 0–17 (50/250=20%) - off-by-one authority.",
       },
     ],
   },
@@ -13881,7 +13881,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:4",
         distractors: ["4:5", "6:5", "5:2"],
         explanation:
-          "Adults total = 500; Paediatric total = 400. GCD(500,400)=100. 500÷100=5, 400÷100=4. Ratio = 5:4. Distractor 4:5: ratio reversed. Distractor 6:5: reads Elderly:Adults (600:500=6:5). Distractor 5:2: reads Adults+Pregnant:Paediatric (1000:400=5:2) — sums two cohorts.",
+          "Adults total = 500; Paediatric total = 400. GCD(500,400)=100. 500÷100=5, 400÷100=4. Ratio = 5:4. Distractor 4:5: ratio reversed. Distractor 6:5: reads Elderly:Adults (600:500=6:5). Distractor 5:2: reads Adults+Pregnant:Paediatric (1000:400=5:2) - sums two cohorts.",
       },
       {
         subtype: "qr-averages",
@@ -13939,7 +13939,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "4:3", "3:1"],
         explanation:
-          "Cardiology total = 600; Neurology total = 300. 600÷300=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Cardiology:Orthopaedics (600:450; GCD=150, giving 4:3). Distractor 3:1: reads Orthopaedics:Urology (450:150=3:1) — uses wrong pair.",
+          "Cardiology total = 600; Neurology total = 300. 600÷300=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Cardiology:Orthopaedics (600:450; GCD=150, giving 4:3). Distractor 3:1: reads Orthopaedics:Urology (450:150=3:1) - uses wrong pair.",
       },
       {
         subtype: "qr-averages",
@@ -14461,7 +14461,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "4:3", "5:2"],
         explanation:
-          "Residential total = 1000; Industrial total = 500. 1000÷500=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Residential:Commercial (1000:750; GCD=250, giving 4:3). Distractor 5:2: approximation error — student rounds Commercial (750) down to 400 and uses it as denominator (1000:400=5:2).",
+          "Residential total = 1000; Industrial total = 500. 1000÷500=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Residential:Commercial (1000:750; GCD=250, giving 4:3). Distractor 5:2: approximation error - student rounds Commercial (750) down to 400 and uses it as denominator (1000:400=5:2).",
       },
       {
         subtype: "qr-averages",
@@ -14519,7 +14519,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "10:3", "5:2"],
         explanation:
-          "Premium total = 2000; Standard total = 1000. 2000÷1000=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 10:3: reads Premium:Basic (2000:600; GCD=200, giving 10:3). Distractor 5:2: reads Standard:Student (1000:400; GCD=200, giving 5:2) — uses wrong segments.",
+          "Premium total = 2000; Standard total = 1000. 2000÷1000=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 10:3: reads Premium:Basic (2000:600; GCD=200, giving 10:3). Distractor 5:2: reads Standard:Student (1000:400; GCD=200, giving 5:2) - uses wrong segments.",
       },
       {
         subtype: "qr-averages",
@@ -14653,7 +14653,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "25%",
         distractors: ["10%", "40%", "50%"],
         explanation:
-          "West total = 100; South total = 400. 100÷400×100=25%. Distractor 10%: uses grand total as denominator (100÷1000×100=10%). Distractor 40%: uses grand total as denominator for South (400/1000=40%) — confuses 'percentage of South' with 'South's share of total'. Distractor 50%: reads East:South instead (200/400=50%).",
+          "West total = 100; South total = 400. 100÷400×100=25%. Distractor 10%: uses grand total as denominator (100÷1000×100=10%). Distractor 40%: uses grand total as denominator for South (400/1000=40%) - confuses 'percentage of South' with 'South's share of total'. Distractor 50%: reads East:South instead (200/400=50%).",
       },
     ],
   },
@@ -14925,7 +14925,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "4:3", "4:1"],
         explanation:
-          "Cod total = 1000; Mackerel total = 500. 1000÷500=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Cod:Haddock (1000:750; GCD=250, giving 4:3). Distractor 4:1: reads Cod:Plaice (1000:250; GCD=250, giving 4:1) — uses Plaice instead of Mackerel as denominator.",
+          "Cod total = 1000; Mackerel total = 500. 1000÷500=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 4:3: reads Cod:Haddock (1000:750; GCD=250, giving 4:3). Distractor 4:1: reads Cod:Plaice (1000:250; GCD=250, giving 4:1) - uses Plaice instead of Mackerel as denominator.",
       },
       {
         subtype: "qr-averages",
@@ -15427,7 +15427,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:2",
         distractors: ["2:5", "5:3", "3:2"],
         explanation:
-          "Crisis total = 1000; Liaison total = 400. GCD(1000,400)=200. 1000÷200=5, 400÷200=2. Ratio = 5:2. Distractor 2:5: ratio reversed. Distractor 5:3: uses CAMHS instead of Liaison (1000:600=5:3). Distractor 3:2: uses CAMHS:Liaison (600:400=3:2) — reads the wrong numerator.",
+          "Crisis total = 1000; Liaison total = 400. GCD(1000,400)=200. 1000÷200=5, 400÷200=2. Ratio = 5:2. Distractor 2:5: ratio reversed. Distractor 5:3: uses CAMHS instead of Liaison (1000:600=5:3). Distractor 3:2: uses CAMHS:Liaison (600:400=3:2) - reads the wrong numerator.",
       },
       {
         subtype: "qr-averages",
@@ -15485,7 +15485,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:2",
         distractors: ["2:3", "4:3", "3:1"],
         explanation:
-          "Branch B total = 600; Branch C total = 400. GCD(600,400)=200. 600÷200=3, 400÷200=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 4:3: uses Branch A vs Branch B (800:600=4:3) — off by one branch. Distractor 3:1: uses Branch B vs Branch D (600:200=3:1) — skips a branch.",
+          "Branch B total = 600; Branch C total = 400. GCD(600,400)=200. 600÷200=3, 400÷200=2. Ratio = 3:2. Distractor 2:3: ratio reversed. Distractor 4:3: uses Branch A vs Branch B (800:600=4:3) - off by one branch. Distractor 3:1: uses Branch B vs Branch D (600:200=3:1) - skips a branch.",
       },
       {
         subtype: "qr-averages",
@@ -15601,7 +15601,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "3:2", "3:1"],
         explanation:
-          "Airport total = 800; Business Park total = 400. 800÷400=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 3:2: uses City Centre vs Airport (1200:800=3:2) — wrong pair. Distractor 3:1: uses City Centre vs Business Park (1200:400=3:1) — wrong pair.",
+          "Airport total = 800; Business Park total = 400. 800÷400=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 3:2: uses City Centre vs Airport (1200:800=3:2) - wrong pair. Distractor 3:1: uses City Centre vs Business Park (1200:400=3:1) - wrong pair.",
       },
       {
         subtype: "qr-averages",
@@ -15716,7 +15716,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3:1",
         distractors: ["1:3", "2:1", "3:2"],
         explanation:
-          "Post-Surgical <24 hrs = 90; Respiratory <24 hrs = 30. 90÷30=3, ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 2:1: uses Cardiac instead of Post-Surgical (60:30=2:1). Distractor 3:2: uses Post-Surgical vs Cardiac (90:60=3:2) — off-by-one row.",
+          "Post-Surgical <24 hrs = 90; Respiratory <24 hrs = 30. 90÷30=3, ratio = 3:1. Distractor 1:3: ratio reversed. Distractor 2:1: uses Cardiac instead of Post-Surgical (60:30=2:1). Distractor 3:2: uses Post-Surgical vs Cardiac (90:60=3:2) - off-by-one row.",
       },
       {
         subtype: "qr-averages",
@@ -15832,7 +15832,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "8:5",
         distractors: ["5:8", "8:3", "2:1"],
         explanation:
-          "North total = 800; East total = 500. GCD(800,500)=100. 800÷100=8, 500÷100=5. Ratio = 8:5. Distractor 5:8: ratio reversed. Distractor 8:3: uses West instead of East as denominator (800:300=8:3). Distractor 2:1: approximation error — rounds 800 to 1000 (1000:500=2:1).",
+          "North total = 800; East total = 500. GCD(800,500)=100. 800÷100=8, 500÷100=5. Ratio = 8:5. Distractor 5:8: ratio reversed. Distractor 8:3: uses West instead of East as denominator (800:300=8:3). Distractor 2:1: approximation error - rounds 800 to 1000 (1000:500=2:1).",
       },
       {
         subtype: "qr-averages",
@@ -16134,7 +16134,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "7:3",
         distractors: ["3:7", "7:5", "2:1"],
         explanation:
-          "Medical 2024 = 420; Orthopaedics 2024 = 180. GCD(420,180)=60. 420÷60=7, 180÷60=3. Ratio = 7:3. Distractor 3:7: ratio reversed. Distractor 7:5: uses Surgical instead of Orthopaedics (420:300; GCD=60, 7:5). Distractor 2:1: approximation — rounds 420 to 360 (360:180=2:1).",
+          "Medical 2024 = 420; Orthopaedics 2024 = 180. GCD(420,180)=60. 420÷60=7, 180÷60=3. Ratio = 7:3. Distractor 3:7: ratio reversed. Distractor 7:5: uses Surgical instead of Orthopaedics (420:300; GCD=60, 7:5). Distractor 2:1: approximation - rounds 420 to 360 (360:180=2:1).",
       },
       {
         subtype: "qr-averages",
@@ -16174,7 +16174,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "70%",
         distractors: ["35%", "50%", "20%"],
         explanation:
-          "Year 2 Anatomy = 168; Year 2 cohort size = 240. 168÷240×100=70%. Distractor 35%: uses Year 2 column total (480) as denominator instead of cohort size (168÷480×100=35%). Distractor 50%: uses Year 1 Anatomy (120) over Year 2 cohort (120÷240=50%) — reads the wrong year's data. Distractor 20%: uses grand total as denominator (168÷840×100=20%).",
+          "Year 2 Anatomy = 168; Year 2 cohort size = 240. 168÷240×100=70%. Distractor 35%: uses Year 2 column total (480) as denominator instead of cohort size (168÷480×100=35%). Distractor 50%: uses Year 1 Anatomy (120) over Year 2 cohort (120÷240=50%) - reads the wrong year's data. Distractor 20%: uses grand total as denominator (168÷840×100=20%).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -16183,7 +16183,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:6",
         distractors: ["6:5", "5:7", "3:4"],
         explanation:
-          "Year 1 Physiology = 100; Year 2 Physiology = 120. GCD(100,120)=20. 100÷20=5, 120÷20=6. Ratio = 5:6. Distractor 6:5: ratio reversed. Distractor 5:7: uses Anatomy row instead (120:168; GCD=24, 5:7). Distractor 3:4: uses total Y1 vs Y2 (360:480; GCD=120, 3:4) — confuses row data with column totals.",
+          "Year 1 Physiology = 100; Year 2 Physiology = 120. GCD(100,120)=20. 100÷20=5, 120÷20=6. Ratio = 5:6. Distractor 6:5: ratio reversed. Distractor 5:7: uses Anatomy row instead (120:168; GCD=24, 5:7). Distractor 3:4: uses total Y1 vs Y2 (360:480; GCD=120, 3:4) - confuses row data with column totals.",
       },
       {
         subtype: "qr-averages",
@@ -16241,7 +16241,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:3",
         distractors: ["3:5", "5:4", "2:1"],
         explanation:
-          "Elective total = 150; Emergency total = 90. GCD(150,90)=30. 150÷30=5, 90÷30=3. Ratio = 5:3. Distractor 3:5: ratio reversed. Distractor 5:4: uses Assisted instead of Emergency (150:120; GCD=30, 5:4). Distractor 2:1: approximation — rounds 150 to 180 (180:90=2:1).",
+          "Elective total = 150; Emergency total = 90. GCD(150,90)=30. 150÷30=5, 90÷30=3. Ratio = 5:3. Distractor 3:5: ratio reversed. Distractor 5:4: uses Assisted instead of Emergency (150:120; GCD=30, 5:4). Distractor 2:1: approximation - rounds 150 to 180 (180:90=2:1).",
       },
       {
         subtype: "qr-averages",
@@ -16549,7 +16549,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "1200 mg",
         distractors: ["800 mg", "1600 mg", "600 mg"],
         explanation:
-          "Patient C weight = 80 kg. New dose = 80 × 15 = 1200 mg. Distractor 800 mg: original dose at 10 mg/kg (80 × 10 = 800). Distractor 1600 mg: original twice-daily total, misread as the new dose. Distractor 600 mg: uses Patient B's original dose — off-by-one row error.",
+          "Patient C weight = 80 kg. New dose = 80 × 15 = 1200 mg. Distractor 800 mg: original dose at 10 mg/kg (80 × 10 = 800). Distractor 1600 mg: original twice-daily total, misread as the new dose. Distractor 600 mg: uses Patient B's original dose - off-by-one row error.",
       },
     ],
   },
@@ -16685,7 +16685,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         ["Wound care", "3", "20", "240"],
         ["Diabetic monitoring", "2", "25", "200"],
         ["Palliative care", "4", "10", "160"],
-        ["Total", "—", "65", "800"],
+        ["Total", "-", "65", "800"],
       ],
     },
     questions: [
@@ -16996,7 +16996,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "6:5", "3:2"],
         explanation:
-          "Mental health total = 200; Neurological total = 100. 200÷100=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 6:5: uses Musculoskeletal vs Mental health (240:200; GCD=40, 6:5). Distractor 3:2: reads Mental health GP referrals vs Neurological GP referrals (60:40=3:2) — uses one column only.",
+          "Mental health total = 200; Neurological total = 100. 200÷100=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 6:5: uses Musculoskeletal vs Mental health (240:200; GCD=40, 6:5). Distractor 3:2: reads Mental health GP referrals vs Neurological GP referrals (60:40=3:2) - uses one column only.",
       },
       {
         subtype: "qr-averages",
@@ -17449,7 +17449,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "120",
         distractors: ["180", "40", "160"],
         explanation:
-          "The Year 1 bar for GP reaches 120. Distractor 180: Year 2 GP value — off by one year. Distractor 40: reads Year 1 Self-referral or Hospital specialist bar instead of GP. Distractor 160: adds GP Y1 and Self-referral Y1 together instead of reading GP alone (120+40=160).",
+          "The Year 1 bar for GP reaches 120. Distractor 180: Year 2 GP value - off by one year. Distractor 40: reads Year 1 Self-referral or Hospital specialist bar instead of GP. Distractor 160: adds GP Y1 and Self-referral Y1 together instead of reading GP alone (120+40=160).",
       },
       {
         subtype: "qr-percentages",
@@ -17574,7 +17574,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "1:3",
         distractors: ["3:1", "3:8", "1:4"],
         explanation:
-          "Referral total = 150; Self-resolving total = 450. GCD(150,450)=150. 150÷150=1, 450÷150=3. Ratio = 1:3. Distractor 3:1: ratio reversed. Distractor 3:8: uses Prescriptions instead of Self-resolving (150:400; GCD=50, 3:8). Distractor 1:4: uses URTI Referral vs URTI Prescription (50:200=1:4) — within-row rather than column totals.",
+          "Referral total = 150; Self-resolving total = 450. GCD(150,450)=150. 150÷150=1, 450÷150=3. Ratio = 1:3. Distractor 3:1: ratio reversed. Distractor 3:8: uses Prescriptions instead of Self-resolving (150:400; GCD=50, 3:8). Distractor 1:4: uses URTI Referral vs URTI Prescription (50:200=1:4) - within-row rather than column totals.",
       },
       {
         subtype: "qr-averages",
@@ -17624,7 +17624,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "20%",
         distractors: ["80%", "25%", "12.5%"],
         explanation:
-          "H1 total = 1000; H2 total = 800. % decrease = (1000−800)÷1000×100 = 200÷1000×100 = 20%. Distractor 80%: reads H2/H1 (800/1000=80%) — gives % remaining, not % decrease. Distractor 25%: uses H2 as base (200÷800×100=25%). Distractor 12.5%: divides the change by H1 total misread as 1600 (200/1600=12.5%).",
+          "H1 total = 1000; H2 total = 800. % decrease = (1000−800)÷1000×100 = 200÷1000×100 = 20%. Distractor 80%: reads H2/H1 (800/1000=80%) - gives % remaining, not % decrease. Distractor 25%: uses H2 as base (200÷800×100=25%). Distractor 12.5%: divides the change by H1 total misread as 1600 (200/1600=12.5%).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -17651,7 +17651,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "25%",
         distractors: ["75%", "33.3%", "10%"],
         explanation:
-          "Nursing H1 = 400; Nursing H2 = 300. % decrease = (400−300)÷400×100 = 100÷400×100 = 25%. Distractor 75%: reads H2/H1 (300/400=75%) — gives % remaining, not % decrease. Distractor 33.3%: uses H2 as base (100÷300×100=33.3%). Distractor 10%: uses H1 total as denominator (100÷1000×100=10%).",
+          "Nursing H1 = 400; Nursing H2 = 300. % decrease = (400−300)÷400×100 = 100÷400×100 = 25%. Distractor 75%: reads H2/H1 (300/400=75%) - gives % remaining, not % decrease. Distractor 33.3%: uses H2 as base (100÷300×100=33.3%). Distractor 10%: uses H1 total as denominator (100÷1000×100=10%).",
       },
     ],
   },
@@ -17757,7 +17757,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "5:3", "3:1"],
         explanation:
-          "Family/friend = 300; Ambulance = 150. 300÷150=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 5:3: uses Own car vs Family/friend (500:300; GCD=100, 5:3). Distractor 3:1: uses Ambulance vs Taxi (150:50=3:1) — correct calculation but wrong pair.",
+          "Family/friend = 300; Ambulance = 150. 300÷150=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 5:3: uses Own car vs Family/friend (500:300; GCD=100, 5:3). Distractor 3:1: uses Ambulance vs Taxi (150:50=3:1) - correct calculation but wrong pair.",
       },
       {
         subtype: "qr-estimation",
@@ -17806,7 +17806,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "5:3", "3:1"],
         explanation:
-          "Anxiety total = 600; Bipolar total = 300. 600÷300=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 5:3: uses Depression vs Anxiety (1000:600; GCD=200, 5:3). Distractor 3:1: uses Bipolar vs PTSD (300:100=3:1) — correct calculation but wrong pair.",
+          "Anxiety total = 600; Bipolar total = 300. 600÷300=2, ratio = 2:1. Distractor 1:2: ratio reversed. Distractor 5:3: uses Depression vs Anxiety (1000:600; GCD=200, 5:3). Distractor 3:1: uses Bipolar vs PTSD (300:100=3:1) - correct calculation but wrong pair.",
       },
       {
         subtype: "qr-averages",
@@ -17858,7 +17858,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "110",
         distractors: ["130", "95", "120"],
         explanation:
-          "The Friday point reaches 110. Distractor 130: Saturday value. Distractor 95: Thursday value. Distractor 120: between Friday and Saturday — overestimates Friday.",
+          "The Friday point reaches 110. Distractor 130: Saturday value. Distractor 95: Thursday value. Distractor 120: between Friday and Saturday - overestimates Friday.",
       },
       {
         subtype: "qr-averages",
@@ -18232,7 +18232,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "35%",
         distractors: ["45%", "70%", "7%"],
         explanation:
-          "Breast responders = 70; Breast cohort = 200. 70÷200×100=35%. Distractor 45%: reads Renal response rate (90/200=45%). Distractor 70%: reads the raw responder count (70) as a percentage — ignores the denominator. Distractor 7%: uses grand total patients (5×200=1000) as denominator (70÷1000×100=7%).",
+          "Breast responders = 70; Breast cohort = 200. 70÷200×100=35%. Distractor 45%: reads Renal response rate (90/200=45%). Distractor 70%: reads the raw responder count (70) as a percentage - ignores the denominator. Distractor 7%: uses grand total patients (5×200=1000) as denominator (70÷1000×100=7%).",
       },
     ],
   },
@@ -18321,7 +18321,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "5:2",
         distractors: ["2:5", "4:1", "3:1"],
         explanation:
-          "Penicillins total = 300; Carbapenems total = 120. 300:120 = 5:2. Distractor 2:5: ratio reversed. Distractor 4:1: uses Medical ward only (120:30=4:1). Distractor 3:1: compares Penicillins to Macrolides total (300:100=3:1) — wrong comparator.",
+          "Penicillins total = 300; Carbapenems total = 120. 300:120 = 5:2. Distractor 2:5: ratio reversed. Distractor 4:1: uses Medical ward only (120:30=4:1). Distractor 3:1: compares Penicillins to Macrolides total (300:100=3:1) - wrong comparator.",
       },
       {
         subtype: "qr-percentages",
@@ -18463,7 +18463,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2/5",
         distractors: ["1/3", "1/2", "1/4"],
         explanation:
-          "Assessments completed = 240; grand total = 600. 240÷600=2/5 (exactly 40%). Distractor 1/3: reads the waiting list total (210) as completions — 210/600≈1/3. Distractor 1/2: overestimates; 1/2 of 600=300, close enough to confuse an inattentive reader. Distractor 1/4: applies GP completed proportion only (50÷200=1/4).",
+          "Assessments completed = 240; grand total = 600. 240÷600=2/5 (exactly 40%). Distractor 1/3: reads the waiting list total (210) as completions - 210/600≈1/3. Distractor 1/2: overestimates; 1/2 of 600=300, close enough to confuse an inattentive reader. Distractor 1/4: applies GP completed proportion only (50÷200=1/4).",
       },
     ],
   },
@@ -18630,7 +18630,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "20%",
         distractors: ["16.7%", "10", "120%"],
         explanation:
-          "January = 50 min; April = 60 min. % increase = (60−50)÷50×100=20%. Distractor 16.7%: uses April as the denominator (10÷60×100=16.7%). Distractor 10: gives the absolute difference in minutes rather than a percentage. Distractor 120%: calculates 60÷50×100=120% — 'April as % of January' rather than % increase.",
+          "January = 50 min; April = 60 min. % increase = (60−50)÷50×100=20%. Distractor 16.7%: uses April as the denominator (10÷60×100=16.7%). Distractor 10: gives the absolute difference in minutes rather than a percentage. Distractor 120%: calculates 60÷50×100=120% - 'April as % of January' rather than % increase.",
       },
       {
         subtype: "qr-percentages",
@@ -18639,7 +18639,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "50%",
         distractors: ["33.3%", "66.7%", "16.7%"],
         explanation:
-          "Overall mean = 50 min. Months above 50 min: Feb (55), Apr (60), May (55) = 3 months. 3÷6×100=50%. Distractor 33.3%: counts only Feb and Apr — misidentifies May as 'at' rather than 'above' the mean (2÷6=33.3%). Distractor 66.7%: counts Jan (50) as 'above' by using ≥50 rather than >50 (4÷6=66.7%). Distractor 16.7%: counts only April (the maximum) as above average (1÷6=16.7%).",
+          "Overall mean = 50 min. Months above 50 min: Feb (55), Apr (60), May (55) = 3 months. 3÷6×100=50%. Distractor 33.3%: counts only Feb and Apr - misidentifies May as 'at' rather than 'above' the mean (2÷6=33.3%). Distractor 66.7%: counts Jan (50) as 'above' by using ≥50 rather than >50 (4÷6=66.7%). Distractor 16.7%: counts only April (the maximum) as above average (1÷6=16.7%).",
       },
     ],
   },
@@ -18697,7 +18697,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "20%",
         distractors: ["25%", "30%", "10%"],
         explanation:
-          "Clinic B drug stopped = 40; Clinic B total = 200. 40÷200×100=20%. Distractor 25%: uses drug stopped grand total as numerator (200÷800×100=25% — confuses the clinic count with the overall rate). Distractor 30%: reads Clinic A drug stopped proportion (60÷200×100=30%). Distractor 10%: misreads Clinic B drug stopped as 20 (the Dose reduced value): 20÷200×100=10%.",
+          "Clinic B drug stopped = 40; Clinic B total = 200. 40÷200×100=20%. Distractor 25%: uses drug stopped grand total as numerator (200÷800×100=25% - confuses the clinic count with the overall rate). Distractor 30%: reads Clinic A drug stopped proportion (60÷200×100=30%). Distractor 10%: misreads Clinic B drug stopped as 20 (the Dose reduced value): 20÷200×100=10%.",
       },
     ],
   },
@@ -18828,7 +18828,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
     visual: {
       type: "table",
       title: "Neonatal Blood Spot Screening Results by Condition (n=4000 screened)",
-      headers: ["Condition", "Confirmed positive", "Screen positive — not confirmed", "Screen negative", "Total screened"],
+      headers: ["Condition", "Confirmed positive", "Screen positive - not confirmed", "Screen negative", "Total screened"],
       rows: [
         ["PKU", "10", "10", "980", "1000"],
         ["Congenital hypothyroidism", "30", "20", "950", "1000"],
@@ -18845,7 +18845,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "60%",
         distractors: ["40%", "3%", "75%"],
         explanation:
-          "Confirmed positives = 120; total positives (confirmed + not confirmed) = 120+80=200. 120÷200×100=60%. Distractor 40%: reads the not-confirmed proportion (80÷200×100=40%). Distractor 3%: uses grand total screened as denominator (120÷4000×100=3%). Distractor 75%: uses sickle cell data only — 60 confirmed out of 80 sickle cell positives (60÷80×100=75%).",
+          "Confirmed positives = 120; total positives (confirmed + not confirmed) = 120+80=200. 120÷200×100=60%. Distractor 40%: reads the not-confirmed proportion (80÷200×100=40%). Distractor 3%: uses grand total screened as denominator (120÷4000×100=3%). Distractor 75%: uses sickle cell data only - 60 confirmed out of 80 sickle cell positives (60÷80×100=75%).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -18872,7 +18872,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "3%",
         distractors: ["5%", "60%", "2%"],
         explanation:
-          "Confirmed positives = 120; grand total screened = 4000. 120÷4000×100=3%. Distractor 5%: uses total screen positives (confirmed + not confirmed = 200) as numerator (200÷4000×100=5%). Distractor 60%: reads the confirmation rate (120÷200=60%) — uses total positives rather than all screened as denominator. Distractor 2%: uses not-confirmed count as numerator (80÷4000×100=2%).",
+          "Confirmed positives = 120; grand total screened = 4000. 120÷4000×100=3%. Distractor 5%: uses total screen positives (confirmed + not confirmed = 200) as numerator (200÷4000×100=5%). Distractor 60%: reads the confirmation rate (120÷200=60%) - uses total positives rather than all screened as denominator. Distractor 2%: uses not-confirmed count as numerator (80÷4000×100=2%).",
       },
     ],
   },
@@ -19039,7 +19039,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "100%",
         distractors: ["50%", "200%", "1200"],
         explanation:
-          "February = 1200; May = 2400. % increase = (2400−1200)÷1200×100=100%. Distractor 50%: uses May as the denominator (1200÷2400×100=50%). Distractor 200%: calculates May÷February×100=2400÷1200×100=200% — 'May as % of February' rather than % increase. Distractor 1200: gives the absolute difference in attendance rather than a percentage.",
+          "February = 1200; May = 2400. % increase = (2400−1200)÷1200×100=100%. Distractor 50%: uses May as the denominator (1200÷2400×100=50%). Distractor 200%: calculates May÷February×100=2400÷1200×100=200% - 'May as % of February' rather than % increase. Distractor 1200: gives the absolute difference in attendance rather than a percentage.",
       },
       {
         subtype: "qr-percentages",
@@ -19048,7 +19048,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "50%",
         distractors: ["33.3%", "800", "150%"],
         explanation:
-          "January = 1600; April = 2400. % increase = (2400−1600)÷1600×100=50%. Distractor 33.3%: uses April as the denominator (800÷2400×100=33.3%). Distractor 800: gives the absolute difference. Distractor 150%: calculates April÷January×100=2400÷1600×100=150% — 'April as % of January' rather than % more.",
+          "January = 1600; April = 2400. % increase = (2400−1600)÷1600×100=50%. Distractor 33.3%: uses April as the denominator (800÷2400×100=33.3%). Distractor 800: gives the absolute difference. Distractor 150%: calculates April÷January×100=2400÷1600×100=150% - 'April as % of January' rather than % more.",
       },
     ],
   },
@@ -19164,7 +19164,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "16.7%",
         distractors: ["25%", "20%", "40%"],
         explanation:
-          "Renal disease total = 100; grand total = 600. 100÷600×100=16.7%. Distractor 25%: reads Diabetes or Dysphagia proportion (150÷600×100=25%). Distractor 20%: reads ITU Renal disease as proportion of ITU total (20÷100×100=20%). Distractor 40%: reads Medical Malnutrition as proportion of Medical total (80÷200×100=40%) — confuses row and column.",
+          "Renal disease total = 100; grand total = 600. 100÷600×100=16.7%. Distractor 25%: reads Diabetes or Dysphagia proportion (150÷600×100=25%). Distractor 20%: reads ITU Renal disease as proportion of ITU total (20÷100×100=20%). Distractor 40%: reads Medical Malnutrition as proportion of Medical total (80÷200×100=40%) - confuses row and column.",
       },
     ],
   },
@@ -19203,7 +19203,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "2:1",
         distractors: ["1:2", "3:2", "4:3"],
         explanation:
-          "Haematological total = 200; Patient choice total = 100. 200:100=2:1. Distractor 1:2: ratio reversed. Distractor 3:2: uses FOLFOX only (Haematological 60 : Patient choice 40 = 3:2). Distractor 4:3: uses FOLFIRI Haematological:Renal (40:30=4:3) — wrong comparison.",
+          "Haematological total = 200; Patient choice total = 100. 200:100=2:1. Distractor 1:2: ratio reversed. Distractor 3:2: uses FOLFOX only (Haematological 60 : Patient choice 40 = 3:2). Distractor 4:3: uses FOLFIRI Haematological:Renal (40:30=4:3) - wrong comparison.",
       },
       {
         subtype: "qr-averages",
@@ -19221,7 +19221,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "33.3%",
         distractors: ["40%", "25%", "10%"],
         explanation:
-          "FOLFOX Patient choice = 40; FOLFOX total = 120. 40÷120×100=33.3%. Distractor 40%: misreads FOLFOX total as 100 — applying FOLFIRI's denominator (40÷100×100=40%). Distractor 25%: reads Patient choice grand proportion (100÷400×100=25%). Distractor 10%: uses FOLFOX Patient choice over grand total (40÷400×100=10%).",
+          "FOLFOX Patient choice = 40; FOLFOX total = 120. 40÷120×100=33.3%. Distractor 40%: misreads FOLFOX total as 100 - applying FOLFIRI's denominator (40÷100×100=40%). Distractor 25%: reads Patient choice grand proportion (100÷400×100=25%). Distractor 10%: uses FOLFOX Patient choice over grand total (40÷400×100=10%).",
       },
     ],
   },
@@ -19318,7 +19318,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "30%",
         distractors: ["25%", "20%", "40%"],
         explanation:
-          "South Resurfacing = 60; South total = 200. 60÷200×100=30%. Distractor 25%: reads Resurfacing grand proportion (200÷800×100=25%). Distractor 20%: reads North Resurfacing as proportion of North total (40÷200×100=20%). Distractor 40%: reads North Pothole proportion of North total (80÷200×100=40%) — confuses category.",
+          "South Resurfacing = 60; South total = 200. 60÷200×100=30%. Distractor 25%: reads Resurfacing grand proportion (200÷800×100=25%). Distractor 20%: reads North Resurfacing as proportion of North total (40÷200×100=20%). Distractor 40%: reads North Pothole proportion of North total (80÷200×100=40%) - confuses category.",
       },
       {
         subtype: "qr-averages",
@@ -19387,7 +19387,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "75%",
         distractors: ["600", "25%", "400%"],
         explanation:
-          "November = 800; January = 200. % decrease = (800−200)÷800×100=75%. Distractor 600: gives the absolute difference in bookings rather than a percentage. Distractor 25%: reads January bookings as a percentage of November bookings (200÷800×100=25%) — gives 'Jan as % of Nov' not the fall. Distractor 400%: reads November÷January×100=800÷200×100=400%.",
+          "November = 800; January = 200. % decrease = (800−200)÷800×100=75%. Distractor 600: gives the absolute difference in bookings rather than a percentage. Distractor 25%: reads January bookings as a percentage of November bookings (200÷800×100=25%) - gives 'Jan as % of Nov' not the fall. Distractor 400%: reads November÷January×100=800÷200×100=400%.",
       },
       {
         subtype: "qr-estimation",
@@ -19396,7 +19396,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "1/2",
         distractors: ["1/3", "2/3", "1/6"],
         explanation:
-          "Monthly mean = 3000÷6=500. Months above 500: Oct (600), Nov (800), Feb (600) = 3 months. 3÷6=1/2. Distractor 1/3: counts only Oct and Nov — misses Feb (2÷6=1/3). Distractor 2/3: counts 4 months — includes Sep or Dec as 'around the mean' (4÷6=2/3). Distractor 1/6: counts only November (the single highest month): 1÷6=1/6.",
+          "Monthly mean = 3000÷6=500. Months above 500: Oct (600), Nov (800), Feb (600) = 3 months. 3÷6=1/2. Distractor 1/3: counts only Oct and Nov - misses Feb (2÷6=1/3). Distractor 2/3: counts 4 months - includes Sep or Dec as 'around the mean' (4÷6=2/3). Distractor 1/6: counts only November (the single highest month): 1÷6=1/6.",
       },
     ],
   },
@@ -19570,7 +19570,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "200%",
         distractors: ["8", "33.3%", "300%"],
         explanation:
-          "January Chlorine = 4; March Chlorine = 12. % increase = (12−4)÷4×100=200%. Distractor 8: gives the absolute difference rather than a percentage. Distractor 33.3%: reads January Chlorine as a percentage of March (4÷12×100=33.3%) — gives 'Jan as % of Mar' not % increase. Distractor 300%: calculates March÷January×100=12÷4×100=300% — 'March as % of January' rather than % increase.",
+          "January Chlorine = 4; March Chlorine = 12. % increase = (12−4)÷4×100=200%. Distractor 8: gives the absolute difference rather than a percentage. Distractor 33.3%: reads January Chlorine as a percentage of March (4÷12×100=33.3%) - gives 'Jan as % of Mar' not % increase. Distractor 300%: calculates March÷January×100=12÷4×100=300% - 'March as % of January' rather than % increase.",
       },
     ],
   },
@@ -19706,7 +19706,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         ["Patient B", "80", "5", "400"],
         ["Patient C", "70", "7", "490"],
         ["Patient D", "90", "7", "630"],
-        ["Total", "300", "—", "1820"],
+        ["Total", "300", "-", "1820"],
       ],
       note: "Dose (mg) = Weight (kg) × Dose (mg/kg)",
     },
@@ -19718,7 +19718,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "490,000 µg",
         distractors: ["490 µg", "49,000 µg", "4,900,000 µg"],
         explanation:
-          "1 mg = 1000 µg. 490 mg × 1000 = 490,000 µg. Distractor 490 µg: reads the mg value directly as µg — forgets to convert. Distractor 49,000 µg: applies a ×100 factor instead of ×1000. Distractor 4,900,000 µg: applies a ×10,000 factor instead of ×1000.",
+          "1 mg = 1000 µg. 490 mg × 1000 = 490,000 µg. Distractor 490 µg: reads the mg value directly as µg - forgets to convert. Distractor 49,000 µg: applies a ×100 factor instead of ×1000. Distractor 4,900,000 µg: applies a ×10,000 factor instead of ×1000.",
       },
       {
         subtype: "qr-units-geometry",
@@ -19736,7 +19736,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "110%",
         distractors: ["52.4%", "330", "210%"],
         explanation:
-          "Patient D = 630 mg; Patient A = 300 mg. % increase = (630−300)÷300×100=110%. Distractor 52.4%: uses Patient D as the denominator (330÷630×100=52.4%). Distractor 330: gives the absolute difference in mg rather than a percentage. Distractor 210%: calculates Patient D÷Patient A×100=630÷300×100=210% — 'Patient D as % of Patient A' rather than % more.",
+          "Patient D = 630 mg; Patient A = 300 mg. % increase = (630−300)÷300×100=110%. Distractor 52.4%: uses Patient D as the denominator (330÷630×100=52.4%). Distractor 330: gives the absolute difference in mg rather than a percentage. Distractor 210%: calculates Patient D÷Patient A×100=630÷300×100=210% - 'Patient D as % of Patient A' rather than % more.",
       },
       {
         subtype: "qr-averages",
@@ -19919,7 +19919,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "20%",
         distractors: ["1500", "80%", "25%"],
         explanation:
-          "Summer = 7500; Autumn = 6000. % decrease = (7500−6000)÷7500×100=20%. Distractor 1500: gives the absolute difference rather than a percentage. Distractor 80%: calculates Autumn÷Summer×100=6000÷7500×100=80% — 'Autumn as % of Summer' rather than % decrease. Distractor 25%: uses Autumn as the denominator (1500÷6000×100=25%).",
+          "Summer = 7500; Autumn = 6000. % decrease = (7500−6000)÷7500×100=20%. Distractor 1500: gives the absolute difference rather than a percentage. Distractor 80%: calculates Autumn÷Summer×100=6000÷7500×100=80% - 'Autumn as % of Summer' rather than % decrease. Distractor 25%: uses Autumn as the denominator (1500÷6000×100=25%).",
       },
     ],
   },
@@ -20144,7 +20144,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "66.7%",
         distractors: ["60", "33.3%", "300%"],
         explanation:
-          "March = 90 mm; June = 30 mm. % decrease = (90−30)÷90×100=66.7%. Distractor 60: gives the absolute difference in mm rather than a percentage. Distractor 33.3%: reads June as a percentage of March (30÷90×100=33.3%) — gives 'Jun as % of Mar' rather than % decrease. Distractor 300%: reads March÷June×100=90÷30×100=300%.",
+          "March = 90 mm; June = 30 mm. % decrease = (90−30)÷90×100=66.7%. Distractor 60: gives the absolute difference in mm rather than a percentage. Distractor 33.3%: reads June as a percentage of March (30÷90×100=33.3%) - gives 'Jun as % of Mar' rather than % decrease. Distractor 300%: reads March÷June×100=90÷30×100=300%.",
       },
       {
         subtype: "qr-estimation",
@@ -20153,7 +20153,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "1/2",
         distractors: ["1/3", "2/3", "1/6"],
         explanation:
-          "Monthly mean = 60 mm. Months above 60 mm: Feb (70), Mar (90), Apr (70) = 3 months. 3÷6=1/2. Distractor 1/3: counts only March (the clear highest): 1÷6=1/6... or counts only Feb and Mar, missing Apr. Distractor 2/3: includes months at exactly 60 mm — Jan and May are below 60, so this overcounts. Distractor 1/6: counts only March (the single highest month): 1÷6=1/6.",
+          "Monthly mean = 60 mm. Months above 60 mm: Feb (70), Mar (90), Apr (70) = 3 months. 3÷6=1/2. Distractor 1/3: counts only March (the clear highest): 1÷6=1/6... or counts only Feb and Mar, missing Apr. Distractor 2/3: includes months at exactly 60 mm - Jan and May are below 60, so this overcounts. Distractor 1/6: counts only March (the single highest month): 1÷6=1/6.",
       },
     ],
   },
@@ -26825,7 +26825,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "9.5",
         distractors: ["9", "12", "12.5"],
         explanation:
-          "Total declined = 38 across 4 presenting conditions. 38/4 = 9.5. Distractor 9: rounds down incorrectly. Distractor 12: reads chronic pain declined or cancer adjustment declined directly. Distractor 12.5: divides total signposted (48) by 4 instead (48/4 = 12, not 12.5) — or divides total declined by 3 (38/3 ≈ 12.7, rounds to 12.5 with rounding error).",
+          "Total declined = 38 across 4 presenting conditions. 38/4 = 9.5. Distractor 9: rounds down incorrectly. Distractor 12: reads chronic pain declined or cancer adjustment declined directly. Distractor 12.5: divides total signposted (48) by 4 instead (48/4 = 12, not 12.5) - or divides total declined by 3 (38/3 ≈ 12.7, rounds to 12.5 with rounding error).",
       },
       {
         subtype: "qr-rates-ratios",
@@ -26897,7 +26897,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "4:5",
         distractors: ["5:4", "320:400", "8:9"],
         explanation:
-          "February = 320, April = 400. GCD(320, 400) = 80. 320/80 = 4, 400/80 = 5, giving 4:5. Distractor 5:4 reverses the ratio. Distractor 320:400 is unsimplified. Distractor 8:9 compares March to April instead (360:400; GCD = 40; 9:10 — actually 360:400 = 9:10, not 8:9; so a student who divides by 45 gets 8:8.9 — alternatively they compare February to March: 320:360 = 8:9). The explanation: 8:9 compares February to March (320:360 = 8:9).",
+          "February = 320, April = 400. GCD(320, 400) = 80. 320/80 = 4, 400/80 = 5, giving 4:5. Distractor 5:4 reverses the ratio. Distractor 320:400 is unsimplified. Distractor 8:9 compares March to April instead (360:400; GCD = 40; 9:10 - actually 360:400 = 9:10, not 8:9; so a student who divides by 45 gets 8:8.9 - alternatively they compare February to March: 320:360 = 8:9). The explanation: 8:9 compares February to March (320:360 = 8:9).",
       },
     ],
   },
@@ -26948,7 +26948,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
         correct: "22.5",
         distractors: ["30", "37.5", "18"],
         explanation:
-          "Total day shifts = 90 across 4 grades. 90/4 = 22.5. Distractor 30: divides by 3 instead of 4 (90/3 = 30). Distractor 37.5: divides total shifts (150) by 4 instead of day shifts (90/4). Actually 150/4 = 37.5 — divides all shifts by 4 instead of just day shifts. Distractor 18: reads Band 7 day shifts directly.",
+          "Total day shifts = 90 across 4 grades. 90/4 = 22.5. Distractor 30: divides by 3 instead of 4 (90/3 = 30). Distractor 37.5: divides total shifts (150) by 4 instead of day shifts (90/4). Actually 150/4 = 37.5 - divides all shifts by 4 instead of just day shifts. Distractor 18: reads Band 7 day shifts directly.",
       },
       {
         subtype: "qr-percentages",
@@ -49210,7 +49210,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
   //   questions: [ ... ],
   // },
 
-  // ===== CLAUDE-ADDED SETS (separate array — no Codex conflict) =====
+  // ===== CLAUDE-ADDED SETS (separate array - no Codex conflict) =====
 
   {
     chartType: "bar",
@@ -49943,7 +49943,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "150%",
         distractors: ["90", "250%", "60%"],
         explanation:
-          "Increase = 150 − 60 = 90. % increase = 90 ÷ 60 × 100 = 150%. Distractor 90: gives the absolute increase rather than a percentage. Distractor 250%: uses June ÷ January × 100 = 150 ÷ 60 × 100 = 250% ('percentage of' error). Distractor 60%: uses new value as denominator — 90 ÷ 150 × 100 = 60%.",
+          "Increase = 150 − 60 = 90. % increase = 90 ÷ 60 × 100 = 150%. Distractor 90: gives the absolute increase rather than a percentage. Distractor 250%: uses June ÷ January × 100 = 150 ÷ 60 × 100 = 250% ('percentage of' error). Distractor 60%: uses new value as denominator - 90 ÷ 150 × 100 = 60%.",
       },
     ],
   },
@@ -50561,7 +50561,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "50%",
         distractors: ["50", "150%", "33%"],
         explanation:
-          "Increase = 150−100 = 50. % increase = 50÷100×100 = 50%. Distractor 50: absolute increase, not a percentage. Distractor 150%: uses March÷January×100 = 150÷100×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 50÷150×100 = 33.3%.",
+          "Increase = 150−100 = 50. % increase = 50÷100×100 = 50%. Distractor 50: absolute increase, not a percentage. Distractor 150%: uses March÷January×100 = 150÷100×100 = 150% ('% of' error). Distractor 33%: uses new value as base - 50÷150×100 = 33.3%.",
       },
     ],
   },
@@ -50712,7 +50712,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "150%",
         distractors: ["60", "250%", "60%"],
         explanation:
-          "Increase = 100−40 = 60. % increase = 60÷40×100 = 150%. Distractor 60: absolute increase, not a percentage. Distractor 250%: uses wk 3÷wk 1×100 = 100÷40×100 = 250% ('% of' error). Distractor 60%: uses new value as base — 60÷100×100 = 60%.",
+          "Increase = 100−40 = 60. % increase = 60÷40×100 = 150%. Distractor 60: absolute increase, not a percentage. Distractor 250%: uses wk 3÷wk 1×100 = 100÷40×100 = 250% ('% of' error). Distractor 60%: uses new value as base - 60÷100×100 = 60%.",
       },
     ],
   },
@@ -50970,7 +50970,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "50%",
         distractors: ["500", "150%", "33%"],
         explanation:
-          "Increase = 1500−1000 = 500. % increase = 500÷1000×100 = 50%. Distractor 500: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 1500÷1000×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 500÷1500×100 = 33.3%.",
+          "Increase = 1500−1000 = 500. % increase = 500÷1000×100 = 50%. Distractor 500: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 1500÷1000×100 = 150% ('% of' error). Distractor 33%: uses new value as base - 500÷1500×100 = 33.3%.",
       },
     ],
   },
@@ -51064,7 +51064,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "3:2",
         distractors: ["2:3", "9:2", "9:4"],
         explanation:
-          "OGD : Colonoscopy = 450 : 300 = 3 : 2 (÷150). Distractor 2:3: reversed. Distractor 9:2: misreads sigmoidoscopy as 100 instead of 200, giving 450:100 = 9:2. Distractor 9:4: correct sigmoidoscopy value but wrong comparison — OGD : sigmoidoscopy = 450:200 = 9:4.",
+          "OGD : Colonoscopy = 450 : 300 = 3 : 2 (÷150). Distractor 2:3: reversed. Distractor 9:2: misreads sigmoidoscopy as 100 instead of 200, giving 450:100 = 9:2. Distractor 9:4: correct sigmoidoscopy value but wrong comparison - OGD : sigmoidoscopy = 450:200 = 9:4.",
       },
       {
         subtype: "qr-averages",
@@ -51125,7 +51125,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "150%",
         distractors: ["300", "250%", "60%"],
         explanation:
-          "Increase = 500−200 = 300. % increase = 300÷200×100 = 150%. Distractor 300: absolute increase, not a percentage. Distractor 250%: uses March÷Jan×100 = 500÷200×100 = 250% ('% of' error). Distractor 60%: uses new value as base — 300÷500×100 = 60%.",
+          "Increase = 500−200 = 300. % increase = 300÷200×100 = 150%. Distractor 300: absolute increase, not a percentage. Distractor 250%: uses March÷Jan×100 = 500÷200×100 = 250% ('% of' error). Distractor 60%: uses new value as base - 300÷500×100 = 60%.",
       },
     ],
   },
@@ -51390,7 +51390,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "50%",
         distractors: ["250", "150%", "33%"],
         explanation:
-          "Increase = 750−500 = 250. % increase = 250÷500×100 = 50%. Distractor 250: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 750÷500×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 250÷750×100 = 33.3%.",
+          "Increase = 750−500 = 250. % increase = 250÷500×100 = 50%. Distractor 250: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 750÷500×100 = 150% ('% of' error). Distractor 33%: uses new value as base - 250÷750×100 = 33.3%.",
       },
     ],
   },
@@ -51541,7 +51541,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "100%",
         distractors: ["60", "200%", "50%"],
         explanation:
-          "Increase = 120−60 = 60. % increase = 60÷60×100 = 100%. Distractor 60: absolute increase, not a percentage. Distractor 200%: uses March÷January×100 = 120÷60×100 = 200% ('% of' error). Distractor 50%: uses new value as base — 60÷120×100 = 50%.",
+          "Increase = 120−60 = 60. % increase = 60÷60×100 = 100%. Distractor 60: absolute increase, not a percentage. Distractor 200%: uses March÷January×100 = 120÷60×100 = 200% ('% of' error). Distractor 50%: uses new value as base - 60÷120×100 = 50%.",
       },
     ],
   },
@@ -51791,7 +51791,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "50%",
         distractors: ["60", "150%", "33%"],
         explanation:
-          "Increase = 180−120 = 60. % increase = 60÷120×100 = 50%. Distractor 60: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 180÷120×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 60÷180×100 = 33.3%.",
+          "Increase = 180−120 = 60. % increase = 60÷120×100 = 50%. Distractor 60: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 180÷120×100 = 150% ('% of' error). Distractor 33%: uses new value as base - 60÷180×100 = 33.3%.",
       },
     ],
   },
@@ -51948,7 +51948,7 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
         correct: "50%",
         distractors: ["100", "150%", "33%"],
         explanation:
-          "Increase = 300−200 = 100. % increase = 100÷200×100 = 50%. Distractor 100: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 300÷200×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 100÷300×100 = 33.3%.",
+          "Increase = 300−200 = 100. % increase = 100÷200×100 = 50%. Distractor 100: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 300÷200×100 = 150% ('% of' error). Distractor 33%: uses new value as base - 100÷300×100 = 33.3%.",
       },
     ],
   },

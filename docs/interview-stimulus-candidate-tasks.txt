@@ -1,4 +1,4 @@
-INTERVIEW STIMULUS CANDIDATE TASKS — SEPARATE FROM IMAGES
+INTERVIEW STIMULUS CANDIDATE TASKS - SEPARATE FROM IMAGES
 19 September 2026
 
 These are draft candidate-facing tasks for app text or markscheme authoring, NOT image-generation prompts. Do not render them inside the PNGs. They accompany the final 27 images and are not completed markschemes or clinical guidance. Review before publishing. No question-bank/database records were changed in this pass.

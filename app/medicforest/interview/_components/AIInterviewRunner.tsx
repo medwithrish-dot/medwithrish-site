@@ -480,7 +480,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const startAttempt = async (options: StartOptions, asPreview = previewRef.current, plan = planRef.current) => {
     if (actionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
-    setBusy("Opening your interview…");
+    setBusy("Opening your Med interview…");
     setError("");
     setErrorStatus(0);
     setSaveWarning("");
@@ -522,7 +522,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         } else if (resumed && plan) {
           planRef.current = null;
           setRoomPlan(null);
-          setSaveWarning("You already had an active interview, so we’ve resumed it with its saved settings.");
+          setSaveWarning("You already had an active Med interview, so we’ve resumed it with its saved settings.");
         }
         applyResponse(response, true);
         setReviewRequested(false);
@@ -703,18 +703,18 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const step = !attempt ? 0 : reviewing ? 2 : 1;
 
   return <div className={styles.experience}>
-    <nav aria-label="Interview steps" className={styles.steps}>
+    <nav aria-label="Med Interview steps" className={styles.steps}>
       <span data-active={step === 0} aria-current={step === 0 ? "step" : undefined}><span>01</span> Make it yours</span><i aria-hidden="true" />
-      <span data-active={step === 1} aria-current={step === 1 ? "step" : undefined}><span>02</span> Your interview</span><i aria-hidden="true" />
+      <span data-active={step === 1} aria-current={step === 1 ? "step" : undefined}><span>02</span> Your Med interview</span><i aria-hidden="true" />
       <span data-active={step === 2} aria-current={step === 2 ? "step" : undefined}><span>03</span> Reflect & grow</span>
     </nav>
     {error && <div role="alert" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
       <p>{error}</p>
-      {errorStatus === 401 && <Link href="/medicforest/account" className="mt-2 inline-block font-bold underline">Sign in to start your scored interview</Link>}
+      {errorStatus === 401 && <Link href="/medicforest/account" className="mt-2 inline-block font-bold underline">Sign in to start your scored Med interview</Link>}
       {errorStatus === 403 && <Link href="/medicforest/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
     {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI feedback is paused. Timed practice and saved answers are available.</p>}
-    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
+    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your Med interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       interviewerVoice={interviewerVoice} setInterviewerVoice={setInterviewerVoice}

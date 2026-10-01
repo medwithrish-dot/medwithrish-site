@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Interview Tutoring | MedWithRish",
+  title: "Med Interview Tutoring | MedWithRish",
   description: "Practise medicine and dentistry MMI and panel interviews with individual feedback.",
   alternates: { canonical: "/interview-tutoring" },
 };
@@ -13,14 +13,14 @@ export default function Page() {
   return (
     <GuidePage
       eyebrow="Tutoring"
-      title="Interview Tutoring"
+      title="Med Interview Tutoring"
       intro="Targeted support for MMI and panel interviews, with a focus on structure, confidence, and stronger answers."
       sections={[
         {
           title: "What support can include",
           points: [
             "MMI station practice and feedback.",
-            "Panel interview structure and delivery.",
+            "Panel Med interview structure and delivery.",
             "Ethics, reflection, communication, and confidence-building.",
           ],
         },
@@ -33,7 +33,7 @@ export default function Page() {
           ],
         },
       ]}
-      ctaLabel="Contact for interview tutoring"
+      ctaLabel="Contact for Med interview tutoring"
       ctaHref={contactHref("interview-tutoring")}
     />
   );

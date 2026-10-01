@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new InterviewError("Sign in to save your interview plan.", 401);
+    if (!user) throw new InterviewError("Sign in to save your Med interview plan.", 401);
     const { data, error } = await supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
     if (error) databaseError(error);
     return interviewJson({ profile: preparationFromRow(data) });

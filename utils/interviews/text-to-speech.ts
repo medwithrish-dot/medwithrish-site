@@ -37,14 +37,14 @@ export function interviewTextToSpeechConfigured() {
 }
 
 export async function synthesizeInterviewSpeech(text: string, voice: InterviewerVoice) {
-  if (!interviewTextToSpeechConfigured()) throw new Error("Interview text-to-speech is not enabled");
-  if (!text.trim() || text.length > 500) throw new Error("Interview speech text is invalid");
+  if (!interviewTextToSpeechConfigured()) throw new Error("Med Interview text-to-speech is not enabled");
+  if (!text.trim() || text.length > 500) throw new Error("Med Interview speech text is invalid");
   const [response] = await speechClient().synthesizeSpeech({
     input: { text },
     voice: { languageCode: "en-GB", name: VOICES[voice] },
     audioConfig: { audioEncoding: "MP3" },
   });
-  if (!response.audioContent) throw new Error("Google Cloud returned no interview audio");
+  if (!response.audioContent) throw new Error("Google Cloud returned no Med interview audio");
   return Buffer.isBuffer(response.audioContent)
     ? response.audioContent
     : Buffer.from(response.audioContent as Uint8Array);

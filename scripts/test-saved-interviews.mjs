@@ -55,7 +55,7 @@ test("general practice and zero scores remain searchable and correctly categoris
   assert.equal(savedInterviewStatus(expired), "Transcript saved · Ready to review");
 });
 
-test("only an unexpired active attempt opens the interview room", () => {
+test("only an unexpired active attempt opens the Med interview room", () => {
   const active = { status: "in_progress", startedAt: "2026-09-12T10:00:00Z", preparationSeconds: 60, stationSeconds: 480 };
   const deadline = Date.parse("2026-09-12T10:09:00Z");
   assert.equal(canResumeSavedInterview(active, deadline - 1), true);

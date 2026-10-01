@@ -746,7 +746,7 @@ function microphoneDevices({ supported = true } = {}) {
   return { initial, render, requests, unmount, replayEffects: () => { unmount(); mount(); }, get stateWrites() { return stateWrites; } };
 }
 
-test("native interview microphone permission requests audio only and immediately releases granted tracks", async () => {
+test("native Med interview microphone permission requests audio only and immediately releases granted tracks", async () => {
   const browser = microphoneDevices();
   const pending = browser.initial.requestMicrophone();
   assert.equal(browser.render().microphonePermission, "requesting");

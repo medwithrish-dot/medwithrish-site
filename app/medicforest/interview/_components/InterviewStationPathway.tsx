@@ -83,7 +83,7 @@ export function InterviewStationPathway({ stations, userId, initialCompleted, av
 
   return <div className={styles.pathway}>
     <section className={styles.intro} aria-labelledby="pathway-title">
-      <div className={styles.introHeading}><span className={styles.introIcon}><Target size={23} /></span><span className={styles.eyebrow}>Your interview pathway</span></div>
+      <div className={styles.introHeading}><span className={styles.introIcon}><Target size={23} /></span><span className={styles.eyebrow}>Your Med interview pathway</span></div>
       <h2 id="pathway-title">Seven stations. One steady route.</h2>
       <p>Learn the approach, practise your answers, then check you feel ready. Work through each station at your own pace before bringing everything together in mock interviews.</p>
       <div className={styles.overview}><strong>{progress.completedCount} of 7 stations complete</strong><span>Guides → Questions → Readiness → Next station</span></div>
@@ -120,7 +120,7 @@ export function InterviewStationPathway({ stations, userId, initialCompleted, av
               <h3><CheckCircle2 size={16} /> 3. Your readiness check</h3>
               <p>{station.readiness}</p>
               {state.complete ? <div className={styles.completedRow}><span><Check size={16} /> You marked this station ready.</span><button type="button" disabled={!!busy || !ready} onClick={() => void toggle(readyId, false)}>Revisit this station</button></div> : <>
-                <button type="button" className={styles.continueButton} disabled={!ready || !!busy || !state.unlocked || !allTasksDone} onClick={() => void toggle(readyId, true, true)}>{busy === readyId ? <Loader2 size={16} className={styles.spinner} /> : <Check size={16} />}I feel ready{index === stations.length - 1 ? " — move to mocks" : " — next station"}<ArrowRight size={16} /></button>
+                <button type="button" className={styles.continueButton} disabled={!ready || !!busy || !state.unlocked || !allTasksDone} onClick={() => void toggle(readyId, true, true)}>{busy === readyId ? <Loader2 size={16} className={styles.spinner} /> : <Check size={16} />}I feel ready{index === stations.length - 1 ? " - move to mocks" : " - next station"}<ArrowRight size={16} /></button>
                 {!allTasksDone && <span className={styles.readinessHint}>Complete the guides and questions above first.</span>}
               </>}
               <p className={styles.selfReview}>This is your own readiness check. Revisit and repeat any task whenever you need to.</p>
@@ -132,8 +132,8 @@ export function InterviewStationPathway({ stations, userId, initialCompleted, av
 
     <section id="pathway-mocks" className={styles.mocks} data-ready={progress.allComplete} aria-labelledby="mocks-title">
       <span className={styles.mockIcon}><Flag size={23} /></span><div><p className={styles.eyebrow}>Bring it all together</p><h2 id="mocks-title">Your next chapter: mock interviews</h2>
-        <p>{progress.allComplete ? "You have worked through all seven stations. Rehearse a mixed circuit, review your feedback and return to the areas that need another try." : "After all seven readiness checks, practise switching between stations in a timed mock interview."}</p>
-        {progress.allComplete ? <><Link className={styles.continueButton} href="/medicforest/interview/ai-interviews?setup=mock">Set up a mock interview <ArrowRight size={16} /></Link><p className={styles.selfReview}>{isPremium ? "Choose your circuit and timings in the interview lobby." : "The room preview is free. AI-scored mock circuits require membership; you can also rehearse the question-bank tasks with a friend."}</p></> : <span className={styles.mocksLocked}><LockKeyhole size={13} /> {7 - progress.completedCount} stations to work through</span>}
+        <p>{progress.allComplete ? "You have worked through all seven stations. Rehearse a mixed circuit, review your feedback and return to the areas that need another try." : "After all seven readiness checks, practise switching between stations in a timed mock Med interview."}</p>
+        {progress.allComplete ? <><Link className={styles.continueButton} href="/medicforest/interview/ai-interviews?setup=mock">Set up a mock Med interview <ArrowRight size={16} /></Link><p className={styles.selfReview}>{isPremium ? "Choose your circuit and timings in the Med interview lobby." : "The room preview is free. AI-scored mock circuits require membership; you can also rehearse the question-bank tasks with a friend."}</p></> : <span className={styles.mocksLocked}><LockKeyhole size={13} /> {7 - progress.completedCount} stations to work through</span>}
       </div>
     </section>
   </div>;

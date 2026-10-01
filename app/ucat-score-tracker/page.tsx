@@ -38,7 +38,7 @@ export default function UCATScoreTrackerPage() {
 
 <ul className="mt-3 space-y-3 text-base leading-7 text-gray-700">
   <li>
-   - Enter your mock scores (VR, DM, QR, SJT) — scaled scores and totals
+   - Enter your mock scores (VR, DM, QR, SJT) - scaled scores and totals
     are calculated automatically
   </li>
 

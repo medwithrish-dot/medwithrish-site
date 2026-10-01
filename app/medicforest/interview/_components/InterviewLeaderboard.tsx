@@ -56,12 +56,12 @@ export function InterviewLeaderboard() {
   return <div className="space-y-6">
     <section className="rounded-2xl bg-[#042724] p-6 text-white sm:p-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div><p className="text-xs font-semibold text-[#9ce8dd]">Try the AI interview for free</p>
+        <div><p className="text-xs font-semibold text-[#9ce8dd]">Try the AI Med interview for free</p>
           <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Beat Medwithrish’s score of 96%</h2>
           <p className="mt-3 max-w-lg text-sm leading-6 text-teal-50/75">Answer the Why Medicine? station, get personal AI feedback and see how you compare.</p>
-          <Link href="/medicforest/interview/ai-interviews?station=why-medicine" className="mt-5 inline-flex items-center gap-3 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-bold text-[#042724] hover:bg-white">Try the free AI interview <ArrowRight size={17} /></Link>
+          <Link href="/medicforest/interview/ai-interviews?station=why-medicine" className="mt-5 inline-flex items-center gap-3 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-bold text-[#042724] hover:bg-white">Try the free AI Med interview <ArrowRight size={17} /></Link>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:min-w-48"><Award className="mb-4 text-[#b9f4db]" size={30} /><p className="text-xs font-semibold uppercase tracking-wider text-teal-100/70">Your personal best</p><p className="mt-2 text-5xl font-bold tabular-nums">{board?.bestScore != null ? `${board.bestScore}%` : "—"}</p><p className="mt-3 text-xs text-teal-100/70">{board?.bestScore != null ? "Free Why medicine? station" : board && !board.preference ? "Sign in to see your score" : "Your first attempt starts here"}</p></div>
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:min-w-48"><Award className="mb-4 text-[#b9f4db]" size={30} /><p className="text-xs font-semibold uppercase tracking-wider text-teal-100/70">Your personal best</p><p className="mt-2 text-5xl font-bold tabular-nums">{board?.bestScore != null ? `${board.bestScore}%` : "-"}</p><p className="mt-3 text-xs text-teal-100/70">{board?.bestScore != null ? "Free Why medicine? station" : board && !board.preference ? "Sign in to see your score" : "Your first attempt starts here"}</p></div>
       </div>
     </section>
     {error && <div role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">{error}<div className="mt-3 flex gap-5"><button onClick={() => void load()} className="font-bold underline">Try again</button><Link href="/medicforest/account" className="font-bold underline">Sign in / account</Link></div></div>}

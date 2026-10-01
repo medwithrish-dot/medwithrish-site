@@ -52,7 +52,7 @@ export function FeedbackPageClient() {
               Share your feedback
             </h1>
             <p className="mt-4 text-base leading-7 text-[#4a6568]">
-              Whether it&apos;s a bug, a feature idea, or a general thought — we read everything.
+              Whether it&apos;s a bug, a feature idea, or a general thought - we read everything.
               Your feedback directly influences what we build next.
             </p>
           </div>
@@ -132,7 +132,7 @@ export function FeedbackPageClient() {
               <div className="mt-5">
                 <label htmlFor="replyEmail" className="block text-sm font-semibold text-[#0d2c2e]">
                   Your email{" "}
-                  <span className="font-normal text-gray-400">(optional — so we can reply)</span>
+                  <span className="font-normal text-gray-400">(optional - so we can reply)</span>
                 </label>
                 <input
                   id="replyEmail"

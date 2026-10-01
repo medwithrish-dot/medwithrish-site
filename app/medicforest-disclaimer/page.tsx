@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const points = [
   {
     title: "Educational guidance, not a guarantee",
-    text: "MedicForest provides UCAT preparation support. It does not guarantee a score, percentile, decile, interview, offer or admission outcome.",
+    text: "MedicForest provides UCAT preparation support. It does not guarantee a score, percentile, decile, Med interview, offer or admission outcome.",
   },
   {
     title: "AI can be wrong",

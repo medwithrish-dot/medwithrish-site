@@ -20,7 +20,7 @@ import { FREE_INTERVIEW_GUIDE_URL } from "@/utils/medwithrish/site-links";
 export const metadata: Metadata = {
   title: "Medicine and Dentistry Interviews | MedWithRish",
   description:
-    "Prepare for medicine and dentistry interviews with MMI strategy, panel interview guidance, ethics, motivation, reflection and practice structure.",
+    "Prepare for medicine and dentistry interviews with MMI strategy, panel Med interview guidance, ethics, motivation, reflection and practice structure.",
   alternates: {
     canonical: "/interviews",
   },
@@ -85,18 +85,18 @@ const commonMistakes = [
 const quickLinks = [
   {
     title: "Free medicine MMI guide",
-    text: "Open the free MedWithRish MMI interview guide.",
+    text: "Open the free MedWithRish MMI Med interview guide.",
     href: FREE_INTERVIEW_GUIDE_URL,
     external: true,
   },
   {
-    title: "Interview tutoring",
-    text: "Get 1-to-1 MMI or panel interview feedback.",
+    title: "Med Interview tutoring",
+    text: "Get 1-to-1 MMI or panel Med interview feedback.",
     href: "/interview-tutoring",
   },
   {
     title: "Contact",
-    text: "Ask about interview support or resources.",
+    text: "Ask about Med interview support or resources.",
     href: "/contact",
   },
 ];
@@ -110,7 +110,7 @@ export default function InterviewsPage() {
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 lg:grid-cols-[1fr_360px] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
-              Interview preparation
+              Med Interview preparation
             </p>
             <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-gray-950 md:text-6xl">
               Medicine and Dentistry Interviews
@@ -134,7 +134,7 @@ export default function InterviewsPage() {
                 href="/interview-tutoring"
                 className="inline-flex h-12 items-center justify-center rounded-lg border border-gray-200 bg-white px-5 text-sm font-bold text-gray-800 transition hover:border-blue-300 hover:text-blue-700"
               >
-                Interview tutoring
+                Med Interview tutoring
               </Link>
             </div>
           </div>

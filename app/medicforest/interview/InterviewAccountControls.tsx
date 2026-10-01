@@ -114,7 +114,7 @@ export function InterviewAccountControls() {
       setSignOutError("Could not log out. Please try again.");
       return;
     }
-    // A full navigation clears interview state and previously cached account pages.
+    // A full navigation clears Med interview state and previously cached account pages.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign("/medicforest");
   };
@@ -221,7 +221,7 @@ export function InterviewAccountControls() {
                 role="menuitem"
               >
                 <Bookmark className="h-4 w-4" aria-hidden="true" />
-                Interview reports
+                Med Interview reports
               </Link>
               <button
                 type="button"

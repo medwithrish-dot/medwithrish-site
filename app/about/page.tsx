@@ -18,9 +18,9 @@ const nextSteps = [
   },
   {
     title: "Prepare for interviews",
-    description: "Start with MMI and panel interview guidance, then explore one-to-one support.",
+    description: "Start with MMI and panel Med interview guidance, then explore one-to-one support.",
     href: "/interviews",
-    action: "Visit the interview hub",
+    action: "Visit the Med interview hub",
   },
   {
     title: "Find a guide or tutor",

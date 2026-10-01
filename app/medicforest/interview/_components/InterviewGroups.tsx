@@ -181,13 +181,13 @@ export function InterviewGroups() {
     <div className="space-y-5 text-[#071923]">
       <div className="relative overflow-hidden rounded-2xl bg-[#072f32] p-6 text-white sm:p-7">
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full border-[30px] border-white/[0.035]" />
-        <p className="relative text-[10px] font-bold uppercase tracking-[0.2em] text-[#8be5df]">Your interview study circle</p>
+        <p className="relative text-[10px] font-bold uppercase tracking-[0.2em] text-[#8be5df]">Your Med interview study circle</p>
         <h2 className="relative mt-3 text-2xl font-bold tracking-tight">Practise with your people.</h2>
         <p className="relative mt-3 max-w-2xl text-sm leading-6 text-[#c8dddf]">Bring your friends into a private study group. Track question progress together, compare performance and help each other build confidence.</p>
         <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-4 text-xs font-semibold text-[#d2edeb]"><span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Up to 12 members</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Track question practice</span></div>
       </div>
 
-      <p className="px-1 text-xs leading-5 text-[#46646b]">When you create or join a group, members can see your account display name and best free Why medicine? score. Your individual interview transcripts stay private.</p>
+      <p className="px-1 text-xs leading-5 text-[#46646b]">When you create or join a group, members can see your account display name and best free Why medicine? score. Your individual Med interview transcripts stay private.</p>
 
       {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}{signedOut && <p className="mt-2"><Link className="font-bold underline" href="/medicforest/account">Sign in or create an account</Link>, then return here to join your friends. Your invite is kept in this tab.</p>}</div>}
       {notice && <p role="status" className="rounded-xl bg-[#e5f5ef] p-3 text-sm text-[#075d4c]">{notice}</p>}
@@ -196,7 +196,7 @@ export function InterviewGroups() {
         <form className={panel} onSubmit={(event) => { event.preventDefault(); void act("create", { name }); }}>
           <h2 className="text-base font-bold">Create a study group</h2>
           <label htmlFor="study-group-name" className="mb-2 mt-4 block text-sm font-semibold">Group name</label>
-          <input id="study-group-name" className={input} value={name} onChange={(event) => setName(event.target.value)} required minLength={2} maxLength={60} placeholder="Your interview study circle" autoComplete="off" />
+          <input id="study-group-name" className={input} value={name} onChange={(event) => setName(event.target.value)} required minLength={2} maxLength={60} placeholder="Your Med interview study circle" autoComplete="off" />
           <button className={`${button} mt-3`} disabled={!!busy || !list || name.trim().length < 2}><Plus className="h-4 w-4" aria-hidden="true" />{busy === "create" ? "Creating…" : "Create group"}</button>
         </form>
         <form className={panel} onSubmit={(event) => { event.preventDefault(); void act("join", { code: parseInvite(code) }); }}>
@@ -253,7 +253,7 @@ export function InterviewGroups() {
                 {isOwner && <td className="py-4 text-right">{member.userId !== current.userId && <button disabled={!!busy} className="text-xs font-semibold text-red-700 underline" onClick={() => setConfirm({ action: "remove", userId: member.userId, name: member.name })}>Remove</button>}</td>}
               </tr>)}
             </tbody></table></div>
-            <p className="mt-3 text-xs leading-5 text-slate-500">Rank is based on completed interview question-bank questions. Tied totals share a rank. Why medicine? shows each member’s best scored free AI station, capped at 99%.</p>
+            <p className="mt-3 text-xs leading-5 text-slate-500">Rank is based on completed Med interview question-bank questions. Tied totals share a rank. Why medicine? shows each member’s best scored free AI station, capped at 99%.</p>
           </section>
         </div>}
       </div>}

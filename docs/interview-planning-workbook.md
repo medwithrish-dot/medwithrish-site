@@ -1,4 +1,4 @@
-# MedicForest interview planning workbook
+# MedicForest Med interview planning workbook
 
 ## 01 / Your launch brief
 
@@ -285,7 +285,7 @@ Record fixed prompts and a small bank of confirmations, transitions and endings 
 
 ## 09 / Choosing text-to-speech
 
-**Recommendation:** shortlist Google Chirp 3 HD and ElevenLabs Flash v2.5. Choose by listening to the same interview scripts with intended users. No provider has been benchmarked on this application during this work.
+**Recommendation:** shortlist Google Chirp 3 HD and ElevenLabs Flash v2.5. Choose by listening to the same Med interview scripts with intended users. No provider has been benchmarked on this application during this work.
 
 | Option | Fit for this product | Current published information |
 | --- | --- | --- |
@@ -328,7 +328,7 @@ You need separate capabilities, not a separate reasoning model for every student
 | Eligible probing stations | Owner-controlled allowlist is empty at this review. Select station IDs before enabling probes. |
 | Recognition and voice | Browser Web Speech APIs. Chirp and ElevenLabs are recommendations, not installed services. |
 | Data-station assessment | Currently title + answers; add approved stimulus facts and station-specific rubric. |
-| UCAT reports | Separate existing Claude integration; do not count it as interview voice capacity. |
+| UCAT reports | Separate existing Claude integration; do not count it as Med interview voice capacity. |
 
 ### Capacity planning
 

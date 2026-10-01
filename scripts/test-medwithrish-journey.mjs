@@ -10,7 +10,7 @@ test("tutoring enquiries carry their topic through to email and WhatsApp", () =>
   for (const [topic, subject] of [
     ["gcse-tutoring", "GCSE tutoring enquiry"],
     ["alevel-tutoring", "A-Level tutoring enquiry"],
-    ["interview-tutoring", "Interview tutoring enquiry"],
+    ["interview-tutoring", "Med Interview tutoring enquiry"],
     ["personal-statement-session", "Personal statement session enquiry"],
   ]) {
     const destination = new URL(contactHref(topic), "https://medwithrish.com");
@@ -28,6 +28,6 @@ test("unknown or repeated contact topics cannot control the outgoing message", (
   }
 });
 
-test("the free interview guide points to its own Payhip product", () => {
+test("the free Med interview guide points to its own Payhip product", () => {
   assert.equal(new URL(FREE_INTERVIEW_GUIDE_URL).pathname, "/b/HLn2M");
 });

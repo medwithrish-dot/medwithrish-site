@@ -1021,7 +1021,7 @@ function CategoryCard({
     <button
       type="button"
       onClick={onOpen}
-      aria-label={`Open ${category.title} interview questions`}
+      aria-label={`Open ${category.title} Med interview questions`}
       className="group relative flex h-[276px] w-full flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] text-left shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
@@ -3504,7 +3504,7 @@ export function InterviewQuestionBankDashboard({
                   Question Bank
                 </h1>
                 <p className="mt-2 text-sm font-medium text-[#4a6370]">
-                  Explore {totals.total}+ interview questions across{" "}
+                  Explore {totals.total}+ Med interview questions across{" "}
                   {categoriesWithStats.length} categories.
                 </p>
               </div>

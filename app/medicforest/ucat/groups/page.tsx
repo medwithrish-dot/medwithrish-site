@@ -20,7 +20,7 @@ const groupCards = [
   },
   {
     title: "Med Interviews group",
-    description: "Switch into interview prep groups and MMI practice.",
+    description: "Switch into Med interview prep groups and MMI practice.",
     href: "/medicforest/interview/groups",
   },
 ] as const;
@@ -48,7 +48,7 @@ export default function Page() {
               </h1>
               <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-[#314956]">
                 Peer practice rooms for question review, diagnostic planning and
-                interview prep crossover.
+                Med interview prep crossover.
               </p>
             </div>
             <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#cfe0df] bg-[#edf7f6] text-[#08787b]">
@@ -96,7 +96,7 @@ export default function Page() {
             <span className="flex items-center gap-3">
               <Trophy className="h-5 w-5 text-[#08787b]" aria-hidden="true" />
               <span className="text-sm font-bold text-[#071923]">
-                Interview leaderboard
+                Med Interview leaderboard
               </span>
             </span>
             <ArrowRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />

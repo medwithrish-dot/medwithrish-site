@@ -5,7 +5,7 @@ described below was subsequently scrapped. Its PDF, checkout and email findings
 no longer describe a live feature.
 
 Reviewed the website components and routes, MedicForest account and UCAT workflows,
-interview platform, payment/API handlers, SQL setup, scripts and dependency
+Med interview platform, payment/API handlers, SQL setup, scripts and dependency
 configuration. Existing generated question content was checked with the question
 bank audit rather than rewritten.
 
@@ -21,7 +21,7 @@ bank audit rather than rewritten.
 - Cancel stale camera and microphone requests, release devices/models on exit,
   avoid repeated inference for the same video frame, and preserve final speech
   transcripts during concurrent shutdown requests.
-- Serialize interview autosaves and omit transcripts from report-list requests.
+- Serialize Med interview autosaves and omit transcripts from report-list requests.
   Stop room timers once their deadlines have passed.
 - Run independent account queries together, deduplicate initial authentication
   loads and discard responses belonging to an earlier account/session.

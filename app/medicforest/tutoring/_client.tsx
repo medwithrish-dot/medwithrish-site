@@ -340,12 +340,12 @@ export function TutoringPageClient() {
     tutorLabel: "With a MedicForest Admissions Specialist",
     durationLabel: "All–inclusive package • 8 hours tuition + PS support",
     description:
-      "All–inclusive support covering UCAT, Personal Statement and Interview coaching from start to finish.",
+      "All–inclusive support covering UCAT, Personal Statement and Med Interview coaching from start to finish.",
     features: [
       "4 hours UCAT Crash Course across all 4 core subtests",
       "Personal Statement complete support: brainstorming, draft review and line–by–line refinement",
-      "4 hours 1–1 Interview Tutoring: 2 hrs technique mastery + 2 full realistic mock interviews",
-      "Detailed written feedback and scorecard after each mock interview",
+      "4 hours 1–1 Med Interview Tutoring: 2 hrs technique mastery + 2 full realistic mock interviews",
+      "Detailed written feedback and scorecard after each mock Med interview",
       "University shortlisting strategy and application guidance",
       "Priority scheduling and mentor messaging between sessions",
     ],
@@ -355,12 +355,12 @@ export function TutoringPageClient() {
     interviewTutor === "rish"
       ? {
           id: "interview-rish",
-          name: "1–1 Interview Tutoring with MedWithRish",
+          name: "1–1 Med Interview Tutoring with MedWithRish",
           price: 140,
           tutorLabel: "Direct 1–to–1 coaching with @medwithrish",
           durationLabel: "4 hours total: 2 hrs coaching + 2 mock interviews",
           description:
-            "Complete 1–to–1 interview preparation including 2 hrs on core basics and 2 realistic mock interviews with feedback.",
+            "Complete 1–to–1 Med interview preparation including 2 hrs on core basics and 2 realistic mock interviews with feedback.",
           features: [
             "2 hours on core basics, answer structures and ethical decision–making",
             "2 full realistic mock interviews (MMI and panel stations)",
@@ -372,14 +372,14 @@ export function TutoringPageClient() {
         }
       : {
           id: "interview-specialist",
-          name: "1–1 Interview Tutoring with MedicForest Specialist",
+          name: "1–1 Med Interview Tutoring with MedicForest Specialist",
           price: 100,
-          tutorLabel: "With an experienced MedicForest Interview Specialist",
+          tutorLabel: "With an experienced MedicForest Med Interview Specialist",
           durationLabel: "4 hours total: 2 hrs coaching + 2 mock interviews",
           description:
-            "Complete 1–to–1 interview tutoring including 2 hrs on techniques and 2 realistic mock interviews with feedback.",
+            "Complete 1–to–1 Med interview tutoring including 2 hrs on techniques and 2 realistic mock interviews with feedback.",
           features: [
-            "2 hours on proven interview techniques and station confidence",
+            "2 hours on proven Med interview techniques and station confidence",
             "2 full realistic mock interviews simulating real medical school formats",
             "Actionable feedback and scoring breakdown after every station",
             "Model answers and structure guides for challenging questions",
@@ -417,7 +417,7 @@ export function TutoringPageClient() {
                 <strong className="font-bold text-slate-900">
                   @medwithrish
                 </strong>{" "}
-                — a leading medical admissions expert who has helped students
+                - a leading medical admissions expert who has helped students
                 achieve strong UCAT scores, secure multiple medicine offers, and
                 ace their interviews.
               </p>
@@ -581,7 +581,7 @@ export function TutoringPageClient() {
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0d5c4d] px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white shadow-xs">
                     <Sparkles className="h-3 w-3 text-teal-200" />
-                    MOST POPULAR — ALL–IN–ONE
+                    MOST POPULAR - ALL–IN–ONE
                   </span>
                 </div>
 
@@ -611,7 +611,7 @@ export function TutoringPageClient() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs font-semibold text-emerald-700">
-                      Best value — combines 4 hrs UCAT + PS + 4 hrs Interviews
+                      Best value - combines 4 hrs UCAT + PS + 4 hrs Interviews
                     </p>
                   </div>
 
@@ -641,14 +641,14 @@ export function TutoringPageClient() {
                 </div>
               </div>
 
-              {/* Package 3: 1–1 Interview Tutoring */}
+              {/* Package 3: 1–1 Med Interview Tutoring */}
               <div className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition hover:shadow-md">
                 <div>
                   <h3 className="text-xl font-black text-slate-900">
-                    1–1 Interview Tutoring
+                    1–1 Med Interview Tutoring
                   </h3>
                   <p className="mt-1 text-xs font-medium text-slate-500">
-                    MMI and panel interview coaching with realistic mock simulations.
+                    MMI and panel Med interview coaching with realistic mock simulations.
                   </p>
 
                   {/* Tutor Selector Pills */}
@@ -712,7 +712,7 @@ export function TutoringPageClient() {
                     disabled={loadingCheckout}
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-teal-700/80 bg-teal-50 px-4 py-3 text-xs font-bold text-teal-800 transition hover:bg-teal-100/70"
                   >
-                    <span>Book Interview Tutoring</span>
+                    <span>Book Med Interview Tutoring</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>

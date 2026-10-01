@@ -36,14 +36,14 @@ npm run build
 |---|---|---|---|
 | **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
 | **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No submission or checkout flow remains. Old MedicForest personal-statement URLs redirect to live tutoring; obsolete setup variables and the unused email dependency were removed. |
-| **Segment 3** | AI Interview Platform — Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
-| **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
-| **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | ✅ Re-audited | Guests can view opted-in leaderboard scores without an account; private preferences remain owner-only. Group and pathway routes delegate to services, and the compact pathway checklist preserves newly saved steps during older refreshes. |
-| **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Re-audited | Public routes import dedicated landing/pricing clients; dashboard bank lookups are deferred. Fixed dual `Alt+C` toggles, timer drift, account countdown redraws, cross-domain links, and legacy mock redirect hops. |
-| **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Re-audited | Scoring and visuals remain separated. Fixed duplicate shortcut handling, stale timeout submission, zero-second resume resets, invalid saved-answer scoring, and multi-part answer-change reporting; added runner tests. |
-| **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
-| **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview tokens expire server-side after 30 days, with redirect checks covered. The UCAT-backed account page is outside this pass. |
-| **Segment 10** | MedicForest Public Marketing & Shell | ✅ Re-audited outside UCAT | Corrected Premium price to the configured live Stripe amount, protected checkout from price drift, returned interview upgrades to the interview flow, and fixed shared desktop/mobile navigation. Existing two-offering About page was verified. |
+| **Segment 3** | AI Med Interview Platform - Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
+| **Segment 4** | AI Med Interview Platform - Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
+| **Segment 5** | AI Med Interview Platform - Community (Groups, Leaderboard, Pathway) | ✅ Re-audited | Guests can view opted-in leaderboard scores without an account; private preferences remain owner-only. Group and pathway routes delegate to services, and the compact pathway checklist preserves newly saved steps during older refreshes. |
+| **Segment 6** | MedicForest UCAT Platform - Client Monolith & State | ✅ Re-audited | Public routes import dedicated landing/pricing clients; dashboard bank lookups are deferred. Fixed dual `Alt+C` toggles, timer drift, account countdown redraws, cross-domain links, and legacy mock redirect hops. |
+| **Segment 7** | MedicForest UCAT Platform - Question Bank Engine | ✅ Re-audited | Scoring and visuals remain separated. Fixed duplicate shortcut handling, stale timeout submission, zero-second resume resets, invalid saved-answer scoring, and multi-part answer-change reporting; added runner tests. |
+| **Segment 8** | MedicForest UCAT Platform - Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
+| **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Med Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview tokens expire server-side after 30 days, with redirect checks covered. The UCAT-backed account page is outside this pass. |
+| **Segment 10** | MedicForest Public Marketing & Shell | ✅ Re-audited outside UCAT | Corrected Premium price to the configured live Stripe amount, protected checkout from price drift, returned Med interview upgrades to the Med interview flow, and fixed shared desktop/mobile navigation. Existing two-offering About page was verified. |
 | **Segment 11** | MedWithRish.com Core & Resources Hub | ✅ Re-audited outside UCAT | Direct free-guide links, contextual tutoring enquiries, complete About journeys and desktop navigation. Verified success-story assets, internal links and removal of the deprecated PS review offer. |
 | **Segment 12** | Infrastructure, Routing & Build Configuration | ✅ Re-audited outside UCAT | Preview proxy covers clean product routes before rewrites; public pages avoid claim refresh. Added shared security headers, private API caching, and separate brand/product crawler files. |
 
@@ -123,7 +123,7 @@ The owner scrapped the Personal Statement review submission idea entirely from t
 
 ---
 
-### Segment 3: AI Interview Platform — Call & Speech Engine
+### Segment 3: AI Med Interview Platform - Call & Speech Engine
 
 #### 1. Scope and audit
 The room, microphone device hook, speech hook, question-bank recorder, practice timer, recorded question audio and generated follow-up speech route were traced together. Existing protections for owner-bound sessions, follow-up speech requests, serial autosaves, late microphone permissions and failed station submission remain covered by the room tests.
@@ -139,7 +139,7 @@ Run `npm run test:interviews:room`, `npm run test:unit`, `npm run lint`, `npx ts
 
 ---
 
-### Segment 4: AI Interview Platform — Scoring & Feedback Reports
+### Segment 4: AI Med Interview Platform - Scoring & Feedback Reports
 
 #### 1. Context & Motivation
 Segment 4 covers feedback generation, saved reports and review UI. Gemini evaluates saved candidate answers against server-owned question guidance. `utils/interviews/scoring.ts` calculates a fixed practice percentage capped at 99. The criteria are MedicForest practice criteria, not official medical-school marking standards.
@@ -148,7 +148,7 @@ The re-audit found that the feedback endpoint could claim an active station befo
 
 #### 2. What Was Done
 1. `app/api/interviews/feedback/route.ts` now parses the request and delegates feedback work to `utils/interviews/feedback-service.ts`. The service verifies ownership and a completed station before claiming grading. Legacy saved attempts without `answer_submitted_at` remain eligible; the database trigger captures that timestamp on their first claim.
-2. The grading claim function in all three interview setup SQL files enforces the same completed-station rule. A standalone SQL patch updates existing installations without replacing unrelated functions. Provider failures return safe retry text and release the claim. Database save failures are handled separately and also release the claim where possible, preserving the submitted transcript and original completion time.
+2. The grading claim function in all three Med interview setup SQL files enforces the same completed-station rule. A standalone SQL patch updates existing installations without replacing unrelated functions. Provider failures return safe retry text and release the claim. Database save failures are handled separately and also release the claim where possible, preserving the submitted transcript and original completion time.
 3. `AIInterviewReview.tsx` now says AI feedback is unavailable when the service is unconfigured. The paid upgrade dialog and its claim about official medical-school markschemes were removed. Existing feedback remains viewable. While a grading request is running, the runner and saved review check the current station with GET instead of starting another grading request.
 4. `InterviewHistoryViews.tsx` and `SavedInterviewList.tsx` now contain only the live reports path and its filters. The reports list and detail routes retain their loading and error boundaries.
 5. Regression tests cover route eligibility, legacy submission timestamps, provider and database failure recovery, score validation and the rendered unavailable state.
@@ -157,18 +157,18 @@ The re-audit found that the feedback endpoint could claim an active station befo
 1. Run `node --test scripts/test-interview-feedback-reports.mjs scripts/test-interview-scoring.mjs scripts/test-interview-review.mjs scripts/test-saved-interview-review.mjs` for scoring and review behavior.
 2. Run `npm run test:interviews:db` and `node scripts/test-interview-dashboard-db.mjs` to verify the real PostgreSQL grading claim rejects active stations, accepts older submitted rows and applies the standalone patch.
 3. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
-4. For an existing hosted interview database, apply `supabase/medicforest_interview_grading_guard.sql` through the SQL editor. This audit tested the patch locally and did not apply it to the hosted project.
+4. For an existing hosted Med interview database, apply `supabase/medicforest_interview_grading_guard.sql` through the SQL editor. This audit tested the patch locally and did not apply it to the hosted project.
 
 ---
 
-### Segment 5: AI Interview Platform — Community (Groups, Leaderboard, Pathway)
+### Segment 5: AI Med Interview Platform - Community (Groups, Leaderboard, Pathway)
 
 #### 1. Context & Motivation
 The leaderboard was intended for public viewing, but its GET endpoint required an account, the database denied anonymous RPC calls, and the MedicForest page path still passed through the preview gate. The page assumed every viewer could edit preferences. Group and pathway routes mixed request handling with database work. The compact dashboard checklist could accept an old refresh after a save and show an earlier pathway state.
 
 #### 2. What Was Done
 1. `leaderboard-service.ts` separates public reads from owner-only preference writes. Guest reads use an anonymous Supabase client and return only opted-in entries; private preferences and personal best are queried only for the signed-in owner. The leaderboard page now bypasses the preview gate, and its UI offers guests a sign-in action instead of editable controls. Failed preference reloads no longer show a false success message.
-2. The interview platform and name-moderation SQL now grant anonymous access only to the leaderboard RPC. The RPC returns a boolean `is_you` for guests; the API also normalizes older `null` values. `medicforest_interview_public_leaderboard.sql` adds the grant to existing installations without replacing moderated leaderboard logic.
+2. The Med interview platform and name-moderation SQL now grant anonymous access only to the leaderboard RPC. The RPC returns a boolean `is_you` for guests; the API also normalizes older `null` values. `medicforest_interview_public_leaderboard.sql` adds the grant to existing installations without replacing moderated leaderboard logic.
 3. `groups-service.ts` owns bounded request parsing, authentication and RPC error mapping. Its route now only returns HTTP responses. Membership, private roster access, invitation hashing and limits remain enforced by the database RPC.
 4. `pathway-service.ts` owns account persistence while `pathway.ts` retains progression rules. The compact checklist now ignores stale refreshes after a save, and the dashboard keys its checklist by account ID.
 5. Regression tests cover guest and owner leaderboard responses, nickname sanitization, group route validation, pathway refresh ordering and actual PostgreSQL permissions.
@@ -181,7 +181,7 @@ The leaderboard was intended for public viewing, but its GET endpoint required a
 
 ---
 
-### Segment 6: MedicForest UCAT Platform — Client Monolith & State
+### Segment 6: MedicForest UCAT Platform - Client Monolith & State
 
 #### 1. Context & Motivation
 The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`) that:
@@ -231,7 +231,7 @@ Verification: `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (239 tests
 
 ---
 
-### Segment 7: MedicForest UCAT Platform — Question Bank Engine
+### Segment 7: MedicForest UCAT Platform - Question Bank Engine
 
 #### 1. Context & Motivation
 The UCAT question bank client (`UCATQuestionBankClient.tsx`) was a 10,942-line monolith:
@@ -295,7 +295,7 @@ The scoring engine now treats duplicate or unknown drag items, invalid most/leas
 
 ---
 
-### Segment 8: MedicForest UCAT Platform — Diagnostics & AI Feedback
+### Segment 8: MedicForest UCAT Platform - Diagnostics & AI Feedback
 
 #### 1. Context & Motivation
 
@@ -317,9 +317,9 @@ Diagnostic and report rendering, issue labels, study tasks, credit display, and 
 
 ---
 
-### Segment 9: Auth, Supabase & User Account Management — non-UCAT re-audit (2026-09-27)
+### Segment 9: Auth, Supabase & User Account Management - non-UCAT re-audit (2026-09-27)
 
-The interview account controls previously read the session twice: once through `getSession()` and again through the auth subscription. A delayed initial read or profile query could leave the wrong user's plan on screen after an account change. The menu also ignored `profiles.full_name`, where account edits are saved, and navigated away even if sign-out failed.
+The Med interview account controls previously read the session twice: once through `getSession()` and again through the auth subscription. A delayed initial read or profile query could leave the wrong user's plan on screen after an account change. The menu also ignored `profiles.full_name`, where account edits are saved, and navigated away even if sign-out failed.
 
 The menu now hydrates from Supabase's `INITIAL_SESSION` event, loads the active user's profile in a separate effect, and associates the returned name and plan with that user's ID. Stale profile responses are ignored. Sign-out failures remain visible so the user can retry. Server and admin Supabase clients now declare a server-only boundary.
 
@@ -329,49 +329,49 @@ Verification: `node --test scripts/test-profile-security.mjs scripts/test-server
 
 ---
 
-### Segment 10: MedicForest Public Marketing & Shell — non-UCAT re-audit (2026-09-27)
+### Segment 10: MedicForest Public Marketing & Shell - non-UCAT re-audit (2026-09-27)
 
-The About page already has the requested two-card Interview Practice and 1-to-1 Tutoring layout, a subtle UCAT work-in-progress note, founder section, and interview/tutoring calls to action. The pricing and landing pages now use one shared GBP 14.99 monthly price definition. Checkout verifies the Stripe amount, GBP currency, and monthly interval before creating a payment session, so a later Stripe price change cannot silently disagree with the public copy. A new price requires updating the shared definition before checkout can resume.
+The About page already has the requested two-card Med Interview Practice and 1-to-1 Tutoring layout, a subtle UCAT work-in-progress note, founder section, and interview/tutoring calls to action. The pricing and landing pages now use one shared GBP 14.99 monthly price definition. Checkout verifies the Stripe amount, GBP currency, and monthly interval before creating a payment session, so a later Stripe price change cannot silently disagree with the public copy. A new price requires updating the shared definition before checkout can resume.
 
-Interview customers previously returned from Stripe to the UCAT dashboard. The interview pricing button now requests a validated interview return destination. Checkout and portal sessions return to the pricing page; successful checkouts are synchronised to the signed-in account before navigation to the interview dashboard. If confirmation fails, the page shows a retry instruction and disables another checkout. Existing UCAT callers retain their previous return path.
+Med Interview customers previously returned from Stripe to the UCAT dashboard. The Med interview pricing button now requests a validated Med interview return destination. Checkout and portal sessions return to the pricing page; successful checkouts are synchronised to the signed-in account before navigation to the Med interview dashboard. If confirmation fails, the page shows a retry instruction and disables another checkout. Existing UCAT callers retain their previous return path.
 
-The interview shell now reuses the shared mobile navigation instead of maintaining a second link list. Public shell links keep users on MedicForest whether they use clean medicforest.com paths or `/medicforest/...` paths on the shared site. A stable first pathname snapshot avoids hydration mismatches on the rewritten static pages. The landing page no longer highlights UCAT as the active section, and the area switcher uses a click disclosure that closes on focus exit or Escape. Shared MedicForest metadata now describes the active interview and tutoring offering, and About has its own social preview. No UCAT platform files changed.
+The Med interview shell now reuses the shared mobile navigation instead of maintaining a second link list. Public shell links keep users on MedicForest whether they use clean medicforest.com paths or `/medicforest/...` paths on the shared site. A stable first pathname snapshot avoids hydration mismatches on the rewritten static pages. The landing page no longer highlights UCAT as the active section, and the area switcher uses a click disclosure that closes on focus exit or Escape. Shared MedicForest metadata now describes the active Med interview and tutoring offering, and About has its own social preview. No UCAT platform files changed.
 
 Verification: `node --test scripts/test-domain-routing.mjs scripts/test-billing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (249 passing), and `npm run build` (184 static pages).
 
 ---
 
-### Segment 11: MedWithRish.com Core & Resources Hub — non-UCAT re-audit (2026-09-27)
+### Segment 11: MedWithRish.com Core & Resources Hub - non-UCAT re-audit (2026-09-27)
 
-The homepage journey, resources index, interview hub, shared navbar, About and Contact pages, and tutoring entry pages were reviewed. The success-story image files and literal internal links in the Segment 11 pages and components resolve. No live personal statement review upload or checkout offer remains; the one-to-one personal statement session is still a separate tutoring service.
+The homepage journey, resources index, Med interview hub, shared navbar, About and Contact pages, and tutoring entry pages were reviewed. The success-story image files and literal internal links in the Segment 11 pages and components resolve. No live personal statement review upload or checkout offer remains; the one-to-one personal statement session is still a separate tutoring service.
 
-Several buttons labelled "Free interview guide" opened the general Payhip shop. The live free MMI guide has its own product page, so those buttons now use one shared direct URL across the MedWithRish pages and the related public MedicForest resources page. The general Notes buttons still open the shop.
+Several buttons labelled "Free Med interview guide" opened the general Payhip shop. The live free MMI guide has its own product page, so those buttons now use one shared direct URL across the MedWithRish pages and the related public MedicForest resources page. The general Notes buttons still open the shop.
 
-Tutoring buttons for GCSE, A-Level, interview and personal statement sessions now carry a topic to Contact. Contact validates the topic against a fixed list and prepares a matching email subject and WhatsApp message; unknown or repeated query values fall back to a general enquiry. The About page now provides routes into the admissions journey, interview preparation, resources, and contact. The desktop navigation has an About link, working destinations for category labels, and a mobile layout through tablet widths so the additional items fit. The category links remain keyboard accessible through the existing focus-based dropdown.
+Tutoring buttons for GCSE, A-Level, Med interview and personal statement sessions now carry a topic to Contact. Contact validates the topic against a fixed list and prepares a matching email subject and WhatsApp message; unknown or repeated query values fall back to a general enquiry. The About page now provides routes into the admissions journey, Med interview preparation, resources, and contact. The desktop navigation has an About link, working destinations for category labels, and a mobile layout through tablet widths so the additional items fit. The category links remain keyboard accessible through the existing focus-based dropdown.
 
 Verification: `node --test scripts/test-medwithrish-journey.mjs` (3 passing), `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (252 passing), and `npm run build` (184 static pages; Contact is rendered on demand for its topic query). The link audit found no unresolved literal internal links in Segment 11 pages and components. No UCAT platform files changed.
 
 ---
 
-### Segment 12: Infrastructure, Routing & Build Configuration — non-UCAT re-audit (2026-09-27)
+### Segment 12: Infrastructure, Routing & Build Configuration - non-UCAT re-audit (2026-09-27)
 
-Next 16 runs Proxy before host-based rewrites. The preview gate previously checked only `/medicforest/...`, so a clean `medicforest.com/interviews/dashboard` request could reach the rewrite without the gate. `preview-routing.ts` now maps clean product interview paths to their internal path before the access check. The shared mapping also keeps the existing clean `/ucat/...` preview gate consistent without editing UCAT platform files. Denied product requests redirect directly to the clean landing URL with the correct preview area. Public product pages and guest views skip Supabase claim refresh; protected pages and authenticated APIs keep it. Existing signed preview-token expiry remains covered by the server route tests.
+Next 16 runs Proxy before host-based rewrites. The preview gate previously checked only `/medicforest/...`, so a clean `medicforest.com/interviews/dashboard` request could reach the rewrite without the gate. `preview-routing.ts` now maps clean product Med interview paths to their internal path before the access check. The shared mapping also keeps the existing clean `/ucat/...` preview gate consistent without editing UCAT platform files. Denied product requests redirect directly to the clean landing URL with the correct preview area. Public product pages and guest views skip Supabase claim refresh; protected pages and authenticated APIs keep it. Existing signed preview-token expiry remains covered by the server route tests.
 
 Both hosts previously served the MedWithRish sitemap and robots file. The product host now rewrites `/sitemap.xml` to a static MedicForest sitemap and `/robots.txt` to a statically generated product route. The brand sitemap no longer lists product-prefixed URLs or an outdated fixed modification date, and brand robots excludes duplicate `/medicforest/` subpaths while leaving the separate disclaimer page crawlable. Product crawler files advertise only clean product URLs. The root metadata description now names the actual admissions and tutoring resources.
 
-`next.config.ts` now removes the powered-by header, adds content-type, referrer, frame, transport and feature-policy headers, and marks API responses `private, no-store`. Camera and microphone remain allowed for the site's own interview pages. The product robots route uses a regular cached Route Handler because this Next version only recognizes `robots.ts` at the app root.
+`next.config.ts` now removes the powered-by header, adds content-type, referrer, frame, transport and feature-policy headers, and marks API responses `private, no-store`. Camera and microphone remain allowed for the site's own Med interview pages. The product robots route uses a regular cached Route Handler because this Next version only recognizes `robots.ts` at the app root.
 
-Verification: `node --test scripts/test-domain-routing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (258 passing), and `npm run build` (186 generated static pages). A local production server with `medicforest.com` resolved to localhost returned the product sitemap and robots file, redirected an unauthorised clean interview dashboard request to `/?preview=interview`, served the public leaderboard, and returned `Cache-Control: private, no-store` on an API response. No UCAT platform files changed.
+Verification: `node --test scripts/test-domain-routing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (258 passing), and `npm run build` (186 generated static pages). A local production server with `medicforest.com` resolved to localhost returned the product sitemap and robots file, redirected an unauthorised clean Med interview dashboard request to `/?preview=Med interview`, served the public leaderboard, and returned `Cache-Control: private, no-store` on an API response. No UCAT platform files changed.
 
 ---
 
 ### Immediate UI Requests (Completed)
 
-#### 1. Group Interview Station Box Removal
-- **Request**: Remove the "Group interview station" panel from the study group page (`/medicforest/interview/groups`).
+#### 1. Group Med Interview Station Box Removal
+- **Request**: Remove the "Group Med interview station" panel from the study group page (`/medicforest/interview/groups`).
 - **File Changed**: [`app/medicforest/interview/_components/InterviewGroups.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/_components/InterviewGroups.tsx).
 - **Details**:
-  - Removed the `Group interview station` section containing station selector, recent stations dropdown, question box, timer, unsaved draft banner, shared answers, and room discussion.
+  - Removed the `Group Med interview station` section containing station selector, recent stations dropdown, question box, timer, unsaved draft banner, shared answers, and room discussion.
   - Removed the subcomponent `StationRoom`.
   - Removed station-specific state (`stationId`, `clock`, `selectedRoomId`).
   - Retained the core study circle roster, member rankings (by question bank completion and Why Medicine? attempt), invite link generator, and group management.
@@ -394,13 +394,13 @@ Verification: `node --test scripts/test-domain-routing.mjs scripts/test-server-r
 - **Request**: Redesign the MedicForest About page to feel complete, polished, and premium while keeping the information density low and scan-friendly (approx. 2–2.5 desktop screens long).
 - **Core Product Realignment**:
   - Highlighted the **TWO active offerings**:
-    1. **Interview Practice** (featuring 550+ FREE practice questions, MMI + panel prep, AI interview practice, personalised feedback).
-    2. **1-to-1 Tutoring** (interview coaching, personal statement support, individual feedback with Rish).
+    1. **Med Interview Practice** (featuring 550+ FREE practice questions, MMI + panel prep, AI Med interview practice, personalised feedback).
+    2. **1-to-1 Tutoring** (Med interview coaching, personal statement support, individual feedback with Rish).
   - Clarified that UCAT question bank tools are currently in development via a subtle single-line note.
 - **Section Structure**:
-  1. **Compact Hero**: Retained the core philosophy ("Growing a community of medics — like a forest of trees"), 2–3 line supporting copy, no huge empty dark areas, quick CTAs to platform and philosophy.
-  2. **What MedicForest Offers**: Two side-by-side compact cards (Interview Practice with bold `550+ FREE practice questions` badge, and 1-to-1 Tutoring) + subtle "UCAT practice tools are currently in development" note.
+  1. **Compact Hero**: Retained the core philosophy ("Growing a community of medics - like a forest of trees"), 2–3 line supporting copy, no huge empty dark areas, quick CTAs to platform and philosophy.
+  2. **What MedicForest Offers**: Two side-by-side compact cards (Med Interview Practice with bold `550+ FREE practice questions` badge, and 1-to-1 Tutoring) + subtle "UCAT practice tools are currently in development" note.
   3. **Why MedicForest**: Core philosophy ("A solitary tree stands fragile. A forest stands unbreakable."), single short explanation paragraph, and a minimal 3-step inline flow (`Practise → Get Feedback → Improve`).
   4. **Founder**: Compact 2-column layout with photo of Rish (`/rish-profile.jpg`), short 2-paragraph story, experience badges, mission quote, and CTA to 1-to-1 tutoring.
-  5. **Final CTA**: Compact bottom strip with clear heading, dual buttons (`Start Interview Practice →` and `Explore Tutoring →`), and `550+ free interview questions • No card required` trust note.
+  5. **Final CTA**: Compact bottom strip with clear heading, dual buttons (`Start Med Interview Practice →` and `Explore Tutoring →`), and `550+ free Med interview questions • No card required` trust note.
 - **Verification**: `npx tsc --noEmit` passed with 0 errors, `npm run test:unit` passed 197/197 tests, `npm run build` compiled 184 static pages cleanly.

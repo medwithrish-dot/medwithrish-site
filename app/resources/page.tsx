@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Medical and Dental Admissions Resources | MedWithRish",
-  description: "Explore UCAT tools, interview preparation, personal statement guides and tutoring resources.",
+  description: "Explore UCAT tools, Med interview preparation, personal statement guides and tutoring resources.",
   alternates: { canonical: "/resources" },
 };
 
@@ -26,7 +26,7 @@ const popularResources = [
     description: "Compare mock difficulty, average section scores, totals, and SJT bands.",
   },
   {
-    title: "Interview Prep Hub",
+    title: "Med Interview Prep Hub",
     href: "/interviews",
     description: "MMI, panel, ethics, motivation and reflection preparation.",
   },
@@ -83,8 +83,8 @@ const stages = [
     description: "Prepare for MMI and panel interviews with structure.",
     resources: [
       { title: "Medicine and Dentistry Interviews", href: "/interviews" },
-      { title: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
-      { title: "Interview Tutoring", href: "/interview-tutoring" },
+      { title: "FREE Medicine Med Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
+      { title: "Med Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
   {

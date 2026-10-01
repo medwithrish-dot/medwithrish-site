@@ -9,7 +9,7 @@ type AccessSearchParams = {
 
 const PREVIEW_DESTINATIONS = {
   interview: {
-    label: "Medicine interview dashboard",
+    label: "Medicine Med interview dashboard",
     path: "/medicforest/interview/dashboard",
   },
   ucat: {

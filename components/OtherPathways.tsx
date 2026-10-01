@@ -9,7 +9,7 @@ const pathways = [
     title: "Reapplying After a Gap Year",
     audience: "Medicine & Dentistry",
     description:
-      "A gap year can strengthen your application through improved UCAT, more work experience, stronger interview prep, and broader reflection. Often, I deal with students who need correction in how to revise effectively for each stage, since they did almost everything wrong and inefficiently the first time round. This is good to recognise for the second round, as it means there are a lot of easy fixes!",
+      "A gap year can strengthen your application through improved UCAT, more work experience, stronger Med interview prep, and broader reflection. Often, I deal with students who need correction in how to revise effectively for each stage, since they did almost everything wrong and inefficiently the first time round. This is good to recognise for the second round, as it means there are a lot of easy fixes!",
   },
   {
     id: "gateway",

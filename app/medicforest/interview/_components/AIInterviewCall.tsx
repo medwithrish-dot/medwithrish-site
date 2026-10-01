@@ -124,7 +124,7 @@ export function AIInterviewCall(props: Props) {
   return <div className={`${styles.callRoom} ${focus ? styles.focusRoom : ""}`}>
     <header className={styles.roomHeader}>
       <div className={styles.roomBrand}>
-        <div><h1>{attempt.title}</h1><p>MedicForest interview <span>·</span> Station {attempt.stationIndex + 1} of {attempt.stationCount}</p></div>
+        <div><h1>{attempt.title}</h1><p>MedicForest Med interview <span>·</span> Station {attempt.stationIndex + 1} of {attempt.stationCount}</p></div>
       </div>
       <div className={styles.headerActions}>
         <span className={styles.sessionBadge}><span className={styles.greenDot} />{preview ? "Preview" : "Private practice"}</span>
@@ -152,7 +152,7 @@ export function AIInterviewCall(props: Props) {
           </div>}
           <div className={styles.stationHint}><p className={styles.stageStatus} role="status"><span className={speech.listening ? styles.listeningDot : styles.greenDot} />{status}</p>{preparing && preview && <button type="button" className={styles.textButton} onClick={props.onSkipPreparation}>Skip reading time <ArrowRight size={14} /></button>}</div>
         </div>
-        <footer className={styles.callControls} aria-label="Interview controls">
+        <footer className={styles.callControls} aria-label="Med Interview controls">
           <div className={styles.deviceControls}>
             <button type="button" disabled={!active || microphonePending || !speech.supported} aria-label={microphoneLabel} title={microphoneLabel} aria-pressed={speech.listening} className={speech.listening ? styles.controlActive : ""} onClick={props.onToggleMicrophone}>{microphonePending ? <Loader2 size={21} className="animate-spin" /> : speech.listening ? <Mic size={21} /> : <MicOff size={21} />}<span>{props.micWanted && !speech.error ? "Stop mic" : "Start mic"}</span></button>
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
@@ -163,7 +163,7 @@ export function AIInterviewCall(props: Props) {
           {!speech.supported && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
         </footer>
       </div>
-      <aside className={styles.transcriptPanel} aria-label="Interview transcript and notes">
+      <aside className={styles.transcriptPanel} aria-label="Med Interview transcript and notes">
         <div className={styles.transcriptTabs}><button type="button" aria-pressed={tab === "transcript"} onClick={() => setTab("transcript")}><MessageSquareText size={21} />Live transcript<span className={styles.transcriptCount}>{questionIndex + 1}</span></button><button type="button" aria-pressed={tab === "notes"} onClick={() => setTab("notes")}><FileText size={18} />Notes{notes && <span className={styles.notesDot} aria-label="Notes added" />}</button></div>
         {tab === "transcript" ? <>
           <div ref={transcriptScroll} className={styles.transcriptScroll}>
@@ -205,7 +205,7 @@ export function AIInterviewCall(props: Props) {
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }}>
-        <button type="button" autoFocus aria-label="Return to interview" className={styles.closeDialog} disabled={Boolean(busy)} onClick={closeEndDialog}><X size={19} /></button>
+        <button type="button" autoFocus aria-label="Return to Med interview" className={styles.closeDialog} disabled={Boolean(busy)} onClick={closeEndDialog}><X size={19} /></button>
         <span className={styles.sectionIcon}><Check size={22} /></span>
         <h2 id="finish-title">Ready to reflect?</h2>
         <p>{preview ? "Review your preview transcript and markscheme. Sample AI feedback is optional." : "Save your transcript and open the station review, with the markscheme. You can choose to generate AI feedback there."}</p>

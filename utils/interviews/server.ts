@@ -10,7 +10,7 @@ export class InterviewError extends Error {
 export async function interviewContext() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new InterviewError("Sign in to save your interview and receive feedback.", 401);
+  if (!user) throw new InterviewError("Sign in to save your Med interview and receive feedback.", 401);
   const admin = createAdminClient();
   const { data, error } = await admin.from("profiles").select("current_plan").eq("id", user.id).maybeSingle();
   if (error) throw new InterviewError("Your account could not be loaded. Please retry.", 503);
@@ -21,12 +21,12 @@ export function interviewJson(data: object, status = 200) {
 }
 export function interviewFailure(error: unknown) {
   if (error instanceof InterviewError) return interviewJson({ error: error.message }, error.status);
-  return interviewJson({ error: "Interview services are temporarily unavailable. Your saved work is safe; please retry." }, 503);
+  return interviewJson({ error: "Med Interview services are temporarily unavailable. Your saved work is safe; please retry." }, 503);
 }
 export function databaseError(error: { code?: string; message: string }) {
-  if (error.code === "42P01" || error.code === "PGRST202" || error.code === "PGRST205") throw new InterviewError("Interview storage is being set up. Please try again once setup is complete.", 503);
+  if (error.code === "42P01" || error.code === "PGRST202" || error.code === "PGRST205") throw new InterviewError("Med Interview storage is being set up. Please try again once setup is complete.", 503);
   if (error.code === "P0001") throw new InterviewError(error.message, /limit reached/i.test(error.message) ? 429 : 409);
-  throw new InterviewError("Your interview could not be saved. Please retry.", 503);
+  throw new InterviewError("Your Med interview could not be saved. Please retry.", 503);
 }
 export async function readInterviewBody(request: Request) {
   const origin = request.headers.get("origin");

@@ -36,12 +36,12 @@ export async function GET(request: Request) {
   try {
     const { user, admin, isPremium } = await interviewContext();
     const id = new URL(request.url).searchParams.get("attempt");
-    if (id && !validId(id)) throw new InterviewError("Invalid interview ID");
+    if (id && !validId(id)) throw new InterviewError("Invalid Med interview ID");
     let query = admin.from("interview_attempts").select("*").eq("user_id", user.id);
     query = id ? query.eq("id", id) : query.in("status", ["in_progress", "grading"]).order("started_at", { ascending: false }).limit(1);
     const { data, error } = await query.maybeSingle();
     if (error) databaseError(error);
-    if (id && !data) throw new InterviewError("Interview not found", 404);
+    if (id && !data) throw new InterviewError("Med Interview not found", 404);
     return interviewJson({ attempt: data ? toInterviewAttempt(data) : null, configured: interviewAiConfigured(), isPremium });
   } catch (error) { return interviewFailure(error); }
 }
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     const body = await readInterviewBody(request);
     const { user, admin, isPremium } = await interviewContext();
     const mode = body.mode;
-    if (!["free", "university", "station", "reference"].includes(String(mode))) throw new InterviewError("Choose an interview mode");
+    if (!["free", "university", "station", "reference"].includes(String(mode))) throw new InterviewError("Choose a Med interview mode");
     if (mode !== "free" && !isPremium) throw new InterviewError("University circuits and additional stations require Premium. The Why medicine? station is free.", 403);
     const university = typeof body.universitySlug === "string" ? findInterviewUniversity(body.universitySlug) : undefined;
     if (mode === "university" && !university) throw new InterviewError("Choose a university");
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const index = body.stationIndex === undefined ? 0 : Number(body.stationIndex);
     const circuitMode = mode === "university" || mode === "reference";
     const presetStations = universityStationSlugs(university?.slug);
-    if (mode === "university" && !body.stationSlug && !presetStations.length) throw new InterviewError("Choose your practice topics before starting this university interview.");
+    if (mode === "university" && !body.stationSlug && !presetStations.length) throw new InterviewError("Choose your practice topics before starting this university Med interview.");
     const defaultCount = mode === "university" ? presetStations.length || 1 : mode === "reference" ? 5 : 1;
     let count = defaultCount;
     if (body.stationCount !== undefined) {
@@ -113,10 +113,10 @@ export async function PATCH(request: Request) {
   try {
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
-    if (!validId(body.attemptId) || !Array.isArray(body.answers)) throw new InterviewError("Invalid interview answers");
+    if (!validId(body.attemptId) || !Array.isArray(body.answers)) throw new InterviewError("Invalid Med interview answers");
     const { data: row, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("id", body.attemptId).maybeSingle();
     if (error) databaseError(error);
-    if (!row) throw new InterviewError("Interview not found", 404);
+    if (!row) throw new InterviewError("Med Interview not found", 404);
     const finish = body.finish === true;
     if (row.status !== "in_progress") {
       if (finish && row.last_error !== "abandoned") {
@@ -159,7 +159,7 @@ export async function PATCH(request: Request) {
       ...(finish ? { status: "failed", last_error: "awaiting_feedback", completed_at: row.completed_at ?? finishedAt, answer_submitted_at: row.answer_submitted_at ?? finishedAt } : {}),
     }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
     if (saveError) databaseError(saveError);
-    if (!data) throw new InterviewError("Your interview changed while saving. Please retry to keep the latest answers.", 409);
+    if (!data) throw new InterviewError("Your Med interview changed while saving. Please retry to keep the latest answers.", 409);
     const attempt = toInterviewAttempt(data);
     if (finish) await completeQuestionBankProgress(admin, user.id, attempt, attempt.completedAt ?? finishedAt);
     return interviewJson({ attempt, ...(finish && answerWindowClosed ? { usedSavedAnswers: true } : {}) });
@@ -170,7 +170,7 @@ export async function DELETE(request: Request) {
   try {
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
-    if (!validId(body.attemptId)) throw new InterviewError("Invalid interview ID");
+    if (!validId(body.attemptId)) throw new InterviewError("Invalid Med interview ID");
     const { data, error } = await admin.from("interview_attempts").update({ status: "failed", last_error: "abandoned" }).eq("user_id", user.id).eq("id", body.attemptId).eq("status", "in_progress").select("id").maybeSingle();
     if (error) databaseError(error);
     if (!data) throw new InterviewError("Only an active station can be ended", 409);

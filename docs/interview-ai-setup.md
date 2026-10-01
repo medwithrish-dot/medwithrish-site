@@ -1,4 +1,4 @@
-# Interview AI setup and follow-up costs
+# Med Interview AI setup and follow-up costs
 
 Checked against official provider documentation on 12 September 2026.
 
@@ -33,7 +33,7 @@ For deployment, set the corresponding key and confirmation flag in the host's se
 
 `GEMINI_API_KEY` is required for both generation and feedback. The two model variables are optional overrides with the defaults shown; accepted overrides are 2.5, 3.1 and 3.5 Flash-Lite, with no automatic model switching. Keep the key out of Git, browser requests and `NEXT_PUBLIC_` variables; only the server contacts Google. Restrict the key to the Gemini API. [Google key setup and security](https://ai.google.dev/gemini-api/docs/api-key)
 
-The existing Supabase account, service-role and interview database setup are still required; see [interview platform setup](interview-platform-setup.md). Do not infer a working production key from a local environment file. A missing key, rejected key or provider quota failure must leave saved answers and ordinary practice usable. Enabling an account's billing is a separate owner action; changing these variables does not activate billing or purchase credit.
+The existing Supabase account, service-role and Med interview database setup are still required; see [Med interview platform setup](interview-platform-setup.md). Do not infer a working production key from a local environment file. A missing key, rejected key or provider quota failure must leave saved answers and ordinary practice usable. Enabling an account's billing is a separate owner action; changing these variables does not activate billing or purchase credit.
 
 ## Google Chirp speech for generated probes
 
@@ -45,7 +45,7 @@ python scripts/generate_all.py --ids 643 644 645 646 647 648 649 650 651 652 653
 
 The script skips existing files, validates contiguous CSV IDs, retries transient synthesis failures and supports `--dry-run`, `--force`, `--limit` and `--ids`. Local generation uses Google Application Default Credentials (ADC).
 
-Generated answer-aware probes cannot be pre-recorded. `GET /api/interviews/speech` therefore validates the signed-in user, active attempt and generated question before requesting Chirp 3 HD audio. The browser caches that private response and falls back to its built-in voice if the endpoint is disabled or unavailable. Enable it deliberately—Cloud Text-to-Speech requires a billing-enabled project even when usage is within its free allowance:
+Generated answer-aware probes cannot be pre-recorded. `GET /api/interviews/speech` therefore validates the signed-in user, active attempt and generated question before requesting Chirp 3 HD audio. The browser caches that private response and falls back to its built-in voice if the endpoint is disabled or unavailable. Enable it deliberately-Cloud Text-to-Speech requires a billing-enabled project even when usage is within its free allowance:
 
 ```dotenv
 GOOGLE_CLOUD_PROJECT=your-project-id
@@ -83,7 +83,7 @@ Formula: `probes * (input_tokens * input_rate + billable_output_tokens * output_
 
 Google limits requests per minute, input tokens per minute and requests per day at project level. Multiple keys do not multiply the project's allowance. Exact limits vary by model and account; inspect the project's active limits in AI Studio rather than hard-coding a public free-tier number. Daily provider quotas reset at midnight Pacific time. [Google rate limits](https://ai.google.dev/gemini-api/docs/rate-limits)
 
-The interview flow bounds follow-ups to one per original question and at most three per attempt. Existing application allowances remain free: 2 station starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days. These application quotas are separate from Google's project quota and do not establish simultaneous-user capacity. Reuse saved probes, keep generation requests bounded, monitor actual token usage and use the catalogue fallback when generation is unavailable.
+The Med interview flow bounds follow-ups to one per original question and at most three per attempt. Existing application allowances remain free: 2 station starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days. These application quotas are separate from Google's project quota and do not establish simultaneous-user capacity. Reuse saved probes, keep generation requests bounded, monitor actual token usage and use the catalogue fallback when generation is unavailable.
 
 `429 RESOURCE_EXHAUSTED` means a provider limit was hit; it does not mean the key is invalid. A quota error naming `free_tier` identifies the free quota involved in that request. A reported limit of zero means that model/request currently has no usable allocation; it does not promise that waiting will restore access. Do not enable billing to work around that error in this personal setup. Check AI Studio's model quota, wait if a nonzero daily/minute quota was exhausted, and continue with saved or catalogue questions. [Google error reference](https://ai.google.dev/gemini-api/docs/generate-content/api-errors), [Google quota documentation](https://ai.google.dev/gemini-api/docs/rate-limits)
 
