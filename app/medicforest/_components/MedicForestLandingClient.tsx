@@ -98,14 +98,6 @@ function RedesignedTutorHero() {
       href: "/medicforest/interview/dashboard",
       active: true,
     },
-    {
-      title: "Dentistry Med Interview",
-      status: "Coming Soon",
-      text: "Dentistry-specific Med interview practice with confidence scoring.",
-      icon: BadgeCheck,
-      action: "Notify Me",
-      active: false,
-    },
   ];
 
   useEffect(() => {
@@ -527,7 +519,7 @@ function RedesignedTutorHero() {
           </p>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {productCards.map((product) => {
             const Icon = product.icon;
             const content = (

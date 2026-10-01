@@ -79,10 +79,10 @@ const stages = [
   },
   {
     number: "06",
-    title: "Interviews",
+    title: "Med Interviews",
     description: "Prepare for MMI and panel interviews with structure.",
     resources: [
-      { title: "Medicine and Dentistry Interviews", href: "/interviews" },
+      { title: "Med Interviews", href: "/interviews" },
       { title: "FREE Medicine Med Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
       { title: "Med Interview Tutoring", href: "/interview-tutoring" },
     ],

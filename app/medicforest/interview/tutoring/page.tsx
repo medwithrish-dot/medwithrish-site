@@ -4,7 +4,7 @@ import { InterviewShell } from "../_components/InterviewShell";
 
 export const metadata: Metadata = {
   title: "1-1 Med Interview Tutoring | MedicForest",
-  description: "Book individual medicine or dentistry Med interview tutoring with tailored MMI and panel Med interview practice.",
+  description: "Book individual medicine Med interview tutoring with tailored MMI and panel Med interview practice.",
 };
 
 const benefits = [
@@ -21,7 +21,7 @@ export default function Page() {
   return (
     <InterviewShell
       title="1-1 Med Interview Tutoring"
-      subtitle="Personal medicine and dentistry Med interview coaching, built around the answers and stations you want to improve."
+      subtitle="Personal medicine Med interview coaching, built around the answers and stations you want to improve."
       activeLabel="1-1 Tutoring"
       eyebrow="Work directly with Rish"
     >

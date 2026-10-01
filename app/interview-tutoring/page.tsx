@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Med Interview Tutoring | MedWithRish",
-  description: "Practise medicine and dentistry MMI and panel interviews with individual feedback.",
+  description: "Practise medicine MMI and panel interviews with individual feedback.",
   alternates: { canonical: "/interview-tutoring" },
 };
 

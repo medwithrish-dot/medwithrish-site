@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     absolute: "MedicForest Interviews | 550+ free questions with markschemes",
   },
   description:
-    "Start practising immediately with 550+ free medicine and dentistry Med interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
+    "Start practising immediately with 550+ free medicine interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
   alternates: { canonical: "/interviews" },
 };
 
@@ -39,7 +39,7 @@ const sampleHref = `${bankHref}?question=iq-01-001-motivation-for-medicine`;
 const features = [
   {
     title: "550+ free questions",
-    text: "Practise medicine and dentistry Med interview questions across a wide range of topics and station styles.",
+    text: "Practise medicine interview questions across a wide range of topics and station styles.",
     icon: BookOpen,
     tone: "blue",
   },
@@ -245,16 +245,16 @@ export default function InterviewsPage() {
             <div className={styles.heroCopy}>
               <p className={styles.eyebrowPill}>
                 <Sparkles size={15} aria-hidden="true" />
-                <span>Medicine &amp; dentistry Med interview preparation</span>
+                <span>Medicine interview preparation</span>
               </p>
               <h1>
-                Medicine and Dentistry Med interview practice,
+                Medicine interview practice,
                 <br />
                 <span>made for you.</span>
               </h1>
               <p className={styles.heroDescription}>
                 Realistic practice, clear markschemes and personalised AI
-                feedback. Feel more confident at your medical or dental school
+                feedback. Feel more confident at your medical school
                 interviews.
               </p>
               <div className={styles.freePromise}>

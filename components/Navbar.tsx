@@ -29,12 +29,12 @@ const navItems: {
   },
 
   {
-    label: "Interviews",
+    label: "Med Interviews",
     href: "/interviews",
     items: [
       { label: "Med Interview Hub", href: "/interviews" },
       { label: "FREE Medicine Med Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
-      { label: "Medicine/Dentistry Med Interview Tutoring", href: "/interview-tutoring" },
+      { label: "Medicine Med Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
 
@@ -90,7 +90,7 @@ export default function Navbar() {
       <div aria-hidden="true" className="h-[49px]" />
 
       <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1250px] items-center justify-between px-6 py-1">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-1">
           <Link href="/" className="text-lg font-bold tracking-wide text-gray-900">
             MedWithRish
           </Link>

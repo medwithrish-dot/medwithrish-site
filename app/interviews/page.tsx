@@ -18,9 +18,9 @@ import Navbar from "@/components/Navbar";
 import { FREE_INTERVIEW_GUIDE_URL } from "@/utils/medwithrish/site-links";
 
 export const metadata: Metadata = {
-  title: "Medicine and Dentistry Interviews | MedWithRish",
+  title: "Medicine Interviews | MedWithRish",
   description:
-    "Prepare for medicine and dentistry interviews with MMI strategy, panel Med interview guidance, ethics, motivation, reflection and practice structure.",
+    "Prepare for medicine interviews with MMI strategy, panel Med interview guidance, ethics, motivation, reflection and practice structure.",
   alternates: {
     canonical: "/interviews",
   },
@@ -47,7 +47,7 @@ const interviewFormats = [
 const coreAreas = [
   {
     title: "Motivation",
-    text: "Why medicine or dentistry, why now, and what evidence proves you understand the career.",
+    text: "Why medicine, why now, and what evidence proves you understand the career.",
     icon: Stethoscope,
   },
   {
@@ -113,7 +113,7 @@ export default function InterviewsPage() {
               Med Interview preparation
             </p>
             <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-gray-950 md:text-6xl">
-              Medicine and Dentistry Interviews
+              Medicine Interviews
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-8 text-gray-700 md:text-lg">
               A focused prep hub for MMI, panel, ethics, motivation,

@@ -195,7 +195,7 @@ export function MedicForestPricingPage() {
               className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Back to Interviews
+              Back to Med Interviews
             </Link>
             <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_330px] lg:items-end">
               <div>
