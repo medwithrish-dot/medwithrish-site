@@ -27,7 +27,7 @@ const landingLinks = [
   ["1-1 Tutoring", "/tutoring"],
   ["Resources", "/resources"],
   ["Feedback", "/feedback"],
-  ["Contact us", "/contact"],
+  ["Help & Support", "/contact"],
 ] as const;
 
 export function InterviewMobileNav({

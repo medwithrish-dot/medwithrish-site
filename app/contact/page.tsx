@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact MedWithRish | MedWithRish",
+  title: "Help & Support | MedWithRish",
   description: "Contact Rish about UCAT tutoring, interviews, personal statement sessions and admissions resources.",
   alternates: { canonical: "/contact" },
 };
@@ -89,7 +89,7 @@ export default async function ContactPage({
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
-                Tell me what support you need and when you hope to start. I can
+                Reach out by emailing medwithrish@gmail.com, or drop a DM to @medwithrish on Instagram or TikTok. I can
                 help with tutoring, interviews, personal statement sessions,
                 resources, and collaborations.
               </p>

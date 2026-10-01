@@ -18,22 +18,32 @@ export function FeedbackPageClient() {
   const [category, setCategory] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (sending || !message.trim()) return;
+    const website = new FormData(e.currentTarget as HTMLFormElement).get("website");
     setSending(true);
-    const subject = encodeURIComponent(
-      `[MedicForest Feedback] ${category || "General"}`
-    );
-    const body = encodeURIComponent(
-      `Category: ${category || "Not specified"}\n\nMessage:\n${message}\n\nReply to: ${email || "not provided"}`
-    );
-    window.location.href = `mailto:medwithrish@gmail.com?subject=${subject}&body=${body}`;
-    setTimeout(() => {
-      setSending(false);
+    setError("");
+
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category, message, email, website }),
+      });
+      const result = await response.json().catch(() => null) as { error?: string } | null;
+      if (!response.ok) {
+        throw new Error(result?.error || "Feedback could not be sent. Please try again.");
+      }
       setSubmitted(true);
-    }, 800);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Feedback could not be sent. Please try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -64,9 +74,7 @@ export function FeedbackPageClient() {
               </span>
               <h2 className="mt-5 text-2xl font-bold text-[#0d2c2e]">Thanks for your feedback!</h2>
               <p className="mt-3 text-sm leading-7 text-[#4a6568]">
-                Your email client should have opened with your message pre-filled and addressed to{" "}
-                <strong>medwithrish@gmail.com</strong>. If it didn&apos;t open, you can email us
-                directly.
+                Your feedback has been sent directly to <strong>medwithrish@gmail.com</strong>.
               </p>
               <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                 <a
@@ -82,6 +90,7 @@ export function FeedbackPageClient() {
                     setCategory("");
                     setMessage("");
                     setEmail("");
+                    setError("");
                   }}
                   className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:border-teal-300 hover:text-teal-700"
                 >
@@ -121,6 +130,7 @@ export function FeedbackPageClient() {
                   id="message"
                   required
                   rows={6}
+                  maxLength={5000}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us what's working, what isn't, or what you'd love to see…"
@@ -144,6 +154,21 @@ export function FeedbackPageClient() {
                 />
               </div>
 
+              <div className="sr-only" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
+
+              {error && (
+                <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                  {error}{" "}
+                  <a href="mailto:medwithrish@gmail.com" className="font-bold underline">
+                    Email us directly
+                  </a>
+                  .
+                </p>
+              )}
+
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="submit"
@@ -151,7 +176,7 @@ export function FeedbackPageClient() {
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
-                  {sending ? "Opening email…" : "Send feedback"}
+                  {sending ? "Sending feedback…" : "Send feedback"}
                 </button>
                 <p className="text-xs text-gray-400">
                   Or email us at{" "}

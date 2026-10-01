@@ -106,6 +106,61 @@ test("site URLs are validated and production checkout cannot use a caller's loca
   });
 });
 
+test("feedback submissions are validated before email delivery", async () => {
+  let providerCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => { providerCalls++; return Response.json({ id: "email-1" }); };
+  try {
+    await withEnv({ RESEND_API_KEY: "test-only" }, async () => {
+      const { POST } = load("app/api/feedback/route.ts");
+      assert.equal((await POST(jsonRequest({ message: "" }))).status, 400);
+      assert.equal((await POST(jsonRequest({ message: "Useful feedback", category: "Invalid" }))).status, 400);
+      assert.equal((await POST(jsonRequest({ message: "Useful feedback", email: "not-an-email" }))).status, 400);
+      assert.equal((await POST(new Request("https://example.test/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Origin: "https://attacker.test" },
+        body: JSON.stringify({ message: "Useful feedback" }),
+      }))).status, 403);
+      assert.equal(providerCalls, 0);
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("feedback submissions are emailed to the MedWithRish inbox", async () => {
+  let providerRequest;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    providerRequest = { url, init, body: JSON.parse(init.body) };
+    return Response.json({ id: "email-1" });
+  };
+  try {
+    await withEnv({
+      RESEND_API_KEY: "test-only",
+      FEEDBACK_TO_EMAIL: undefined,
+      FEEDBACK_FROM_EMAIL: undefined,
+    }, async () => {
+      const { POST } = load("app/api/feedback/route.ts");
+      const response = await POST(jsonRequest({
+        category: "Feature request",
+        message: "Please add this useful feature.",
+        email: "student@example.test",
+        website: "",
+      }));
+      assert.equal(response.status, 200);
+      assert.equal(providerRequest.url, "https://api.resend.com/emails");
+      assert.equal(providerRequest.init.headers.Authorization, "Bearer test-only");
+      assert.deepEqual(providerRequest.body.to, ["medwithrish@gmail.com"]);
+      assert.equal(providerRequest.body.reply_to, "student@example.test");
+      assert.match(providerRequest.body.subject, /Feature request/);
+      assert.match(providerRequest.body.text, /Please add this useful feature/);
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("subscription checkout webhooks retrieve subscription and sync", async () => {
   let synced = false;
   const currentSub = { id: "sub_paid", status: "active" };

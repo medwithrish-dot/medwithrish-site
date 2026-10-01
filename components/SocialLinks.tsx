@@ -18,7 +18,7 @@ export default function SocialLinks() {
 
       
       <a
-        href="https://instagram.com/medwithrish_"
+        href="https://instagram.com/medwithrish"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center rounded-full border border-blue-300 p-3 text-gray-700 transition hover:scale-110 hover:bg-gray-50"

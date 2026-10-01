@@ -109,7 +109,7 @@ const landingSections = [
     label: "Support",
     items: [
       { label: "Feedback", icon: MessageSquare, href: "/feedback" },
-      { label: "Contact us", icon: CircleHelp, href: "/contact" },
+      { label: "Help & Support", icon: CircleHelp, href: "/contact" },
     ],
   },
 ] as const;
@@ -124,7 +124,7 @@ export function getLandingActiveLabel(pathname: string) {
   if (path.startsWith("/tutoring")) return "1-1 Tutoring";
   if (path.startsWith("/resources")) return "Resources";
   if (path.startsWith("/feedback")) return "Feedback";
-  if (path.startsWith("/contact")) return "Contact us";
+  if (path.startsWith("/contact")) return "Help & Support";
   if (path.startsWith("/ucat")) return "UCAT (WIP)";
 
   return "";
