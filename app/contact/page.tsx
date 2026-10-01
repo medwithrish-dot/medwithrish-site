@@ -89,7 +89,7 @@ export default async function ContactPage({
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
-                Reach out by emailing medwithrish@gmail.com, or drop a DM to @medwithrish on Instagram or TikTok. I can
+                Reach out by emailing medwithrish@gmail.com, or drop a DM to @medwithrish_ on Instagram or @medwithrish on TikTok. I can
                 help with tutoring, interviews, personal statement sessions,
                 resources, and collaborations.
               </p>

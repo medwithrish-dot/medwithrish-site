@@ -7,7 +7,7 @@ import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingS
 export const metadata: Metadata = {
   title: "Help & Support | MedicForest",
   description:
-    "Get in touch with MedWithRish and MedicForest. Email medwithrish@gmail.com or DM @medwithrish on Instagram and TikTok.",
+    "Get in touch with MedWithRish and MedicForest. Email medwithrish@gmail.com or DM @medwithrish_ on Instagram or @medwithrish on TikTok.",
   alternates: {
     canonical: "/contact",
   },
@@ -83,7 +83,7 @@ export default function ContactPage() {
                   Instagram DM
                 </h2>
                 <p className="mt-1 text-xs font-semibold text-pink-600">
-                  @medwithrish
+                  @medwithrish_
                 </p>
 
                 <p className="mt-3 text-xs leading-relaxed text-slate-500">
@@ -92,7 +92,7 @@ export default function ContactPage() {
               </div>
 
               <a
-                href="https://instagram.com/medwithrish"
+                href="https://instagram.com/medwithrish_"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-[#042724] px-4 text-xs font-bold text-white shadow-xs transition hover:bg-slate-800"
