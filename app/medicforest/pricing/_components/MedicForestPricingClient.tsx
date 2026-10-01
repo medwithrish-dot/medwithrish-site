@@ -3,12 +3,18 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CreditCard,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import { MedicForestLandingShell } from "@/app/medicforest/ucat/_components/MedicForestLandingShell";
 import { MEDICFOREST_PREMIUM_MONTHLY_PRICE } from "@/utils/medicforest/premium-price";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
-
 
 const INTERVIEW_FREE_FEATURES = [
   "Unlimited Med interview question bank practice",
@@ -24,78 +30,78 @@ const INTERVIEW_PREMIUM_FEATURES = [
   "Unlimited saved Med interview reports and transcripts",
   "AI feedback, scoring and mark scheme breakdowns",
   "Personalised Med interview plan and revision tasks",
-  "MMI circuits, panel practice and university-specific stations",
+  "MMI circuits, panel practice and university–specific stations",
   "Advanced analytics for timing, structure, confidence and improvement",
 ];
 
-const INTERVIEW_PRICING_ROWS = [
-  ["Question bank practice", "Unlimited", "Unlimited"],
-  ["'Why Medicine?' AI attempt", "1 free attempt", "Full access"],
-  ["Study groups", "Included", "Included"],
-  ["Med Interview guides", "Included", "Included"],
-  ["AI Med interview stations", "Starter attempt", "Full library"],
-  ["Saved transcripts and reports", "Limited", "Unlimited"],
-  ["AI scoring and mark schemes", "Sample feedback", "Full feedback"],
-  ["MMI circuits", "Premium", "Included"],
-  ["University-specific station practice", "Premium", "Included"],
-  ["Personalised improvement plan", "Basic progress", "Advanced"],
-  ["Analytics and leaderboard insights", "Basic", "Advanced"],
-] as const;
+type CompareRow = {
+  feature: string;
+  free: boolean | string;
+  premium: boolean | string;
+};
 
-// ── Landing Hero ──────────────────────────────────────────────────────────────
-
-function PricingComparisonValue({
-  value,
-  featured = false,
-}: {
-  value: string;
-  featured?: boolean;
-}) {
-  if (value === "Included") {
-    return (
-      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200">
-        <Check className="h-4 w-4" aria-hidden="true" />
-        <span className="sr-only">Included</span>
-      </span>
-    );
-  }
-
-  if (value === "Premium") {
-    return (
-      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-400 ring-1 ring-slate-200">
-        <X className="h-4 w-4" aria-hidden="true" />
-        <span className="sr-only">Not included</span>
-      </span>
-    );
-  }
-
-  if (value === "Advanced") {
-    return (
-      <span className="inline-flex items-center rounded-full bg-blue-600 px-3 py-1 text-xs font-black text-white shadow-sm shadow-blue-900/20">
-        Advanced
-      </span>
-    );
-  }
-
-  if (value === "Limited") {
-    return (
-      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500">
-        Limited
-      </span>
-    );
-  }
-
-  return (
-    <span
-      className={`text-sm font-black ${
-        featured ? "text-blue-700" : "text-slate-600"
-      }`}
-    >
-      {value}
-    </span>
-  );
-}
-
+const COMPARE_ROWS: CompareRow[] = [
+  {
+    feature: "Med interview question bank practice",
+    free: true,
+    premium: true,
+  },
+  {
+    feature: "AI 'Why Medicine?' interview attempt",
+    free: "1 free attempt",
+    premium: true,
+  },
+  {
+    feature: "Full AI Med interview station library",
+    free: false,
+    premium: true,
+  },
+  {
+    feature: "Saved interview reports and transcripts",
+    free: false,
+    premium: true,
+  },
+  {
+    feature: "AI feedback, scoring and mark scheme breakdowns",
+    free: "Sample feedback",
+    premium: true,
+  },
+  {
+    feature: "Personalised Med interview plan and revision tasks",
+    free: false,
+    premium: true,
+  },
+  {
+    feature: "MMI circuits, panel practice and university–specific stations",
+    free: false,
+    premium: true,
+  },
+  {
+    feature: "Advanced analytics for timing, structure, and confidence",
+    free: false,
+    premium: true,
+  },
+  {
+    feature: "Free study groups and room practice",
+    free: true,
+    premium: true,
+  },
+  {
+    feature: "University Med interview guides and station checklists",
+    free: true,
+    premium: true,
+  },
+  {
+    feature: "Public leaderboard and community practice tools",
+    free: true,
+    premium: true,
+  },
+  {
+    feature: "Basic progress tracking across completed questions",
+    free: true,
+    premium: true,
+  },
+];
 
 export function MedicForestPricingPage() {
   const router = useRouter();
@@ -187,183 +193,315 @@ export function MedicForestPricingPage() {
 
   return (
     <MedicForestLandingShell>
-      <div className="bg-white text-[#0b1143]">
-        <section className="bg-[#050b1f] px-5 py-6 text-white lg:px-6">
-          <div className="mx-auto max-w-5xl">
+      <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16">
+        <main className="mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10">
+          {/* Back Navigation Link */}
+          <div>
             <Link
               href={medicForestPublicHref(pathname, "/interviews")}
-              className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-800 transition hover:text-teal-950 sm:text-sm"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Back to Med Interviews
+              <span>Back to Med Interviews</span>
             </Link>
-            <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_330px] lg:items-end">
+          </div>
+
+          {/* Hero Header with Medical Stethoscope Art */}
+          <div className="mt-5 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="max-w-2xl">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-teal-700 sm:text-xs">
+                Med Interview Platform Pricing
+              </p>
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl lg:text-[40px] lg:leading-[1.15]">
+                Choose the plan that fits your preparation.
+              </h1>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Start with a free plan to practise and explore, or upgrade to Premium for the full AI Med interview platform, saved reports and advanced analytics.
+              </p>
+            </div>
+
+            {/* Right illustration: Minimal mint doctor / stethoscope graphic */}
+            <div className="hidden lg:flex items-center justify-end shrink-0">
+              <div className="relative flex h-32 w-48 items-center justify-center">
+                <div className="absolute inset-0 rounded-full bg-emerald-100/60 blur-2xl" />
+                <svg
+                  viewBox="0 0 160 130"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="relative z-10 h-28 w-44 text-teal-600/75"
+                >
+                  {/* Subtle sparkle radiate marks */}
+                  <line x1="28" y1="28" x2="38" y2="38" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
+                  <line x1="56" y1="14" x2="58" y2="28" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
+                  <line x1="88" y1="22" x2="98" y2="14" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
+
+                  {/* Stethoscope */}
+                  <path
+                    d="M92 34 C92 64, 126 64, 126 34"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="92" cy="32" r="3" fill="currentColor" />
+                  <circle cx="126" cy="32" r="3" fill="currentColor" />
+                  <path
+                    d="M109 60 C109 84, 120 102, 142 102"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="142" cy="102" r="9" stroke="currentColor" strokeWidth="3.5" fill="#f7faf8" />
+                  <circle cx="142" cy="102" r="4" fill="currentColor" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 Trust Badges Row */}
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="flex items-center gap-3.5 rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                <CreditCard className="h-5 w-5" />
+              </div>
               <div>
-                <p className="text-xs font-black uppercase tracking-wide text-cyan-200">
-                  Med Interview platform pricing
+                <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                  No card needed for free plan
                 </p>
-                <h1 className="mt-2 max-w-2xl text-3xl font-black leading-tight sm:text-4xl">
-                  See exactly what you get before you upgrade.
-                </h1>
-                <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-200">
-                  Start with free question-bank practice, study groups and a
-                  Why Medicine? Med interview attempt. Upgrade when you want the
-                  full AI Med interview platform, saved reports and deeper
-                  improvement analytics.
+                <p className="text-[11px] text-slate-500">
+                  Get started instantly.
                 </p>
               </div>
-              <div className="rounded-xl border border-blue-300/40 bg-white/10 p-4 shadow-lg shadow-blue-950/20">
-                <p className="text-xs font-black uppercase tracking-wide text-blue-100">
-                  Premium
+            </div>
+
+            <div className="flex items-center gap-3.5 rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                  Cancel anytime
                 </p>
-                <div className="mt-2 flex items-end gap-2">
-                  <span className="text-3xl font-black">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
-                  <span className="pb-1 text-sm font-bold text-slate-300">
-                    / month
-                  </span>
-                </div>
-                <p className="mt-2 text-xs font-semibold leading-5 text-slate-300">
-                  Cancel through billing management. No card is needed for the
-                  free Med interview plan.
+                <p className="text-[11px] text-slate-500">
+                  No long–term commitment.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5 rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                <Users className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                  Built for realistic med interview prep
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Trusted by thousands of future doctors.
                 </p>
               </div>
             </div>
           </div>
-        </section>
 
-        <section className="mx-auto max-w-6xl px-5 py-6 lg:px-6">
+          {/* Checkout Return Status Alerts */}
           {checkoutReturnStatus === "syncing" && (
-            <p role="status" className="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm font-bold text-blue-900">
+            <p role="status" className="mt-6 rounded-xl border border-teal-200 bg-teal-50 p-4 text-xs font-bold text-teal-900 sm:text-sm">
               Confirming your Premium access…
             </p>
           )}
           {checkoutReturnStatus === "error" && (
-            <p role="alert" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900">
+            <p role="alert" className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold text-amber-900 sm:text-sm">
               Your checkout could not be confirmed yet. Refresh this page to try syncing it again before starting another payment.
             </p>
           )}
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div className="flex flex-col rounded-xl border border-blue-200 bg-white p-5 shadow-sm">
-              <div className="flex items-center justify-between gap-4">
-                <h2 className="text-lg font-black">Free Plan</h2>
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
-                  Start here
-                </span>
+
+          {/* Two Plan Cards Grid */}
+          <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Free Plan Card */}
+            <div className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 shadow-2xs sm:p-8">
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+                  Free Plan
+                </h2>
+
+                <div className="mt-3">
+                  <div className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                    GBP 0
+                  </div>
+                  <p className="mt-1 text-xs font-medium text-slate-500">
+                    No card needed.
+                  </p>
+                </div>
+
+                <ul className="mt-6 space-y-3 pb-6 text-xs text-slate-700 sm:text-sm">
+                  {INTERVIEW_FREE_FEATURES.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
+                        <Check className="h-3 w-3 stroke-[3]" />
+                      </span>
+                      <span className="leading-snug">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="mt-3 text-4xl font-black">GBP 0</div>
-              <p className="mt-2 text-sm font-bold text-slate-500">
-                No card needed.
-              </p>
-              <ul className="mt-4 flex-1 space-y-2.5 pb-5 text-sm font-semibold text-slate-700">
-                {INTERVIEW_FREE_FEATURES.map((feature) => (
-                  <li key={feature} className="flex gap-3">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+
               <Link
                 href="/medicforest/interview/dashboard"
-                className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
+                className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#0c6b5e] px-5 text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
               >
-                Launch Med Interview Platform
+                <span>Launch Med Interview Platform</span>
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <div className="relative flex flex-col rounded-xl border-2 border-blue-500 bg-gradient-to-br from-white via-blue-50/70 to-indigo-50 p-5 shadow-xl shadow-blue-900/10">
-              <div className="absolute right-4 top-0 -translate-y-1/2 rounded-full bg-blue-600 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-white shadow-lg shadow-blue-900/20">
-                Upgrade
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <h2 className="text-lg font-black">MedicForest Premium</h2>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-black text-blue-700">
-                  Full Med interview prep
+            {/* MedicForest Premium Card */}
+            <div className="relative flex flex-col justify-between rounded-2xl border-2 border-teal-500 bg-white p-6 shadow-sm ring-4 ring-teal-500/10 sm:p-8">
+              <div className="absolute right-6 top-6 sm:right-8 sm:top-8">
+                <span className="inline-flex items-center gap-1 rounded-full bg-teal-100/90 px-3 py-1 text-xs font-bold text-teal-800">
+                  ★ Most Popular
                 </span>
               </div>
-              <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
-                <span className="text-4xl font-black">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
-                <span className="pb-2 text-base font-black text-slate-500">
-                  / month
-                </span>
-              </div>
-              <p className="mt-2 text-sm font-black text-blue-700">
-                Best for full AI stations, realistic circuits and feedback you
-                can use after every attempt.
-              </p>
-              <ul className="mt-4 flex-1 space-y-2.5 pb-5 text-sm font-semibold text-slate-700">
-                {INTERVIEW_PREMIUM_FEATURES.map((feature) => (
-                  <li key={feature} className="flex gap-3">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => void handlePremiumCheckout()}
-                disabled={premiumCheckoutLoading || checkoutReturnStatus !== "idle"}
-                className="mt-auto h-11 rounded-lg bg-blue-600 px-5 text-sm font-black text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-              >
-                {premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}
-              </button>
-              {premiumCheckoutError && (
-                <p className="mt-3 text-xs font-bold leading-5 text-red-600">
-                  {premiumCheckoutError}
+
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+                  MedicForest Premium
+                </h2>
+
+                {/* Price with subtle launch sale offer */}
+                <div className="mt-3">
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-lg font-bold text-slate-400 line-through sm:text-xl">
+                      GBP 30
+                    </span>
+                    <span className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                      {MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-500 sm:text-sm">
+                      / month
+                    </span>
+                  </div>
+
+                  {/* Subtle Launch Offer Pill */}
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">
+                    <span className="inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
+                      Launch offer 50% off!
+                    </span>
+                    <span className="text-slate-500 font-medium">
+                      Limited time, buy now
+                    </span>
+                  </div>
+                </div>
+
+                <p className="mt-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                  <strong className="text-slate-900">Everything you need</strong> for realistic, structured and effective Med interview preparation.
                 </p>
-              )}
+
+                <ul className="mt-5 space-y-3 pb-6 text-xs text-slate-700 sm:text-sm">
+                  {INTERVIEW_PREMIUM_FEATURES.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
+                        <Check className="h-3 w-3 stroke-[3]" />
+                      </span>
+                      <span className="leading-snug">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => void handlePremiumCheckout()}
+                  disabled={premiumCheckoutLoading || checkoutReturnStatus !== "idle"}
+                  className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-5 text-sm font-bold text-white shadow-xs transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-teal-300"
+                >
+                  <span>{premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}</span>
+                  {!premiumCheckoutLoading && <ArrowRight className="h-4 w-4" />}
+                </button>
+                {premiumCheckoutError && (
+                  <p className="mt-2 text-center text-xs font-semibold text-red-600">
+                    {premiumCheckoutError}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
-          <section className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-500 sm:grid-cols-[1.2fr_1fr_1fr]">
-              <span>Plan comparison</span>
-              <span>Free Plan</span>
-              <span className="text-blue-700">Premium</span>
-            </div>
-            <div className="border-b border-slate-100 px-4 py-3">
-              <p className="text-xs font-semibold leading-5 text-slate-500">
-                The free plan is built for regular Med interview practice. Premium
-                adds the full AI feedback loop, saved reports, circuits and
-                advanced analytics for serious Med interview preparation.
+          {/* Compare Plans Table */}
+          <section className="mt-12 sm:mt-16">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+              <h2 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">
+                Compare plans
+              </h2>
+              <p className="text-xs text-slate-500">
+                See what&apos;s included in each plan and find the best option for your preparation.
               </p>
             </div>
-            <div className="divide-y divide-slate-100">
-              {INTERVIEW_PRICING_ROWS.map(([feature, freeValue, premiumValue]) => (
-                <div
-                  key={feature}
-                  className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1.2fr_1fr_1fr] sm:items-center"
-                >
-                  <p className="font-black text-slate-950">{feature}</p>
-                  <div>
-                    <PricingComparisonValue value={freeValue} />
+
+            <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
+              {/* Table Header */}
+              <div className="grid grid-cols-12 border-b border-slate-200/80 bg-slate-50/80 px-4 py-3.5 text-xs font-bold text-slate-600 sm:px-6">
+                <div className="col-span-6 text-left">Feature</div>
+                <div className="col-span-3 text-center">Free Plan</div>
+                <div className="col-span-3 text-center">Premium</div>
+              </div>
+
+              {/* Table Rows */}
+              <div className="divide-y divide-slate-100 text-xs sm:text-sm">
+                {COMPARE_ROWS.map((row) => (
+                  <div
+                    key={row.feature}
+                    className="grid grid-cols-12 items-center px-4 py-3 transition hover:bg-slate-50/50 sm:px-6"
+                  >
+                    <div className="col-span-6 font-medium text-slate-800 pr-2">
+                      {row.feature}
+                    </div>
+
+                    <div className="col-span-3 flex items-center justify-center text-center text-xs font-semibold text-slate-600">
+                      {row.free === true ? (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white">
+                          <Check className="h-3 w-3 stroke-[3]" />
+                        </span>
+                      ) : row.free === false ? (
+                        <span className="font-bold text-slate-300">–</span>
+                      ) : (
+                        <span>{row.free}</span>
+                      )}
+                    </div>
+
+                    <div className="col-span-3 flex items-center justify-center text-center text-xs font-semibold text-slate-600">
+                      {row.premium === true ? (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white">
+                          <Check className="h-3 w-3 stroke-[3]" />
+                        </span>
+                      ) : (
+                        <span>{row.premium}</span>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <PricingComparisonValue value={premiumValue} featured />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
 
-          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
+          {/* Legal / AI Disclaimer Note */}
+          <div className="mt-8 rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 text-xs font-medium leading-5 text-slate-600">
             MedicForest is an independent educational tool. AI feedback and progress
             estimates are not guarantees of admissions or Med interview outcomes.
-            Practice telemetry is used to
-            provide feedback and progress tracking. Read the{" "}
-            <Link href="/privacy-policy" className="font-black underline">
+            Practice telemetry is used to provide feedback and progress tracking. Read the{" "}
+            <Link href="/privacy-policy" className="font-bold text-slate-900 underline underline-offset-2">
               Privacy Policy
             </Link>
             ,{" "}
-            <Link href="/terms-and-conditions" className="font-black underline">
+            <Link href="/terms-and-conditions" className="font-bold text-slate-900 underline underline-offset-2">
               Terms
             </Link>{" "}
             and{" "}
-            <Link href="/medicforest-disclaimer" className="font-black underline">
+            <Link href="/medicforest-disclaimer" className="font-bold text-slate-900 underline underline-offset-2">
               AI/Data Disclaimer
             </Link>
             .
           </div>
-        </section>
+        </main>
       </div>
     </MedicForestLandingShell>
   );

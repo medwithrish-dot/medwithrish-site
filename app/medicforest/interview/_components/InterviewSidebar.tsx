@@ -255,7 +255,7 @@ export function InterviewSidebar({
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
             {mode === "landing"
-              ? "Start with free Med interview practice. No card needed."
+              ? "Try our AI feedback to find your weak spots."
               : "Unlock more Med interview stations, deeper analytics and guided practice."}
           </p>
           <Link

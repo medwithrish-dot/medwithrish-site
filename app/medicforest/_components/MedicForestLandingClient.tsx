@@ -461,13 +461,25 @@ function RedesignedTutorHero() {
                 Premium
               </span>
             </div>
-            <div className="mt-2 flex flex-wrap items-end gap-x-2 gap-y-1">
-              <span className="text-3xl font-black text-slate-950">{MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}</span>
-              <span className="pb-1 text-sm font-bold text-slate-500">/ month</span>
+            <div className="mt-2">
+              <div className="flex flex-wrap items-baseline gap-2">
+                <span className="text-base font-bold text-slate-400 line-through">
+                  GBP 30
+                </span>
+                <span className="text-3xl font-black text-slate-950">
+                  {MEDICFOREST_PREMIUM_MONTHLY_PRICE.label}
+                </span>
+                <span className="pb-1 text-sm font-bold text-slate-500">/ month</span>
+              </div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs">
+                <span className="inline-flex items-center rounded-md bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-800 ring-1 ring-inset ring-violet-600/20">
+                  Launch offer 50% off!
+                </span>
+                <span className="text-slate-500 font-medium">
+                  Limited time, buy now
+                </span>
+              </div>
             </div>
-            <p className="mt-2 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
-              Best for full UCAT prep
-            </p>
             <ul className="mt-4 flex-1 space-y-2 pb-5 text-sm text-slate-700">
               {MEDICFOREST_PREMIUM_FEATURES.map((item) => (
                 <li key={item} className="flex gap-2">
