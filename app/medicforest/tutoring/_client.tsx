@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   ZoomIn,
   X,
-  Sparkles,
   MessageCircle,
   Mail,
   Loader2,
@@ -20,6 +19,10 @@ import {
   Target,
   MessageSquareCheck,
   HeartHandshake,
+  BookOpen,
+  GraduationCap,
+  Users,
+  Crown,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 
@@ -387,6 +390,30 @@ export function TutoringPageClient() {
           ],
         };
 
+  const ucatHighlights = [
+    ucatTutor === "rish"
+      ? "4 hours of direct 1-to-1 coaching with Rish"
+      : "4 hours of 1-to-1 coaching with a UCAT specialist",
+    "Focused on all UCAT subtests",
+    "Personalised strategies and resources",
+    "Session summary and next steps",
+  ];
+
+  const admissionsHighlights = [
+    "4 hours UCAT support",
+    "Personal statement guidance",
+    "4 hours Med interview preparation",
+    "Ongoing feedback and support",
+    "Session summaries and action plan",
+  ];
+
+  const interviewHighlights = [
+    "2 hours on core basics and structures",
+    "2 hours of realistic mock Med interviews",
+    "Personalised feedback and improvement plan",
+    "Ethical, MMI and panel style practice",
+  ];
+
   return (
     <MedicForestLandingShell>
       <div className="relative min-h-screen bg-[#f4faf7] px-6 py-8 sm:px-10 lg:py-10">
@@ -458,8 +485,8 @@ export function TutoringPageClient() {
           </div>
 
           {/* Tutoring Packages Section */}
-          <section className="space-y-6 pt-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <section className="space-y-5 pt-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-2xl font-black text-slate-900 sm:text-3xl">
                   Tutoring packages
@@ -470,13 +497,13 @@ export function TutoringPageClient() {
               </div>
 
               {/* Master Tutor Preference Switcher */}
-              <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
+              <div className="grid w-full min-w-0 grid-cols-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm sm:w-auto sm:min-w-[390px]">
                 <button
                   type="button"
                   onClick={() => applyGlobalTutor("rish")}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                  className={`min-w-0 rounded-lg px-2 py-2 text-[10px] font-bold leading-tight transition sm:px-3 sm:text-xs ${
                     ucatTutor === "rish" && interviewTutor === "rish"
-                      ? "bg-[#0d5c4d] text-white shadow-xs"
+                      ? "bg-[#08745f] text-white shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
@@ -485,9 +512,9 @@ export function TutoringPageClient() {
                 <button
                   type="button"
                   onClick={() => applyGlobalTutor("specialist")}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                  className={`min-w-0 rounded-lg px-2 py-2 text-[10px] font-bold leading-tight transition sm:px-3 sm:text-xs ${
                     ucatTutor === "specialist" && interviewTutor === "specialist"
-                      ? "bg-[#0d5c4d] text-white shadow-xs"
+                      ? "bg-[#08745f] text-white shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
@@ -497,25 +524,32 @@ export function TutoringPageClient() {
             </div>
 
             {/* 3 Packages Side-by-Side: UCAT | Featured Complete | Interviews */}
-            <div className="grid gap-6 lg:grid-cols-3 lg:items-stretch">
+            <div className="grid gap-4 lg:grid-cols-3 lg:items-stretch">
               {/* Package 1: UCAT Crash Course */}
-              <div className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition hover:shadow-md">
+              <div className="flex min-w-0 flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <div>
-                  <h3 className="text-xl font-black text-slate-900">
-                    UCAT Crash Course
-                  </h3>
-                  <p className="mt-1 text-xs font-medium text-slate-500">
-                    Intensive 4–hour subtest strategy and timed question technique.
-                  </p>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e5f7f2] text-[#08745f]">
+                      <BookOpen className="h-6 w-6" strokeWidth={2.2} />
+                    </div>
+                    <div className="min-w-0 pt-1">
+                      <h3 className="text-base font-black text-slate-900 sm:text-lg">
+                        UCAT Crash Course
+                      </h3>
+                      <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-500 sm:text-sm">
+                        Intensive 4-hour subtest strategy and timed question technique.
+                      </p>
+                    </div>
+                  </div>
 
                   {/* Tutor Selector Pills */}
-                  <div className="mt-4 flex rounded-lg border border-slate-200/80 bg-slate-50 p-0.5">
+                  <div className="mt-4 grid grid-cols-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
                     <button
                       type="button"
                       onClick={() => setUcatTutor("rish")}
-                      className={`flex-1 rounded-md py-1 text-[11px] font-bold transition ${
+                      className={`min-w-0 rounded-lg px-1 py-1.5 text-[10px] font-bold leading-tight transition sm:px-2 sm:text-xs ${
                         ucatTutor === "rish"
-                          ? "bg-white text-teal-800 shadow-2xs"
+                          ? "bg-white text-[#08745f] shadow-sm ring-1 ring-teal-100"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
                     >
@@ -524,9 +558,9 @@ export function TutoringPageClient() {
                     <button
                       type="button"
                       onClick={() => setUcatTutor("specialist")}
-                      className={`flex-1 rounded-md py-1 text-[11px] font-bold transition ${
+                      className={`min-w-0 rounded-lg px-1 py-1.5 text-[10px] font-bold leading-tight transition sm:px-2 sm:text-xs ${
                         ucatTutor === "specialist"
-                          ? "bg-white text-teal-800 shadow-2xs"
+                          ? "bg-white text-[#08745f] shadow-sm ring-1 ring-teal-100"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
                     >
@@ -535,26 +569,23 @@ export function TutoringPageClient() {
                   </div>
 
                   {/* Price Tag */}
-                  <div className="mt-4">
-                    <div className="flex items-baseline gap-1">
+                  <div className="mt-3">
+                    <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-black text-slate-900">
                         £{currentUcatPackage.price}
                       </span>
-                      <span className="text-xs font-semibold text-slate-500">
-                        / 4–hour course
+                      <span className="text-xs font-semibold text-slate-500 sm:text-sm">
+                        / 4-hour course
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-medium text-teal-700">
-                      {currentUcatPackage.tutorLabel}
-                    </p>
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="mt-5 space-y-2.5 border-t border-slate-100 pt-4">
-                    {currentUcatPackage.features.map((feature) => (
+                  <div className="mt-2 space-y-2">
+                    {ucatHighlights.map((feature) => (
                       <div key={feature} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
-                        <span className="text-xs font-medium leading-relaxed text-slate-700">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0b8b73]" />
+                        <span className="text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
                           {feature}
                         </span>
                       </div>
@@ -562,65 +593,67 @@ export function TutoringPageClient() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4">
+                <div className="mt-5">
                   <button
                     type="button"
                     onClick={() => handleStartBooking(currentUcatPackage)}
                     disabled={loadingCheckout}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-teal-700/80 bg-teal-50 px-4 py-3 text-xs font-bold text-teal-800 transition hover:bg-teal-100/70"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#08745f] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#065e4e] disabled:cursor-wait disabled:opacity-70"
                   >
-                    <span>Book UCAT Course</span>
+                    <span>Choose this package</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               {/* Package 2 (FEATURED / STANDOUT): Complete Admissions Package */}
-              <div className="relative flex flex-col justify-between rounded-2xl border-2 border-teal-600 bg-white p-6 shadow-md transition hover:shadow-lg">
+              <div className="relative flex min-w-0 flex-col justify-between rounded-xl border border-[#0b8b73] bg-gradient-to-b from-[#f7fffc] to-[#eefbf7] p-5 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg">
                 {/* Floating Top Badge */}
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0d5c4d] px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white shadow-xs">
-                    <Sparkles className="h-3 w-3 text-teal-200" />
-                    MOST POPULAR - ALL–IN–ONE
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#08745f] px-3.5 py-1 text-[10px] font-black uppercase text-white shadow-sm">
+                    <Crown className="h-3 w-3 fill-current" />
+                    MOST POPULAR
                   </span>
                 </div>
 
                 <div>
-                  <div className="mt-1 flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900">
-                      Complete Admissions Package
-                    </h3>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#dff5ee] text-[#08745f]">
+                      <GraduationCap className="h-6 w-6" strokeWidth={2.2} />
+                    </div>
+                    <div className="min-w-0 pt-1">
+                      <h3 className="text-base font-black text-slate-900 sm:text-lg">
+                        Complete Admissions Package
+                      </h3>
+                      <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-500 sm:text-sm">
+                        Comprehensive support across every stage of your medical application.
+                      </p>
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs font-medium text-slate-500">
-                    Comprehensive 360° support across every stage of your medical application.
-                  </p>
 
                   {/* Specialist Tag */}
-                  <div className="mt-3 rounded-lg border border-teal-100 bg-teal-50/70 px-3 py-1.5 text-center text-xs font-bold text-teal-800">
+                  <div className="mt-4 rounded-xl border border-teal-200 bg-white/60 px-3 py-2 text-center text-xs font-bold text-[#08745f]">
                     Full Admissions Bundle • MedicForest Specialist
                   </div>
 
                   {/* Price Tag */}
-                  <div className="mt-4">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-slate-900">
+                  <div className="mt-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-black text-slate-900">
                         £{completeAdmissionsPackage.price}
                       </span>
-                      <span className="text-xs font-semibold text-slate-500">
+                      <span className="text-xs font-semibold text-slate-500 sm:text-sm">
                         / complete package
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-semibold text-emerald-700">
-                      Best value - combines 4 hrs UCAT + PS + 4 hrs Interviews
-                    </p>
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="mt-5 space-y-2.5 border-t border-slate-100 pt-4">
-                    {completeAdmissionsPackage.features.map((feature) => (
+                  <div className="mt-2 space-y-2">
+                    {admissionsHighlights.map((feature) => (
                       <div key={feature} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                        <span className="text-xs font-medium leading-relaxed text-slate-700">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0b8b73]" />
+                        <span className="text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
                           {feature}
                         </span>
                       </div>
@@ -628,37 +661,44 @@ export function TutoringPageClient() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4">
+                <div className="mt-5">
                   <button
                     type="button"
                     onClick={() => handleStartBooking(completeAdmissionsPackage)}
                     disabled={loadingCheckout}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0d5c4d] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#094338]"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#08745f] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#065e4e] disabled:cursor-wait disabled:opacity-70"
                   >
-                    <span>Book Complete Package</span>
+                    <span>Choose this package</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               {/* Package 3: 1–1 Med Interview Tutoring */}
-              <div className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition hover:shadow-md">
+              <div className="flex min-w-0 flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <div>
-                  <h3 className="text-xl font-black text-slate-900">
-                    1–1 Med Interview Tutoring
-                  </h3>
-                  <p className="mt-1 text-xs font-medium text-slate-500">
-                    MMI and panel Med interview coaching with realistic mock simulations.
-                  </p>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e5f7f2] text-[#08745f]">
+                      <Users className="h-6 w-6" strokeWidth={2.2} />
+                    </div>
+                    <div className="min-w-0 pt-1">
+                      <h3 className="text-base font-black text-slate-900 sm:text-lg">
+                        1-1 Med Interview Tutoring
+                      </h3>
+                      <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-500 sm:text-sm">
+                        MMI and panel Med interview coaching with realistic mock simulations.
+                      </p>
+                    </div>
+                  </div>
 
                   {/* Tutor Selector Pills */}
-                  <div className="mt-4 flex rounded-lg border border-slate-200/80 bg-slate-50 p-0.5">
+                  <div className="mt-4 grid grid-cols-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
                     <button
                       type="button"
                       onClick={() => setInterviewTutor("rish")}
-                      className={`flex-1 rounded-md py-1 text-[11px] font-bold transition ${
+                      className={`min-w-0 rounded-lg px-1 py-1.5 text-[10px] font-bold leading-tight transition sm:px-2 sm:text-xs ${
                         interviewTutor === "rish"
-                          ? "bg-white text-teal-800 shadow-2xs"
+                          ? "bg-white text-[#08745f] shadow-sm ring-1 ring-teal-100"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
                     >
@@ -667,9 +707,9 @@ export function TutoringPageClient() {
                     <button
                       type="button"
                       onClick={() => setInterviewTutor("specialist")}
-                      className={`flex-1 rounded-md py-1 text-[11px] font-bold transition ${
+                      className={`min-w-0 rounded-lg px-1 py-1.5 text-[10px] font-bold leading-tight transition sm:px-2 sm:text-xs ${
                         interviewTutor === "specialist"
-                          ? "bg-white text-teal-800 shadow-2xs"
+                          ? "bg-white text-[#08745f] shadow-sm ring-1 ring-teal-100"
                           : "text-slate-500 hover:text-slate-800"
                       }`}
                     >
@@ -678,26 +718,23 @@ export function TutoringPageClient() {
                   </div>
 
                   {/* Price Tag */}
-                  <div className="mt-4">
-                    <div className="flex items-baseline gap-1">
+                  <div className="mt-3">
+                    <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-black text-slate-900">
                         £{currentInterviewPackage.price}
                       </span>
-                      <span className="text-xs font-semibold text-slate-500">
-                        / 4–hour package
+                      <span className="text-xs font-semibold text-slate-500 sm:text-sm">
+                        / 4-hour package
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-medium text-teal-700">
-                      {currentInterviewPackage.tutorLabel}
-                    </p>
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="mt-5 space-y-2.5 border-t border-slate-100 pt-4">
-                    {currentInterviewPackage.features.map((feature) => (
+                  <div className="mt-2 space-y-2">
+                    {interviewHighlights.map((feature) => (
                       <div key={feature} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
-                        <span className="text-xs font-medium leading-relaxed text-slate-700">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0b8b73]" />
+                        <span className="text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
                           {feature}
                         </span>
                       </div>
@@ -705,14 +742,14 @@ export function TutoringPageClient() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4">
+                <div className="mt-5">
                   <button
                     type="button"
                     onClick={() => handleStartBooking(currentInterviewPackage)}
                     disabled={loadingCheckout}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-teal-700/80 bg-teal-50 px-4 py-3 text-xs font-bold text-teal-800 transition hover:bg-teal-100/70"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#08745f] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#065e4e] disabled:cursor-wait disabled:opacity-70"
                   >
-                    <span>Book Med Interview Tutoring</span>
+                    <span>Choose this package</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
