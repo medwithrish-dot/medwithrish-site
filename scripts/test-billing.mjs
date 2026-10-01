@@ -81,7 +81,7 @@ test("checkout price matches the Premium amount, currency and monthly interval s
     id: "price_123",
     active: true,
     product: "prod_123",
-    unit_amount: 1490,
+    unit_amount: 1499,
     currency: "gbp",
     recurring: { interval: "month" },
   };
@@ -90,7 +90,7 @@ test("checkout price matches the Premium amount, currency and monthly interval s
   await withEnv({ STRIPE_PREMIUM_PRICE_ID: price.id, STRIPE_PREMIUM_PRODUCT_ID: price.product }, async () => {
     assert.equal(await resolvePremiumPriceId(stripe), price.id);
     for (const mismatch of [
-      { unit_amount: 1499 },
+      { unit_amount: 1490 },
       { currency: "usd" },
       { recurring: { interval: "year" } },
     ]) {
