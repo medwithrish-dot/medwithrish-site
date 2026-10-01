@@ -1,84 +1,74 @@
-import { createStripeClient } from "@/utils/billing/stripe-client";
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 import { getRequiredSiteUrl } from "@/utils/site-url";
 
 export const runtime = "nodejs";
 
-type TutoringPackageMeta = {
-  name: string;
-  amountGbp: number;
-  envKey: string;
-};
-
-const TUTORING_PACKAGES: Record<string, TutoringPackageMeta> = {
-  "ucat-rish": {
-    name: "UCAT Crash Course with MedWithRish",
-    amountGbp: 140,
-    envKey: "STRIPE_PRICE_TUTORING_UCAT_RISH",
-  },
-  "ucat-specialist": {
-    name: "UCAT Crash Course with MedicForest Specialist",
-    amountGbp: 100,
-    envKey: "STRIPE_PRICE_TUTORING_UCAT_SPECIALIST",
-  },
-  "interview-rish": {
-    name: "1–1 Interview Tutoring with MedWithRish",
-    amountGbp: 140,
-    envKey: "STRIPE_PRICE_TUTORING_INTERVIEW_RISH",
-  },
-  "interview-specialist": {
-    name: "1–1 Interview Tutoring with MedicForest Specialist",
-    amountGbp: 100,
-    envKey: "STRIPE_PRICE_TUTORING_INTERVIEW_SPECIALIST",
-  },
-  "complete-bundle": {
-    name: "Complete Admissions Package (UCAT, PS & Interviews)",
-    amountGbp: 200,
-    envKey: "STRIPE_PRICE_TUTORING_COMPLETE_BUNDLE",
-  },
+const TUTORING_PRICE_ENV_MAP: Record<string, string | undefined> = {
+  "ucat-rish": process.env.STRIPE_PRICE_TUTORING_UCAT_RISH,
+  "ucat-specialist": process.env.STRIPE_PRICE_TUTORING_UCAT_SPECIALIST,
+  "complete-bundle": process.env.STRIPE_PRICE_TUTORING_COMPLETE_BUNDLE,
+  "interview-rish": process.env.STRIPE_PRICE_TUTORING_INTERVIEW_RISH,
+  "interview-specialist": process.env.STRIPE_PRICE_TUTORING_INTERVIEW_SPECIALIST,
 };
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { packageId?: string };
-    const packageId = body?.packageId;
+    const body = (await request.json().catch(() => null)) as {
+      packageId?: string;
+    } | null;
 
-    if (!packageId || !TUTORING_PACKAGES[packageId]) {
-      return Response.json({ error: "Invalid tutoring package selected." }, { status: 400 });
+    if (!body?.packageId) {
+      return NextResponse.json(
+        { error: "Missing packageId parameter" },
+        { status: 400 }
+      );
     }
 
-    const pkg = TUTORING_PACKAGES[packageId];
-    const priceId = process.env[pkg.envKey]?.trim();
+    const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
+    const priceId = TUTORING_PRICE_ENV_MAP[body.packageId]?.trim();
 
-    if (!priceId) {
-      return Response.json({
+    if (!secretKey || !priceId) {
+      // Gracefully signal to client that direct online checkout is unconfigured
+      // so it immediately opens direct consultation / WhatsApp / email booking dialogue.
+      return NextResponse.json({
         configured: false,
-        packageId,
-        packageName: pkg.name,
-        priceFormatted: `£${pkg.amountGbp}`,
-        envKey: pkg.envKey,
-        message: `Stripe price key ${pkg.envKey} is not yet configured.`,
+        message: "Stripe Price ID not yet configured for this tutoring package",
       });
     }
 
-    const stripe = createStripeClient();
+    const stripe = new Stripe(secretKey);
     const siteUrl = getRequiredSiteUrl(request);
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
       mode: "payment",
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
       success_url: `${siteUrl}/medicforest/tutoring?status=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/medicforest/tutoring?status=cancelled`,
       metadata: {
-        packageId,
-        packageName: pkg.name,
-        service: "tutoring",
+        packageId: body.packageId,
+        source: "medicforest-tutoring",
       },
     });
 
-    return Response.json({ configured: true, url: session.url });
+    return NextResponse.json({
+      configured: true,
+      url: session.url,
+    });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Checkout error occurred.";
-    return Response.json({ error: message }, { status: 500 });
+    console.error("Error creating tutoring checkout session:", error);
+    return NextResponse.json(
+      {
+        configured: false,
+        error: error instanceof Error ? error.message : "Failed to create session",
+      },
+      { status: 500 }
+    );
   }
 }
+
