@@ -24,7 +24,7 @@ const navItems: {
     href: "/personal-statements-guide",
     items: [
       { label: "Personal Statements Guide", href: "/personal-statements-guide" },
-      { label: "1-to-1 Personal Statement Session", href: "/personal-statement-session" },
+      { label: "1–to–1 Personal Statement Session", href: "/personal-statement-session" },
     ],
   },
 
@@ -33,13 +33,13 @@ const navItems: {
     href: "/interviews",
     items: [
       { label: "Med Interview Hub", href: "/interviews" },
-      { label: "FREE Medicine Med Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
-      { label: "Medicine Med Interview Tutoring", href: "/interview-tutoring" },
+      { label: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
+      { label: "1–to–1 Med Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
 
   {
-    label: "GCSE & A-Levels",
+    label: "GCSE & A–Levels",
     href: "/resources",
     items: [
             { label: "A-Level Tutoring", href: "/alevel-tutoring" },
