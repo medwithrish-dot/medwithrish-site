@@ -2,7 +2,7 @@ import sharp from "sharp";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const SOURCE_PATH = "C:/Users/usedf/.gemini/antigravity/brain/b96a7c2f-6907-478e-a0f5-4a64b8bf1371/.user_uploaded/media_1790864008958.png";
+const SOURCE_PATH = "C:/Users/usedf/.gemini/antigravity/brain/b96a7c2f-6907-478e-a0f5-4a64b8bf1371/.user_uploaded/media_1790868249810.png";
 
 function createIco(images) {
   const header = Buffer.alloc(6);
@@ -45,11 +45,11 @@ async function run() {
   const img = sharp(SOURCE_PATH);
   const { data, info } = await img.raw().toBuffer({ resolveWithObject: true });
 
-  // 2. Full logo extraction (x = 45..990, y = 85..260)
-  const cropX = 45;
-  const cropY = 85;
-  const cropW = 945;
-  const cropH = 175;
+  // 2. Full logo extraction (x = 52..980, y = 72..281)
+  const cropX = 52;
+  const cropY = 72;
+  const cropW = 929;
+  const cropH = 210;
 
   const lightLogoBuf = Buffer.alloc(cropW * cropH * 4);
   const darkLogoBuf = Buffer.alloc(cropW * cropH * 4);
@@ -58,152 +58,129 @@ async function run() {
     for (let x = 0; x < cropW; x++) {
       const srcX = cropX + x;
       const srcY = cropY + y;
-      const srcIdx = (srcY * info.width + srcX) * info.channels;
+      const srcIdx = (srcY * info.width + srcX) * 4;
       const outIdx = (y * cropW + x) * 4;
 
       const r = data[srcIdx];
       const g = data[srcIdx + 1];
       const b = data[srcIdx + 2];
+      const a = data[srcIdx + 3];
 
-      const minVal = Math.min(r, g, b);
-      let alpha = 255;
-      if (minVal >= 250) {
-        alpha = 0;
-      } else if (minVal >= 235) {
-        alpha = Math.round(255 * (1 - (minVal - 235) / 15));
+      if (a < 10) {
+        lightLogoBuf[outIdx + 3] = 0;
+        darkLogoBuf[outIdx + 3] = 0;
+        continue;
       }
 
-      // Light logo: keep original colours on transparent canvas
+      // Light logo: keep pristine original colours and transparency
       lightLogoBuf[outIdx] = r;
       lightLogoBuf[outIdx + 1] = g;
       lightLogoBuf[outIdx + 2] = b;
-      lightLogoBuf[outIdx + 3] = alpha;
+      lightLogoBuf[outIdx + 3] = a;
 
-      // Dark logo: recolor dark green text ('Medic', x < 390) to crisp white
-      if (alpha > 0) {
-        if (x < 390 && r < 70 && g < 130 && b < 110) {
-          darkLogoBuf[outIdx] = 255;
-          darkLogoBuf[outIdx + 1] = 255;
-          darkLogoBuf[outIdx + 2] = 255;
-          darkLogoBuf[outIdx + 3] = alpha;
-        } else {
-          darkLogoBuf[outIdx] = r;
-          darkLogoBuf[outIdx + 1] = g;
-          darkLogoBuf[outIdx + 2] = b;
-          darkLogoBuf[outIdx + 3] = alpha;
-        }
+      // Dark logo: recolor dark green parts (#043f36, r < 40, g < 100, b < 85) to pure white (#FFFFFF)
+      // Bright teal and mint parts (earpieces, inner bell circle, 'Forest' text) have g > 140 && b > 100
+      const isBrightTeal = g > 140 && b > 100;
+      if (!isBrightTeal) {
+        darkLogoBuf[outIdx] = 255;
+        darkLogoBuf[outIdx + 1] = 255;
+        darkLogoBuf[outIdx + 2] = 255;
+        darkLogoBuf[outIdx + 3] = a;
       } else {
-        darkLogoBuf[outIdx] = 0;
-        darkLogoBuf[outIdx + 1] = 0;
-        darkLogoBuf[outIdx + 2] = 0;
-        darkLogoBuf[outIdx + 3] = 0;
+        darkLogoBuf[outIdx] = r;
+        darkLogoBuf[outIdx + 1] = g;
+        darkLogoBuf[outIdx + 2] = b;
+        darkLogoBuf[outIdx + 3] = a;
       }
     }
   }
 
-  // Save light & dark transparent logos (PNG)
-  await sharp(lightLogoBuf, { raw: { width: cropW, height: cropH, channels: 4 } })
-    .png()
-    .toFile(path.join(brandDir, "medicforest-logo.png"));
+  // Save light and dark full logos
+  const lightLogoPng = await sharp(lightLogoBuf, { raw: { width: cropW, height: cropH, channels: 4 } }).png().toBuffer();
+  const darkLogoPng = await sharp(darkLogoBuf, { raw: { width: cropW, height: cropH, channels: 4 } }).png().toBuffer();
 
-  await sharp(darkLogoBuf, { raw: { width: cropW, height: cropH, channels: 4 } })
-    .png()
-    .toFile(path.join(brandDir, "medicforest-logo-dark.png"));
+  await fs.writeFile(path.join(brandDir, "medicforest-logo.png"), lightLogoPng);
+  await fs.writeFile(path.join(brandDir, "medicforest-logo-dark.png"), darkLogoPng);
 
-  // 3. Tree Mark extraction (x = 840..988, y = 88..258)
-  const treeCropX = 840;
-  const treeCropY = 88;
-  const treeCropW = 148;
-  const treeCropH = 170;
+  // 3. Stethoscope 'M' Mark extraction:
+  // Component bounds: x = 52..254 (w = 203), y = 72..281 (h = 210)
+  // Exclude 'e' pixels at x >= 247 that lie outside bell radius (dist > 36)
+  const markW = 203;
+  const markH = 210;
+  const markBuf = Buffer.alloc(markW * markH * 4);
 
-  const treeOutBuf = Buffer.alloc(treeCropW * treeCropH * 4);
+  for (let y = 0; y < markH; y++) {
+    for (let x = 0; x < markW; x++) {
+      const srcX = 52 + x;
+      const srcY = 72 + y;
+      const srcIdx = (srcY * info.width + srcX) * 4;
+      const outIdx = (y * markW + x) * 4;
 
-  for (let y = 0; y < treeCropH; y++) {
-    for (let x = 0; x < treeCropW; x++) {
-      const srcX = treeCropX + x;
-      const srcY = treeCropY + y;
-      const srcIdx = (srcY * info.width + srcX) * info.channels;
-      const outIdx = (y * treeCropW + x) * 4;
+      const a = data[srcIdx + 3];
+      if (a < 10) continue;
 
-      const r = data[srcIdx];
-      const g = data[srcIdx + 1];
-      const b = data[srcIdx + 2];
-
-      const minVal = Math.min(r, g, b);
-      if (minVal >= 250) {
-        treeOutBuf[outIdx] = 0;
-        treeOutBuf[outIdx + 1] = 0;
-        treeOutBuf[outIdx + 2] = 0;
-        treeOutBuf[outIdx + 3] = 0;
-      } else if (minVal >= 235) {
-        const alpha = Math.round(255 * (1 - (minVal - 235) / 15));
-        treeOutBuf[outIdx] = r;
-        treeOutBuf[outIdx + 1] = g;
-        treeOutBuf[outIdx + 2] = b;
-        treeOutBuf[outIdx + 3] = alpha;
-      } else {
-        treeOutBuf[outIdx] = r;
-        treeOutBuf[outIdx + 1] = g;
-        treeOutBuf[outIdx + 2] = b;
-        treeOutBuf[outIdx + 3] = 255;
+      // Bell center is (219, 247) with radius ~35.
+      // Any pixel to the right of the vertical arm (srcX >= 235) that lies outside the bell radius belongs to 'e'
+      const distFromBell = Math.sqrt((srcX - 219) ** 2 + (srcY - 247) ** 2);
+      if (srcX >= 235 && distFromBell > 35.5) {
+        continue; // skip 'e' pixel
       }
+
+      markBuf[outIdx] = data[srcIdx];
+      markBuf[outIdx + 1] = data[srcIdx + 1];
+      markBuf[outIdx + 2] = data[srcIdx + 2];
+      markBuf[outIdx + 3] = a;
     }
   }
 
-  // Resize tree to fit centered on 512x512 canvas with comfortable ~15% padding
-  const treePngBuffer = await sharp(treeOutBuf, {
-    raw: { width: treeCropW, height: treeCropH, channels: 4 },
-  })
-    .png()
-    .resize(360, 420, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .toBuffer();
-
-  const treeSquare512 = await sharp({
-    create: {
-      width: 512,
-      height: 512,
-      channels: 4,
+  // Center mark inside 512x512 canvas with ~15% padding (380x393 mark inside 512x512)
+  const rawMarkImg = sharp(markBuf, { raw: { width: markW, height: markH, channels: 4 } });
+  const mark512 = await rawMarkImg
+    .resize(380, 393, { fit: "contain" })
+    .extend({
+      top: 59,
+      bottom: 60,
+      left: 66,
+      right: 66,
       background: { r: 0, g: 0, b: 0, alpha: 0 },
-    },
-  })
-    .composite([{ input: treePngBuffer, gravity: "center" }])
+    })
     .png()
     .toBuffer();
 
-  // Save 512x512 tree marks
-  await sharp(treeSquare512).toFile(path.join(brandDir, "medicforest-tree-mark.png"));
-  await sharp(treeSquare512).toFile(path.join(appDir, "icon.png"));
-  await sharp(treeSquare512).toFile(path.join(medicforestAppDir, "icon.png"));
+  // Save tree mark and standalone mark aliases
+  await fs.writeFile(path.join(brandDir, "medicforest-tree-mark.png"), mark512);
+  await fs.writeFile(path.join(brandDir, "medicforest-mark.png"), mark512);
 
-  // Save 192x192 PWA / web manifest icon
-  await sharp(treeSquare512)
-    .resize(192, 192)
-    .toFile(path.join(brandDir, "medicforest-tree-mark-192.png"));
+  // 4. Generate Responsive Icons
+  const mark192 = await sharp(mark512).resize(192, 192).png().toBuffer();
+  const mark180 = await sharp(mark512).resize(180, 180).png().toBuffer();
+  const mark48 = await sharp(mark512).resize(48, 48).png().toBuffer();
+  const mark32 = await sharp(mark512).resize(32, 32).png().toBuffer();
+  const mark16 = await sharp(mark512).resize(16, 16).png().toBuffer();
 
-  // Save 180x180 Apple touch icons
-  const appleTouchIcon180 = await sharp(treeSquare512).resize(180, 180).toBuffer();
-  await sharp(appleTouchIcon180).toFile(path.join(appDir, "apple-icon.png"));
-  await sharp(appleTouchIcon180).toFile(path.join(medicforestAppDir, "apple-icon.png"));
-  await sharp(appleTouchIcon180).toFile(path.join(publicDir, "apple-touch-icon.png"));
+  await fs.writeFile(path.join(brandDir, "medicforest-tree-mark-192.png"), mark192);
+  await fs.writeFile(path.join(brandDir, "medicforest-tree-mark-32.png"), mark32);
 
-  // Save 32x32 and 16x16 PNGs
-  const icon32 = await sharp(treeSquare512).resize(32, 32).toBuffer();
-  const icon16 = await sharp(treeSquare512).resize(16, 16).toBuffer();
-  const icon48 = await sharp(treeSquare512).resize(48, 48).toBuffer();
-
-  await sharp(icon32).toFile(path.join(brandDir, "medicforest-tree-mark-32.png"));
-
-  // Generate multi-resolution ICO file (16, 32, 48)
-  const icoData = createIco([
-    { buf: icon16, size: 16 },
-    { buf: icon32, size: 32 },
-    { buf: icon48, size: 48 },
+  // 5. Save Favicons (.ico multi-resolution)
+  const icoBuf = createIco([
+    { size: 16, buf: mark16 },
+    { size: 32, buf: mark32 },
+    { size: 48, buf: mark48 },
   ]);
 
-  await fs.writeFile(path.join(publicDir, "favicon.ico"), icoData);
-  await fs.writeFile(path.join(appDir, "favicon.ico"), icoData);
+  await fs.writeFile(path.join(publicDir, "favicon.ico"), icoBuf);
+  await fs.writeFile(path.join(appDir, "favicon.ico"), icoBuf);
 
-  console.log("All MedicForest brand and favicon assets generated successfully!");
+  // 6. Save Next.js App Icons
+  await fs.writeFile(path.join(appDir, "icon.png"), mark512);
+  await fs.writeFile(path.join(medicforestAppDir, "icon.png"), mark512);
+
+  // 7. Save Apple Touch Icons
+  await fs.writeFile(path.join(publicDir, "apple-touch-icon.png"), mark180);
+  await fs.writeFile(path.join(appDir, "apple-icon.png"), mark180);
+  await fs.writeFile(path.join(medicforestAppDir, "apple-icon.png"), mark180);
+
+  console.log("Successfully generated all MedicForest brand assets, favicons, and icons.");
 }
 
 run().catch((err) => {
