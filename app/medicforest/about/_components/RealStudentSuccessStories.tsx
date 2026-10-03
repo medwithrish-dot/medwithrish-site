@@ -5,7 +5,6 @@ import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
   Maximize2,
   X,
 } from "lucide-react";
@@ -91,50 +90,32 @@ export function RealStudentSuccessStories() {
   );
 
   return (
-    <div className="mt-8 border-t border-slate-100 pt-8">
-      {/* Sub-header with Carousel controls */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-base font-bold text-slate-950 sm:text-lg">
-              Student success stories
-            </h3>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20">
-              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-              Verified Results
-            </span>
-          </div>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Real offers. Real score improvements. Real progress.
-          </p>
-        </div>
-
-        {/* Carousel buttons */}
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-slate-400 mr-1 hidden sm:inline">
-            Page {page + 1} of {totalPages}
-          </span>
-          <button
-            type="button"
-            onClick={handlePrev}
-            aria-label="Previous success stories"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleNext}
-            aria-label="Next success stories"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
+    <div className="mt-8 border-t border-slate-100 pt-6">
+      {/* Carousel controls */}
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <span className="text-[11px] font-semibold text-slate-400 mr-1">
+          Page {page + 1} of {totalPages}
+        </span>
+        <button
+          type="button"
+          onClick={handlePrev}
+          aria-label="Previous success stories"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={handleNext}
+          aria-label="Next success stories"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </div>
 
       {/* 3 Real Stories Grid */}
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {currentStories.map((story) => (
           <div
             key={story.id}
