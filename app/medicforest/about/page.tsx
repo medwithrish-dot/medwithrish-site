@@ -7,7 +7,6 @@ import {
   Trees,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
-import { StudentSuccessStoriesCarousel } from "./_components/StudentSuccessStoriesCarousel";
 
 export const metadata: Metadata = {
   title: "About MedicForest | Structured Medical Admissions & Mentorship",
@@ -269,11 +268,11 @@ export default function MedicForestAboutPage() {
 
           {/* ─────────────────────────────────────────────────────────────
               3. PROVEN IMPACT
-              Stats row + Interactive student success stories carousel
+              Header + 3 real student outcome metrics
           ───────────────────────────────────────────────────────────── */}
           <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xs sm:p-9 lg:p-10">
             {/* Header + Stats */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center border-b border-slate-100 pb-8">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-5">
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
                   PROVEN IMPACT
@@ -320,9 +319,6 @@ export default function MedicForestAboutPage() {
                 </div>
               </div>
             </div>
-
-            {/* Student Success Stories Carousel with Interview Offer, UCAS Offer, & UCAT Score Cards */}
-            <StudentSuccessStoriesCarousel />
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
