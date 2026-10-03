@@ -3,19 +3,23 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
+  ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   Maximize2,
+  Sparkles,
   X,
 } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
 
 interface RealStory {
   id: string;
-  imageSrc: string;
+  imageSrc?: string;
   title: string;
   subtitle: string;
   tag: string;
   highlightText?: string;
+  isMoreCard?: boolean;
 }
 
 const ALL_REAL_STORIES: RealStory[] = [
@@ -166,6 +170,14 @@ const ALL_REAL_STORIES: RealStory[] = [
     tag: "Official UCAT",
     highlightText: "Medical School Threshold Secured",
   },
+  {
+    id: "many-more",
+    title: "+ Many more...",
+    subtitle: "Dozens more medicine offers and score increases verified each cycle",
+    tag: "Every Season",
+    highlightText: "@medwithrish_ · Instagram Highlights",
+    isMoreCard: true,
+  },
 ];
 
 export function RealStudentSuccessStories() {
@@ -235,59 +247,115 @@ export function RealStudentSuccessStories() {
 
       {/* 3 Real Stories Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {currentStories.map((story) => (
-          <div
-            key={story.id}
-            onClick={() => setSelectedStory(story)}
-            className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-300 hover:shadow-xs"
-          >
-            {/* Real Screenshot Preview Container */}
-            <div className="relative flex h-52 w-full flex-col justify-between overflow-hidden rounded-xl border border-slate-100 bg-slate-950 p-1.5 transition">
-              <div className="relative h-full w-full overflow-hidden rounded-lg">
-                <Image
-                  src={story.imageSrc}
-                  alt={story.title}
-                  fill
-                  className="object-contain transition duration-300 group-hover:scale-[1.02]"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                {/* Hover overlay hint */}
-                <div className="absolute inset-0 bg-slate-950/0 transition group-hover:bg-slate-950/20 flex items-center justify-center">
-                  <span className="opacity-0 group-hover:opacity-100 transition rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
-                    <Maximize2 className="h-3 w-3 text-teal-700" />
-                    <span>View full receipt</span>
-                  </span>
+        {currentStories.map((story) => {
+          if (story.isMoreCard) {
+            return (
+              <a
+                key={story.id}
+                href="https://instagram.com/medwithrish_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-teal-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-400 hover:shadow-xs"
+              >
+                {/* Special More Preview Container */}
+                <div className="relative flex h-52 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 via-emerald-50/50 to-teal-100/60 p-4 text-center transition group-hover:border-teal-300 group-hover:from-teal-100/70 group-hover:to-emerald-100/70">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-teal-700 shadow-xs ring-1 ring-teal-200/70 transition group-hover:scale-110">
+                    <Sparkles className="h-6 w-6 text-teal-600" />
+                  </div>
+                  <p className="mt-3 text-lg font-black tracking-tight text-slate-950 sm:text-xl">
+                    + Many more...
+                  </p>
+                  <p className="mt-1 max-w-[210px] text-[11px] text-slate-600 leading-tight">
+                    Oxbridge, London, and medical school offers nationwide
+                  </p>
+                  <div className="mt-3.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-teal-800 shadow-2xs transition group-hover:bg-white group-hover:text-teal-900">
+                    <FaInstagram className="h-3.5 w-3.5 text-pink-600" />
+                    <span>View all on Instagram</span>
+                    <ArrowUpRight className="h-3 w-3 text-teal-700" />
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Caption & Metadata */}
-            <div className="mt-3.5 space-y-1">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
-                  {story.title}
-                </p>
-                <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
-                  {story.tag}
-                </span>
+                {/* Caption & Metadata */}
+                <div className="mt-3.5 space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
+                      {story.title}
+                    </p>
+                    <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                      {story.tag}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 leading-snug">
+                    {story.subtitle}
+                  </p>
+                  {story.highlightText && (
+                    <div className="pt-1">
+                      <span className="inline-block rounded-md bg-teal-50/80 px-2 py-0.5 text-[11px] font-semibold text-teal-800 border border-teal-200/60">
+                        {story.highlightText}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </a>
+            );
+          }
+
+          return (
+            <div
+              key={story.id}
+              onClick={() => setSelectedStory(story)}
+              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-300 hover:shadow-xs"
+            >
+              {/* Real Screenshot Preview Container */}
+              <div className="relative flex h-52 w-full flex-col justify-between overflow-hidden rounded-xl border border-slate-100 bg-slate-950 p-1.5 transition">
+                <div className="relative h-full w-full overflow-hidden rounded-lg">
+                  {story.imageSrc && (
+                    <Image
+                      src={story.imageSrc}
+                      alt={story.title}
+                      fill
+                      className="object-contain transition duration-300 group-hover:scale-[1.02]"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  )}
+                  {/* Hover overlay hint */}
+                  <div className="absolute inset-0 bg-slate-950/0 transition group-hover:bg-slate-950/20 flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
+                      <Maximize2 className="h-3 w-3 text-teal-700" />
+                      <span>View full receipt</span>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs text-slate-500 leading-snug">
-                {story.subtitle}
-              </p>
-              {story.highlightText && (
-                <div className="pt-1">
-                  <span className="inline-block rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-100">
-                    {story.highlightText}
+
+              {/* Caption & Metadata */}
+              <div className="mt-3.5 space-y-1">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
+                    {story.title}
+                  </p>
+                  <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                    {story.tag}
                   </span>
                 </div>
-              )}
+                <p className="text-xs text-slate-500 leading-snug">
+                  {story.subtitle}
+                </p>
+                {story.highlightText && (
+                  <div className="pt-1">
+                    <span className="inline-block rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-100">
+                      {story.highlightText}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Lightbox Modal for Full Screenshot */}
-      {selectedStory && (
+      {selectedStory && selectedStory.imageSrc && (
         <div
           role="dialog"
           aria-modal="true"
