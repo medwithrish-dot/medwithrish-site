@@ -45,7 +45,7 @@ const ALL_REAL_STORIES: RealStory[] = [
     highlightText: "VR 730 · DM 710 · QR 900",
   },
 
-  // Flip Page 2: Edinburgh, Manchester, 2410
+  // Flip Page 2: Edinburgh, Manchester, 1 Interview 1 Offer
   {
     id: "edinburgh-offer",
     imageSrc: "/success-stories/story10.jpeg",
@@ -63,22 +63,22 @@ const ALL_REAL_STORIES: RealStory[] = [
     highlightText: "University of Manchester",
   },
   {
-    id: "score-2410-b2",
-    imageSrc: "/success-stories/story-2410-b2.png",
-    title: "2410 Band 2 UCAT score",
-    subtitle: "Top national percentile score targeting Cambridge and Imperial",
-    tag: "Top Decile UCAT",
-    highlightText: "All 9s & 8s at GCSE · 2410 B2",
-  },
-
-  // Flip Page 3: UEA 1-Interview-1-Offer, Lincoln Unconditional, 2350 Band 1
-  {
     id: "story-1-chance",
     imageSrc: "/success-stories/story3.jpeg",
     title: "1 Interview, 1 Medicine offer",
     subtitle: "Single interview converted into an official place for Medicine",
     tag: "UCAS Track Offer",
     highlightText: "Medicine (A104) at UEA",
+  },
+
+  // Flip Page 3: 2410 B2, Lincoln Unconditional, 2350 Band 1
+  {
+    id: "score-2410-b2",
+    imageSrc: "/success-stories/story-2410-b2.png",
+    title: "2410 Band 2 UCAT score",
+    subtitle: "Top national percentile score targeting Cambridge and Imperial",
+    tag: "Top Decile UCAT",
+    highlightText: "All 9s & 8s at GCSE · 2410 B2",
   },
   {
     id: "lincoln-unconditional",
