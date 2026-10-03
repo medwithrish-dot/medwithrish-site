@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowUpRight,
   Quote,
   Trees,
 } from "lucide-react";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import { RealStudentSuccessStories } from "./_components/RealStudentSuccessStories";
 
@@ -250,17 +252,75 @@ export default function MedicForestAboutPage() {
                 </div>
               </div>
 
-              {/* Right Column: Founder Quote Card */}
+              {/* Right Column: Founder Social Links Card */}
               <div className="lg:col-span-5">
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-teal-100 bg-[#f4f9f7] p-6 shadow-2xs sm:p-7">
-                  <div className="flex items-start gap-3">
-                    <Quote className="h-6 w-6 shrink-0 text-teal-600 mt-0.5" />
-                    <p className="text-xs sm:text-sm italic leading-relaxed text-slate-700 font-medium">
-                      &ldquo;My mission has always been simple — demystify the medical school journey, replace anxious guesswork with structured practice, and nurture a community where every dedicated applicant can flourish.&rdquo;
+                <div className="flex h-full flex-col justify-between rounded-2xl border border-teal-100 bg-[#f4f9f7] p-5 shadow-2xs sm:p-6">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700">
+                        Follow &amp; Connect
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-teal-100/70 px-2 py-0.5 text-[10px] font-bold text-teal-800">
+                        Direct DMs
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-xs text-slate-600">
+                      Reach out directly for admissions guidance, quick questions, or daily breakdowns:
                     </p>
                   </div>
-                  <div className="mt-4 border-t border-teal-100/80 pt-3 text-right">
-                    <span className="text-xs font-bold text-slate-900">— Rish</span>
+
+                  <div className="mt-4 space-y-2.5">
+                    {/* Instagram */}
+                    <a
+                      href="https://instagram.com/medwithrish_"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between rounded-xl border border-slate-200/80 bg-white p-3 text-slate-900 shadow-2xs transition hover:border-pink-300 hover:bg-pink-50/30 hover:shadow-xs"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white shadow-2xs transition group-hover:scale-105">
+                          <FaInstagram className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold text-slate-950">Instagram</span>
+                            <span className="text-[11px] font-semibold text-pink-600">@medwithrish_</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500">
+                            Admissions tips, Q&amp;As &amp; direct DMs
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-pink-300 group-hover:bg-pink-100/60 group-hover:text-pink-700">
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
+
+                    {/* TikTok */}
+                    <a
+                      href="https://tiktok.com/@medwithrish"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between rounded-xl border border-slate-200/80 bg-white p-3 text-slate-900 shadow-2xs transition hover:border-slate-400 hover:bg-slate-50/80 hover:shadow-xs"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-2xs transition group-hover:scale-105">
+                          <FaTiktok className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold text-slate-950">TikTok</span>
+                            <span className="text-[11px] font-semibold text-slate-700">@medwithrish</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500">
+                            High-yield interview breakdowns &amp; tips
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-slate-400 group-hover:bg-slate-200/70 group-hover:text-slate-900">
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
                   </div>
                 </div>
               </div>
