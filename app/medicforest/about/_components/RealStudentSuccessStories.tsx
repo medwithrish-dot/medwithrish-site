@@ -1,0 +1,252 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Maximize2,
+  X,
+} from "lucide-react";
+
+interface RealStory {
+  id: string;
+  imageSrc: string;
+  title: string;
+  subtitle: string;
+  tag: string;
+  highlightText?: string;
+}
+
+const REAL_STORIES: RealStory[] = [
+  {
+    id: "story-4-offers",
+    imageSrc: "/success-stories/story1.jpeg",
+    title: "Secured 4 / 4 Medicine offers",
+    subtitle: "Full sweep of UK medical school interviews converted to offers",
+    tag: "Medicine Offers",
+    highlightText: "Manchester, Newcastle, KCL & Liverpool",
+  },
+  {
+    id: "story-1-chance",
+    imageSrc: "/success-stories/story3.jpeg",
+    title: "1 Interview, 1 Medicine offer",
+    subtitle: "Single interview converted into an official place for Medicine",
+    tag: "UCAS Track Offer",
+    highlightText: "Medicine (A104) at UEA",
+  },
+  {
+    id: "score-2340",
+    imageSrc: "/success-stories/story-2340-b2.png",
+    title: "2340 Band 2 (900 in QR)",
+    subtitle: "Flawless Quantitative Reasoning score on official UCAT report",
+    tag: "Official UCAT Score",
+    highlightText: "VR 730 · DM 710 · QR 900",
+  },
+  {
+    id: "score-2410",
+    imageSrc: "/success-stories/story-2410-b2.png",
+    title: "2410 Band 2 UCAT score",
+    subtitle: "Top national percentile score with all 9s and 8s at GCSE",
+    tag: "UCAT Top Percentile",
+    highlightText: "Cambridge & London Medical Schools",
+  },
+  {
+    id: "story-2370-qr880",
+    imageSrc: "/success-stories/story5.jpeg",
+    title: "2370 Band 2 (880 in QR)",
+    subtitle: "Official candidate score report with 880 in QR after 1–to–1 mentoring",
+    tag: "Candidate Score Report",
+    highlightText: "VR 730 · DM 760 · QR 880",
+  },
+  {
+    id: "score-2350-band1",
+    imageSrc: "/success-stories/story-2350-b1.png",
+    title: "2350 Band 1 (Top 4% score)",
+    subtitle: "96th percentile national score across all cognitive subtests",
+    tag: "UCAT Band 1",
+    highlightText: "VR 730 · DM 740 · QR 880 · Band 1",
+  },
+];
+
+export function RealStudentSuccessStories() {
+  const [page, setPage] = useState(0);
+  const [selectedStory, setSelectedStory] = useState<RealStory | null>(null);
+
+  const pageSize = 3;
+  const totalPages = Math.ceil(REAL_STORIES.length / pageSize);
+
+  const handlePrev = () => {
+    setPage((p) => (p > 0 ? p - 1 : totalPages - 1));
+  };
+
+  const handleNext = () => {
+    setPage((p) => (p < totalPages - 1 ? p + 1 : 0));
+  };
+
+  const currentStories = REAL_STORIES.slice(
+    page * pageSize,
+    page * pageSize + pageSize
+  );
+
+  return (
+    <div className="mt-8 border-t border-slate-100 pt-8">
+      {/* Sub-header with Carousel controls */}
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-bold text-slate-950 sm:text-lg">
+              Student success stories
+            </h3>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20">
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+              Verified Results
+            </span>
+          </div>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Real offers. Real score improvements. Real progress.
+          </p>
+        </div>
+
+        {/* Carousel buttons */}
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-semibold text-slate-400 mr-1 hidden sm:inline">
+            Page {page + 1} of {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Previous success stories"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next success stories"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* 3 Real Stories Grid */}
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {currentStories.map((story) => (
+          <div
+            key={story.id}
+            onClick={() => setSelectedStory(story)}
+            className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-300 hover:shadow-xs"
+          >
+            {/* Real Screenshot Preview Container */}
+            <div className="relative flex h-52 w-full flex-col justify-between overflow-hidden rounded-xl border border-slate-100 bg-slate-950 p-1.5 transition">
+              <div className="relative h-full w-full overflow-hidden rounded-lg">
+                <Image
+                  src={story.imageSrc}
+                  alt={story.title}
+                  fill
+                  className="object-contain transition duration-300 group-hover:scale-[1.02]"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                {/* Hover overlay hint */}
+                <div className="absolute inset-0 bg-slate-950/0 transition group-hover:bg-slate-950/20 flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 transition rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
+                    <Maximize2 className="h-3 w-3 text-teal-700" />
+                    <span>View full receipt</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Caption & Metadata */}
+            <div className="mt-3.5 space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
+                  {story.title}
+                </p>
+                <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                  {story.tag}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 leading-snug">
+                {story.subtitle}
+              </p>
+              {story.highlightText && (
+                <div className="pt-1">
+                  <span className="inline-block rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-100">
+                    {story.highlightText}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Lightbox Modal for Full Screenshot */}
+      {selectedStory && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-xs"
+          onClick={() => setSelectedStory(null)}
+        >
+          <div
+            className="relative max-h-[92vh] w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-5 sm:p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-base font-bold text-slate-950">
+                    {selectedStory.title}
+                  </h4>
+                  <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full">
+                    {selectedStory.tag}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  {selectedStory.subtitle}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedStory(null)}
+                aria-label="Close modal"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mt-4 flex max-h-[68vh] items-center justify-center overflow-auto rounded-xl bg-slate-950 p-2 sm:p-4">
+              <div className="relative h-[480px] w-full">
+                <Image
+                  src={selectedStory.imageSrc}
+                  alt={selectedStory.title}
+                  fill
+                  className="object-contain"
+                  sizes="640px"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+              <span>Authentic student verification receipt</span>
+              <button
+                type="button"
+                onClick={() => setSelectedStory(null)}
+                className="rounded-xl bg-[#0c6b5e] px-4 py-2 font-bold text-white transition hover:bg-[#084e45]"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -7,6 +7,7 @@ import {
   Trees,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
+import { RealStudentSuccessStories } from "./_components/RealStudentSuccessStories";
 
 export const metadata: Metadata = {
   title: "About MedicForest | Structured Medical Admissions & Mentorship",
@@ -319,6 +320,9 @@ export default function MedicForestAboutPage() {
                 </div>
               </div>
             </div>
+
+            {/* Real Student Success Stories from WhatsApp & Official Score Reports */}
+            <RealStudentSuccessStories />
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
