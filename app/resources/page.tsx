@@ -16,7 +16,7 @@ import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwith
 export const metadata: Metadata = {
   title: "Admissions Resources & Revision Guides | MedWithRish",
   description:
-    "Explore free medical admissions resources — UCAT tools, free Medicine interview guide, personal statement support and 1–to–1 tutoring.",
+    "Explore free medical admissions resources - UCAT tools, free Medicine interview guide, personal statement support and 1-to-1 tutoring.",
   alternates: { canonical: "/resources" },
 };
 

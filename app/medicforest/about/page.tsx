@@ -14,7 +14,7 @@ import { RealStudentSuccessStories } from "./_components/RealStudentSuccessStori
 export const metadata: Metadata = {
   title: "About MedicForest | Structured Medical Admissions & Mentorship",
   description:
-    "Learn about MedicForest — realistic medical interview practice, useful feedback and personalised guidance founded by Rish (@medwithrish_).",
+    "Learn about MedicForest - realistic medical interview practice, useful feedback and personalised guidance founded by Rish (@medwithrish_).",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About MedicForest | Structured Medical Admissions & Mentorship",
@@ -197,7 +197,7 @@ export default function MedicForestAboutPage() {
                       <div className="relative aspect-square w-full overflow-hidden rounded-xl">
                         <Image
                           src="/rish-profile.jpg"
-                          alt="Rish — Founder of MedicForest and MedWithRish"
+                          alt="Rish - Founder of MedicForest and MedWithRish"
                           fill
                           className="object-cover object-center"
                           priority
@@ -245,7 +245,7 @@ export default function MedicForestAboutPage() {
                         Personal statements
                       </span>
                       <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
-                        1–to–1 mentoring
+                        1-to-1 mentoring
                       </span>
                     </div>
                   </div>
@@ -351,7 +351,7 @@ export default function MedicForestAboutPage() {
                   {/* Metric 1 */}
                   <div className="rounded-xl border border-slate-100 bg-[#f8fafc] p-4 text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                      2300–2400+
+                      2300-2400+
                     </div>
                     <p className="mt-1 text-xs font-bold text-teal-700">
                       Top UCAT scores each season
@@ -371,7 +371,7 @@ export default function MedicForestAboutPage() {
                   {/* Metric 3 */}
                   <div className="rounded-xl border border-slate-100 bg-[#f8fafc] p-4 text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-[#0c6b5e] sm:text-3xl">
-                      +100–200 points
+                      +100-200 points
                     </div>
                     <p className="mt-1 text-xs font-bold text-teal-700">
                       Average increase per UCAT section

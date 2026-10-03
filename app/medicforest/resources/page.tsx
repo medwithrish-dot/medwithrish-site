@@ -15,7 +15,7 @@ import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwith
 export const metadata: Metadata = {
   title: "Admissions Resources & Revision Guides | MedicForest",
   description:
-    "Free medical admissions resources — UCAT guides, free Medicine interview guide, personal statement support and 1–to–1 coaching.",
+    "Free medical admissions resources - UCAT guides, free Medicine interview guide, personal statement support and 1-to-1 coaching.",
   alternates: { canonical: "/resources" },
 };
 

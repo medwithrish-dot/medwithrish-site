@@ -38,7 +38,7 @@ export default function ContactPage() {
               We&apos;re here to help.
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
-              Have a question about Med interview tutoring, UCAT coaching, or your MedicForest account? Reach out directly — we usually reply the same day.
+              Have a question about Med interview tutoring, UCAT coaching, or your MedicForest account? Reach out directly - we usually reply the same day.
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export default function ContactPage() {
                 </p>
 
                 <p className="mt-3 text-xs leading-relaxed text-slate-500">
-                  Best for detailed questions, 1–to–1 tutoring enquiries, or platform support.
+                  Best for detailed questions, 1-to-1 tutoring enquiries, or platform support.
                 </p>
               </div>
 
@@ -117,7 +117,7 @@ export default function ContactPage() {
                 </p>
 
                 <p className="mt-3 text-xs leading-relaxed text-slate-500">
-                  Message via TikTok or check out high–yield interview breakdowns and guidance.
+                  Message via TikTok or check out high-yield interview breakdowns and guidance.
                 </p>
               </div>
 
@@ -146,7 +146,7 @@ export default function ContactPage() {
 
             <div className="mt-4 grid gap-4 sm:grid-cols-3 text-xs text-slate-600">
               <div className="space-y-1">
-                <p className="font-bold text-slate-900">Looking for 1–to–1 Tuition?</p>
+                <p className="font-bold text-slate-900">Looking for 1-to-1 Tuition?</p>
                 <p>Explore crash courses and private coaching for UCAT and Med interviews.</p>
                 <Link href="/medicforest/tutoring" className="inline-block pt-1 font-semibold text-teal-700 hover:underline">
                   View Tutoring Options →
