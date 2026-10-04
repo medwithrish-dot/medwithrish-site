@@ -92,11 +92,27 @@ function FadedForestBackground() {
 export default function MedicForestAboutPage() {
   return (
     <MedicForestLandingShell>
-      <div className="relative min-h-screen bg-[#f8faf9] text-slate-900 pb-20 overflow-x-hidden">
+      <div className="relative isolate min-h-screen bg-[#f8faf9]/60 text-slate-900 pb-20 overflow-x-hidden">
+        {/* Ambient Waves Background Layer */}
+        <div
+          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[230px]"
+          aria-hidden="true"
+        >
+          <Image
+            src="/medicforest/about-ambient-bg.png"
+            alt=""
+            fill
+            className="object-cover object-center opacity-85 sm:opacity-95"
+            priority
+          />
+          {/* Subtle gradient tint to softly blend with page elements */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f8faf9]/20 via-transparent to-[#f8faf9]/40" />
+        </div>
+
         {/* Faded Pine Trees Background Layer */}
         <FadedForestBackground />
 
-        <main className="mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10 space-y-10 sm:space-y-12">
+        <main className="relative z-0 mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10 space-y-10 sm:space-y-12">
           {/* ─────────────────────────────────────────────────────────────
               1. HERO / WHAT MEDICFOREST IS & FOREST METAPHOR
               Split layout over the panoramic misty pine mountain banner
