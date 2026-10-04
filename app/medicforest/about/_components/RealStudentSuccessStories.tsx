@@ -41,15 +41,16 @@ const ALL_REAL_STORIES: RealStory[] = [
     highlightText: "VR 730 · DM 710 · QR 900",
   },
 
-  // Flip Page 2: Edinburgh, Manchester, 1 Interview 1 Offer
   {
-    id: "edinburgh-offer",
-    imageSrc: "/success-stories/story10.jpeg",
-    title: "Edinburgh Medicine offer",
-    subtitle: "Official place secured to study Medicine at University of Edinburgh",
-    tag: "Medicine Offer",
-    highlightText: "University of Edinburgh",
+    id: "score-2410-b2",
+    imageSrc: "/success-stories/story-2410-b2.png",
+    title: "2410 Band 2 UCAT score",
+    subtitle: "Top national percentile score targeting top medical schools",
+    tag: "Top Decile UCAT",
+    highlightText: "All 9s & 8s at GCSE · 2410 B2",
   },
+
+  // Flip Page 2: Manchester, 1 Interview 1 Offer, Edinburgh Offer
   {
     id: "manchester-offer",
     imageSrc: "/success-stories/story7.jpeg",
@@ -66,16 +67,16 @@ const ALL_REAL_STORIES: RealStory[] = [
     tag: "UCAS Track Offer",
     highlightText: "Medicine (A104) at UEA",
   },
-
-  // Flip Page 3: 2410 B2, Lincoln Unconditional, 2350 Band 1
   {
-    id: "score-2410-b2",
-    imageSrc: "/success-stories/story-2410-b2.png",
-    title: "2410 Band 2 UCAT score",
-    subtitle: "Top national percentile score targeting top medical schools",
-    tag: "Top Decile UCAT",
-    highlightText: "All 9s & 8s at GCSE · 2410 B2",
+    id: "edinburgh-offer",
+    imageSrc: "/success-stories/story10.jpeg",
+    title: "Edinburgh Medicine offer",
+    subtitle: "Official place secured to study Medicine at University of Edinburgh",
+    tag: "Medicine Offer",
+    highlightText: "University of Edinburgh",
   },
+
+  // Flip Page 3: Lincoln Unconditional, 2350 Band 1, Kent & Medway
   {
     id: "lincoln-unconditional",
     imageSrc: "/success-stories/story2.jpeg",
