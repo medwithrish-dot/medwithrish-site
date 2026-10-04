@@ -492,7 +492,7 @@ export function TutoringPageClient() {
             {/* Left Column: Headlines, Copy & Feature Highlights */}
             <div>
               <span className="inline-flex items-center rounded-full border border-teal-100/90 bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-800">
-                1–1 Tutoring
+                1-1 Tutoring
               </span>
 
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
@@ -509,7 +509,11 @@ export function TutoringPageClient() {
                 </strong>{" "}
                 - a leading medical admissions expert who has helped students
                 achieve strong UCAT scores, secure multiple medicine offers, and
-                ace their interviews.
+                ace their interviews - or you can work with a{" "}
+                <strong className="font-bold text-slate-900">
+                  MedicForest specialist
+                </strong>{" "}
+                too.
               </p>
 
               {/* Three Circular Feature Bullets in a Row */}
