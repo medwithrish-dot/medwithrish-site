@@ -374,7 +374,10 @@ export default function MedicForestAboutPage() {
                       +100-200 points
                     </div>
                     <p className="mt-1 text-xs font-bold text-teal-700">
-                      Average increase per UCAT section
+                      Average increase{" "}
+                      <span className="font-black uppercase tracking-wide text-purple-700">
+                        PER UCAT SECTION
+                      </span>
                     </p>
                   </div>
                 </div>
