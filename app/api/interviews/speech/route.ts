@@ -3,18 +3,20 @@ import { synthesizeInterviewSpeech } from "@/utils/interviews/text-to-speech";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
 
 export const runtime = "nodejs";
+export const maxDuration = 20;
 
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const attemptId = url.searchParams.get("attempt");
-    const index = Number(url.searchParams.get("question"));
+    const questionIndex = url.searchParams.get("question");
+    const index = questionIndex === null || questionIndex.trim() === "" ? NaN : Number(questionIndex);
     const voice = url.searchParams.get("voice");
     if (!validId(attemptId) || !Number.isInteger(index) || index < 0 || !["female", "male"].includes(voice ?? "")) {
       throw new InterviewError("Invalid speech request");
     }
     const { user, admin } = await interviewContext();
-    const { data, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
+    const { data, error } = await admin.from("interview_attempts").select("questions,status,last_error").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
     if (error) databaseError(error);
     if (!data) throw new InterviewError("Med Interview not found", 404);
     if (data.status !== "in_progress") throw new InterviewError("This Med interview has ended", 409);

@@ -63,3 +63,6 @@ Thumbs.db
 *.xlsx
 *.xls
 *.csv
+
+# Private cookies used only by the read-only interview load probe
+/.interview-load-cookies*.json

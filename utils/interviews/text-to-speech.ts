@@ -43,7 +43,7 @@ export async function synthesizeInterviewSpeech(text: string, voice: Interviewer
     input: { text },
     voice: { languageCode: "en-GB", name: VOICES[voice] },
     audioConfig: { audioEncoding: "MP3" },
-  });
+  }, { timeout: 10_000, retry: null });
   if (!response.audioContent) throw new Error("Google Cloud returned no Med interview audio");
   return Buffer.isBuffer(response.audioContent)
     ? response.audioContent

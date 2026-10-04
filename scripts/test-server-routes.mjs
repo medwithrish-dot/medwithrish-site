@@ -542,3 +542,28 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
   assert.equal((await PATCH(jsonRequest({ displayName: "Hassan", optIn: true }))).status, 401);
   assert.equal(writes.length, 1);
 });
+
+test("an auth-refresh outage allows route-level recovery without bypassing the preview gate", async () => {
+  const { NextRequest } = require("next/server");
+  let refreshes = 0;
+  const mocks = {
+    "@supabase/ssr": { createServerClient: () => ({ auth: { getClaims: async () => { refreshes++; throw new Error("offline"); } } }) },
+    "@/utils/medicforest/preview-access": { MEDICFOREST_PREVIEW_COOKIE: "medicforest_preview_access", isValidMedicForestPreviewToken: async () => true },
+  };
+  const previousLog = console.error;
+  const logs = [];
+  console.error = (...args) => logs.push(args);
+  try {
+    await withEnv({ NEXT_PUBLIC_SUPABASE_URL: "https://supabase.example.test", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-key" }, async () => {
+      const { proxy } = load("proxy.ts", mocks);
+      const response = await proxy(new NextRequest("https://medicforest.com/interviews/dashboard"));
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("x-middleware-next"), "1");
+      assert.equal(refreshes, 1);
+      const denied = load("proxy.ts", { ...mocks, "@/utils/medicforest/preview-access": { ...mocks["@/utils/medicforest/preview-access"], isValidMedicForestPreviewToken: async () => false } });
+      assert.equal((await denied.proxy(new NextRequest("https://medicforest.com/interviews/dashboard"))).status, 307);
+      assert.equal(refreshes, 1);
+    });
+    assert.deepEqual(logs, [["auth_refresh_unavailable"]]);
+  } finally { console.error = previousLog; }
+});

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { Session, User } from "@supabase/supabase-js";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -11,7 +11,6 @@ import {
   CreditCard,
   Lock,
   LogOut,
-  Mail,
   Shield,
   Sparkles,
   UserRound,
@@ -35,7 +34,7 @@ interface ProfileData {
 
 export function ManageAccountClient() {
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
+  const profileLoadVersion = useRef(0);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,13 +65,29 @@ export function ManageAccountClient() {
     [supabaseReady]
   );
 
+  const loadUserProfile = useCallback(async (userId: string, version: number) => {
+    if (!supabase) return;
+    try {
+      const { data, error } = await supabase.from("profiles")
+        .select("full_name,current_plan,stripe_customer_id,stripe_subscription_id,subscription_status,diagnostic_credits")
+        .eq("id", userId).maybeSingle();
+      if (version !== profileLoadVersion.current) return;
+      const nextProfile = error ? null : data as ProfileData | null;
+      setProfile(nextProfile);
+      setDisplayNameDraft(nextProfile?.full_name ?? "");
+    } catch {
+      if (version === profileLoadVersion.current) setProfile(null);
+    }
+  }, [supabase]);
+
   useEffect(() => {
     if (!supabase) {
-      setLoading(false);
-      return;
+      const timer = window.setTimeout(() => setLoading(false), 0);
+      return () => window.clearTimeout(timer);
     }
 
     let active = true;
+    const initialVersion = ++profileLoadVersion.current;
 
     async function initAuth() {
       if (!supabase) return;
@@ -81,15 +96,16 @@ export function ManageAccountClient() {
           data: { session: initialSession },
         } = await supabase.auth.getSession();
 
-        if (!active) return;
-        setSession(initialSession);
+        if (!active || initialVersion !== profileLoadVersion.current) return;
         setUser(initialSession?.user ?? null);
 
         if (initialSession?.user) {
-          await loadUserProfile(initialSession.user.id);
+          await loadUserProfile(initialSession.user.id, initialVersion);
         }
+      } catch {
+        if (active && initialVersion === profileLoadVersion.current) setAuthError("Your account could not be loaded. Please refresh to retry.");
       } finally {
-        if (active) setLoading(false);
+        if (active && initialVersion === profileLoadVersion.current) setLoading(false);
       }
     }
 
@@ -97,46 +113,30 @@ export function ManageAccountClient() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
       if (!active) return;
-      setSession(newSession);
+      const version = ++profileLoadVersion.current;
       setUser(newSession?.user ?? null);
-
+      setProfile(null);
+      setDisplayNameDraft("");
+      // Defer database calls until the auth callback releases its session lock.
       if (newSession?.user) {
-        await loadUserProfile(newSession.user.id);
-      } else {
-        setProfile(null);
-        setDisplayNameDraft("");
-      }
-      setLoading(false);
+        const userId = newSession.user.id;
+        window.setTimeout(() => {
+          if (!active || version !== profileLoadVersion.current) return;
+          void loadUserProfile(userId, version).finally(() => {
+            if (active && version === profileLoadVersion.current) setLoading(false);
+          });
+        }, 0);
+      } else setLoading(false);
     });
 
     return () => {
       active = false;
+      profileLoadVersion.current += 1;
       subscription.unsubscribe();
     };
-  }, [supabase]);
-
-  async function loadUserProfile(userId: string) {
-    if (!supabase) return;
-    try {
-      const { data } = await supabase
-        .from("profiles")
-        .select(
-          "full_name,current_plan,stripe_customer_id,stripe_subscription_id,subscription_status,diagnostic_credits"
-        )
-        .eq("id", userId)
-        .maybeSingle();
-
-      if (data) {
-        const profileData = data as ProfileData;
-        setProfile(profileData);
-        setDisplayNameDraft(profileData.full_name ?? "");
-      }
-    } catch {
-      // Fallback
-    }
-  }
+  }, [supabase, loadUserProfile]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +167,6 @@ export function ManageAccountClient() {
         if (error) throw error;
 
         if (data.session) {
-          setSession(data.session);
           setUser(data.user);
           setAuthMessage("Account created successfully!");
         } else {
@@ -183,7 +182,6 @@ export function ManageAccountClient() {
 
         if (error) throw error;
 
-        setSession(data.session);
         setUser(data.user);
         setAuthMessage("Logged in successfully.");
       }
@@ -200,7 +198,6 @@ export function ManageAccountClient() {
     if (!supabase) return;
     try {
       await supabase.auth.signOut();
-      setSession(null);
       setUser(null);
       setProfile(null);
       router.refresh();

@@ -53,3 +53,11 @@ Check dependency advisories with `npm audit` and
 `npm --prefix ucat-generator audit`. The generator currently contains package
 configuration only; its installed dependencies are ignored by Git and can be
 restored with `npm --prefix ucat-generator ci`.
+
+## Interview reliability
+
+The [twelve-area review and recovery runbook](docs/interview-reliability.md) covers
+50-user capacity checks, the two domains, automatic saving recovery, monitoring
+and outage repair. Run `npm run load:interviews` against a running production build
+for a read-only HTTP probe. Use Node.js 22.18 or later for the test suite's direct
+TypeScript imports. GitHub Actions verifies changes without live account secrets.

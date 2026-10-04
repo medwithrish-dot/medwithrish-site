@@ -20,8 +20,12 @@ export function interviewJson(data: object, status = 200) {
   return Response.json({ ...data, serverNow: new Date().toISOString() }, { status, headers: { "Cache-Control": "private, no-store" } });
 }
 export function interviewFailure(error: unknown) {
-  if (error instanceof InterviewError) return interviewJson({ error: error.message }, error.status);
-  return interviewJson({ error: "Med Interview services are temporarily unavailable. Your saved work is safe; please retry." }, 503);
+  const status = error instanceof InterviewError ? error.status : 503;
+  // Log operational metadata only: never answers, request bodies or provider keys.
+  if (status >= 500) console.error("interview_service_failure", { status, kind: error instanceof Error ? error.name : "UnknownError" });
+  const response = interviewJson({ error: error instanceof InterviewError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
+  if (status === 429 || status === 503) response.headers.set("Retry-After", "15");
+  return response;
 }
 export function databaseError(error: { code?: string; message: string }) {
   if (error.code === "42P01" || error.code === "PGRST202" || error.code === "PGRST205") throw new InterviewError("Med Interview storage is being set up. Please try again once setup is complete.", 503);

@@ -1,4 +1,5 @@
 import "server-only";
+import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
 import { randomUUID } from "node:crypto";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { assessInterview, interviewAiConfigured } from "@/utils/interviews/gemini";
@@ -42,6 +43,12 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
     throw new InterviewError("Preparation is still running.", 409);
   }
 
+  // Reject a known cooldown before requesting another grading claim.
+  try { interviewProviderLoad.assertAvailable(); }
+  catch (error) {
+    if (error instanceof InterviewAiBusyError) throw new InterviewError(error.message, 503);
+    throw error;
+  }
   const token = randomUUID();
   const { data: claimed, error: claimError } = await admin.rpc("claim_interview_grading", { p_user: user.id, p_attempt: row.id, p_token: token });
   if (claimError) databaseError(claimError);

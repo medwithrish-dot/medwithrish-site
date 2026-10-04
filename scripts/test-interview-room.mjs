@@ -587,10 +587,10 @@ test("leaving an active station ends it and clears its reload URL and browser dr
   assert.equal(room.latestCall(), null);
 });
 
-function loadQuestionModule(file) {
+function loadQuestionModule(file, browserWindow) {
   const compiled = { exports: {} };
   const output = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-  new Function("require", "module", "exports", output)(name => loadQuestionModule(resolve(dirname(file), `${name}.ts`)), compiled, compiled.exports);
+  new Function("require", "module", "exports", "window", output)(name => name.startsWith(".") ? loadQuestionModule(resolve(dirname(file), `${name}.ts`), browserWindow) : require(name), compiled, compiled.exports, browserWindow);
   return compiled.exports;
 }
 
@@ -622,7 +622,11 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
     start() { this.state = "recording"; }
     stop() { this.state = "inactive"; }
   }
-  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewQuestionBankDashboard.tsx"), "utf8");
+  const recordingWindow = {
+    SpeechRecognition: Recognition, MediaRecorder: Recorder,
+    setTimeout: () => 1, clearTimeout() {}, setInterval: () => 1, clearInterval() {},
+  };
+  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/QuestionPracticeView.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX,
   } }).outputText;
@@ -630,8 +634,8 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   runInNewContext(`${output}\nexports.testPracticeView = QuestionPracticeView;`, {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
-      if (name.endsWith("speech-delivery") || name.endsWith("question-review") || name.endsWith("question-practice-timer")) {
-        return loadQuestionModule(resolve(root, `app/medicforest/interview/_lib/${name.split("/").at(-1)}.ts`));
+      if (name.endsWith("speech-delivery") || name.endsWith("question-review") || name.endsWith("question-practice-timer") || name.endsWith("question-bank-storage") || name.endsWith("question-bank-model")) {
+        return loadQuestionModule(resolve(root, `app/medicforest/interview/_lib/${name.split("/").at(-1)}.ts`), recordingWindow);
       }
       if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/medicforest/interview/_data/interview-stimuli.ts"));
       if (name === "react") return {
@@ -644,10 +648,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
       return {};
     },
     navigator: { mediaDevices: { getUserMedia: () => new Promise(resolve => { grantPermission = () => resolve(stream); }) } },
-    window: {
-      SpeechRecognition: Recognition, MediaRecorder: Recorder,
-      setTimeout: () => 1, clearTimeout() {}, setInterval: () => 1, clearInterval() {},
-    },
+    window: recordingWindow,
   });
   const tree = loaded.exports.testPracticeView({
     category: { title: "Personal & Motivation", colour: "#fff" },

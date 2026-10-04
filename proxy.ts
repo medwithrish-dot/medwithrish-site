@@ -71,7 +71,13 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getClaims();
+  try {
+    await supabase.auth.getClaims();
+  } catch {
+    // Routes still verify identity themselves. A refresh outage must not take
+    // down the interview shell before its fallback can render.
+    console.error("auth_refresh_unavailable");
+  }
 
   return supabaseResponse;
 }

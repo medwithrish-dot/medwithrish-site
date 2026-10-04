@@ -98,3 +98,11 @@ Run `npm run lint`, `npx tsc --noEmit`, `npm run build`, `node --experimental-st
 For dashboard date calculations, recommendations, validation and database access tests, also run `npm run test:interviews:dashboard`.
 
 After applying SQL, use two separate signed-in test accounts: create/join a group, compare a saved Why medicine? personal best, start a shared room, contribute answers, and confirm non-members cannot open it. Complete a free Med interview, view its private report, opt into the leaderboard, and opt out again. Verify a free account cannot start paid circuits. A local PostgreSQL test suite covers permissions, quota/retry logic and group flows; a real hosted two-account pass is still needed after the migration.
+
+## Reliability and operations
+
+See [interview reliability](interview-reliability.md) for the twelve-area audit,
+50-user load probe, cross-domain behaviour and crash recovery.
+`INTERVIEW_AI_MAX_CONCURRENT` defaults to 20 concurrent Gemini calls per server
+instance (valid range 1?100). This does not replace Google's project-wide quota.
+This reliability update adds no SQL migration.

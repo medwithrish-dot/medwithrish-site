@@ -8,7 +8,6 @@ import {
   BadgePoundSterling,
   BarChart3,
   BookOpen,
-  CircleHelp,
   ClipboardList,
   Home,
   Mic,
@@ -145,6 +144,7 @@ function SidebarLink({
 }) {
   return (
     <Link
+      prefetch={false}
       data-interview-sidebar-link
       href={href}
       aria-current={active ? "page" : undefined}

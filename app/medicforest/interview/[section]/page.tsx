@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { InterviewQuestionBankDashboard, AIInterviewRunner, InterviewGroups, InterviewLeaderboard, InterviewGuides } from "../_components/InterviewSectionClients";
 import { getMedicForestEntitlements } from "@/utils/medicforest/premium-access";
 import { AIInterviewLanding } from "../_components/AIInterviewLanding";
-import { InterviewQuestionBankDashboard } from "../_components/InterviewQuestionBankDashboard";
 import { InterviewShell } from "../_components/InterviewShell";
-import { AIInterviewRunner } from "../_components/AIInterviewRunner";
-import { InterviewGroups } from "../_components/InterviewGroups";
-import { InterviewLeaderboard } from "../_components/InterviewLeaderboard";
 import { InterviewPreparationViews } from "../_components/InterviewPreparationViews";
-import { InterviewGuides } from "../_components/InterviewGuides";
 import { isAcademicInterview } from "../_data/university-stations";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
@@ -29,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ section: 
 }
 export default async function Page({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<Search> }) {
   const { section } = await params;
-  const config = pages[section];
+  const config = Object.hasOwn(pages, section) ? pages[section] : undefined;
   if (!config) notFound();
   const search = await searchParams;
   if (section === "ai-interviews" && isAcademicInterview(single(search.university)) && !single(search.attempt)) {

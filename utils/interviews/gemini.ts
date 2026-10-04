@@ -1,4 +1,5 @@
 import "server-only";
+import { interviewProviderLoad } from "./provider-load";
 import { RUBRIC_CRITERIA, validateFeedback } from "./scoring";
 import { validateFollowUp } from "./follow-up";
 import { assessmentGuidance } from "./assessment-guidance";
@@ -27,30 +28,35 @@ async function generateInterviewJson({ model, instruction, context, schema, maxO
   // Flash-Lite 2.5 can disable thinking entirely; newer Flash-Lite supports minimal.
   const thinkingConfig = /^gemini-2\.5-flash/.test(model) ? { thinkingBudget: 0 }
     : /^gemini-3\.(1|5)-flash-lite/.test(model) ? { thinkingLevel: "minimal" } : undefined;
-  let response: Response;
+  const release = interviewProviderLoad.acquire();
   try {
-    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST", signal: AbortSignal.timeout(timeout), cache: "no-store",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: instruction }] },
-        contents: [{ role: "user", parts: [{ text: JSON.stringify(context) }] }],
-        generationConfig: { temperature: 0, maxOutputTokens, responseMimeType: "application/json", responseSchema: schema, ...(thinkingConfig ? { thinkingConfig } : {}) },
-      }),
-    });
-  } catch {
-    throw new Error("The AI service could not respond in time. Your answers are saved; please retry.");
-  }
-  if (!response.ok) throw new Error(response.status === 429 ? "The AI service is busy. Your answers are saved; retry shortly." : "The AI service is unavailable. Your answers are saved; please retry.");
-  try {
-    const payload = await response.json();
-    const candidate = payload.candidates?.[0];
-    if (candidate?.finishReason !== "STOP" || !Array.isArray(candidate.content?.parts)) throw new Error();
-    const result = candidate.content.parts.filter((part: { thought?: boolean }) => !part.thought).map((part: { text?: string }) => part.text ?? "").join("");
-    return JSON.parse(result);
-  } catch {
-    throw new Error("The AI response was incomplete. Your answers are saved; please retry.");
-  }
+    let response: Response;
+    try {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST", signal: AbortSignal.timeout(timeout), cache: "no-store",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: instruction }] },
+          contents: [{ role: "user", parts: [{ text: JSON.stringify(context) }] }],
+          generationConfig: { temperature: 0, maxOutputTokens, responseMimeType: "application/json", responseSchema: schema, ...(thinkingConfig ? { thinkingConfig } : {}) },
+        }),
+      });
+    } catch {
+      throw new Error("The AI service could not respond in time. Your answers are saved; please retry.");
+    }
+    interviewProviderLoad.unavailable(response.status, response.headers.get("retry-after"));
+    if (!response.ok) throw new Error(response.status === 429 ? "The AI service is busy. Your answers are saved; retry shortly." : "The AI service is unavailable. Your answers are saved; please retry.");
+    try {
+      const payload = await response.json();
+      const candidate = payload.candidates?.[0];
+      if (candidate?.finishReason !== "STOP" || !Array.isArray(candidate.content?.parts)) throw new Error();
+      const result = candidate.content.parts.filter((part: { thought?: boolean }) => !part.thought).map((part: { text?: string }) => part.text ?? "").join("");
+      return JSON.parse(result);
+    } catch {
+      throw new Error("The AI response was incomplete. Your answers are saved; please retry.");
+    }
+  } finally { release(); }
+
 }
 
 export async function generateInterviewFollowUp(context: {
