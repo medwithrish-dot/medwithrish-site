@@ -138,13 +138,13 @@ try {
     assert.equal(duplicate.id, old.id);
     const second = await reserve(ids.daily, station(), 2, 30);
     await db.query("update public.interview_attempts set status='completed' where id=$1", [second.id]);
-    await assert.rejects(reserve(ids.daily, station(), 2, 30), /Daily Med interview limit reached/);
+    await assert.rejects(reserve(ids.daily, station(), 2, 30), /Daily interview limit reached/);
     assert.equal((await reserve(ids.daily, station({ circuit_id: old.circuit_id }), 2, 30)).id, old.id);
   });
   await check("monthly quota counts older stations outside the daily window", async () => {
     await attempt(ids.monthly, { startedAt: new Date(Date.now() - 2 * 86400_000).toISOString() });
     await attempt(ids.monthly, { startedAt: new Date(Date.now() - 3 * 86400_000).toISOString() });
-    await assert.rejects(reserve(ids.monthly, station(), 20, 2), /Monthly Med interview limit reached/);
+    await assert.rejects(reserve(ids.monthly, station(), 20, 2), /Monthly interview limit reached/);
   });
 
   const gradeId = await attempt(ids.claims, { status: "failed" });
