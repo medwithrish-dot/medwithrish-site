@@ -120,9 +120,9 @@ async function run() {
       if (a < 10) continue;
 
       // Bell center is (219, 247) with radius ~35.
-      // Any pixel to the right of the vertical arm (srcX >= 235) that lies outside the bell radius belongs to 'e'
+      // The letter 'e' only exists at srcY >= 170 to the right of the stethoscope bell (srcX >= 246).
       const distFromBell = Math.sqrt((srcX - 219) ** 2 + (srcY - 247) ** 2);
-      if (srcX >= 235 && distFromBell > 35.5) {
+      if (srcY >= 170 && srcX >= 246 && distFromBell > 35.5) {
         continue; // skip 'e' pixel
       }
 
