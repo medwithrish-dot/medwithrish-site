@@ -39,6 +39,17 @@ type OutcomeStory = {
 
 const outcomeStories: OutcomeStory[] = [
   {
+    src: "/success-stories/tutoring-feedback-extra-time.png",
+    alt: "Student WhatsApp feedback praising dedicated 1-to-1 tutoring session",
+    tag: "1-1 TUTORING",
+    scoreHeading: "Tutor Was Amazing!",
+    quote:
+      "He explained everything so well... means a lot when you see a tutor that genuinely cares and doesn't try to just reach the 1 hour mark.",
+    authorName: "1-to-1 Tutoring student",
+    authorInitial: "S",
+    offers: "Verified Student Feedback",
+  },
+  {
     src: "/success-stories/story5.jpeg",
     alt: "Student UCAT score 2370 Band 2 feedback screenshot",
     tag: "UCAT SCORE",
@@ -125,9 +136,14 @@ function StudentOutcomesCard({
 
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(next, 5000);
-    return () => clearInterval(id);
-  }, [next, paused]);
+    // The featured student feedback stays longer (7s) so students have time to read the WhatsApp messages;
+    // subsequent outcome cards flash by quickly (2.2s) before resting on the featured image again.
+    const delay = current === 0 ? 7000 : 2200;
+    const timer = setTimeout(() => {
+      next();
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [current, next, paused]);
 
   const active = outcomeStories[current];
 
