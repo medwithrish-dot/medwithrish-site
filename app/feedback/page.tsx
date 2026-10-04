@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FeedbackPageClient } from "./_client";
+import FeedbackPage from "../medicforest/feedback/page";
 
 export const metadata: Metadata = {
   title: "Feedback and Support | MedicForest",
@@ -10,6 +10,4 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FeedbackPage() {
-  return <FeedbackPageClient />;
-}
+export default FeedbackPage;

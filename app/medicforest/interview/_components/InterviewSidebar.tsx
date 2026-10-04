@@ -14,6 +14,7 @@ import {
   Mic,
   MessageSquare,
   Trophy,
+  UserRound,
   UserRoundCheck,
   Users,
   Wrench,
@@ -108,8 +109,8 @@ const landingSections = [
   {
     label: "Support",
     items: [
-      { label: "Feedback", icon: MessageSquare, href: "/feedback" },
-      { label: "Help & Support", icon: CircleHelp, href: "/contact" },
+      { label: "Feedback and Support", icon: MessageSquare, href: "/feedback" },
+      { label: "Manage Account", icon: UserRound, href: "/account" },
     ],
   },
 ] as const;
@@ -123,8 +124,9 @@ export function getLandingActiveLabel(pathname: string) {
   if (path.startsWith("/interviews")) return "Med Interviews";
   if (path.startsWith("/tutoring")) return "1-1 Tutoring";
   if (path.startsWith("/resources")) return "Resources";
-  if (path.startsWith("/feedback")) return "Feedback";
-  if (path.startsWith("/contact")) return "Help & Support";
+  if (path.startsWith("/feedback")) return "Feedback and Support";
+  if (path.startsWith("/account")) return "Manage Account";
+  if (path.startsWith("/contact")) return "Manage Account";
   if (path.startsWith("/ucat")) return "UCAT (WIP)";
 
   return "";

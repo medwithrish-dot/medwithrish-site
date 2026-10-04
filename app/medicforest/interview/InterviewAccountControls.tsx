@@ -197,13 +197,13 @@ export function InterviewAccountControls() {
                 Manage plan
               </Link>
               <Link
-                href="/contact"
+                href="/feedback"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-bold text-slate-700 hover:bg-[#f4f8f8] hover:text-[#08787b]"
                 role="menuitem"
               >
                 <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                Help & Support
+                Feedback and Support
               </Link>
               <Link
                 href="/medicforest/ucat/dashboard"

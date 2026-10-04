@@ -7,6 +7,9 @@ import { selectStationQuestions } from "@/utils/interviews/station-question-sele
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
 import { interviewerSpeech } from "@/app/medicforest/interview/_lib/interviewer-transcript";
 import { isAcademicInterview, universityStationSlugs } from "@/app/medicforest/interview/_data/university-stations";
+import { INTERVIEW_QUESTIONS } from "@/app/medicforest/interview/_data/interviewQuestionBank";
+
+const interviewQuestionIds = new Set<string>(INTERVIEW_QUESTIONS.map((question) => question.id));
 
 async function completeQuestionBankProgress(
   admin: Awaited<ReturnType<typeof interviewContext>>["admin"],
@@ -18,7 +21,7 @@ async function completeQuestionBankProgress(
     if (!answer.answer.trim()) return [];
     const index = attempt.questions.indexOf(answer.question);
     const questionId = attempt.questionIds?.[index];
-    if (!questionId) return [];
+    if (!questionId || !interviewQuestionIds.has(questionId)) return [];
     return [{
       user_id: userId, question_id: questionId, status: "completed", answer: answer.answer,
       completed_at: completedAt, elapsed_seconds: 0,

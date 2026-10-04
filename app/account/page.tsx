@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ManageAccountClient } from "./_client";
+import AccountPage from "../medicforest/account/page";
 
 export const metadata: Metadata = {
   title: "Manage Account | MedicForest",
@@ -10,6 +10,4 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AccountPage() {
-  return <ManageAccountClient />;
-}
+export default AccountPage;
