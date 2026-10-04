@@ -84,6 +84,54 @@ test("checkout accepts only named return destinations", async () => {
   assert.deepEqual(calls, ["interviews", "ucat"]);
 });
 
+test("tutoring checkout requires an email and attaches it to the Stripe customer", async () => {
+  const sessions = [];
+  class Stripe {
+    checkout = {
+      sessions: {
+        create: async (params) => {
+          sessions.push(params);
+          return { url: "https://checkout.stripe.com/pay/cs_tutoring_123" };
+        },
+      },
+    };
+  }
+
+  await withEnv({
+    STRIPE_SECRET_KEY: "sk_test_only",
+    STRIPE_PRICE_TUTORING_UCAT_RISH: "price_ucat_rish",
+  }, async () => {
+    const { POST } = load("app/api/stripe/create-tutoring-checkout/route.ts", {
+      stripe: Stripe,
+      "@/utils/site-url": { getRequiredSiteUrl: () => "https://medicforest.com" },
+    });
+
+    for (const body of [
+      { packageId: "ucat-rish" },
+      { packageId: "ucat-rish", email: "not-an-email" },
+      { packageId: "not-a-package", email: "student@example.test" },
+    ]) {
+      assert.equal((await POST(jsonRequest(body))).status, 400);
+    }
+    assert.equal(sessions.length, 0);
+
+    const response = await POST(jsonRequest({
+      packageId: "ucat-rish",
+      email: "  student@example.test  ",
+    }));
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), {
+      configured: true,
+      url: "https://checkout.stripe.com/pay/cs_tutoring_123",
+    });
+    assert.equal(sessions.length, 1);
+    assert.equal(sessions[0].customer_email, "student@example.test");
+    assert.equal(sessions[0].customer_creation, "always");
+    assert.equal(sessions[0].line_items[0].price, "price_ucat_rish");
+    assert.equal(sessions[0].metadata.packageId, "ucat-rish");
+  });
+});
+
 test("site URLs are validated and production checkout cannot use a caller's localhost Origin", async () => {
   const { getRequiredSiteUrl, getPublicSiteUrl, getProductSiteUrl } = load("utils/site-url.ts");
   const request = new Request("https://example.test", { headers: { Origin: "http://localhost:9999" } });

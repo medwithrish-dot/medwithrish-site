@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, type FormEvent } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -265,7 +265,10 @@ export function TutoringPageClient() {
 
   // Booking modal and checkout state
   const [bookingPackage, setBookingPackage] = useState<PackageInfo | null>(null);
+  const [bookingEmail, setBookingEmail] = useState("");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [showContactFallback, setShowContactFallback] = useState(false);
 
   // Global tutor preference toggle
   const applyGlobalTutor = (tier: TutorTier) => {
@@ -273,28 +276,62 @@ export function TutoringPageClient() {
     setInterviewTutor(tier);
   };
 
-  const handleStartBooking = async (pkg: PackageInfo) => {
+  const handleStartBooking = (pkg: PackageInfo) => {
     setBookingPackage(pkg);
+    setCheckoutError(null);
+    setShowContactFallback(false);
+  };
+
+  const closeBooking = () => {
+    if (loadingCheckout) return;
+
+    setBookingPackage(null);
+    setCheckoutError(null);
+    setShowContactFallback(false);
+  };
+
+  const handleCheckoutSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!bookingPackage) return;
+
+    const email = bookingEmail.trim();
     setLoadingCheckout(true);
+    setCheckoutError(null);
+    setShowContactFallback(false);
 
     try {
       const response = await fetch("/api/stripe/create-tutoring-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageId: pkg.id }),
+        body: JSON.stringify({ packageId: bookingPackage.id, email }),
       });
 
       const data = (await response.json()) as {
         configured?: boolean;
         url?: string;
+        error?: string;
+        message?: string;
       };
 
-      if (data.configured && data.url) {
+      if (response.ok && data.configured && data.url) {
         window.location.href = data.url;
         return;
       }
+
+      if (!response.ok) {
+        setCheckoutError(data.error ?? "We could not start checkout. Please try again.");
+        return;
+      }
+
+      setCheckoutError(
+        "Online payment is temporarily unavailable. Contact us below and we will arrange your booking."
+      );
+      setShowContactFallback(true);
     } catch {
-      // Gracefully fall back to the booking dialogue
+      setCheckoutError(
+        "We could not connect to secure checkout. Contact us below or try again."
+      );
+      setShowContactFallback(true);
     } finally {
       setLoadingCheckout(false);
     }
@@ -851,7 +888,7 @@ export function TutoringPageClient() {
       {bookingPackage && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs"
-          onClick={() => setBookingPackage(null)}
+          onClick={closeBooking}
         >
           <div
             className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
@@ -859,15 +896,16 @@ export function TutoringPageClient() {
           >
             <button
               type="button"
-              onClick={() => setBookingPackage(null)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+              onClick={closeBooking}
+              disabled={loadingCheckout}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200 disabled:cursor-wait disabled:opacity-50"
               aria-label="Close booking modal"
             >
               <X className="h-4 w-4" />
             </button>
 
             <span className="inline-flex items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-800">
-              Booking Enquiry
+              Secure booking
             </span>
 
             <h3 className="mt-3 text-xl font-black text-slate-900">
@@ -880,19 +918,72 @@ export function TutoringPageClient() {
               {bookingPackage.durationLabel}
             </p>
 
-            <div className="mt-5 space-y-3">
-              {loadingCheckout ? (
-                <div className="flex items-center justify-center gap-2 rounded-xl bg-slate-50 py-6 text-sm font-bold text-slate-600">
-                  <Loader2 className="h-5 w-5 animate-spin text-teal-700" />
-                  <span>Connecting to secure checkout…</span>
-                </div>
-              ) : (
-                <>
+            <form className="mt-5 space-y-4" onSubmit={handleCheckoutSubmit}>
+              <div>
+                <label
+                  htmlFor="tutoring-booking-email"
+                  className="block text-sm font-bold text-slate-800"
+                >
+                  Email address
+                </label>
+                <input
+                  id="tutoring-booking-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  required
+                  maxLength={254}
+                  value={bookingEmail}
+                  onChange={(event) => setBookingEmail(event.target.value)}
+                  disabled={loadingCheckout}
+                  placeholder="you@example.com"
+                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-hidden transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-50"
+                />
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  We&apos;ll use this to send your receipt and arrange your tutoring sessions.
+                </p>
+              </div>
+
+              {checkoutError && (
+                <p
+                  role="alert"
+                  className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs font-medium leading-relaxed text-amber-900"
+                >
+                  {checkoutError}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loadingCheckout}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0d5c4d] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#094338] disabled:cursor-wait disabled:opacity-70"
+              >
+                {loadingCheckout ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Connecting to secure checkout…</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Continue to secure payment</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+
+              <p className="text-center text-[11px] leading-relaxed text-slate-500">
+                Your email will be prefilled at Stripe. Card details are entered securely on Stripe&apos;s payment page.
+              </p>
+            </form>
+
+            {showContactFallback && (
+              <div className="mt-4 space-y-3 border-t border-slate-200 pt-4">
                   <a
                     href={`mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
                       `Booking: ${bookingPackage.name} (£${bookingPackage.price})`
                     )}&body=${encodeURIComponent(
-                      `Hi Rish,\n\nI would like to book the ${bookingPackage.name} (£${bookingPackage.price}).\n\nTarget Universities:\nKey Areas / Dates:\n\nThank you!`
+                      `Hi Rish,\n\nI would like to book the ${bookingPackage.name} (£${bookingPackage.price}).\nMy email: ${bookingEmail.trim()}\n\nTarget Universities:\nKey Areas / Dates:\n\nThank you!`
                     )}`}
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0d5c4d] px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#094338]"
                   >
@@ -911,9 +1002,8 @@ export function TutoringPageClient() {
                     <MessageCircle className="h-4 w-4 text-emerald-600" />
                     <span>Message on WhatsApp</span>
                   </a>
-                </>
-              )}
-            </div>
+              </div>
+            )}
 
             <p className="mt-5 text-center text-xs text-slate-500">
               Sessions are arranged based on your availability. Weekdays and weekends available.

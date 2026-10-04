@@ -12,15 +12,39 @@ const TUTORING_PRICE_ENV_MAP: Record<string, string | undefined> = {
   "interview-specialist": process.env.STRIPE_PRICE_TUTORING_INTERVIEW_SPECIALIST,
 };
 
+function normaliseEmail(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+
+  const email = value.trim();
+  if (
+    email.length === 0 ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
+    return null;
+  }
+
+  return email;
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => null)) as {
       packageId?: string;
+      email?: string;
     } | null;
 
-    if (!body?.packageId) {
+    if (!body?.packageId || !(body.packageId in TUTORING_PRICE_ENV_MAP)) {
       return NextResponse.json(
-        { error: "Missing packageId parameter" },
+        { error: "Please choose a valid tutoring package." },
+        { status: 400 }
+      );
+    }
+
+    const email = normaliseEmail(body.email);
+    if (!email) {
+      return NextResponse.json(
+        { error: "Please enter a valid email address." },
         { status: 400 }
       );
     }
@@ -42,6 +66,8 @@ export async function POST(request: Request) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      customer_creation: "always",
+      customer_email: email,
       line_items: [
         {
           price: priceId,
