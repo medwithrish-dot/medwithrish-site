@@ -110,6 +110,15 @@ test("every prepared PNG is mapped to a real question with accessible source fac
   assert.equal(getQuestionStimulus("unknown"), null);
 });
 
+test("review images start collapsed and use one inline open control", () => {
+  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewStimulus.tsx"), "utf8");
+  assert.match(source, /useState\(presentation\)/);
+  assert.match(source, /aria-expanded=\{imageOpen\}/);
+  assert.match(source, /Open image/);
+  assert.match(source, /Collapse image/);
+  assert.doesNotMatch(source, /Enlarge|showModal|<dialog/);
+});
+
 test("every visual question names the subject shown in its paired image", () => {
   const expectedTerms = {
     "iq-18-001-data-stations": ["gp", "appointment"],
