@@ -201,7 +201,7 @@ export function RealStudentSuccessStories() {
   );
 
   return (
-    <div className="mt-8 border-t border-slate-100 pt-6">
+    <div className="mt-8 border-t border-[#E3E8E5] pt-6">
       {/* Flip controls */}
       <div className="flex items-center justify-between mb-4">
         {/* Flip Dots */}
@@ -230,7 +230,7 @@ export function RealStudentSuccessStories() {
             type="button"
             onClick={handlePrev}
             aria-label="Previous success stories"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#E3E8E5] bg-white text-slate-600 shadow-2xs transition hover:border-slate-300 hover:text-slate-900"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -238,7 +238,7 @@ export function RealStudentSuccessStories() {
             type="button"
             onClick={handleNext}
             aria-label="Next success stories"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs transition hover:border-teal-300 hover:text-teal-800"
+            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#E3E8E5] bg-white text-slate-600 shadow-2xs transition hover:border-slate-300 hover:text-slate-900"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -255,12 +255,12 @@ export function RealStudentSuccessStories() {
                 href="https://instagram.com/medwithrish_"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-teal-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-400 hover:shadow-xs"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition hover:border-slate-300"
               >
                 {/* Special More Preview Container */}
-                <div className="relative flex h-52 w-full flex-col items-center justify-center overflow-hidden rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 via-emerald-50/50 to-teal-100/60 p-4 text-center transition group-hover:border-teal-300 group-hover:from-teal-100/70 group-hover:to-emerald-100/70">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-teal-700 shadow-xs ring-1 ring-teal-200/70 transition group-hover:scale-110">
-                    <Sparkles className="h-6 w-6 text-teal-600" />
+                <div className="relative flex h-52 w-full flex-col items-center justify-center overflow-hidden rounded-[10px] border border-[#E3E8E5] bg-gradient-to-br from-[#F7FAF7] via-emerald-50/30 to-teal-50/40 p-4 text-center transition group-hover:from-emerald-50/50 group-hover:to-teal-50/60">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-white text-teal-700 shadow-xs ring-1 ring-[#E3E8E5] transition group-hover:scale-105">
+                    <Sparkles className="h-6 w-6 text-teal-700" />
                   </div>
                   <p className="mt-3 text-lg font-black tracking-tight text-slate-950 sm:text-xl">
                     + Many more...
@@ -268,10 +268,10 @@ export function RealStudentSuccessStories() {
                   <p className="mt-1 max-w-[210px] text-[11px] text-slate-600 leading-tight">
                     Oxbridge, London, and medical school offers nationwide
                   </p>
-                  <div className="mt-3.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-teal-800 shadow-2xs transition group-hover:bg-white group-hover:text-teal-900">
+                  <div className="mt-3.5 inline-flex items-center gap-1.5 rounded-full border border-[#E3E8E5] bg-white px-3 py-1 text-[11px] font-semibold text-slate-800 shadow-2xs transition group-hover:bg-[#F7FAF7]">
                     <FaInstagram className="h-3.5 w-3.5 text-pink-600" />
                     <span>View all on Instagram</span>
-                    <ArrowUpRight className="h-3 w-3 text-teal-700" />
+                    <ArrowUpRight className="h-3 w-3 text-slate-500" />
                   </div>
                 </div>
 
@@ -281,7 +281,7 @@ export function RealStudentSuccessStories() {
                     <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
                       {story.title}
                     </p>
-                    <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                    <span className="shrink-0 text-[10px] font-semibold text-slate-700 bg-[#F7FAF7] px-2 py-0.5 rounded-full border border-[#E3E8E5]">
                       {story.tag}
                     </span>
                   </div>
@@ -290,7 +290,7 @@ export function RealStudentSuccessStories() {
                   </p>
                   {story.highlightText && (
                     <div className="pt-1">
-                      <span className="inline-block rounded-md bg-teal-50/80 px-2 py-0.5 text-[11px] font-semibold text-teal-800 border border-teal-200/60">
+                      <span className="inline-block rounded-[6px] bg-[#F7FAF7] px-2 py-0.5 text-[11px] font-medium text-slate-700 border border-[#E3E8E5]">
                         {story.highlightText}
                       </span>
                     </div>
@@ -304,11 +304,11 @@ export function RealStudentSuccessStories() {
             <div
               key={story.id}
               onClick={() => setSelectedStory(story)}
-              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs transition hover:border-teal-300 hover:shadow-xs"
+              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-[14px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition hover:border-slate-300"
             >
               {/* Real Screenshot Preview Container */}
-              <div className="relative flex h-52 w-full flex-col justify-between overflow-hidden rounded-xl border border-slate-100 bg-slate-950 p-1.5 transition">
-                <div className="relative h-full w-full overflow-hidden rounded-lg">
+              <div className="relative flex h-52 w-full flex-col justify-between overflow-hidden rounded-[10px] border border-[#E3E8E5] bg-slate-950 p-1.5 transition">
+                <div className="relative h-full w-full overflow-hidden rounded-[8px]">
                   {story.imageSrc && (
                     <Image
                       src={story.imageSrc}
@@ -334,7 +334,7 @@ export function RealStudentSuccessStories() {
                   <p className="text-sm font-bold text-slate-950 group-hover:text-teal-900 transition">
                     {story.title}
                   </p>
-                  <span className="shrink-0 text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                  <span className="shrink-0 text-[10px] font-semibold text-slate-700 bg-[#F7FAF7] px-2 py-0.5 rounded-full border border-[#E3E8E5]">
                     {story.tag}
                   </span>
                 </div>
@@ -343,7 +343,7 @@ export function RealStudentSuccessStories() {
                 </p>
                 {story.highlightText && (
                   <div className="pt-1">
-                    <span className="inline-block rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-100">
+                    <span className="inline-block rounded-[6px] bg-[#F7FAF7] px-2 py-0.5 text-[11px] font-medium text-slate-700 border border-[#E3E8E5]">
                       {story.highlightText}
                     </span>
                   </div>
@@ -407,7 +407,7 @@ export function RealStudentSuccessStories() {
               <button
                 type="button"
                 onClick={() => setSelectedStory(null)}
-                className="rounded-xl bg-[#0c6b5e] px-4 py-2 font-bold text-white transition hover:bg-[#084e45]"
+                className="rounded-[10px] bg-[#0c6b5e] px-4 py-2 font-bold text-white transition hover:bg-[#084e45]"
               >
                 Close
               </button>

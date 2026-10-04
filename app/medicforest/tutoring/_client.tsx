@@ -416,12 +416,38 @@ export function TutoringPageClient() {
 
   return (
     <MedicForestLandingShell>
-      <div className="relative min-h-screen bg-[#f4faf7] px-6 py-8 sm:px-10 lg:py-10">
-        {/* Soft background mint glow decoration */}
+      <div className="relative isolate min-h-screen text-slate-900 px-6 py-8 sm:px-10 lg:py-10">
+        {/* ── Quiet Ambient Background Layer ── */}
         <div
-          className="pointer-events-none absolute right-0 top-0 -z-10 h-[560px] w-[560px] rounded-full bg-gradient-to-br from-teal-200/35 via-emerald-100/25 to-transparent blur-3xl"
+          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[230px]"
           aria-hidden="true"
-        />
+          style={{
+            backgroundColor: "#F7FAF7",
+            backgroundImage: `
+              radial-gradient(circle at 92% 15%, rgba(77, 190, 163, 0.16), transparent 32%),
+              radial-gradient(circle at 8% 75%, rgba(178, 232, 214, 0.18), transparent 26%)
+            `,
+          }}
+        >
+          {/* Thin, graceful abstract curve */}
+          <svg
+            className="absolute right-0 top-0 h-full w-full max-w-4xl text-[#0c6b5e] opacity-[0.05]"
+            viewBox="0 0 1000 1000"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M1000,100 C750,200 600,450 450,650 C300,850 150,950 0,1000" />
+          </svg>
+
+          {/* Understated paper grain texture (1.8% opacity) */}
+          <div
+            className="absolute inset-0 opacity-[0.018] mix-blend-multiply pointer-events-none"
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+            }}
+          />
+        </div>
 
         <div className="mx-auto max-w-6xl space-y-12">
           {/* Top Hero: Two-column layout matching design screenshot */}

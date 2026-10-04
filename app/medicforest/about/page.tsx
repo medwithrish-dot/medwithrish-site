@@ -92,39 +92,52 @@ function FadedForestBackground() {
 export default function MedicForestAboutPage() {
   return (
     <MedicForestLandingShell>
-      <div className="relative isolate min-h-screen bg-[#f8faf9]/60 text-slate-900 pb-20 overflow-x-hidden">
-        {/* Ambient Waves Background Layer */}
+      <div className="relative isolate min-h-screen text-slate-900 pb-20 overflow-x-hidden">
+        {/* ── Quiet Ambient Background Layer ── */}
         <div
           className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[230px]"
           aria-hidden="true"
+          style={{
+            backgroundColor: "#F7FAF7",
+            backgroundImage: `
+              radial-gradient(circle at 95% 65%, rgba(77, 190, 163, 0.18), transparent 32%),
+              radial-gradient(circle at 10% 5%, rgba(178, 232, 214, 0.20), transparent 24%)
+            `,
+          }}
         >
-          <Image
-            src="/medicforest/about-ambient-bg.png"
-            alt=""
-            fill
-            className="object-cover object-center opacity-85 sm:opacity-95"
-            priority
+          {/* Thin, graceful abstract curve */}
+          <svg
+            className="absolute right-0 bottom-0 h-full w-full max-w-4xl text-[#0c6b5e] opacity-[0.06]"
+            viewBox="0 0 1000 1000"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M1000,920 C720,860 520,620 460,410 C410,210 260,60 0,0" />
+          </svg>
+
+          {/* Understated paper grain texture (1.8% opacity) to remove digital sterility */}
+          <div
+            className="absolute inset-0 opacity-[0.018] mix-blend-multiply pointer-events-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }}
           />
-          {/* Subtle gradient tint to softly blend with page elements */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#f8faf9]/20 via-transparent to-[#f8faf9]/40" />
         </div>
 
-        {/* Faded Pine Trees Background Layer */}
-        <FadedForestBackground />
-
-        <main className="relative z-0 mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10 space-y-10 sm:space-y-12">
+        <main className="relative z-0 mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10 space-y-12 sm:space-y-14">
           {/* ─────────────────────────────────────────────────────────────
               1. HERO / WHAT MEDICFOREST IS & FOREST METAPHOR
-              Split layout over the panoramic misty pine mountain banner
+              Hero card: 18px radius, neutral border #E3E8E5, no heavy shadow
           ───────────────────────────────────────────────────────────── */}
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-2xs">
+          <section className="relative overflow-hidden rounded-[18px] border border-[#E3E8E5] bg-white shadow-none">
             {/* Panoramic Forest Background Image with Gradient Overlay */}
             <div className="absolute inset-0 -z-10 overflow-hidden">
               <Image
                 src="/medicforest/about-hero-forest.jpg"
                 alt="Misty mountain and pine forest panorama"
                 fill
-                className="object-cover object-right-top opacity-70 md:opacity-85"
+                className="object-cover object-right-top opacity-60 md:opacity-75"
                 priority
               />
               {/* Left-to-right fade for crisp readability */}
@@ -137,8 +150,8 @@ export default function MedicForestAboutPage() {
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
                 {/* Left: Headline & CTAs */}
                 <div className="lg:col-span-7">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-teal-200/80 bg-white/90 px-3.5 py-1 text-xs font-bold text-teal-800 shadow-2xs backdrop-blur-xs">
-                    <Trees className="h-3.5 w-3.5 text-teal-600" />
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E3E8E5] bg-[#F7FAF7] px-3 py-1 text-xs font-semibold text-slate-700">
+                    <Trees className="h-3.5 w-3.5 text-teal-700" />
                     <span>ABOUT MEDICFOREST</span>
                   </div>
 
@@ -154,7 +167,7 @@ export default function MedicForestAboutPage() {
                   <div className="mt-6 flex flex-wrap items-center gap-3">
                     <Link
                       href="/interviews"
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#0c6b5e] px-6 py-3.5 text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
+                      className="inline-flex items-center gap-2 rounded-[10px] bg-[#0c6b5e] px-6 py-3.5 text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
                     >
                       <span>Explore the platform</span>
                       <ArrowRight className="h-4 w-4" />
@@ -162,26 +175,28 @@ export default function MedicForestAboutPage() {
 
                     <a
                       href="#our-founder"
-                      className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white/90 px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-2xs backdrop-blur-xs transition hover:border-teal-300 hover:text-teal-900"
+                      className="inline-flex items-center gap-2 rounded-[10px] border border-[#E3E8E5] bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 hover:text-slate-900"
                     >
                       <span>Our story</span>
                     </a>
                   </div>
                 </div>
 
-                {/* Right: Solitary tree vs Forest quote card */}
+                {/* Right: Solitary tree vs Forest quote card - Editorial Serif Moment */}
                 <div className="lg:col-span-5">
-                  <div className="relative rounded-3xl border border-teal-900/10 bg-white/85 p-6 shadow-xs backdrop-blur-md sm:p-7">
+                  <div className="relative rounded-[14px] border border-[#E3E8E5] bg-[#FBFDFB] p-6 sm:p-7 shadow-none">
                     <div className="flex items-start justify-between">
-                      <Quote className="h-8 w-8 text-teal-600/30" />
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700">
+                      <Quote className="h-7 w-7 text-teal-800/25" />
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                         The Vision
                       </span>
                     </div>
 
-                    <blockquote className="mt-2 text-base font-bold tracking-tight text-slate-900 sm:text-lg">
-                      <span className="italic text-slate-700">A solitary tree stands fragile.</span>
-                      <span className="mt-0.5 block font-black text-[#0c6b5e]">
+                    <blockquote className="mt-3">
+                      <span className="font-serif italic text-lg sm:text-xl text-slate-800 leading-snug">
+                        &ldquo;A solitary tree stands fragile.&rdquo;
+                      </span>
+                      <span className="mt-1 block font-sans font-bold tracking-tight text-[#0c6b5e] sm:text-lg">
                         A forest stands unbreakable.
                       </span>
                     </blockquote>
@@ -197,90 +212,79 @@ export default function MedicForestAboutPage() {
 
           {/* ─────────────────────────────────────────────────────────────
               2. OUR FOUNDER
-              Real admissions experience with Rish's actual photo
+              No outer card container - sits directly on the background.
+              Asymmetric layout: taller photo left, editorial copy center, social card right.
           ───────────────────────────────────────────────────────────── */}
-          <section
-            id="our-founder"
-            className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xs sm:p-9 lg:p-10"
-          >
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
-              {/* Left Column: Photo + Bio */}
-              <div className="lg:col-span-7">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-[160px_1fr] sm:items-start">
-                  {/* Photo Container - Rish's real photograph */}
-                  <div className="mx-auto w-36 sm:w-full">
-                    <div className="relative overflow-hidden rounded-2xl border border-teal-100 bg-teal-50/40 p-2 shadow-xs">
-                      <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-                        <Image
-                          src="/rish-profile.jpg"
-                          alt="Rish - Founder of MedicForest and MedWithRish"
-                          fill
-                          className="object-cover object-center"
-                          priority
-                        />
-                      </div>
-                      <div className="mt-2.5 text-center">
-                        <p className="text-sm font-bold text-slate-950">Rish</p>
-                        <a
-                          href="https://instagram.com/medwithrish_"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-semibold text-teal-700 hover:underline"
-                        >
-                          Founder • @medwithrish_
-                        </a>
-                      </div>
+          <section id="our-founder" className="pt-2 pb-2">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
+              {/* Left Column: Taller Photo Frame (aspect-[4/5], 14px radius, neutral border) */}
+              <div className="lg:col-span-3">
+                <div className="mx-auto w-44 sm:w-48 lg:w-full">
+                  <div className="relative overflow-hidden rounded-[14px] border border-[#E3E8E5] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[10px] bg-slate-100">
+                      <Image
+                        src="/rish-profile.jpg"
+                        alt="Rish - Founder of MedicForest and MedWithRish"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                      />
                     </div>
-                  </div>
-
-                  {/* Bio */}
-                  <div className="space-y-3">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
-                        OUR FOUNDER
-                      </span>
-                      <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                        Built from real admissions experience.
-                      </h2>
-                    </div>
-
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600">
-                      MedicForest was founded by Rish, an admissions mentor who has supported hundreds of aspiring doctors across the UK. Having guided applicants into top medical schools, he saw that students were often left with unstructured resources and generic advice.
-                    </p>
-
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600">
-                      He built MedicForest to provide what students truly need: realistic practice, structured guidance and a supportive community.
-                    </p>
-
-                    {/* 3 Credibility Tags */}
-                    <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-                      <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
-                        Medical interviews
-                      </span>
-                      <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
-                        Personal statements
-                      </span>
-                      <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 px-2.5 py-1 font-bold text-teal-800 ring-1 ring-inset ring-teal-600/20">
-                        1-to-1 mentoring
-                      </span>
+                    <div className="mt-2.5 text-center">
+                      <p className="text-sm font-bold text-slate-950">Rish</p>
+                      <a
+                        href="https://instagram.com/medwithrish_"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-semibold text-teal-700 hover:underline"
+                      >
+                        Founder • @medwithrish_
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Right Column: Founder Social Links Card */}
-              <div className="lg:col-span-5">
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-teal-100 bg-[#f4f9f7] p-5 shadow-2xs sm:p-6">
+              {/* Center Column: Narrower Editorial Copy (direct on background) */}
+              <div className="lg:col-span-5 lg:pr-2 space-y-3.5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    OUR FOUNDER
+                  </p>
+                  <h2 className="mt-1.5 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                    Built from real admissions experience.
+                  </h2>
+                </div>
+
+                <p className="text-sm leading-relaxed text-slate-600">
+                  MedicForest was founded by Rish, an admissions mentor who has supported hundreds of aspiring doctors across the UK. Having guided applicants into top medical schools, he saw that students were often left with unstructured resources and generic advice.
+                </p>
+
+                <p className="text-sm leading-relaxed text-slate-600">
+                  He built MedicForest to provide what students truly need: realistic practice, structured guidance and a supportive community.
+                </p>
+
+                {/* Understated credentials list - no neon pills */}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 text-xs font-medium text-slate-500">
+                  <span>• Medical interviews</span>
+                  <span>• Personal statements</span>
+                  <span>• 1-to-1 mentoring</span>
+                </div>
+              </div>
+
+              {/* Right Column: Founder Social Links Card (intentional floating card, shifted inward) */}
+              <div className="lg:col-span-4 lg:pl-2">
+                <div className="flex flex-col justify-between rounded-[14px] border border-[#E3E8E5] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] sm:p-6">
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                         Follow &amp; Connect
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-teal-100/70 px-2 py-0.5 text-[10px] font-bold text-teal-800">
-                        Direct DMs
+                      <span className="text-[11px] font-medium text-teal-800">
+                        Direct DMs open
                       </span>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-600">
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">
                       Reach out directly for admissions guidance, quick questions, or daily breakdowns:
                     </p>
                   </div>
@@ -291,11 +295,11 @@ export default function MedicForestAboutPage() {
                       href="https://instagram.com/medwithrish_"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center justify-between rounded-xl border border-slate-200/80 bg-white p-3 text-slate-900 shadow-2xs transition hover:border-pink-300 hover:bg-pink-50/30 hover:shadow-xs"
+                      className="group flex items-center justify-between rounded-[10px] border border-[#E3E8E5] bg-[#FBFDFB] p-2.5 text-slate-900 transition hover:border-slate-300 hover:bg-white"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white shadow-2xs transition group-hover:scale-105">
-                          <FaInstagram className="h-5 w-5" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white shadow-2xs transition group-hover:scale-105">
+                          <FaInstagram className="h-4 w-4" />
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
@@ -303,12 +307,12 @@ export default function MedicForestAboutPage() {
                             <span className="text-[11px] font-semibold text-pink-600">@medwithrish_</span>
                           </div>
                           <p className="text-[11px] text-slate-500">
-                            Admissions tips, Q&amp;As &amp; direct DMs
+                            Admissions tips &amp; direct DMs
                           </p>
                         </div>
                       </div>
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-pink-300 group-hover:bg-pink-100/60 group-hover:text-pink-700">
-                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      <div className="flex h-6 w-6 items-center justify-center rounded-[6px] border border-[#E3E8E5] bg-white text-slate-400 transition group-hover:text-slate-700">
+                        <ArrowUpRight className="h-3 w-3" />
                       </div>
                     </a>
 
@@ -317,11 +321,11 @@ export default function MedicForestAboutPage() {
                       href="https://tiktok.com/@medwithrish"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center justify-between rounded-xl border border-slate-200/80 bg-white p-3 text-slate-900 shadow-2xs transition hover:border-slate-400 hover:bg-slate-50/80 hover:shadow-xs"
+                      className="group flex items-center justify-between rounded-[10px] border border-[#E3E8E5] bg-[#FBFDFB] p-2.5 text-slate-900 transition hover:border-slate-300 hover:bg-white"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white shadow-2xs transition group-hover:scale-105">
-                          <FaTiktok className="h-4 w-4" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-slate-950 text-white shadow-2xs transition group-hover:scale-105">
+                          <FaTiktok className="h-3.5 w-3.5" />
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
@@ -329,15 +333,19 @@ export default function MedicForestAboutPage() {
                             <span className="text-[11px] font-semibold text-slate-700">@medwithrish</span>
                           </div>
                           <p className="text-[11px] text-slate-500">
-                            High-yield interview breakdowns &amp; tips
+                            Interview breakdowns &amp; tips
                           </p>
                         </div>
                       </div>
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-slate-400 group-hover:bg-slate-200/70 group-hover:text-slate-900">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-[6px] border border-[#E3E8E5] bg-white text-slate-400 transition group-hover:text-slate-700">
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </div>
                     </a>
                   </div>
+
+                  <p className="mt-3.5 text-[11px] text-slate-500">
+                    Usually responds within 24 hours to prospective medics.
+                  </p>
                 </div>
               </div>
             </div>
@@ -345,16 +353,16 @@ export default function MedicForestAboutPage() {
 
           {/* ─────────────────────────────────────────────────────────────
               3. PROVEN IMPACT
-              Header + 3 real student outcome metrics
+              Direct on background - heading on page, then individual result boxes underneath.
           ───────────────────────────────────────────────────────────── */}
-          <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xs sm:p-9 lg:p-10">
+          <section className="pt-2 space-y-6">
             {/* Header + Stats */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-end">
               <div className="lg:col-span-5">
-                <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   PROVEN IMPACT
-                </span>
-                <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                </p>
+                <h2 className="mt-1.5 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
                   Real progress, from real students.
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -363,33 +371,33 @@ export default function MedicForestAboutPage() {
               </div>
 
               <div className="lg:col-span-7">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
                   {/* Metric 1 */}
-                  <div className="rounded-xl border border-slate-100 bg-[#f8fafc] p-4 text-center sm:text-left">
+                  <div className="rounded-[12px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
                       2300-2400+
                     </div>
-                    <p className="mt-1 text-xs font-bold text-teal-700">
+                    <p className="mt-1 text-xs font-medium text-slate-500">
                       Top UCAT scores each season
                     </p>
                   </div>
 
                   {/* Metric 2 */}
-                  <div className="rounded-xl border border-slate-100 bg-[#f8fafc] p-4 text-center sm:text-left">
+                  <div className="rounded-[12px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
                       Oxbridge offers
                     </div>
-                    <p className="mt-1 text-xs font-bold text-teal-700">
+                    <p className="mt-1 text-xs font-medium text-slate-500">
                       Oxford &amp; Cambridge offers secured
                     </p>
                   </div>
 
                   {/* Metric 3 */}
-                  <div className="rounded-xl border border-slate-100 bg-[#f8fafc] p-4 text-center sm:text-left">
+                  <div className="rounded-[12px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-[#0c6b5e] sm:text-3xl">
                       +100-200 points
                     </div>
-                    <p className="mt-1 text-xs font-bold text-teal-700">
+                    <p className="mt-1 text-xs font-medium text-slate-500">
                       Average increase{" "}
                       <span className="font-black uppercase tracking-wide text-purple-700">
                         PER UCAT SECTION
@@ -400,14 +408,14 @@ export default function MedicForestAboutPage() {
               </div>
             </div>
 
-            {/* Real Student Success Stories from WhatsApp & Official Score Reports */}
+            {/* Real Student Success Stories Flip Grid */}
             <RealStudentSuccessStories />
           </section>
 
           {/* ─────────────────────────────────────────────────────────────
               4. READY TO START PREPARING? (FINAL CTA STRIP)
           ───────────────────────────────────────────────────────────── */}
-          <section className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-xs sm:p-8">
+          <section className="rounded-[16px] border border-[#E3E8E5] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] sm:p-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
                 <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">
@@ -421,7 +429,7 @@ export default function MedicForestAboutPage() {
               <div className="flex flex-wrap items-center gap-3">
                 <Link
                   href="/interviews"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#0c6b5e] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
+                  className="inline-flex items-center gap-2 rounded-[10px] bg-[#0c6b5e] px-6 py-3.5 text-xs sm:text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45]"
                 >
                   <span>Start practising</span>
                   <ArrowRight className="h-4 w-4" />
@@ -429,7 +437,7 @@ export default function MedicForestAboutPage() {
 
                 <Link
                   href="/medicforest/tutoring"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-xs sm:text-sm font-semibold text-slate-800 shadow-2xs transition hover:border-teal-300 hover:text-teal-900"
+                  className="inline-flex items-center gap-2 rounded-[10px] border border-[#E3E8E5] bg-white px-5 py-3.5 text-xs sm:text-sm font-semibold text-slate-800 shadow-2xs transition hover:border-slate-300 hover:text-slate-950"
                 >
                   <span>Explore tutoring</span>
                 </Link>
