@@ -1,0 +1,40 @@
+import type { InterviewQuestion } from "./interviewQuestionBank";
+
+export const DATA_INTERPRETATION_STATION_QUESTIONS = [
+  {
+    id: "iq-18-101-data-stations",
+    text: "What can you understand or interpret from this graph?",
+    category: "Practical MMI & Role Play",
+    subcategory: "Data Stations",
+    sourceSection: 18,
+    sourceSectionTitle: "DATA INTERPRETATION & CRITICAL APPRAISAL",
+    sourceQuestionNumber: 101,
+    difficulty: "applied",
+    status: "not-attempted",
+    tags: ["practical-mmi-and-role-play", "data-stations", "applied", "data-interpretation-and-critical-appraisal"],
+  },
+  {
+    id: "iq-18-102-data-stations",
+    text: "What could explain this pattern? What hypothesis could you make?",
+    category: "Practical MMI & Role Play",
+    subcategory: "Data Stations",
+    sourceSection: 18,
+    sourceSectionTitle: "DATA INTERPRETATION & CRITICAL APPRAISAL",
+    sourceQuestionNumber: 102,
+    difficulty: "applied",
+    status: "not-attempted",
+    tags: ["practical-mmi-and-role-play", "data-stations", "applied", "data-interpretation-and-critical-appraisal"],
+  },
+  {
+    id: "iq-18-103-data-stations",
+    text: "What would you research or investigate to see if there is evidence for your hypothesis?",
+    category: "Practical MMI & Role Play",
+    subcategory: "Data Stations",
+    sourceSection: 18,
+    sourceSectionTitle: "DATA INTERPRETATION & CRITICAL APPRAISAL",
+    sourceQuestionNumber: 103,
+    difficulty: "applied",
+    status: "not-attempted",
+    tags: ["practical-mmi-and-role-play", "data-stations", "applied", "data-interpretation-and-critical-appraisal"],
+  },
+] as const satisfies readonly InterviewQuestion[];

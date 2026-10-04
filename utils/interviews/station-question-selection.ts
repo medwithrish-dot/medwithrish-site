@@ -2,6 +2,7 @@ import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type Interv
 import { stationQuestionCount } from "@/app/medicforest/interview/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 import { getQuestionStimulus } from "@/app/medicforest/interview/_data/interview-stimuli";
+import { DATA_INTERPRETATION_STATION_QUESTIONS } from "@/app/medicforest/interview/_data/data-interpretation-station";
 
 type StationQuestionRule = {
   sourceTopics?: readonly string[];
@@ -21,7 +22,9 @@ const rules: Record<string, StationQuestionRule> = {
 };
 
 const questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS;
-const questionByText = new Map<string, InterviewQuestion>(questions.map((question) => [question.text, question]));
+const questionByText = new Map<string, InterviewQuestion>(
+  [...questions, ...DATA_INTERPRETATION_STATION_QUESTIONS].map((question) => [question.text, question]),
+);
 
 function seedNumber(seed: string) {
   let value = 2166136261;
@@ -42,6 +45,9 @@ function matchingQuestions(stationSlug: string) {
  * topic stay within that topic; older questions fall back to their subcategory.
  */
 export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
+  // A data station is one visual explored in three stages, not three unrelated
+  // visual questions sampled from the wider question bank.
+  if (stationSlug === "data-analysis") return [...DATA_INTERPRETATION_STATION_QUESTIONS];
   const count = stationQuestionCount(stationSeconds);
   const groups = new Map<string, InterviewQuestion[]>();
   for (const question of matchingQuestions(stationSlug)) {

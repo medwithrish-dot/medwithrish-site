@@ -20,6 +20,7 @@ function load(file) {
 }
 const { emptyApplicant, readApplicant, questionEligible } = load(resolve(root, "utils/interviews/applicant-profile"));
 const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection"));
+const { getQuestionStimulus } = load(resolve(root, "app/medicforest/interview/_data/interview-stimuli"));
 const { interviewerSpeech, answerConversation } = load(resolve(root, "app/medicforest/interview/_lib/interviewer-transcript"));
 const { questionTransition, DONE_PROMPT } = load(resolve(root, "app/medicforest/interview/_lib/station-flow"));
 const { standardInterviewUniversities, universityStationPresets, universityStationSlugs } = load(resolve(root, "app/medicforest/interview/_data/university-stations"));
@@ -56,6 +57,17 @@ test("randomised station selection never restores unconfirmed questions to fill 
     confirmedGapQuestions += selectStationQuestions("work-experience", 480, String(seed), { ...emptyApplicant, gapYear: true }).filter((question) => /gap year/i.test(question.text)).length;
   }
   assert.ok(confirmedGapQuestions > 0);
+});
+
+test("data interpretation asks three linked questions about one stimulus", () => {
+  const selected = selectStationQuestions("data-analysis", 300, "data-station-seed");
+  assert.deepEqual(selected.map((question) => question.text), [
+    "What can you understand or interpret from this graph?",
+    "What could explain this pattern? What hypothesis could you make?",
+    "What would you research or investigate to see if there is evidence for your hypothesis?",
+  ]);
+  assert.equal(new Set(selected.map((question) => getQuestionStimulus(question.id)?.src)).size, 1);
+  assert.equal(getQuestionStimulus(selected[0].id)?.id, "iq-18-001-data-stations");
 });
 
 test("university defaults only contain supported topics and academic interviews are excluded", () => {

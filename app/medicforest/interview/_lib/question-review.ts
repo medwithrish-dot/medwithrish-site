@@ -1,6 +1,7 @@
 import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion, type InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
 import { questionMarkingPoints } from "../_data/question-marking-points";
 import { suppliedMarkSchemes } from "../_data/supplied-mark-schemes";
+import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretation-station";
 
 export type MarkSchemeSection = {
   title: "General" | "Start" | "Middle" | "End" | "Mistakes";
@@ -311,8 +312,9 @@ export function getQuestionMarkScheme(question: InterviewQuestion): MarkSchemeSe
   ];
 }
 
-const questionsById = new Map<string, InterviewQuestion>(INTERVIEW_QUESTIONS.map((question) => [question.id, question]));
-const questionsByText = new Map<string, InterviewQuestion>(INTERVIEW_QUESTIONS.map((question) => [question.text, question]));
+const reviewQuestions: readonly InterviewQuestion[] = [...INTERVIEW_QUESTIONS, ...DATA_INTERPRETATION_STATION_QUESTIONS];
+const questionsById = new Map<string, InterviewQuestion>(reviewQuestions.map((question) => [question.id, question]));
+const questionsByText = new Map<string, InterviewQuestion>(reviewQuestions.map((question) => [question.text, question]));
 
 /** IDs are authoritative for saved attempts; text supports pre-ID attempts. */
 export function findReviewQuestion(id: string | null | undefined, text: string) {

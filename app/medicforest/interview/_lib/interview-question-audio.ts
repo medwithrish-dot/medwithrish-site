@@ -1,4 +1,5 @@
 import { INTERVIEW_QUESTIONS } from "../_data/interviewQuestionBank";
+import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretation-station";
 
 export type InterviewerVoice = "female" | "male";
 
@@ -103,15 +104,18 @@ export const INTERVIEWER_AUDIO_PROMPTS = [
   "Thanks. I have a follow-up question for you.",
 ] as const;
 
-export const INTERVIEW_AUDIO_QUESTION_COUNT = INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + INTERVIEWER_AUDIO_PROMPTS.length;
+const dataStationAudioStart = INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + INTERVIEWER_AUDIO_PROMPTS.length;
+export const INTERVIEW_AUDIO_QUESTION_COUNT = dataStationAudioStart + DATA_INTERPRETATION_STATION_QUESTIONS.length;
 
-const questionNumberById = new Map<string, number>(
-  INTERVIEW_QUESTIONS.map((question, index) => [question.id, index + 1]),
-);
+const questionNumberById = new Map<string, number>([
+  ...INTERVIEW_QUESTIONS.map((question, index) => [question.id, index + 1] as const),
+  ...DATA_INTERPRETATION_STATION_QUESTIONS.map((question, index) => [question.id, dataStationAudioStart + index + 1] as const),
+]);
 const questionNumberByText = new Map<string, number>([
   ...INTERVIEW_QUESTIONS.map((question, index) => [question.text, index + 1] as const),
   ...SUPPLEMENTAL_AUDIO_QUESTIONS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + index + 1] as const),
   ...INTERVIEWER_AUDIO_PROMPTS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + index + 1] as const),
+  ...DATA_INTERPRETATION_STATION_QUESTIONS.map((question, index) => [question.text, dataStationAudioStart + index + 1] as const),
 ]);
 
 export function getInterviewQuestionAudioSrc(

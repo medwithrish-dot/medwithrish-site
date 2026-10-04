@@ -41,7 +41,13 @@ export const interviewStimuli: readonly InterviewStimulus[] = Object.entries(sou
   id, src: `/medicforest/interview-stimuli/${id}.png`, title, description,
 }));
 const stimuliById = new Map(interviewStimuli.map((stimulus) => [stimulus.id, stimulus]));
+const sharedStimulusByQuestionId = new Map([
+  ["iq-18-101-data-stations", "iq-18-001-data-stations"],
+  ["iq-18-102-data-stations", "iq-18-001-data-stations"],
+  ["iq-18-103-data-stations", "iq-18-001-data-stations"],
+]);
 
 export function getQuestionStimulus(questionId: string | null | undefined) {
-  return questionId ? stimuliById.get(questionId) ?? null : null;
+  const stimulusId = questionId ? sharedStimulusByQuestionId.get(questionId) ?? questionId : null;
+  return stimulusId ? stimuliById.get(stimulusId) ?? null : null;
 }

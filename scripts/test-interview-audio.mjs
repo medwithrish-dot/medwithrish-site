@@ -43,7 +43,7 @@ function readQuestionCsv() {
 
 test("questions.csv remains aligned with bank IDs and every recorded voice file", () => {
   const rows = readQuestionCsv();
-  assert.equal(rows.length, 654);
+  assert.equal(rows.length, 657);
   assert.equal(INTERVIEW_AUDIO_QUESTION_COUNT, rows.length);
   assert.equal(INTERVIEW_QUESTIONS.length, 561);
 

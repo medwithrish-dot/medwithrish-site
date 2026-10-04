@@ -66,7 +66,7 @@ const { questionIdForText, selectStationQuestions } = load(resolve(root, "utils/
 
 test("all 561 questions have independently authored content, with no category or question-text substitution", () => {
   assert.equal(INTERVIEW_QUESTIONS.length, 561);
-  assert.equal(Object.keys(questionMarkingPoints).length, 561);
+  assert.equal(Object.keys(questionMarkingPoints).length, 564);
   const content = new Set();
   const middles = new Set();
   for (const question of INTERVIEW_QUESTIONS) {
@@ -182,22 +182,20 @@ test("AI marking receives the exact source facts and criteria, including legacy 
   assert.equal(assessmentGuidance([{ question: "Older wording", id: question.id }])[0].questionId, question.id);
 });
 
-test("every data Med interview has visuals and all 15 data sources can be selected", () => {
+test("a data Med interview asks three staged questions about one visual", () => {
   const { findReviewQuestion } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
   for (const text of interviewStations.find(station => station.slug === "data-analysis").questions) {
     assert.ok(getQuestionStimulus(findReviewQuestion(null, text)?.id), "The preview also needs a matching image");
   }
-  const selected = new Set();
   for (let seed = 0; seed < 100; seed++) {
     const questions = selectStationQuestions("data-analysis", 480, String(seed));
     assert.equal(questions.length, 3);
     assert.equal(new Set(questions.map(question => question.id)).size, 3);
-    for (const question of questions) {
-      assert.ok(getQuestionStimulus(question.id), question.id);
-      selected.add(question.id);
-    }
+    assert.equal(new Set(questions.map(question => getQuestionStimulus(question.id)?.src)).size, 1);
+    assert.deepEqual(questions.map(question => question.text), interviewStations.find(station => station.slug === "data-analysis").questions);
+    assert.match(JSON.stringify(getQuestionMarkScheme(questions[1])), /possible confounders/);
+    assert.match(JSON.stringify(getQuestionMarkScheme(questions[2])), /support or weaken the hypothesis/);
   }
-  assert.equal(selected.size, 15);
 });
 
 test("probing is owner-enabled for every current station but never unknown slugs", () => {
