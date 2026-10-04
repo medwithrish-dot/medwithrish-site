@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     const body = (await request.json().catch(() => null)) as {
       packageId?: string;
       email?: string;
+      returnTo?: string;
     } | null;
 
     if (!body?.packageId || !(body.packageId in TUTORING_PRICE_ENV_MAP)) {
@@ -63,6 +64,14 @@ export async function POST(request: Request) {
 
     const stripe = new Stripe(secretKey);
     const siteUrl = getRequiredSiteUrl(request);
+    const returnPath =
+      body.returnTo === "interviews"
+        ? "/medicforest/interview/tutoring"
+        : "/medicforest/tutoring";
+    const source =
+      body.returnTo === "interviews"
+        ? "medicforest-interview-tutoring"
+        : "medicforest-tutoring";
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -74,11 +83,14 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${siteUrl}/medicforest/tutoring?status=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/medicforest/tutoring?status=cancelled`,
+      success_url:
+        siteUrl +
+        returnPath +
+        "?status=success&session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: siteUrl + returnPath + "?status=cancelled",
       metadata: {
         packageId: body.packageId,
-        source: "medicforest-tutoring",
+        source,
       },
     });
 
