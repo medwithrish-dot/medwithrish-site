@@ -385,10 +385,10 @@ export default function MedicForestAboutPage() {
                   {/* Metric 2 */}
                   <div className="rounded-[12px] border border-[#E3E8E5] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] text-center sm:text-left">
                     <div className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
-                      Oxbridge offers
+                      Multiple offers
                     </div>
                     <p className="mt-1 text-xs font-medium text-slate-500">
-                      Oxford &amp; Cambridge offers secured
+                      4 / 4 medicine offers converted
                     </p>
                   </div>
 

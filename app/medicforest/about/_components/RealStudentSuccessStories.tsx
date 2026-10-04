@@ -25,14 +25,6 @@ interface RealStory {
 const ALL_REAL_STORIES: RealStory[] = [
   // Flip Page 1: Flagship Offers & High Scores
   {
-    id: "cambridge-offer",
-    imageSrc: "/success-stories/oxbridge.jpeg",
-    title: "Cambridge Medicine (A100) offer",
-    subtitle: "Official UCAS offer secured for Medicine at University of Cambridge",
-    tag: "Oxbridge Offer",
-    highlightText: "University of Cambridge (C05)",
-  },
-  {
     id: "story-4-offers",
     imageSrc: "/success-stories/story1.jpeg",
     title: "Secured 4 / 4 Medicine offers",
@@ -80,7 +72,7 @@ const ALL_REAL_STORIES: RealStory[] = [
     id: "score-2410-b2",
     imageSrc: "/success-stories/story-2410-b2.png",
     title: "2410 Band 2 UCAT score",
-    subtitle: "Top national percentile score targeting Cambridge and Imperial",
+    subtitle: "Top national percentile score targeting top medical schools",
     tag: "Top Decile UCAT",
     highlightText: "All 9s & 8s at GCSE · 2410 B2",
   },
@@ -266,7 +258,7 @@ export function RealStudentSuccessStories() {
                     + Many more...
                   </p>
                   <p className="mt-1 max-w-[210px] text-[11px] text-slate-600 leading-tight">
-                    Oxbridge, London, and medical school offers nationwide
+                    Russell Group, London, and medical school offers nationwide
                   </p>
                   <div className="mt-3.5 inline-flex items-center gap-1.5 rounded-full border border-[#E3E8E5] bg-white px-3 py-1 text-[11px] font-semibold text-slate-800 shadow-2xs transition group-hover:bg-[#F7FAF7]">
                     <FaInstagram className="h-3.5 w-3.5 text-pink-600" />
