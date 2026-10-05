@@ -339,17 +339,17 @@ function MedicForestAreaSwitcher({
         aria-expanded={open}
         aria-controls={menuId}
         title="Switch area"
-        className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+        className="group flex w-full cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#0b3431] px-2 py-2 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
-        <MedicForestBrandLogo className="h-10 w-[146px]" onDark />
+        <MedicForestBrandLogo className="h-8.5 w-[122px]" onDark />
         <span className="min-w-0 flex-1">
           <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
             UCAT Tutor
           </span>
         </span>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
           <ChevronDown
-            className={`h-4 w-4 transition-transform ${
+            className={`h-3.5 w-3.5 transition-transform ${
               open ? "rotate-180" : ""
             }`}
             aria-hidden="true"
@@ -5571,11 +5571,11 @@ function UCATDashboard({
   return (
     <div className="medicforest-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
       <div
-        className="grid min-h-screen lg:grid-cols-[230px_1fr]"
+        className="grid min-h-screen lg:grid-cols-[200px_1fr]"
         aria-hidden={authGateActive}
         inert={authGateActive ? true : undefined}
       >
-        <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block">
+        <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-3 py-5 text-slate-100 lg:block">
           <MedicForestAreaSwitcher
             open={areaSwitcherOpen}
             onOpen={() => {
@@ -5590,7 +5590,7 @@ function UCATDashboard({
             menuId="medicforest-area-switcher"
           />
 
-          <nav className="mt-8 space-y-2">
+          <nav className="mt-8 space-y-1.5">
             {dashboardNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -5600,73 +5600,73 @@ function UCATDashboard({
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
+                  className={`flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[13px] font-semibold transition-colors ${
                     isActive
                       ? "bg-[#123f3b] text-[#89e4df] shadow-sm"
                       : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
                   }`}
                 >
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                  {item.label}
+                  <Icon className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}
           </nav>
 
           <div className="mt-8">
-            <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
+            <p className="px-3 text-xs font-bold uppercase tracking-wide text-slate-500">
               Community
             </p>
-            <div className="mt-3 space-y-2">
+            <div className="mt-2.5 space-y-1.5">
               <Link
                 href="/medicforest/ucat/groups"
-                className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
+                className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[13px] font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
               >
-                <Users className="h-5 w-5" aria-hidden="true" />
+                <Users className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
                 Groups
               </Link>
               <Link
                 href="/resources"
-                className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
+                className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[13px] font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
               >
-                <BookOpen className="h-5 w-5" aria-hidden="true" />
+                <BookOpen className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
                 Guides
               </Link>
             </div>
           </div>
 
           <div className="mt-8">
-            <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
+            <p className="px-3 text-xs font-bold uppercase tracking-wide text-slate-500">
               Skills Trainers
             </p>
             <Link
               href="/medicforest/ucat/skills-trainers"
-              className={`mt-3 flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
+              className={`mt-2.5 flex h-11 w-full items-center gap-3 rounded-xl px-3 text-[13px] font-semibold transition-colors ${
                 view === "skills-trainers"
                   ? "bg-[#123f3b] text-[#89e4df] shadow-sm"
                   : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
               }`}
             >
-              <Zap className="h-5 w-5" aria-hidden="true" />
+              <Zap className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
               Calculator + Flags
             </Link>
           </div>
 
           {plan !== "Premium" && (
-            <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
-                <BadgeCheck className="h-6 w-6" aria-hidden="true" />
+            <div className="mt-7 rounded-xl border border-white/10 bg-[#082f2c] p-3.5 shadow-sm">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
+                <BadgeCheck className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h2 className="mt-4 text-sm font-bold text-white">
+              <h2 className="mt-3 text-xs font-bold text-white">
                 Unlock Premium diagnostics
               </h2>
-              <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
+              <p className="mt-2 text-xs font-medium leading-5 text-slate-300">
                 Go Premium for diagnostic mocks, deeper analytics and a daily
                 AI diagnostic credit.
               </p>
               <Link
                 href="/medicforest/pricing"
-                className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
+                className="mt-4 flex h-9 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-xs font-bold text-white transition-colors hover:bg-[#14888c]"
               >
                 View Plans
               </Link>

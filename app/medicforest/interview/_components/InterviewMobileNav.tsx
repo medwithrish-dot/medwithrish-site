@@ -26,7 +26,7 @@ const landingLinks = [
   ["Med Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
   ["Resources", "/resources"],
-  ["Feedback and Support", "/feedback"],
+  ["Feedback & Support", "/feedback"],
   ["Manage Account", "/account"],
 ] as const;
 

@@ -66,7 +66,7 @@ export function FeedbackPageClient() {
               Help &amp; Support · MedicForest
             </p>
             <h1 className="mt-2 text-4xl font-black tracking-tight text-[#0d2c2e] sm:text-5xl">
-              Feedback and Support
+              Feedback &amp; Support
             </h1>
             <p className="mt-4 text-base leading-7 text-[#4a6568]">
               Have a question about Med interview tutoring, UCAT prep, or your MedicForest account?

@@ -95,7 +95,7 @@ export default function MedicForestAboutPage() {
       <div className="relative isolate min-h-screen text-slate-900 pb-20 overflow-x-hidden">
         {/* ── Quiet Ambient Background Layer ── */}
         <div
-          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[230px]"
+          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[200px]"
           aria-hidden="true"
           style={{
             backgroundColor: "#F7FAF7",

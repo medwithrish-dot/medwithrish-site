@@ -203,7 +203,7 @@ export function InterviewAccountControls() {
                 role="menuitem"
               >
                 <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                Feedback and Support
+                Feedback & Support
               </Link>
               <Link
                 href="/medicforest/ucat/dashboard"

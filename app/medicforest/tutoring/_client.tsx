@@ -472,7 +472,7 @@ export function TutoringPageClient() {
       <div className="relative isolate min-h-screen text-slate-900 px-6 py-8 sm:px-10 lg:py-10">
         {/* ── Quiet Ambient Background Layer ── */}
         <div
-          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[230px]"
+          className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[200px]"
           aria-hidden="true"
           style={{
             backgroundColor: "#F7FAF7",

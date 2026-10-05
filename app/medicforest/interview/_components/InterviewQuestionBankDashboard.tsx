@@ -445,7 +445,7 @@ function QuestionBankCategoryView({
   return (
     <main className="medicforest-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-auto lg:overflow-hidden">
       <InterviewMobileNav activeLabel="Question Bank" />
-      <div className="grid min-h-screen lg:h-full lg:min-h-0 lg:grid-cols-[230px_1fr]">
+      <div className="grid min-h-screen lg:h-full lg:min-h-0 lg:grid-cols-[200px_1fr]">
         <InterviewSidebar
           activeLabel="Question Bank"
           showPremiumCard={showPremiumCard}
@@ -1223,7 +1223,7 @@ export function InterviewQuestionBankDashboard({
   return withSyncNotice(
     <main className="medicforest-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-auto lg:overflow-hidden">
       <InterviewMobileNav activeLabel="Question Bank" />
-      <div className="grid min-h-screen lg:h-full lg:min-h-0 lg:grid-cols-[230px_1fr]">
+      <div className="grid min-h-screen lg:h-full lg:min-h-0 lg:grid-cols-[200px_1fr]">
         <InterviewSidebar
           activeLabel="Question Bank"
           showPremiumCard={showPremiumCard}

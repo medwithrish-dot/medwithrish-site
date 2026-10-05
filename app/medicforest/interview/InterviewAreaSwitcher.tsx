@@ -60,9 +60,9 @@ export function InterviewAreaSwitcher({
     return (
       <div
         data-medicforest-static-brand
-        className="flex w-full items-center rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 shadow-sm"
+        className="flex w-full items-center rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2 shadow-sm"
       >
-        <MedicForestLogo className="h-10 w-[148px]" onDark />
+        <MedicForestLogo className="h-9 w-[136px]" onDark />
       </div>
     );
   }
@@ -94,14 +94,14 @@ export function InterviewAreaSwitcher({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls="interview-area-switcher"
-        className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+        className="group flex w-full cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-[#0b3431] px-2 py-2 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
         <span className="min-w-0 flex-1">
-          <MedicForestLogo className="h-10 w-[148px]" onDark />
+          <MedicForestLogo className="h-8.5 w-[122px]" onDark />
         </span>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
           <ChevronDown
-            className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+            className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
             aria-hidden="true"
           />
         </span>
