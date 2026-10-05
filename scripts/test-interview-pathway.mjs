@@ -128,7 +128,8 @@ test("an older checklist refresh cannot erase a newly saved pathway step", async
   };
   const loaded = { exports: {} };
   new Function("require", "module", "exports", "window", "fetch", output)(name => {
-    if (name === "react") return react;
+    if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
+      if (name === "react") return react;
     if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
     if (name === "next/link") return { default: "link" };
     if (name === "lucide-react") return { Check: "icon", Loader2: "icon" };

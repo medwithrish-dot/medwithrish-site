@@ -49,6 +49,7 @@ async function savedReview({ overrides = {}, serverNow = new Date().toISOString(
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports, AbortController, Date, crypto: { randomUUID },
     require(name) {
+      if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return react;
       if (name === "next/navigation") return { useRouter: () => router };
       if (name === "next/link") return { default: "link" };

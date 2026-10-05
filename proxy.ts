@@ -1,10 +1,6 @@
+import { guardApiRequest } from "@/utils/security/api-guard";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  isValidMedicForestPreviewToken,
-  MEDICFOREST_PREVIEW_COOKIE,
-} from "@/utils/medicforest/preview-access";
-import { isPublicMedicForestPath } from "@/utils/medicforest/public-paths";
 import { isMedicForestHost, previewPathname } from "@/utils/medicforest/preview-routing";
 
 export async function proxy(request: NextRequest) {
@@ -12,28 +8,25 @@ export async function proxy(request: NextRequest) {
   const productHost = isMedicForestHost(request.nextUrl.hostname)
     || isMedicForestHost(request.headers.get("host"));
   const accessPathname = previewPathname(pathname, productHost);
-  const isProtectedMedicForestPath =
-    accessPathname.startsWith("/medicforest/") && !isPublicMedicForestPath(accessPathname);
-
-  if (isProtectedMedicForestPath) {
-    const previewToken = request.cookies.get(MEDICFOREST_PREVIEW_COOKIE)?.value;
-    const hasPreviewAccess = await isValidMedicForestPreviewToken(previewToken);
-
-    if (!hasPreviewAccess) {
-      const stayTunedUrl = request.nextUrl.clone();
-      stayTunedUrl.pathname = productHost ? "/" : "/medicforest";
-      stayTunedUrl.search = "";
-      stayTunedUrl.searchParams.set(
-        "preview",
-        accessPathname.startsWith("/medicforest/interview") ? "interview" : "ucat"
-      );
-
-      return NextResponse.redirect(stayTunedUrl);
+  if (accessPathname === "/medicforest/ucat" || accessPathname.startsWith("/medicforest/ucat/")) {
+    if (accessPathname !== "/medicforest/ucat/wip") {
+      const wipUrl = request.nextUrl.clone();
+      wipUrl.pathname = productHost ? "/ucat/wip" : "/medicforest/ucat/wip";
+      wipUrl.search = "";
+      return NextResponse.redirect(wipUrl);
     }
+    return NextResponse.next({ request });
   }
 
-  // Public marketing pages and guest views do not need a Supabase claim refresh.
-  if (!isProtectedMedicForestPath && !pathname.startsWith("/api/")) {
+  const apiFailure = guardApiRequest(request);
+  if (apiFailure) return apiFailure;
+
+  // Browse the interview platform freely. Features verify identity in their routes.
+  const needsSessionRefresh = accessPathname.startsWith("/medicforest/interview/")
+    || accessPathname === "/medicforest/account"
+    || pathname.startsWith("/api/interviews/")
+    || ["/api/stripe/create-checkout-session", "/api/stripe/create-portal-session", "/api/stripe/sync-checkout-session"].includes(pathname);
+  if (!needsSessionRefresh) {
     return NextResponse.next({ request });
   }
 
@@ -87,10 +80,6 @@ export const config = {
     "/medicforest/:path*",
     "/ucat/:path*",
     "/interviews/:path*",
-    "/api/ai/:path*",
-    "/api/interviews/:path*",
-    "/api/stripe/create-checkout-session",
-    "/api/stripe/create-portal-session",
-    "/api/stripe/sync-checkout-session",
+    "/api/:path*",
   ],
 };

@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { getStripeWebhookSecret } from "@/utils/billing/billing-config";
 import { createStripeClient } from "@/utils/billing/stripe-client";
 import { dispatchStripeWebhookEvent } from "@/utils/billing/webhooks/dispatch-stripe-event";
+import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
 
 export const runtime = "nodejs";
 
@@ -32,9 +33,10 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
 
   try {
-    const body = await request.text();
+    const body = await readLimitedText(request, 256_000);
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-  } catch {
+  } catch (error) {
+    if (error instanceof RequestBodyError) return Response.json({ error: error.message }, { status: error.status });
     return Response.json(
       { error: "Invalid Stripe webhook signature or payload." },
       { status: 400 }

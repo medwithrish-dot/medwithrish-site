@@ -32,7 +32,7 @@ interface ProfileData {
   diagnostic_credits: number | null;
 }
 
-export function ManageAccountClient() {
+export function ManageAccountClient({ initialAuthTab = "login", returnTo = null }: { initialAuthTab?: AuthTab; returnTo?: string | null }) {
   const router = useRouter();
   const profileLoadVersion = useRef(0);
   const [user, setUser] = useState<User | null>(null);
@@ -40,7 +40,7 @@ export function ManageAccountClient() {
   const [loading, setLoading] = useState(true);
 
   // Auth Form State
-  const [authTab, setAuthTab] = useState<AuthTab>("login");
+  const [authTab, setAuthTab] = useState<AuthTab>(initialAuthTab);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -138,6 +138,12 @@ export function ManageAccountClient() {
     };
   }, [supabase, loadUserProfile]);
 
+  useEffect(() => {
+    if (!user || !returnTo) return;
+    router.replace(returnTo);
+    router.refresh();
+  }, [user, returnTo, router]);
+
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!supabase) return;
@@ -161,6 +167,7 @@ export function ManageAccountClient() {
           password,
           options: {
             data: { full_name: trimmedName },
+            emailRedirectTo: `${window.location.origin}/medicforest/account${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ""}`,
           },
         });
 

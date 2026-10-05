@@ -26,6 +26,7 @@ function sessionRoute({ premium = true, previous = null, applicant = null } = {}
   }
   const query = {
     select() { return this; },
+    limit() { return this; },
     eq(key, value) { filters.push([key, value]); return this; },
     update(value) { mutations.push(value); return this; },
     async maybeSingle() { return { data: previous, error: null }; },
@@ -107,6 +108,21 @@ test("presets use supported university topics and preserve custom/free defaults"
     assert.equal(api.reservations[0].p_payload.station_count, count);
     assert.equal(api.reservations[0].p_payload.station_slug, "why-medicine");
   }
+});
+
+test("used trials reject Free retries, allow reservation replay, and route Premium retries to paid practice", async () => {
+  const previous = { id: "saved-trial", circuit_id: circuitId, status: "completed", mode: "free" };
+  const free = sessionRoute({ premium: false, previous });
+  const denied = await free.post({ mode: "free", circuitId: "22345678-1234-4234-8234-123456789012" });
+  assert.equal(denied.status, 403);
+  assert.match((await denied.json()).error, /free Why Medicine\? attempt/);
+  assert.equal(free.reservations.length, 0);
+  assert.equal((await free.post({ mode: "free", circuitId })).status, 200);
+  assert.equal(free.reservations[0].p_payload.mode, "free");
+  const premium = sessionRoute({ premium: true, previous });
+  assert.equal((await premium.post({ mode: "free", stationSlug: "data-analysis" })).status, 200);
+  assert.equal(premium.reservations[0].p_payload.mode, "station");
+  assert.equal(premium.reservations[0].p_payload.station_slug, "why-medicine");
 });
 
 test("empty, malformed and oversized station selections do not reserve an attempt", async () => {
@@ -244,6 +260,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   runInNewContext(output, {
     module: loaded, exports: loaded.exports, AbortController, URLSearchParams, Date, Error,
     require(name) {
+      if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
@@ -259,7 +276,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     localStorage: { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
     document: { addEventListener() {}, removeEventListener() {} },
     window: {
-      location: { search: "" }, setTimeout: () => 1, clearTimeout() {},
+      dispatchEvent: () => true, location: { search: "" }, setTimeout: () => 1, clearTimeout() {},
       history: { replaceState: (_state, _title, url) => { currentUrl = url; } },
       setInterval: (callback, milliseconds) => { intervals.set(milliseconds, callback); return milliseconds; },
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
@@ -638,6 +655,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
         return loadQuestionModule(resolve(root, `app/medicforest/interview/_lib/${name.split("/").at(-1)}.ts`), recordingWindow);
       }
       if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/medicforest/interview/_data/interview-stimuli.ts"));
+      if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return {
         useState: initial => [typeof initial === "function" ? initial() : initial, () => {}],
         useRef: current => ({ current }), useCallback: callback => callback,

@@ -157,7 +157,8 @@ test("the guest leaderboard shows a sign-in action instead of editable preferenc
   };
   const loaded = { exports: {} };
   new Function("require", "module", "exports", "fetch", output)(name => {
-    if (name === "react") return react;
+    if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
+      if (name === "react") return react;
     if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
     if (name === "next/link") return { __esModule: true, default: "link" };
     if (name === "lucide-react") return new Proxy({}, { get: () => "icon" });

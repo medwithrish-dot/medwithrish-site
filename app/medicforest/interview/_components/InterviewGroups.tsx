@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Clock3, Copy, Plus, RefreshCw, Users } from "lucide-react";
 import type { GroupDetail, GroupList } from "@/utils/interviews/groups";
@@ -83,7 +84,7 @@ export function InterviewGroups() {
       void loadList().then(() => setCode(pendingInvite)).catch((cause) => {
         setCode(pendingInvite);
         setSignedOut(cause instanceof GroupRequestError && cause.status === 401);
-        setError(errorMessage(cause));
+        if (!(cause instanceof GroupRequestError && cause.status === 401)) setError(errorMessage(cause));
       });
     }, 0);
     return () => clearTimeout(initialLoad);
@@ -134,6 +135,7 @@ export function InterviewGroups() {
 
   const act = async (action: string, payload: Record<string, unknown> = {}) => {
     if (actionInFlight.current) return false;
+    if (!requestFeatureAccess("free", "Study groups")) return false;
     actionInFlight.current = true;
     setBusy(action);
     setError("");
@@ -192,22 +194,22 @@ export function InterviewGroups() {
       {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}{signedOut && <p className="mt-2"><Link className="font-bold underline" href="/medicforest/account">Sign in or create an account</Link>, then return here to join your friends. Your invite is kept in this tab.</p>}</div>}
       {notice && <p role="status" className="rounded-xl bg-[#e5f5ef] p-3 text-sm text-[#075d4c]">{notice}</p>}
 
-      {!signedOut && <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <form className={panel} onSubmit={(event) => { event.preventDefault(); void act("create", { name }); }}>
           <h2 className="text-base font-bold">Create a study group</h2>
           <label htmlFor="study-group-name" className="mb-2 mt-4 block text-sm font-semibold">Group name</label>
           <input id="study-group-name" className={input} value={name} onChange={(event) => setName(event.target.value)} required minLength={2} maxLength={60} placeholder="Your Med interview study circle" autoComplete="off" />
-          <button className={`${button} mt-3`} disabled={!!busy || !list || name.trim().length < 2}><Plus className="h-4 w-4" aria-hidden="true" />{busy === "create" ? "Creating…" : "Create group"}</button>
+          <button type={signedOut ? "button" : "submit"} onClick={signedOut ? () => requestFeatureAccess("free", "Study groups") : undefined} className={`${button} mt-3`} disabled={!!busy || (!signedOut && (!list || name.trim().length < 2))}><Plus className="h-4 w-4" aria-hidden="true" />{busy === "create" ? "Creating…" : "Create group"}</button>
         </form>
         <form className={panel} onSubmit={(event) => { event.preventDefault(); void act("join", { code: parseInvite(code) }); }}>
           <h2 className="text-base font-bold">Join your friends</h2>
           <label htmlFor="study-group-code" className="mb-2 mt-4 block text-sm font-semibold">Invite link or code</label>
           <input id="study-group-code" className={input} value={code} onChange={(event) => setCode(event.target.value)} required maxLength={300} placeholder="Paste your friend’s invite" autoComplete="off" spellCheck={false} />
-          <button className={`${button} mt-3`} disabled={!!busy || !list || !code.trim()}>{busy === "join" ? "Joining…" : "Join group"}</button>
+          <button type={signedOut ? "button" : "submit"} onClick={signedOut ? () => requestFeatureAccess("free", "Study groups") : undefined} className={`${button} mt-3`} disabled={!!busy || (!signedOut && (!list || !code.trim()))}>{busy === "join" ? "Joining…" : "Join group"}</button>
         </form>
-      </div>}
+      </div>
 
-      {!list && !error && <p role="status" className="p-5 text-sm text-slate-600">Loading your study groups…</p>}
+      {!list && !error && !signedOut && <p role="status" className="p-5 text-sm text-slate-600">Loading your study groups…</p>}
       {!list && error && !signedOut && <button className={secondary} onClick={() => { setError(""); void loadList().catch((cause) => setError(errorMessage(cause))); }}><RefreshCw className="h-4 w-4" aria-hidden="true" />Try again</button>}
       {list && !signedOut && <div className="grid gap-5 xl:grid-cols-[250px_minmax(0,1fr)]">
         <aside className={`${panel} self-start`}>

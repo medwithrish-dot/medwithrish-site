@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { findInterviewStation, interviewStations } from "../_data/interview-stations";
@@ -236,6 +237,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   }, []);
 
   const showError = useCallback((failure: unknown) => {
+    if (failure instanceof InterviewRequestError && [401, 403].includes(failure.status)) {
+      requestFeatureAccess(failure.status === 403 ? "premium" : "free", "AI interview practice", true);
+    }
     setError(failure instanceof Error ? failure.message : "Something went wrong. Please try again.");
     setErrorStatus(failure instanceof InterviewRequestError ? failure.status : 0);
   }, []);
@@ -479,6 +483,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
 
   const startAttempt = async (options: StartOptions, asPreview = previewRef.current, plan = planRef.current) => {
     if (actionLockRef.current || submitLockRef.current) return;
+    if (!requestFeatureAccess(asPreview ? "free" : options.mode === "free" ? "trial" : "premium", "AI interview practice")) return;
     actionLockRef.current = true;
     setBusy("Opening your Med interview…");
     setError("");
@@ -512,7 +517,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         setReviewRequested(false);
       } else {
         const response = await requestSession("/api/interviews/session", "POST", options);
+        if (response.attempt?.mode === "free") window.dispatchEvent(new Event("medicforest:entitlements-changed"));
         const resumed = response.attempt;
+        if (resumed?.mode === "station" && plan?.mode === "free" && resumed.stationSlug === "why-medicine") plan = { ...plan, mode: "station" };
         const matchesPlan = resumed && plan && resumed.circuitId === options.circuitId && resumed.stationSlug === options.stationSlug && resumed.stationCount === plan.stationSlugs.length && resumed.mode === plan.mode && resumed.universitySlug === (plan.universitySlug ?? null);
         if (resumed && matchesPlan) {
           planRef.current = plan;

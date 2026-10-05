@@ -58,7 +58,8 @@ export async function POST(request: Request) {
   try {
     const body = await readInterviewBody(request);
     const { user, admin, isPremium } = await interviewContext();
-    const mode = body.mode;
+    const requestedFree = body.mode === "free";
+    let mode = body.mode;
     if (!["free", "university", "station", "reference"].includes(String(mode))) throw new InterviewError("Choose a Med interview mode");
     if (mode !== "free" && !isPremium) throw new InterviewError("University circuits and additional stations require Premium. The Why medicine? station is free.", 403);
     const university = typeof body.universitySlug === "string" ? findInterviewUniversity(body.universitySlug) : undefined;
@@ -75,6 +76,14 @@ export async function POST(request: Request) {
       count = body.stationCount;
     }
     if (!Number.isInteger(index) || index < 0 || index >= 20 || (!circuitMode && index !== 0)) throw new InterviewError("Invalid station number");
+    if (requestedFree) {
+      const { data: previousFree, error } = await admin.from("interview_attempts").select("id,circuit_id").eq("user_id", user.id).eq("mode", "free").limit(1).maybeSingle();
+      if (error) databaseError(error);
+      if (previousFree && previousFree.circuit_id !== body.circuitId) {
+        if (!isPremium) throw new InterviewError("Your free Why Medicine? attempt has already been used. Upgrade to Premium to practise again.", 403);
+        mode = "station";
+      }
+    }
     if (body.circuitId !== undefined && !validId(body.circuitId)) throw new InterviewError("Invalid circuit ID");
     const circuitId = typeof body.circuitId === "string" ? body.circuitId : randomUUID();
     if (index > 0) {
@@ -88,7 +97,7 @@ export async function POST(request: Request) {
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
-    const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
+    const station = requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const stationSeconds = mode === "university" ? university!.stationSeconds : 480;
     const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();

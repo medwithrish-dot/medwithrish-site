@@ -1,4 +1,5 @@
 import "server-only";
+import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
@@ -20,16 +21,16 @@ export function interviewJson(data: object, status = 200) {
   return Response.json({ ...data, serverNow: new Date().toISOString() }, { status, headers: { "Cache-Control": "private, no-store" } });
 }
 export function interviewFailure(error: unknown) {
-  const status = error instanceof InterviewError ? error.status : 503;
+  const status = error instanceof InterviewError || error instanceof RequestBodyError ? error.status : 503;
   // Log operational metadata only: never answers, request bodies or provider keys.
   if (status >= 500) console.error("interview_service_failure", { status, kind: error instanceof Error ? error.name : "UnknownError" });
-  const response = interviewJson({ error: error instanceof InterviewError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
+  const response = interviewJson({ error: error instanceof InterviewError || error instanceof RequestBodyError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
   if (status === 429 || status === 503) response.headers.set("Retry-After", "15");
   return response;
 }
 export function databaseError(error: { code?: string; message: string }) {
   if (error.code === "42P01" || error.code === "PGRST202" || error.code === "PGRST205") throw new InterviewError("Med Interview storage is being set up. Please try again once setup is complete.", 503);
-  if (error.code === "P0001") throw new InterviewError(error.message, /limit reached/i.test(error.message) ? 429 : 409);
+  if (error.code === "P0001") throw new InterviewError(error.message, /free Why Medicine\? attempt/i.test(error.message) ? 403 : /limit reached/i.test(error.message) ? 429 : 409);
   throw new InterviewError("Your Med interview could not be saved. Please retry.", 503);
 }
 export async function readInterviewBody(request: Request) {
@@ -37,21 +38,7 @@ export async function readInterviewBody(request: Request) {
   if (origin && origin !== new URL(request.url).origin) throw new InterviewError("Invalid request origin", 403);
   if (Number(request.headers.get("content-length") ?? 0) > 45000) throw new InterviewError("Answer is too long", 413);
   if (!request.headers.get("content-type")?.includes("application/json")) throw new InterviewError("A JSON request is required", 415);
-  const reader = request.body?.getReader();
-  if (!reader) throw new InterviewError("A request body is required");
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    size += value.byteLength;
-    if (size > 45000) { await reader.cancel(); throw new InterviewError("Answer is too long", 413); }
-    chunks.push(value);
-  }
-  const bytes = new Uint8Array(size);
-  let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-  const text = new TextDecoder().decode(bytes);
+  const text = await readLimitedText(request);
   try {
     const body = JSON.parse(text);
     if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error();

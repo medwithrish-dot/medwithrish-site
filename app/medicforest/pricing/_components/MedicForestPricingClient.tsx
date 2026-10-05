@@ -18,7 +18,7 @@ import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePath
 
 const INTERVIEW_FREE_FEATURES = [
   "Unlimited Med interview question bank practice",
-  "1 free 'Why Medicine?' AI Med interview attempt",
+  "1 free 'Why Medicine?' AI attempt per account",
   "Free study groups and room practice",
   "University Med interview guides and station checklists",
   "Public leaderboard and community practice tools",
@@ -48,7 +48,7 @@ const COMPARE_ROWS: CompareRow[] = [
   },
   {
     feature: "AI 'Why Medicine?' interview attempt",
-    free: "1 free attempt",
+    free: "1 attempt per account",
     premium: true,
   },
   {

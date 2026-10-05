@@ -1,5 +1,7 @@
 "use client";
 
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
+
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
@@ -90,6 +92,7 @@ export function InterviewPathwayChecklist({
 
   async function toggle(stationId: string, done: boolean) {
     if (!ready || pending.current) return;
+    if (!requestFeatureAccess("free", "Station checklist")) return;
     pending.current = true;
     changeEpoch.current += 1;
     setBusy(stationId);

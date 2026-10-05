@@ -150,7 +150,7 @@ test("account profile requests cannot restore an earlier user's data after switc
     if (name === "@/utils/supabase/client") return { hasSupabaseConfig: () => true, createClient: () => client };
     return {};
   }, compiled, compiled.exports, { setTimeout: callback => timers.push(callback), clearTimeout() {} });
-  compiled.exports.ManageAccountClient();
+  compiled.exports.ManageAccountClient({});
   const cleanup = effects[0]();
   authChanged("SIGNED_IN", { user: { id: "first" } }); timers.shift()();
   authChanged("SIGNED_IN", { user: { id: "second" } }); timers.shift()();

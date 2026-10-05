@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
 import { ArrowRight, AudioLines, BookOpenCheck, Mic, RotateCcw, ShieldCheck } from "lucide-react";
 import { interviewHistory } from "@/utils/interviews/history";
 import { UniversityCatalogue } from "../universities/UniversityCatalogue";
@@ -29,8 +30,8 @@ export async function AIInterviewLanding() {
         </div>
         {freeAttempt ? <div className={styles.heroActions}>
           <Link href={`/medicforest/interview/reports/${encodeURIComponent(freeAttempt.id)}`} className={styles.primaryAction}><BookOpenCheck size={18} aria-hidden="true" /> Review last attempt <ArrowRight size={18} aria-hidden="true" /></Link>
-          <Link href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.retryAction}><RotateCcw size={15} aria-hidden="true" /> Retry the challenge</Link>
-        </div> : <Link href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Try the free Med interview <ArrowRight size={18} aria-hidden="true" /></Link>}
+          <FeatureActionLink tier="trial" feature="Why Medicine? practice" href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.retryAction}><RotateCcw size={15} aria-hidden="true" /> Retry the challenge</FeatureActionLink>
+        </div> : <FeatureActionLink tier="trial" feature="Why Medicine? practice" href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Try the free Med interview <ArrowRight size={18} aria-hidden="true" /></FeatureActionLink>}
       </section>
       <UniversityCatalogue mode="practice" recentAttempts={recentUniversityAttempts} />
     </div>

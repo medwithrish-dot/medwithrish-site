@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getRequiredSiteUrl } from "@/utils/site-url";
+import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
 
 export const runtime = "nodejs";
 
@@ -29,13 +30,13 @@ function normaliseEmail(value: unknown): string | null {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json().catch(() => null)) as {
+    const body = JSON.parse(await readLimitedText(request, 12_000)) as {
       packageId?: string;
       email?: string;
       returnTo?: string;
     } | null;
 
-    if (!body?.packageId || !(body.packageId in TUTORING_PRICE_ENV_MAP)) {
+    if (typeof body?.packageId !== "string" || !Object.hasOwn(TUTORING_PRICE_ENV_MAP, body.packageId)) {
       return NextResponse.json(
         { error: "Please choose a valid tutoring package." },
         { status: 400 }
@@ -99,11 +100,13 @@ export async function POST(request: Request) {
       url: session.url,
     });
   } catch (error) {
-    console.error("Error creating tutoring checkout session:", error);
+    if (error instanceof RequestBodyError) return NextResponse.json({ error: error.message }, { status: error.status });
+    if (error instanceof SyntaxError) return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    console.error("Tutoring checkout session failed.");
     return NextResponse.json(
       {
         configured: false,
-        error: error instanceof Error ? error.message : "Failed to create session",
+        error: "Could not start checkout. Please retry.",
       },
       { status: 500 }
     );

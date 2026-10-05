@@ -8,7 +8,7 @@ import { randomUUID } from "node:crypto";
 
 const { PGlite } = createRequire(import.meta.url)("@electric-sql/pglite");
 const db = new PGlite();
-const ids = Object.fromEntries(["owner", "friend", "outsider", "daily", "monthly", "claims", "private", "third", "ties"].map((name) => [name, randomUUID()]));
+const ids = Object.fromEntries(["owner", "friend", "outsider", "daily", "monthly", "claims", "private", "third", "ties", "trial"].map((name) => [name, randomUUID()]));
 const transcript = "I want to study medicine because I value combining careful scientific reasoning with compassionate support for people. Volunteering taught me to listen and reflect on each person's priorities.";
 let checks = 0;
 
@@ -80,6 +80,7 @@ try {
   `);
   const platformSql = await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8");
   const gradingGuardSql = await readFile(new URL("../supabase/medicforest_interview_grading_guard.sql", import.meta.url), "utf8");
+  const freeTrialSql = await readFile(new URL("../supabase/medicforest_interview_free_trial.sql", import.meta.url), "utf8");
   const publicLeaderboardSql = await readFile(new URL("../supabase/medicforest_interview_public_leaderboard.sql", import.meta.url), "utf8");
   const questionProgressSql = (await readFile(new URL("../supabase/medicforest_interview_question_progress.sql", import.meta.url), "utf8"))
     .replace('create extension if not exists "pgcrypto";', "");
@@ -89,6 +90,16 @@ try {
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(gradingGuardSql); await db.exec(gradingGuardSql);
     await db.exec(publicLeaderboardSql); await db.exec(publicLeaderboardSql);
+    await db.exec(freeTrialSql); await db.exec(freeTrialSql);
+  });
+  await check("guest leaderboard permission repair restores only the public RPC", async () => {
+    await db.exec("revoke execute on function public.interview_leaderboard() from anon");
+    await role("anon", null, () => assert.rejects(db.query("select * from public.interview_leaderboard()"), /permission denied/));
+    await db.exec(publicLeaderboardSql); await db.exec(publicLeaderboardSql);
+    await role("anon", null, async () => {
+      assert.deepEqual((await db.query("select * from public.interview_leaderboard()")).rows, []);
+      await assert.rejects(db.query("select * from public.interview_attempts"), /permission denied/);
+    });
   });
   for (const [name, id] of Object.entries(ids)) {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
@@ -136,15 +147,26 @@ try {
     await db.query("update public.interview_attempts set status='completed' where id=$1", [old.id]);
     const duplicate = await reserve(ids.daily, station({ circuit_id: old.circuit_id }), 2, 30);
     assert.equal(duplicate.id, old.id);
-    const second = await reserve(ids.daily, station(), 2, 30);
+    const second = await reserve(ids.daily, station({ mode: "station" }), 2, 30);
     await db.query("update public.interview_attempts set status='completed' where id=$1", [second.id]);
-    await assert.rejects(reserve(ids.daily, station(), 2, 30), /Daily interview limit reached/);
+    await assert.rejects(reserve(ids.daily, station({ mode: "station" }), 2, 30), /Daily interview limit reached/);
     assert.equal((await reserve(ids.daily, station({ circuit_id: old.circuit_id }), 2, 30)).id, old.id);
+  });
+  await check("one free trial is durable across abandonment, old dates, and duplicate reservations", async () => {
+    const payload = station();
+    const first = await reserve(ids.trial, payload, 20, 300);
+    assert.equal((await reserve(ids.trial, payload, 20, 300)).id, first.id);
+    await db.query("update public.interview_attempts set status='failed',last_error='abandoned',started_at=now()-interval '60 days' where id=$1", [first.id]);
+    assert.equal((await reserve(ids.trial, payload, 20, 300)).id, first.id);
+    await assert.rejects(reserve(ids.trial, station(), 20, 300), /free Why Medicine\? attempt has already been used/);
+    const paid = await reserve(ids.trial, station({ mode: "station" }), 20, 300);
+    assert.equal(paid.mode, "station");
+    assert.equal((await db.query("select count(*) as n from public.interview_attempts where user_id=$1 and mode='free'", [ids.trial])).rows[0].n, 1);
   });
   await check("monthly quota counts older stations outside the daily window", async () => {
     await attempt(ids.monthly, { startedAt: new Date(Date.now() - 2 * 86400_000).toISOString() });
     await attempt(ids.monthly, { startedAt: new Date(Date.now() - 3 * 86400_000).toISOString() });
-    await assert.rejects(reserve(ids.monthly, station(), 20, 2), /Monthly interview limit reached/);
+    await assert.rejects(reserve(ids.monthly, station({ mode: "station" }), 20, 2), /Monthly interview limit reached/);
   });
 
   const gradeId = await attempt(ids.claims, { status: "failed" });

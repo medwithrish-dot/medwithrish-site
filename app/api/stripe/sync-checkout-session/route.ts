@@ -1,6 +1,7 @@
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { synchronizeCheckoutSession } from "@/utils/billing/billing-service";
 import { toBillingResponse } from "@/utils/billing/billing-errors";
+import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
 
 export const runtime = "nodejs";
 
@@ -18,8 +19,9 @@ export async function POST(request: Request) {
 
     let body: unknown;
     try {
-      body = await request.json();
-    } catch {
+      body = JSON.parse(await readLimitedText(request, 12_000));
+    } catch (error) {
+      if (error instanceof RequestBodyError) throw error;
       return Response.json({ error: "Invalid request body." }, { status: 400 });
     }
 

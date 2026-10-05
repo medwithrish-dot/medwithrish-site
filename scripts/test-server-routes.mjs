@@ -406,45 +406,42 @@ test("full mock AI rejects duplicate sections before using a credit", async () =
   assert.equal(response.status, 400);
 });
 
-test("proxy only refreshes authentication for account pages and authenticated APIs", () => {
+test("proxy covers API guards and product paths but excludes unrelated marketing pages", () => {
   const { config } = load("proxy.ts");
   // The installed Next 16 test package still exports the legacy helper name.
   const { unstable_doesMiddlewareMatch: doesProxyMatch } = require("next/experimental/testing/server");
-  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/medicforest/preview-access"]) {
+  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), false, url);
   }
-  for (const url of ["/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {
+  for (const url of ["/api/stripe/webhook", "/api/medicforest/preview-access", "/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), true, url);
   }
 });
 
-test("preview proxy gates clean product Med interview paths while keeping public paths open", async () => {
+test("interview browsing requires no preview cookie and UCAT stays locked on either host", async () => {
   const { NextRequest } = require("next/server");
+  let claimReads = 0;
   const { proxy } = load("proxy.ts", {
-    "@supabase/ssr": { createServerClient: () => assert.fail("public or denied requests must not refresh auth") },
-    "@/utils/medicforest/preview-access": {
-      MEDICFOREST_PREVIEW_COOKIE: "medicforest_preview_access",
-      isValidMedicForestPreviewToken: async () => false,
-    },
+    "@supabase/ssr": { createServerClient: () => ({ auth: { getClaims: async () => { claimReads++; return { data: { claims: null } }; } } }) },
   });
-
-  await withEnv({ NEXT_PUBLIC_SUPABASE_URL: "https://supabase.example.test", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-key", NEXT_PUBLIC_SUPABASE_ANON_KEY: undefined }, async () => {
-    const denied = await proxy(new NextRequest("https://medicforest.com/interviews/dashboard"));
-    assert.equal(denied.status, 307);
-    assert.equal(new URL(denied.headers.get("location")).pathname, "/");
-    assert.equal(new URL(denied.headers.get("location")).searchParams.get("preview"), "interview");
-
-    const prefixed = await proxy(new NextRequest("https://medwithrish.com/medicforest/interview/dashboard"));
-    assert.equal(prefixed.status, 307);
-    assert.equal(new URL(prefixed.headers.get("location")).pathname, "/medicforest");
-
-    const publicPage = await proxy(new NextRequest("https://medicforest.com/interviews/leaderboard"));
-    assert.equal(publicPage.status, 200);
-    assert.equal(publicPage.headers.get("location"), null);
+  await withEnv({ NEXT_PUBLIC_SUPABASE_URL: "https://supabase.example.test", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-key" }, async () => {
+    for (const url of ["https://medicforest.com/interviews/dashboard", "https://medwithrish.com/medicforest/interview/dashboard", "https://medicforest.com/interviews/leaderboard"]) {
+      const response = await proxy(new NextRequest(url));
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("location"), null);
+    }
+    assert.equal(claimReads, 3);
+    for (const [url, target] of [["https://medicforest.com/ucat/dashboard", "/ucat/wip"], ["https://medwithrish.com/medicforest/ucat/mocks/full/QR", "/medicforest/ucat/wip"]]) {
+      const response = await proxy(new NextRequest(url, { headers: { cookie: "medicforest_preview_access=old-token" } }));
+      assert.equal(response.status, 307);
+      assert.equal(new URL(response.headers.get("location")).pathname, target);
+    }
+    assert.equal((await proxy(new NextRequest("https://medicforest.com/ucat/wip"))).status, 200);
+    assert.equal(claimReads, 3);
   });
 });
 
-test("valid preview access still refreshes auth on protected Med interview pages", async () => {
+test("interview pages refresh auth without a passkey", async () => {
   const { NextRequest } = require("next/server");
   let claimReads = 0;
   const { proxy } = load("proxy.ts", {
@@ -479,47 +476,11 @@ test("brand and product crawler files advertise only their own domains", async (
   });
 });
 
-test("preview access rejects wrong passwords and redirect targets, and tokens rotate with the secret", async () => {
-  await withEnv({
-    MEDICFOREST_PREVIEW_PASSWORD: "preview-password",
-    MEDICFOREST_PREVIEW_TOKEN_SECRET: "first-secret",
-  }, async () => {
-    const { POST } = load("app/api/medicforest/preview-access/route.ts");
-    const {
-      createMedicForestPreviewToken,
-      isValidMedicForestPreviewToken,
-      MEDICFOREST_PREVIEW_COOKIE_MAX_AGE,
-    } = load("utils/medicforest/preview-access.ts");
-    const submit = (password, next) => POST(new Request("https://example.test/api/medicforest/preview-access", {
-      method: "POST",
-      body: new URLSearchParams({ password, next }),
-    }));
-
-    const denied = await submit("wrong", "/medicforest/interview/dashboard");
-    assert.equal(denied.status, 303);
-    assert.match(denied.headers.get("location"), /error=invalid/);
-    assert.equal(denied.headers.get("set-cookie"), null);
-
-    const granted = await submit("preview-password", "https://attacker.example/");
-    assert.equal(granted.status, 303);
-    assert.equal(granted.headers.get("location"), "https://example.test/medicforest");
-    assert.match(granted.headers.get("set-cookie"), /medicforest_preview_access=.*HttpOnly/i);
-    const issuedCookie = granted.headers.get("set-cookie").match(/medicforest_preview_access=([^;]+)/)?.[1];
-    assert.equal(await isValidMedicForestPreviewToken(issuedCookie), true);
-
-    const token = await createMedicForestPreviewToken();
-    assert.match(token, /^v2\.\d+\.[0-9a-f]{64}$/);
-    assert.equal(await isValidMedicForestPreviewToken(token), true);
-    const [version, issuedAtText, signature] = token.split(".");
-    const issuedAt = Number(issuedAtText);
-    assert.equal(await isValidMedicForestPreviewToken(`${version}.${issuedAtText}.${signature[0] === "0" ? "1" : "0"}${signature.slice(1)}`), false);
-    assert.equal(await isValidMedicForestPreviewToken(`${version}.${issuedAt + 1}.${signature}`), false);
-    assert.equal(await isValidMedicForestPreviewToken("a".repeat(64)), false);
-    assert.equal(await isValidMedicForestPreviewToken(token, (issuedAt + MEDICFOREST_PREVIEW_COOKIE_MAX_AGE + 1) * 1000), false);
-    assert.equal(await isValidMedicForestPreviewToken(token, (issuedAt - 61) * 1000), false);
-    process.env.MEDICFOREST_PREVIEW_TOKEN_SECRET = "second-secret";
-    assert.equal(await isValidMedicForestPreviewToken(token), false);
-  });
+test("retired passkeys never set a cookie or grant access", async () => {
+  const { POST } = load("app/api/medicforest/preview-access/route.ts");
+  const response = await POST(new Request("https://example.test/api/medicforest/preview-access", { method: "POST" }));
+  assert.equal(response.status, 410);
+  assert.equal(response.headers.get("set-cookie"), null);
 });
 
 test("leaderboard handlers reject offensive names before writing and mask legacy names on read", async () => {
@@ -560,7 +521,7 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
   assert.equal(writes.length, 1);
 });
 
-test("an auth-refresh outage allows route-level recovery without bypassing the preview gate", async () => {
+test("an auth-refresh outage preserves public interview navigation and UCAT lockdown", async () => {
   const { NextRequest } = require("next/server");
   let refreshes = 0;
   const mocks = {
@@ -578,7 +539,7 @@ test("an auth-refresh outage allows route-level recovery without bypassing the p
       assert.equal(response.headers.get("x-middleware-next"), "1");
       assert.equal(refreshes, 1);
       const denied = load("proxy.ts", { ...mocks, "@/utils/medicforest/preview-access": { ...mocks["@/utils/medicforest/preview-access"], isValidMedicForestPreviewToken: async () => false } });
-      assert.equal((await denied.proxy(new NextRequest("https://medicforest.com/interviews/dashboard"))).status, 307);
+      assert.equal((await denied.proxy(new NextRequest("https://medicforest.com/ucat/dashboard"))).status, 307);
       assert.equal(refreshes, 1);
     });
     assert.deepEqual(logs, [["auth_refresh_unavailable"]]);

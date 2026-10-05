@@ -1,3 +1,5 @@
+import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
+
 const FEEDBACK_RECIPIENT = process.env.FEEDBACK_TO_EMAIL?.trim() || "medwithrish@gmail.com";
 const FEEDBACK_SENDER = process.env.FEEDBACK_FROM_EMAIL?.trim() || "MedicForest Feedback <onboarding@resend.dev>";
 const MAX_BODY_BYTES = 12_000;
@@ -34,8 +36,9 @@ export async function POST(request: Request) {
 
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = JSON.parse(await readLimitedText(request, MAX_BODY_BYTES));
+  } catch (error) {
+    if (error instanceof RequestBodyError) return failure(error.message, error.status);
     return failure("Invalid request body.", 400);
   }
   if (!body || typeof body !== "object" || Array.isArray(body)) {
@@ -80,6 +83,7 @@ export async function POST(request: Request) {
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(10_000),
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
@@ -94,17 +98,15 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      const providerError = await response.text().catch(() => "");
       console.error("Feedback email provider rejected the request.", {
         status: response.status,
-        detail: providerError.slice(0, 500),
       });
       return failure("Feedback could not be sent right now. Please email us directly instead.", 502);
     }
 
     return Response.json({ ok: true });
-  } catch (error) {
-    console.error("Feedback email request failed.", error);
+  } catch {
+    console.error("Feedback email request failed.");
     return failure("Feedback could not be sent right now. Please email us directly instead.", 502);
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
@@ -76,6 +77,8 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
 
   const runAction = useCallback(async (action: Action) => {
     if (actionLockRef.current) return;
+    if (!requestFeatureAccess(action === "retry" ? attemptRef.current.mode === "free" ? "trial" : "premium" : "free", "Saved interview practice")) return;
+    if (!requestFeatureAccess(action === "retry" && attemptRef.current.mode !== "free" ? "premium" : "free", "Saved interview practice")) return;
     actionLockRef.current = true;
     setBusy(action === "retry" ? "Opening your new attempt…" : action === "generate" ? "Preparing your AI feedback…" : "Saving your station review…");
     setError("");
@@ -131,6 +134,7 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
       }
     } catch (failure) {
       if (liveRef.current) {
+        if (failure instanceof ReviewRequestError && [401, 403].includes(failure.status)) requestFeatureAccess(failure.status === 403 ? "premium" : "free", "Saved interview practice", true);
         setError(failure instanceof Error ? failure.message : "Your request could not be completed. Please retry.");
         setErrorStatus(failure instanceof ReviewRequestError ? failure.status : 0);
       }

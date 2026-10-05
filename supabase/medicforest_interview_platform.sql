@@ -61,6 +61,11 @@ begin
   if found then return v_row; end if;
   select * into v_row from public.interview_attempts where user_id=p_user and circuit_id=(p_payload->>'circuit_id')::uuid and station_index=(p_payload->>'station_index')::integer;
   if found then return v_row; end if;
+  if p_payload->>'mode' = 'free' and exists (
+    select 1 from public.interview_attempts where user_id=p_user and mode='free'
+  ) then
+    raise exception 'Your free Why Medicine? attempt has already been used. Upgrade to Premium to practise again.';
+  end if;
   select count(*) into v_count from public.interview_attempts where user_id=p_user and started_at >= now()-interval '24 hours';
   if v_count >= p_daily then raise exception 'Daily interview limit reached. Try again tomorrow.'; end if;
   select count(*) into v_count from public.interview_attempts where user_id=p_user and started_at >= now()-interval '30 days';

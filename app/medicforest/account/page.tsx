@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ManageAccountClient } from "./_client";
+import { safeInterviewReturnPath } from "@/utils/medicforest/feature-access";
 
 export const metadata: Metadata = {
   title: "Manage Account | MedicForest",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AccountPage() {
-  return <ManageAccountClient />;
+export default async function AccountPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const search = await searchParams;
+  return <ManageAccountClient initialAuthTab={search.mode === "signup" ? "signup" : "login"} returnTo={safeInterviewReturnPath(search.next)} />;
 }

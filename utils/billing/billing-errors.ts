@@ -1,3 +1,5 @@
+import { RequestBodyError } from "@/utils/security/request-body";
+
 export class BillingError extends Error {
   readonly statusCode: number;
 
@@ -92,6 +94,7 @@ export function toBillingResponse(
   error: unknown,
   fallbackMessage = "Billing operation failed."
 ): Response {
+  if (error instanceof RequestBodyError) return Response.json({ error: error.message }, { status: error.status });
   if (isBillingError(error)) {
     return Response.json({ error: error.message }, { status: error.statusCode });
   }

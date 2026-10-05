@@ -12,7 +12,6 @@ import {
   Check,
   CheckCircle,
   Eye,
-  LockKeyhole,
   ShieldCheck,
   Sparkles,
   Target,
@@ -85,13 +84,13 @@ function RedesignedTutorHero() {
       status: "Work in progress",
       text: "Full-length practice, AI diagnosis, progress insights and personalised coaching.",
       icon: Brain,
-      action: "Open UCAT dashboard",
+      action: "UCAT coming soon",
       href: "/medicforest/ucat/dashboard",
       active: true,
     },
     {
       title: "Medicine Med Interview",
-      status: "Work in progress",
+      status: "Open for practice",
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
       action: "Open Med interview dashboard",
@@ -527,7 +526,7 @@ function RedesignedTutorHero() {
             Choose your preparation dashboard.
           </h2>
           <p className="mt-1.5 text-sm text-slate-600">
-            UCAT and medicine Med interview preparation are both in private preview.
+            Interview preparation is open. The UCAT area is still being prepared.
           </p>
         </div>
 
@@ -637,63 +636,6 @@ function TutorHero() {
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 
-export function MedicForestLandingPage({
-  lockedArea = null,
-}: {
-  lockedArea?: "ucat" | "interview" | null;
-}) {
-  const lockedDashboard =
-    lockedArea === "interview"
-      ? {
-          label: "Medicine Med interview dashboard",
-          next: "/medicforest/interview/dashboard",
-        }
-      : lockedArea === "ucat"
-        ? { label: "UCAT dashboard", next: "/medicforest/ucat/dashboard" }
-        : null;
-
-  return (
-    <MedicForestLandingShell>
-      <TutorHero />
-      {lockedDashboard && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 px-5 py-8 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="preview-lock-title"
-        >
-          <div className="w-full max-w-md rounded-2xl border border-cyan-100 bg-white p-6 text-slate-950 shadow-2xl">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700">
-              <LockKeyhole className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <p className="mt-5 text-xs font-black uppercase tracking-widest text-cyan-700">
-              Work in progress
-            </p>
-            <h2 id="preview-lock-title" className="mt-2 text-2xl font-black">
-              The {lockedDashboard.label} is currently locked.
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              This area is still being polished. If you have the private access
-              key, you can open the preview on this browser.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
-              <Link
-                href={`/medicforest/access?next=${encodeURIComponent(lockedDashboard.next)}`}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800"
-              >
-                <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-                Enter access key
-              </Link>
-              <Link
-                href="/medicforest"
-                className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
-              >
-                Not yet
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-    </MedicForestLandingShell>
-  );
+export function MedicForestLandingPage() {
+  return <MedicForestLandingShell><TutorHero /></MedicForestLandingShell>;
 }

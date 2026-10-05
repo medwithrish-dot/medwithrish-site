@@ -112,16 +112,16 @@ export default function TermsAndConditionsPage() {
       <div className="mx-auto max-w-4xl px-5 py-10">
         <Link
           href="/"
-          className="inline-flex rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-700"
+          className="inline-flex rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-700"
         >
           Back to homepage
         </Link>
 
         <header className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-xs font-black uppercase tracking-wide text-blue-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
             Legal & Compliance
           </p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+          <h1 className="mt-3 text-3xl font-semibold tracking-normal sm:text-4xl">
             Terms and Conditions
           </h1>
           <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
@@ -136,8 +136,8 @@ export default function TermsAndConditionsPage() {
               key={section.title}
               className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
             >
-              <h2 className="text-xl font-black text-slate-900">{section.title}</h2>
-              <div className="mt-4 space-y-3 text-sm font-medium leading-7 text-slate-600">
+              <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
+              <div className="mt-4 space-y-3 text-base font-normal leading-7 text-slate-600">
                 {section.body.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
@@ -147,11 +147,11 @@ export default function TermsAndConditionsPage() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 className="text-base font-black text-slate-900">Related Legal Documents</h3>
+          <h3 className="text-base font-semibold text-slate-900">Related Legal Documents</h3>
           <p className="mt-1 text-sm text-slate-600">
             Our Privacy Policy and MedicForest AI Disclaimer provide additional detail on data protection and AI usage.
           </p>
-          <div className="mt-4 flex flex-wrap gap-4 text-sm font-bold">
+          <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
             <Link href="/privacy-policy" className="text-blue-600 hover:underline">
               Privacy Policy
             </Link>

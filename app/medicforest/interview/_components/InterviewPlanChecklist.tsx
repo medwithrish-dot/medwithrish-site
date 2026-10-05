@@ -1,5 +1,7 @@
 "use client";
 
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +15,7 @@ export function InterviewPlanChecklist({ tasks, compact = false, available = tru
 
   async function toggle(task: DashboardAnalytics["todayPlan"][number]) {
     if (busy || task.kind === "station") return;
+    if (!requestFeatureAccess("free", "Preparation plan")) return;
     setBusy(task.id); setError("");
     try {
       const response = await fetch("/api/interviews/preparation/tasks", {

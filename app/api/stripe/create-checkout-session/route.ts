@@ -2,6 +2,7 @@ import { createClient as createServerSupabaseClient } from "@/utils/supabase/ser
 import { getRequiredSiteUrl } from "@/utils/site-url";
 import { preparePremiumCheckout } from "@/utils/billing/billing-service";
 import { toBillingResponse } from "@/utils/billing/billing-errors";
+import { readLimitedText } from "@/utils/security/request-body";
 
 export const runtime = "nodejs";
 
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     }
 
     let returnArea: "ucat" | "interviews" = "ucat";
-    const bodyText = await request.text();
+    const bodyText = await readLimitedText(request, 12_000);
     if (bodyText) {
       let body: unknown;
       try {

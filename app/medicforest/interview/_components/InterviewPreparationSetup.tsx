@@ -1,5 +1,8 @@
 "use client";
 
+import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
+import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
+
 import Link from "next/link";
 import { useId, useRef, useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -75,6 +78,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
   const knownDateCount = savedProfile?.targets.filter((target) => target.interviewDate !== null).length || 0;
 
   function openEditor() {
+    if (!requestFeatureAccess("free", "Preparation plan")) return;
     setExpanded(true);
     setError("");
     setNotice("");
@@ -177,7 +181,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
       </button>}
     </div>
 
-    {!signedIn && <div className="border-t border-[#deebe5] px-5 py-4 sm:px-6"><p className="text-sm leading-6 text-[#536d72]">Sign in to keep your university choices and preparation plan in your account.</p><div className="mt-3 flex flex-wrap items-center gap-4"><Link href="/medicforest/account" className={primary}>Sign in / create account <ArrowRight size={15} aria-hidden="true" /></Link><Link href="/medicforest/interview/ai-interviews" className="text-xs font-bold text-[#08787b] hover:underline">Explore the free station</Link></div></div>}
+    {!signedIn && <div className="border-t border-[#deebe5] px-5 py-4 sm:px-6"><p className="text-sm leading-6 text-[#536d72]">Sign in to keep your university choices and preparation plan in your account.</p><div className="mt-3 flex flex-wrap items-center gap-4"><FeatureActionLink feature="Preparation plan" href="/medicforest/account" className={primary}>Set up my free plan <ArrowRight size={15} aria-hidden="true" /></FeatureActionLink><Link href="/medicforest/interview/ai-interviews" className="text-xs font-bold text-[#08787b] hover:underline">Explore the free station</Link></div></div>}
 
     {signedIn && !available && <div role="status" className="mx-5 mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900 sm:mx-6"><p>Saving preparation plans is not available yet. You can keep practising and return to add your targets once setup is complete.</p><button type="button" disabled={refreshing} onClick={() => startRefresh(() => router.refresh())} className="mt-2 inline-flex items-center gap-2 font-bold underline disabled:opacity-50">{refreshing && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}{refreshing ? "Checking…" : "Try again"}</button></div>}
     {notice && signedIn && <p role="status" className="mx-5 mb-4 flex items-start gap-2 rounded-xl bg-[#edf7ef] px-3.5 py-3 text-xs leading-5 text-[#296242] sm:mx-6"><Check size={15} className="mt-0.5 shrink-0" aria-hidden="true" />{notice}</p>}
