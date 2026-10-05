@@ -78,7 +78,7 @@ const navItems: {
 function Chevron() {
   return (
     <svg
-      className="h-3.5 w-3.5 text-slate-400 transition-transform duration-200 group-hover:text-blue-600 group-hover:rotate-180"
+      className="ml-0.5 h-3 w-3 text-slate-400 transition-transform duration-200 group-hover:text-blue-600 group-hover:rotate-180"
       fill="none"
       stroke="currentColor"
       strokeWidth="2.2"
@@ -96,26 +96,29 @@ export default function Navbar() {
 
   return (
     <>
-      <div aria-hidden="true" className="h-[64px]" />
+      <div aria-hidden="true" className="h-[60px]" />
 
-      <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md shadow-[0_2px_15px_-3px_rgba(15,23,42,0.04)] transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5">
-          <Link href="/" className="text-lg font-bold tracking-wide text-gray-900 transition hover:text-blue-600">
+      <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-[0_1px_8px_rgba(15,23,42,0.03)] transition-all">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
+          <Link
+            href="/"
+            className="text-[17px] font-bold tracking-tight text-slate-900 transition-colors hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-sm"
+          >
             MedWithRish
           </Link>
 
-          <nav className="hidden items-center gap-1.5 text-sm font-medium xl:flex">
+          <nav className="hidden items-center gap-1 text-sm font-medium xl:flex">
             {navItems.map((item) => {
               if (item.items) {
                 return (
                   <div key={item.label} className="group relative">
                     <Link
                       href={item.href ?? item.items[0].href}
-                      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13.5px] font-semibold text-slate-700 transition-all hover:bg-slate-100/80 hover:text-blue-700"
+                      className="flex items-center gap-1 rounded-full px-3 py-1.5 text-[13.5px] font-medium text-slate-700 transition-all hover:bg-slate-100/90 hover:text-blue-700"
                     >
                       <span>{item.label}</span>
                       {item.badge && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-2xs">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white shadow-2xs">
                           <Sparkles className="h-2.5 w-2.5" />
                           <span>{item.badge}</span>
                         </span>
@@ -123,7 +126,7 @@ export default function Navbar() {
                       <Chevron />
                     </Link>
 
-                    <div className="invisible absolute left-0 top-full z-50 mt-1.5 w-72 rounded-2xl border border-slate-200/90 bg-white/95 p-2 opacity-0 shadow-[0_20px_50px_rgba(15,23,42,0.12)] backdrop-blur-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="invisible absolute left-0 top-full z-50 mt-1.5 w-64 rounded-xl border border-slate-200/90 bg-white/98 p-1.5 opacity-0 shadow-[0_16px_36px_rgba(15,23,42,0.08)] backdrop-blur-md transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                       {item.items.map((subItem) =>
                         subItem.external ? (
                           <a
@@ -131,7 +134,7 @@ export default function Navbar() {
                             href={subItem.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[13.5px] font-medium text-slate-700 transition-all hover:bg-blue-50/80 hover:text-blue-700 hover:pl-4"
+                            className="flex items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 transition-all hover:bg-blue-50/80 hover:text-blue-700"
                           >
                             <span>{subItem.label}</span>
                             <ArrowUpRight className="h-3.5 w-3.5 text-slate-400" />
@@ -140,7 +143,7 @@ export default function Navbar() {
                           <Link
                             key={subItem.label}
                             href={subItem.href}
-                            className="block rounded-xl px-3.5 py-2.5 text-[13.5px] font-medium text-slate-700 transition-all hover:bg-blue-50/80 hover:text-blue-700 hover:pl-4"
+                            className="block rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 transition-all hover:bg-blue-50/80 hover:text-blue-700"
                           >
                             {subItem.label}
                           </Link>
@@ -181,13 +184,13 @@ export default function Navbar() {
                     rel="noopener noreferrer"
                     className={
                       item.special
-                        ? "inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-4 py-1.5 text-xs font-bold text-white shadow-sm shadow-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/35 hover:scale-[1.03] active:scale-[0.98]"
-                        : "rounded-full px-3 py-1.5 text-[13.5px] font-semibold text-slate-700 transition-all hover:bg-slate-100/80 hover:text-blue-700"
+                        ? "inline-flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-50 px-3.5 py-1 text-[13px] font-semibold text-emerald-800 transition-all hover:bg-emerald-100 hover:border-emerald-600/50 hover:text-emerald-900 active:scale-[0.98]"
+                        : "rounded-full px-3 py-1.5 text-[13.5px] font-medium text-slate-700 transition-all hover:bg-slate-100/90 hover:text-blue-700"
                     }
                   >
-                    {item.special && <Trees className="h-3.5 w-3.5 text-emerald-200" />}
+                    {item.special && <Trees className="h-3.5 w-3.5 text-emerald-600" />}
                     <span>{item.label}</span>
-                    {item.special && <ArrowUpRight className="h-3 w-3 text-emerald-200/80" />}
+                    {item.special && <ArrowUpRight className="h-3 w-3 text-emerald-500" />}
                   </a>
                 );
               }
@@ -196,7 +199,7 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href || "#"}
-                  className="rounded-full px-3 py-1.5 text-[13.5px] font-semibold text-slate-700 transition-all hover:bg-slate-100/80 hover:text-blue-700"
+                  className="rounded-full px-3 py-1.5 text-[13.5px] font-medium text-slate-700 transition-all hover:bg-slate-100/90 hover:text-blue-700"
                 >
                   {item.label}
                 </Link>
@@ -327,13 +330,13 @@ export default function Navbar() {
                       href={item.href || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-700 shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-emerald-600/30 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-800 transition-colors hover:bg-emerald-100"
                     >
                       <span className="inline-flex items-center gap-2">
-                        <Trees className="h-4 w-4 text-emerald-200" />
+                        <Trees className="h-4 w-4 text-emerald-600" />
                         <span>{item.label}</span>
                       </span>
-                      <ArrowUpRight className="h-4 w-4 text-emerald-200" />
+                      <ArrowUpRight className="h-4 w-4 text-emerald-500" />
                     </a>
                   );
                 }
