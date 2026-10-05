@@ -18,7 +18,7 @@ function compile(source) {
 
 test("public MedicForest pages import their lightweight clients directly", () => {
   const imports = [
-    ["../app/medicforest/page.tsx", "./_components/MedicForestLandingClient"],
+    ["../app/medicforest/page.tsx", "./interviews/page"],
     ["../app/medicforest/ucat/page.tsx", "../_components/MedicForestLandingClient"],
     ["../app/medicforest/pricing/page.tsx", "./_components/MedicForestPricingClient"],
   ];

@@ -1,37 +1,26 @@
 import type { Metadata } from "next";
-import { MedicForestLandingPage } from "./_components/MedicForestLandingClient";
-
-type LandingSearchParams = {
-  preview?: string | string[];
-};
+import InterviewsPage from "./interviews/page";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "MedicForest | AI-powered medical admissions preparation",
+    absolute: "MedicForest Interviews | 550+ free questions with markschemes",
   },
   description:
-    "Explore MedicForest features and pricing, then choose UCAT or medicine Med interview preparation.",
+    "Start practising immediately with 550+ free medicine interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "MedicForest | Medical Admissions Preparation",
+    title: "MedicForest Interviews | 550+ Free Med Interview Questions",
     description:
-      "Explore Med interview practice, free questions and personalised tutoring with MedicForest.",
+      "Start practising immediately with 550+ free medicine interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
     url: "/",
     siteName: "MedicForest",
     type: "website",
   },
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<LandingSearchParams>;
-}) {
-  const params = await searchParams;
-  const preview = Array.isArray(params.preview) ? params.preview[0] : params.preview;
-  const lockedArea = preview === "interview" || preview === "ucat" ? preview : null;
-
-  return <MedicForestLandingPage lockedArea={lockedArea} />;
+export default function Page() {
+  return <InterviewsPage />;
 }
+

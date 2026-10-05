@@ -120,7 +120,7 @@ export function getLandingActiveLabel(pathname: string) {
   if (path === "/about") return "About";
   if (path === "/pricing") return "Pricing";
   if (path.startsWith("/personal-statement")) return "Personal Statement";
-  if (path.startsWith("/interviews")) return "Med Interviews";
+  if (path === "/" || path.startsWith("/interviews")) return "Med Interviews";
   if (path.startsWith("/tutoring")) return "1-1 Tutoring";
   if (path.startsWith("/resources")) return "Resources";
   if (path.startsWith("/feedback")) return "Feedback & Support";
