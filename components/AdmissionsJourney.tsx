@@ -174,31 +174,23 @@ export default function AdmissionsJourney() {
 
   return (
     <section
-      id="journey"
-      ref={journeyRef}
-      className="relative overflow-hidden bg-gradient-to-b from-[#e9f1fa] via-[#f1f6fc] to-[#eaf1f8] px-6 py-14 md:py-20"
-    >
-      {/* Ambient background glows & subtle academic dot matrix */}
+  id="journey"
+  ref={journeyRef}
+  className="relative overflow-hidden bg-gradient-to-b from-[#eaf0f8] via-[#f1f6fc] to-[#eaf1f8] px-6 py-12 md:py-16"
+>
+      {/* Ambient background glows */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute right-0 top-10 h-[500px] w-[500px] rounded-full bg-indigo-300/20 blur-3xl" />
-        <div className="absolute left-0 bottom-10 h-[500px] w-[500px] rounded-full bg-blue-300/20 blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 -translate-x-1/2 h-80 w-[600px] rounded-full bg-cyan-200/15 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: "radial-gradient(#1e3a8a 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
+        <div className="absolute right-0 top-10 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
+        <div className="absolute left-0 bottom-10 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
       </div>
       <Reveal className="mx-auto max-w-6xl">
-      <div className="rounded-[2.5rem] border border-white/90 bg-white/90 p-6 shadow-[0_20px_60px_rgba(30,58,138,0.07)] backdrop-blur-md md:p-10">
+      <div className="rounded-[2.5rem] border border-white/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(38,62,105,0.08)] backdrop-blur-sm md:p-10">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/90 bg-white/90 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-700 shadow-xs backdrop-blur-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Admissions Roadmap
-          </span>
+          </p>
 
-          <h2 className="mt-3.5 text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-4xl">
             Your journey into medicine/dentistry
           </h2>
 

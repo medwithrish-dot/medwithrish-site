@@ -87,56 +87,22 @@ export default function SuccessStories() {
   return (
     <section
       id="success-stories"
-      className="relative overflow-hidden px-6 pt-10 pb-14 md:pt-14 md:pb-20"
+      className="relative overflow-hidden bg-gradient-to-b from-[#e8f1fb] via-[#eef5fc] to-[#eaf0f8] px-6 pt-8 pb-12 md:pt-10 md:pb-16"
     >
-      {/* ── Collegiate Academic Ambient Background with Layered Overlays ── */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden select-none" aria-hidden="true">
-        {/* Academic Image Layer */}
-        <div className="absolute inset-0">
-          <Image
-            src="/academic-ambient-bg.jpg"
-            alt="British collegiate university campus panorama"
-            fill
-            sizes="100vw"
-            className="object-cover object-top opacity-35 md:opacity-45"
-            priority
-          />
-        </div>
-
-        {/* Seamless Top & Bottom Blends */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1d4ed8]/25 via-[#eef5fc]/90 to-[#e9f1fa]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/75 via-transparent to-white/75" />
-
-        {/* Radial Ambient Lighting Orbs */}
-        <div className="absolute -left-20 top-10 h-[500px] w-[500px] rounded-full bg-blue-400/20 blur-3xl" />
-        <div className="absolute -right-20 top-40 h-[500px] w-[500px] rounded-full bg-indigo-400/20 blur-3xl" />
-        <div className="absolute left-1/2 bottom-10 -translate-x-1/2 h-[380px] w-[600px] rounded-full bg-cyan-300/20 blur-3xl" />
-
-        {/* Subtle geometric dot grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.035] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(#1e3a8a 1px, transparent 1px)`,
-            backgroundSize: "28px 28px",
-          }}
-        />
-
-        {/* Micro-grain texture (2% opacity) to remove digital sterility */}
-        <div
-          className="absolute inset-0 opacity-[0.02] mix-blend-multiply pointer-events-none"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          }}
-        />
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-20 -top-10 h-[440px] w-[440px] rounded-full bg-blue-300/30 blur-3xl" />
+        <div className="absolute -right-20 top-20 h-[460px] w-[460px] rounded-full bg-indigo-300/25 blur-3xl" />
+        <div className="absolute left-1/3 bottom-10 h-80 w-80 rounded-full bg-cyan-200/25 blur-3xl" />
       </div>
       <div className="mx-auto max-w-6xl">
         {/* Section heading */}
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/90 bg-white/90 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-700 shadow-xs backdrop-blur-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Student Success Stories
-          </span>
+          </p>
 
-          <h2 className="mt-3.5 text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-4xl">
             Real messages. Real offers. Real results.
           </h2>
 
@@ -161,33 +127,32 @@ export default function SuccessStories() {
         {/* Featured result */}
 <Reveal delay={80} className="mx-auto mt-8 max-w-3xl">
 <div id="featured-result">
-  <div className="relative overflow-hidden rounded-[2rem] border border-white/90 bg-white/90 p-5 shadow-[0_20px_50px_rgba(30,58,138,0.08)] backdrop-blur-md md:p-7">
+  <div className="relative overflow-hidden rounded-[1.75rem] border border-blue-200 bg-white p-4 shadow-[0_14px_40px_rgba(59,130,246,0.10)] md:p-5">
     <div className="pointer-events-none absolute inset-0">
-      <div className="absolute -left-10 top-6 h-28 w-28 rounded-full bg-blue-100/70 blur-3xl" />
-      <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-yellow-100/60 blur-3xl" />
+      <div className="absolute -left-10 top-6 h-24 w-24 rounded-full bg-blue-100/70 blur-3xl" />
+      <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-yellow-100/60 blur-3xl" />
     </div>
 
-    <div className="relative grid items-center gap-6 md:grid-cols-[0.9fr_260px]">
+    <div className="relative grid items-center gap-5 md:grid-cols-[0.9fr_260px]">
       <div className="max-w-md">
-        <span className="inline-flex rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white shadow-xs">
+        <span className="inline-flex rounded-full bg-blue-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
           Featured Result
         </span>
 
-        <h3 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+        <h3 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
           A UCAT score that beat 97% of test-takers.
         </h3>
 
-        <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
+        <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
           This is one of MULTIPLE students who I have helped get a UCAT score that was within the top 5%. This particular student went from &apos;failing&apos; his UCAT mock-tests to out-competing approximately 40,000 test-takers, using my guidance and resources!
         </p>
 
-        <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-yellow-200/80 bg-yellow-50 px-3.5 py-1.5 text-xs font-bold text-yellow-800 shadow-2xs">
-          <span>🏆</span>
-          <span>Standout student result (2370 B2)</span>
+        <div className="mt-4 inline-flex rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-semibold text-yellow-800">
+          Standout student result (2370 B2)
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-[260px] rounded-[1.5rem] border border-blue-100/80 bg-white p-2.5 shadow-sm">
+      <div className="mx-auto w-full max-w-[260px] rounded-[1.25rem] border border-blue-100 bg-white p-2.5 shadow-sm">
         <Image
           src={featuredStory.src}
           alt={featuredStory.alt}
@@ -224,7 +189,7 @@ export default function SuccessStories() {
       className="mb-6 break-inside-avoid"
     >
     <div
-      className="rounded-3xl border border-slate-200/80 bg-white/95 p-3.5 shadow-sm backdrop-blur-xs transition-all duration-200 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+      className="rounded-3xl border border-gray-200/90 bg-white/95 p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
       <Image
         src={story.src}
@@ -250,10 +215,9 @@ export default function SuccessStories() {
           <div className="mt-7 flex justify-center">
             <button
               onClick={() => setShowAll(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-7 py-3 text-sm font-bold text-white shadow-md shadow-blue-600/25 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-600/35 active:scale-95"
+              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
-              <span>View More Success Stories</span>
-              <span>↓</span>
+              View More Success Stories
             </button>
           </div>
         )}
