@@ -17,7 +17,17 @@ const navItems: {
 }[] = [
   { label: "Journey", href: "/#journey", bold: true },
 
-  { label: "UCAT (WIP)", locked: true },
+  {
+    label: "UCAT",
+    href: "/ucat-timeline",
+    items: [
+      { label: "UCAT Notes", href: MEDWITHRISH_NOTES_URL, external: true },
+      { label: "UCAT Prep Timeline", href: "/ucat-timeline" },
+      { label: "UCAT Tutoring", href: "/ucat-tutoring" },
+      { label: "Free UCAT Score Tracker", href: "/ucat-score-tracker" },
+      { label: "UCAT Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
+    ],
+  },
 
   {
     label: "Personal Statements",

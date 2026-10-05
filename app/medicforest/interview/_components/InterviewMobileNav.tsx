@@ -22,7 +22,7 @@ const interviewLinks = [
 const landingLinks = [
   ["About", "/about"],
   ["Pricing", "/pricing"],
-  ["UCAT (WIP)", "/ucat"],
+  ["UCAT", "/ucat"],
   ["Med Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
   ["Resources", "/resources"],

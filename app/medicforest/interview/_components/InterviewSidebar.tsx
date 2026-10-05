@@ -16,7 +16,7 @@ import {
   UserRound,
   UserRoundCheck,
   Users,
-  Wrench,
+  Brain,
 } from "lucide-react";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
@@ -91,7 +91,7 @@ const landingSections = [
   {
     label: "Preparation",
     items: [
-      { label: "UCAT (WIP)", icon: Wrench, href: "/ucat" },
+      { label: "UCAT", icon: Brain, href: "/ucat" },
       {
         label: "Med Interviews",
         icon: MessageSquare,
@@ -126,7 +126,7 @@ export function getLandingActiveLabel(pathname: string) {
   if (path.startsWith("/feedback")) return "Feedback & Support";
   if (path.startsWith("/account")) return "Manage Account";
   if (path.startsWith("/contact")) return "Manage Account";
-  if (path.startsWith("/ucat")) return "UCAT (WIP)";
+  if (path.startsWith("/ucat")) return "UCAT";
 
   return "";
 }
