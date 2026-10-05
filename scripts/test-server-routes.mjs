@@ -84,7 +84,7 @@ test("checkout accepts only named return destinations", async () => {
   assert.deepEqual(calls, ["interviews", "ucat"]);
 });
 
-test("tutoring checkout requires an email and attaches it to the Stripe customer", async () => {
+test("tutoring checkout maps every package price and attaches email to the Stripe customer", async () => {
   const sessions = [];
   class Stripe {
     checkout = {
@@ -100,6 +100,10 @@ test("tutoring checkout requires an email and attaches it to the Stripe customer
   await withEnv({
     STRIPE_SECRET_KEY: "sk_test_only",
     STRIPE_PRICE_TUTORING_UCAT_RISH: "price_ucat_rish",
+    STRIPE_PRICE_TUTORING_UCAT_SPECIALIST: "price_ucat_specialist",
+    STRIPE_PRICE_TUTORING_COMPLETE_BUNDLE: "price_complete_bundle",
+    STRIPE_PRICE_TUTORING_INTERVIEW_RISH: "price_interview_rish",
+    STRIPE_PRICE_TUTORING_INTERVIEW_SPECIALIST: "price_interview_specialist",
   }, async () => {
     const { POST } = load("app/api/stripe/create-tutoring-checkout/route.ts", {
       stripe: Stripe,
@@ -115,20 +119,33 @@ test("tutoring checkout requires an email and attaches it to the Stripe customer
     }
     assert.equal(sessions.length, 0);
 
-    const response = await POST(jsonRequest({
-      packageId: "ucat-rish",
-      email: "  student@example.test  ",
-    }));
-    assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), {
-      configured: true,
-      url: "https://checkout.stripe.com/pay/cs_tutoring_123",
-    });
-    assert.equal(sessions.length, 1);
-    assert.equal(sessions[0].customer_email, "student@example.test");
-    assert.equal(sessions[0].customer_creation, "always");
-    assert.equal(sessions[0].line_items[0].price, "price_ucat_rish");
-    assert.equal(sessions[0].metadata.packageId, "ucat-rish");
+    const expectedPrices = {
+      "ucat-rish": "price_ucat_rish",
+      "ucat-specialist": "price_ucat_specialist",
+      "complete-bundle": "price_complete_bundle",
+      "interview-rish": "price_interview_rish",
+      "interview-specialist": "price_interview_specialist",
+    };
+
+    for (const [packageId, priceId] of Object.entries(expectedPrices)) {
+      const response = await POST(jsonRequest({
+        packageId,
+        email: "  student@example.test  ",
+      }));
+      assert.equal(response.status, 200);
+      assert.deepEqual(await response.json(), {
+        configured: true,
+        url: "https://checkout.stripe.com/pay/cs_tutoring_123",
+      });
+
+      const session = sessions.at(-1);
+      assert.equal(session.customer_email, "student@example.test");
+      assert.equal(session.customer_creation, "always");
+      assert.equal(session.line_items[0].price, priceId);
+      assert.equal(session.metadata.packageId, packageId);
+    }
+
+    assert.equal(sessions.length, Object.keys(expectedPrices).length);
   });
 });
 

@@ -22,8 +22,9 @@ origin, including `https://`, without a path, query or fragment.
 
 Optional integrations:
 
-- Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` and
-  `STRIPE_PREMIUM_PRICE_ID`.
+- Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, the Premium price and
+  the five tutoring prices. Use the ready-to-paste values in
+  [`docs/stripe-environment-variables.md`](docs/stripe-environment-variables.md).
 - UCAT feedback: `ANTHROPIC_API_KEY`.
 - Med Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
 - Preview access: `MEDICFOREST_PREVIEW_PASSWORD` and `MEDICFOREST_PREVIEW_TOKEN_SECRET`.

@@ -20,6 +20,10 @@ STRIPE_PREMIUM_PRODUCT_ID=prod_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
+The current Premium and tutoring price IDs, including a ready-to-paste Vercel
+block, are documented in
+[`docs/stripe-environment-variables.md`](../docs/stripe-environment-variables.md).
+
 Do not put the `service_role` key or Stripe secret key in frontend code or in
 `NEXT_PUBLIC_*`.
 
