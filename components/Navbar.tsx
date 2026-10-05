@@ -15,8 +15,6 @@ const navItems: {
   external?: boolean;
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
-  { label: "Journey", href: "/#journey", bold: true },
-
   {
     label: "UCAT",
     href: "/ucat-timeline",
@@ -101,7 +99,7 @@ export default function Navbar() {
       <div aria-hidden="true" className="h-[49px]" />
 
       <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-1">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-1">
           <Link href="/" className="text-lg font-bold tracking-wide text-gray-900">
             MedWithRish
           </Link>
