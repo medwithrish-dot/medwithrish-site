@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { interviewAiConfigured } from "@/utils/interviews/gemini";
+import { interviewAiConfigured } from "@/utils/interviews/openai";
 import { findInterviewUniversity } from "@/app/medicforest/interview/_data/universities";
 import { findInterviewStation, interviewStations } from "@/app/medicforest/interview/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";

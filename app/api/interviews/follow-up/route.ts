@@ -1,6 +1,6 @@
 import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
 import { findInterviewStation } from "@/app/medicforest/interview/_data/interview-stations";
-import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/gemini";
+import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/openai";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";

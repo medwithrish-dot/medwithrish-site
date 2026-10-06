@@ -5,7 +5,7 @@ MedicForest UCAT practice and Med interview preparation.
 
 ## Local development
 
-Use Node.js 20.9 or later and npm. Install dependencies from the lockfile:
+Use Node.js 22 or later and npm. Install dependencies from the lockfile:
 
 ```sh
 npm ci
@@ -26,7 +26,8 @@ Optional integrations:
   the five tutoring prices. Use the ready-to-paste values in
   [`docs/stripe-environment-variables.md`](docs/stripe-environment-variables.md).
 - UCAT feedback: `ANTHROPIC_API_KEY`.
-- Med Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
+- Med Interview feedback and follow-ups: server-only `OPENAI_API_KEY`; optionally
+  `INTERVIEW_OPENAI_MODEL` (defaults to `gpt-6-luna`).
 - Preview access: `MEDICFOREST_PREVIEW_PASSWORD` and `MEDICFOREST_PREVIEW_TOKEN_SECRET`.
 
 Database setup and feature configuration are documented in

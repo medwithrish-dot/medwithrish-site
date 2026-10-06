@@ -2,7 +2,7 @@ import "server-only";
 import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
 import { randomUUID } from "node:crypto";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
-import { assessInterview, interviewAiConfigured } from "@/utils/interviews/gemini";
+import { assessInterview, interviewAiConfigured } from "@/utils/interviews/openai";
 import { databaseError, InterviewError, interviewContext, toInterviewAttempt, validId } from "@/utils/interviews/server";
 
 type FeedbackClaim = {

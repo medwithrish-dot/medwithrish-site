@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { interviewAiConfigured } from "@/utils/interviews/gemini";
+import { interviewAiConfigured } from "@/utils/interviews/openai";
 import { toInterviewAttempt, validId } from "@/utils/interviews/server";
 import { InterviewShell } from "../../_components/InterviewShell";
 import { SavedInterviewReview } from "../../_components/SavedInterviewReview";

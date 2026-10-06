@@ -75,7 +75,7 @@ function harness({ overrides = {}, configured = false, user = "user-1", beforeUp
   const mocks = {
     "@/utils/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: user ? { id: user } : null } }) } }) },
     "@/utils/supabase/admin": { createAdminClient: () => admin },
-    "@/utils/interviews/gemini": { interviewAiConfigured: () => configured, assessInterview: async (...args) => { state.providerCalls += 1; return assess(...args); } },
+    "@/utils/interviews/openai": { interviewAiConfigured: () => configured, assessInterview: async (...args) => { state.providerCalls += 1; return assess(...args); } },
   };
   const cache = new Map();
   const session = load("app/api/interviews/session/route.ts", mocks, cache);
