@@ -19,7 +19,6 @@ function compile(source) {
 test("public MedicForest pages import their lightweight clients directly", () => {
   const imports = [
     ["../app/medicforest/page.tsx", "./interviews/page"],
-    ["../app/medicforest/ucat/page.tsx", "../_components/MedicForestLandingClient"],
     ["../app/medicforest/pricing/page.tsx", "./_components/MedicForestPricingClient"],
   ];
 
@@ -31,6 +30,23 @@ test("public MedicForest pages import their lightweight clients directly", () =>
     assert.ok(modules.includes(expected), `${path} must import ${expected}`);
     assert.ok(!modules.some((name) => name.includes("MedicForestClient")));
   }
+});
+
+test("public UCAT route shows the work-in-progress page", () => {
+  const route = ts.createSourceFile(
+    "../app/medicforest/ucat/page.tsx",
+    read("../app/medicforest/ucat/page.tsx"),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const exports = route.statements.filter(ts.isExportDeclaration);
+  assert.ok(exports.some((statement) => statement.moduleSpecifier?.text === "./wip/page" &&
+    statement.exportClause?.getText(route) === "{ default }"));
+
+  const wipPage = read("../app/medicforest/ucat/wip/page.tsx");
+  assert.match(wipPage, /UCAT is coming soon/);
+  assert.match(wipPage, /unavailable on both Free and Premium plans/);
 });
 
 test("Alt+C has one always-attached calculator toggle handler", () => {
