@@ -35,6 +35,10 @@ The scoring anchors currently used by the assessor are:
 
 The five raw criterion scores are averaged. `interviewPercentage()` then applies the versioned direct-average calibration in `utils/interviews/scoring.ts`, with the displayed result capped at 99%. The v2 scale does not boost the rubric average. Saved v1 reports retain their original scores and are excluded from the v2 leaderboard. This mapping must remain consistent across candidates; it is not a percentile or comparison with other users.
 
+## Practice pass/fail
+
+New reports calculate a practice pass/fail decision on the server from the validated rubric: mean at least 60, reasoning and professionalism at least 50 each, all other criteria at least 40. Weak reasoning or professionalism cannot be hidden by a high average. Students see the unmet minimums alongside the content weaknesses and fixes. Near-cutoff results are flagged. These are MedicForest practice thresholds, not university admissions criteria. See [decision rules and repeated live calibration results](interview-practice-pass-fail.md).
+
 ## Station-specific interpretation
 
 ### Ethical dilemma and hot topic

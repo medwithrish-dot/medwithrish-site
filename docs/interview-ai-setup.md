@@ -24,7 +24,7 @@ The former logarithmic conversion inflated an average raw score of 60 to around 
 
 Run `supabase/medicforest_interview_scoring_v2.sql` on existing installations before deploying this version. It updates installed leaderboard, dashboard and group readers without deleting reports or weakening name moderation/permissions. Old reports retain their saved score and rubric version. V1 and v2 are not ranked together. Fresh install scripts already use v2.
 
-This is prompt calibration, not fine-tuning or an admissions prediction. Run `node scripts/evaluate-interview-feedback.mjs --live` deliberately to repeat the four synthetic ethics checks; this makes four paid GPT requests. Add human-reviewed examples for other station types before treating the scoring as validated.
+This is prompt calibration, not fine-tuning or an admissions prediction. New reports include a server-calculated practice pass/fail decision; see [the practice standard and validation results](interview-practice-pass-fail.md). Run `node scripts/evaluate-interview-feedback.mjs --live` deliberately to repeat the 11 synthetic checks; add `--repeat=2` for a bounded 22-call consistency check. These are paid GPT requests. Add human-reviewed examples for other station types before treating the scoring as validated.
 
 ## Abuse and cost controls
 

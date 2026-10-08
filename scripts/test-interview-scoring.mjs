@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { interviewPercentage, validateFeedback } from "../utils/interviews/scoring.ts";
+import { interviewPercentage, practiceResult, validateFeedback } from "../utils/interviews/scoring.ts";
 
 test("scores are bounded, finite, monotonic and reach exactly 99", () => {
   assert.equal(interviewPercentage(-1), 0);
@@ -22,6 +22,28 @@ test("strict scores do not inflate weak or adequate evidence", () => {
 });
 
 const valid = () => ({ summary: "A clear and reflective answer.", strengths: ["Uses a specific example."], improvements: ["Explain what changed in your understanding."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence with room for deeper reflection." })) });
+
+test("practice pass requires the overall standard and independent criterion minimums", () => {
+  const result = scores => practiceResult(scores.map(score => ({ score })));
+  assert.equal(result([60, 60, 60, 60, 60]).outcome, "pass");
+  assert.equal(result([80, 40, 50, 80, 50]).outcome, "pass");
+  assert.equal(result([59, 59, 59, 59, 59]).outcome, "fail");
+  assert.equal(result([100, 100, 100, 100, 30]).outcome, "fail");
+  assert.equal(result([100, 100, 49, 100, 100]).outcome, "fail");
+  assert.equal(result([100, 39, 100, 100, 100]).outcome, "fail");
+  assert.equal(result([60, 60, 60, 60, 60]).borderline, true);
+  assert.equal(result([80, 80, 80, 80, 80]).borderline, false);
+  assert.equal(result([20, 20, 20, 20, 20]).borderline, false);
+  assert.equal(result([59.99, 59.99, 59.99, 59.99, 59.99]).outcome, "fail");
+  assert.throws(() => result([100]));
+  assert.throws(() => result([100, 100, NaN, 100, 100]));
+});
+
+test("provider pass claims cannot override the server's practice decision", () => {
+  const report = validateFeedback({ ...valid(), practiceResult: { outcome: "pass" }, rubric: valid().rubric.map(row => ({ ...row, score: 20 })) });
+  assert.equal(report.practiceResult.outcome, "fail");
+  assert.ok(report.practiceResult.reasons.length > 0);
+});
 
 test("validated feedback ignores provider or client percentage claims", () => {
   const feedback = validateFeedback({ ...valid(), score: 999 });

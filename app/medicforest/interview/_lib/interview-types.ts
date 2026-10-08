@@ -12,6 +12,12 @@ export type InterviewFeedback = {
   improvements: string[];
   weaknesses?: string[];
   fixes?: string[];
+  practiceResult?: {
+    version: "practice-pass-v1";
+    outcome: "pass" | "fail";
+    borderline: boolean;
+    reasons: string[];
+  };
   rubric: { criterion: string; score: number; reason: string }[];
 };
 export type InterviewAttempt = {
