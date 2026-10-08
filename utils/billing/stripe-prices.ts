@@ -25,7 +25,10 @@ export async function resolvePremiumPriceId(stripe: Stripe): Promise<string> {
   if (
     price.unit_amount !== MEDICFOREST_PREMIUM_MONTHLY_PRICE.amountMinor ||
     price.currency !== MEDICFOREST_PREMIUM_MONTHLY_PRICE.currency ||
-    price.recurring.interval !== MEDICFOREST_PREMIUM_MONTHLY_PRICE.interval
+    price.recurring.interval !== MEDICFOREST_PREMIUM_MONTHLY_PRICE.interval ||
+    price.recurring.interval_count !== 1 ||
+    price.billing_scheme !== "per_unit" ||
+    price.recurring.usage_type !== "licensed"
   ) {
     throw new Error(`Stripe price ${priceId} does not match the advertised Premium monthly price.`);
   }

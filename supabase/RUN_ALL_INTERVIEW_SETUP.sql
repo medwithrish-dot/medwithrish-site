@@ -137,7 +137,7 @@ create table if not exists public.interview_attempts (
   metrics jsonb not null default '{}',
   feedback jsonb,
   score numeric(4,1) check (score between 0 and 99),
-  rubric_version text not null default 'why-medicine-v1',
+  rubric_version text not null default 'why-medicine-v2',
   grading_tries integer not null default 0,
   grading_token uuid,
   grading_started_at timestamptz,
@@ -224,7 +224,7 @@ language sql stable security definer set search_path=public as $$
     select distinct on(a.user_id) a.user_id,p.display_name,a.score,a.completed_at
     from public.interview_attempts a join public.interview_preferences p on p.user_id=a.user_id
     where p.leaderboard_opt_in and a.mode='free' and a.station_slug='why-medicine' and a.status='completed'
-      and a.rubric_version='why-medicine-v1' and a.score is not null
+      and a.rubric_version='why-medicine-v2' and a.score is not null
     order by a.user_id,a.score desc,a.completed_at asc
   ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,coalesce(best.user_id=auth.uid(),false)
     from best order by best.score desc,best.completed_at asc limit 100;
@@ -432,7 +432,7 @@ begin
       -- No attempt IDs, answers, feedback, or other account data are exposed.
       'whyMedicineScore', (select max(a.score) from public.interview_attempts a
         where a.user_id = ranked.user_id and a.mode = 'free' and a.station_slug = 'why-medicine'
-        and a.status = 'completed' and a.rubric_version = 'why-medicine-v1')
+        and a.status = 'completed' and a.rubric_version = 'why-medicine-v2')
     ) order by ranked.rank, ranked.joined_at), '[]'::jsonb) into v_members
       from (
         select m.*,
@@ -662,7 +662,7 @@ returns jsonb language sql stable security invoker set search_path=public as $$
     'completedCount',count(*) filter(where status='completed'),
     'scoredCount',count(*) filter(where status='completed' and score is not null),
     'averageScore',round(avg(score) filter(where status='completed'),1),
-    'bestFreeScore',max(score) filter(where status='completed' and mode='free' and station_slug='why-medicine' and rubric_version='why-medicine-v1'),
+    'bestFreeScore',max(score) filter(where status='completed' and mode='free' and station_slug='why-medicine' and rubric_version='why-medicine-v2'),
     'practiceSeconds',coalesce(round(sum(least(station_seconds,greatest(0,
       extract(epoch from (coalesce(answer_submitted_at,completed_at)-started_at))-preparation_seconds
     ))) filter(where status='completed' and completed_at is not null)),0),
@@ -720,7 +720,7 @@ language sql stable security definer set search_path=public as $$
       a.score,a.completed_at
     from public.interview_attempts a join public.interview_preferences p on p.user_id=a.user_id
     where p.leaderboard_opt_in and a.mode='free' and a.station_slug='why-medicine' and a.status='completed'
-      and a.rubric_version='why-medicine-v1' and a.score is not null
+      and a.rubric_version='why-medicine-v2' and a.score is not null
     order by a.user_id,a.score desc,a.completed_at asc
   ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,coalesce(best.user_id=auth.uid(),false)
     from best order by best.score desc,best.completed_at asc limit 100;
@@ -777,6 +777,12 @@ $$;
 revoke all on function public.interview_daily_activity() from public, anon;
 grant execute on function public.interview_daily_activity() to authenticated;
 
+-- Versioned API: older installations fail closed until the scoring migration is applied.
+create or replace function public.interview_leaderboard_v2()
+returns table(rank bigint,display_name text,score numeric,completed_at timestamptz,is_you boolean)
+language sql stable security invoker set search_path=public as $$
+  select * from public.interview_leaderboard();
+$$;
+revoke all on function public.interview_leaderboard_v2() from public,anon,authenticated;
+grant execute on function public.interview_leaderboard_v2() to anon,authenticated,service_role;
 commit;
-
--- Successful completion means all interview database features are installed.

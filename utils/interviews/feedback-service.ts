@@ -3,6 +3,7 @@ import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
 import { randomUUID } from "node:crypto";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { assessInterview, interviewAiConfigured } from "@/utils/interviews/openai";
+import { INTERVIEW_RUBRIC_VERSION } from "./scoring";
 import { databaseError, InterviewError, interviewContext, toInterviewAttempt, validId } from "@/utils/interviews/server";
 
 type FeedbackClaim = {
@@ -72,7 +73,7 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
   }
 
   const { data, error: saveError } = await admin.from("interview_attempts")
-    .update({ status: "completed", feedback, score: feedback.score, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null })
+    .update({ status: "completed", feedback, score: feedback.score, rubric_version: INTERVIEW_RUBRIC_VERSION, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null })
     .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
   if (saveError) {
     await releaseClaim();

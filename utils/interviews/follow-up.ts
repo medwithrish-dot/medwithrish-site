@@ -14,9 +14,11 @@ export function validateFollowUp(value: unknown, existingQuestions: readonly str
 }
 
 /** A labelled practice prompt remains available if the provider is busy. */
-export function practiceFollowUp(answer: string, questionNumber: number) {
+export function practiceFollowUp(answer: string, questionNumber: number, theme?: string) {
   const text = answer.toLowerCase();
-  const options = /confidential|consent|privacy|patient information/.test(text)
+  const options = theme === "Ethics"
+    ? ["What further information would you need before deciding whether your proposed approach was proportionate?", "How would you weigh the competing interests of the people affected by your proposed approach?", "What would make you reconsider your proposed approach and seek support from a supervising professional?"]
+    : /confidential|consent|privacy|patient information/.test(text)
     ? ["What would guide your decision if respecting confidentiality appeared to conflict with protecting someone from harm?", "How would you seek appropriate support while sharing only the information that was necessary?", "What would you explain to the person involved before taking your next step?"]
     : /team|colleague|listen|communicat/.test(text)
       ? ["What did your own contribution change in that situation, and how do you know?", "How would you adapt your approach if another team member saw the situation differently?", "What would you do differently in a similar situation, based on what you learned?"]
@@ -24,7 +26,7 @@ export function practiceFollowUp(answer: string, questionNumber: number) {
         ? ["How would you find out what support the individual actually needed before deciding on an approach?", "What would you consider if two people's needs appeared to conflict?", "How would you check whether your proposed approach was fair in practice?"]
         : /data|evidence|research|percent|statistic/.test(text)
           ? ["What additional evidence would most strengthen or change the conclusion you have drawn?", "What alternative explanation would you want to rule out before accepting that conclusion?", "How would you communicate the uncertainty in your answer to someone without a scientific background?"]
-          : ["Which specific experience best supports the point you have made, and what did it teach you?", "What challenged your initial assumptions in that experience?", "How would the learning you have described change your approach as a medical student?"];
+          : ["What evidence or observation best supports the point you have made?", "What alternative perspective would you consider before reaching your conclusion?", "How would your reasoning influence your approach as a medical student?"];
   return options[questionNumber % options.length];
 }
 
@@ -33,8 +35,10 @@ export function practiceFollowUp(answer: string, questionNumber: number) {
 // it only once the attempt leaves in_progress, when follow-ups are no longer allowed.
 export function followUpClaimMask(marker: unknown) {
   if (marker === null || marker === undefined) return 0;
-  if (typeof marker !== "string" || !/^ai_followup:[0-7]$/.test(marker)) throw new Error("Invalid follow-up state");
-  return Number(marker.slice("ai_followup:".length));
+  if (typeof marker !== "string" || !/^ai_followup:\d{1,3}$/.test(marker)) throw new Error("Invalid follow-up state");
+  const mask = Number(marker.slice("ai_followup:".length));
+  if (mask > 255 || mask.toString(2).replace(/0/g, "").length > 3) throw new Error("Invalid follow-up state");
+  return mask;
 }
 
 export function existingFollowUp(questions: readonly string[], mainQuestion: string, originals: readonly string[]) {

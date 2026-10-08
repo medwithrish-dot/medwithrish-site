@@ -1,39 +1,36 @@
-# Med Interview AI setup and follow-up costs
+# Interview AI setup
 
-Checked against official provider documentation on 12 September 2026.
-
-For the requested **personal, free setup**, the owner has confirmed the key's project is on Free Tier, and Gemini is enabled locally through the ignored `.env.local` file. Both generated follow-ups and feedback default to **Gemini 3.5 Flash-Lite**, which Google's pricing lists with free developer quota. Other environments stay off until configured with a matching key and free-tier confirmation. [Google pricing](https://ai.google.dev/gemini-api/docs/pricing?hl=en)
-
-A 12 September generation check with the configured key succeeded on 3.5 Flash-Lite. The cheaper 2.5 Flash-Lite returned HTTP 404 saying it was unavailable to new users and recommending 3.5 Flash-Lite, even though it appeared in the model list. Therefore 2.5 is a price comparator, not the working default for this key. A successful generation confirms the key/model works; it does not verify the project's billing tier. Model availability is account-dependent; check actual generation as well as the [model lifecycle](https://ai.google.dev/gemini-api/docs/deprecations).
-
-## Keep personal practice free
-
-Use a key from your own [Google AI Studio account](https://aistudio.google.com/apikey), attached to a project that remains on **Free Tier with no linked Cloud Billing account**. In AI Studio's Projects/API keys page, check the Billing Tier column; “Set up billing” means no billing account is attached. Do not click it, link billing, or purchase credits for this setup. Keys inherit their project's billing state. [Google billing and tier verification](https://ai.google.dev/gemini-api/docs/billing)
-
-Both Gemini request paths require `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true` as well as a key. The owner confirmed Free Tier on 12 September, so this flag is enabled in the local ignored environment file; neither the real key nor the local environment file is committed. These code changes do not enable billing, add payment details or buy credits. There is no automatic model or provider fallback. In environments without confirmation, or when free quota is unavailable, built-in follow-ups and saved answers remain available.
-
-There is no documented per-request “free only” switch: using a model with free quota does not force free billing on a paid project. Keeping the key's project unlinked from billing is the spending protection. A successful model-list request confirms API access, not free-tier status. [Gemini generation request fields](https://ai.google.dev/api/generate-content), [Google project billing](https://ai.google.dev/gemini-api/docs/billing)
-
-For an automated read-only check, Google's `projects.getBillingInfo` returns `billingEnabled`. It needs the project ID, an OAuth credential and `resourcemanager.projects.get` permission; the Gemini API key alone is insufficient. Without that access, verify the project's tier in AI Studio. [Cloud Billing read API](https://docs.cloud.google.com/billing/docs/reference/rest/v1/projects/getBillingInfo), [billing status fields](https://docs.cloud.google.com/billing/docs/reference/rest/v1/ProjectBillingInfo)
+Updated 8 October 2026. The application now uses OpenAI for both feedback and generated probes. The previous Gemini free-tier configuration is obsolete and is not read by either generation path.
 
 ## Server configuration
 
-For a new environment, start with this configuration. The current local `.env.local` has already been enabled after the owner's confirmation:
-
 ```dotenv
-GEMINI_API_KEY=your-own-key
-INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=false
-INTERVIEW_FOLLOWUP_GEMINI_MODEL=gemini-3.5-flash-lite
-INTERVIEW_GEMINI_MODEL=gemini-3.5-flash-lite
+OPENAI_API_KEY=your-server-only-project-key
+INTERVIEW_OPENAI_MODEL=gpt-6-luna
+INTERVIEW_AI_MAX_CONCURRENT=20
 ```
 
-After confirming the key's exact project shows **Free Tier** and has no linked billing account in AI Studio, set `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true` and restart or redeploy. Leave it unset or `false` while unsure. This is an owner confirmation, not an automatic query of Google's billing system; unset it again if the project or key changes until the new tier is verified.
+The API key and model are configured locally. Hosting needs its own environment variables; pushing Git does not transfer `.env.local`. GPT API calls use the project's paid quota. Set project usage alerts and provider limits; there is no free-only request option or automatic provider/model retry. Credentials stay server-side. Requests use strict JSON Schema, bounded output, deadlines and `store: false`. See [official OpenAI documentation](https://developers.openai.com/api/docs/guides/structured-outputs).
 
-For deployment, set the corresponding key and confirmation flag in the host's server environment separately. A Git push does not copy `.env.local` or enable hosted AI. The committed code defaults to disabled when confirmation is missing.
+## Automatic probing
 
-`GEMINI_API_KEY` is required for both generation and feedback. The two model variables are optional overrides with the defaults shown; accepted overrides are 2.5, 3.1 and 3.5 Flash-Lite, with no automatic model switching. Keep the key out of Git, browser requests and `NEXT_PUBLIC_` variables; only the server contacts Google. Restrict the key to the Gemini API. [Google key setup and security](https://ai.google.dev/gemini-api/docs/api-key)
+Probing defaults to on, including confidentiality, equality/diversity and disability ethics stations. The checkbox in setup and the interview remembers the choice on this device. After the candidate confirms an answer is complete, the interviewer asks one brief answer-aware probe and waits for the answer. It then continues to the next main question. A probe is never recursively probed. There are at most three probes per station, at least 20 words are required, and new probes stop in the final 45 seconds. The server enforces the cap independently of the browser, including for circuits with up to eight main questions.
 
-The existing Supabase account, service-role and Med interview database setup are still required; see [Med interview platform setup](interview-platform-setup.md). Do not infer a working production key from a local environment file. A missing key, rejected key or provider quota failure must leave saved answers and ordinary practice usable. Enabling an account's billing is a separate owner action; changing these variables does not activate billing or purchase credit.
+Each original answer reserves a durable bit before generation. Saved probes are reused. Concurrent requests and retries cannot generate additional probes for that answer. Generation is limited to 384 output tokens and a 12-second provider deadline. A provider outage uses a labelled local practice prompt without a second model request.
+
+## Scoring v2
+
+The former logarithmic conversion inflated an average raw score of 60 to around 80%. New reports display the equally weighted rubric average directly, capped at 99. Question-specific authored marking guidance, stimulus facts and valid alternative reasoning remain in the GPT context. The prompt now uses demanding evidence anchors and explicitly checks unsafe decisions, unsupported claims, ethics trade-offs and contradictory score reasons. Typed and spoken answers use the same criteria; accent, disability and filler words are not scoring inputs.
+
+Run `supabase/medicforest_interview_scoring_v2.sql` on existing installations before deploying this version. It updates installed leaderboard, dashboard and group readers without deleting reports or weakening name moderation/permissions. Old reports retain their saved score and rubric version. V1 and v2 are not ranked together. Fresh install scripts already use v2.
+
+This is prompt calibration, not fine-tuning or an admissions prediction. Run `node scripts/evaluate-interview-feedback.mjs --live` deliberately to repeat the four synthetic ethics checks; this makes four paid GPT requests. Add human-reviewed examples for other station types before treating the scoring as validated.
+
+## Abuse and cost controls
+
+Vercel BotID Basic is initialized in `instrumentation-client.ts`, with matching rewrites from `withBotId`. Interview starts, probes, feedback requests and generated speech require a human classification on the server. Bots, including verified bots, are rejected; verification errors fail closed before generation. [Vercel setup](https://vercel.com/docs/botid/get-started). Local development bypasses classification as documented by Vercel; production must be deployed on Vercel with BotID functioning. Test an actual signed-in browser in production and confirm a scripted request is rejected. Do not create a WAF bypass rule for these routes.
+
+Database account quotas bound starts to free 2/day and 30/30 days, premium 20/day and 300/30 days (the free trial has its own lifetime allowance). Grading is locked per attempt and capped at three tries; completed feedback is reused. Requests have body/context limits, origin checks, IP throttling and instance concurrency/cooldown controls. Application rate limiting is instance-local; configure hosting WAF rate limits for aggregate IP abuse and Supabase signup CAPTCHA/email confirmation for account farming. Bot classification reduces automation but cannot guarantee every caller is human. Provider project limits are still necessary for aggregate spend control.
 
 ## Google Chirp speech for generated probes
 
@@ -53,40 +50,3 @@ INTERVIEW_GOOGLE_TTS_ENABLED=true
 ```
 
 For local development, install the Google Cloud CLI, run `gcloud auth application-default login`, enable `texttospeech.googleapis.com`, restart Next.js and test an eligible 20+ word answer. On a non-Google host, add the service account JSON as the server-only `GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON` environment variable. Never prefix it with `NEXT_PUBLIC_` or commit the key. On Google Cloud hosting, attach a service account and let ADC discover it instead. Leave `INTERVIEW_GOOGLE_TTS_ENABLED` unset until billing alerts/quotas are configured. Google currently documents a 5,000-byte request content limit and a separate Chirp 3 quota; this route additionally limits probes to 500 characters. [Cloud TTS setup](https://docs.cloud.google.com/text-to-speech/docs/get-started), [authentication](https://docs.cloud.google.com/text-to-speech/docs/authentication), [Chirp 3 HD](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd), [quotas](https://docs.cloud.google.com/text-to-speech/quotas), [pricing](https://cloud.google.com/text-to-speech/pricing)
-
-## What “training it for medicine interviews” means here
-
-The implementation uses a specialised examiner prompt and the saved station context. It does not fine-tune model weights or upload a training dataset. After a candidate answers, the examiner asks one concise question about a specific point in that answer: evidence, reflection, an alternative perspective, or what the candidate learned. For example, “I enjoyed helping patients on placement” could lead to “Which interaction changed your understanding of a doctor's responsibilities, and why?”
-
-The prompt supplies the UK medicine-interview purpose, station question and answer; it asks for one probe and treats candidate text as evidence rather than instructions. It should avoid invented candidate experiences, claims about confidential university marking criteria, premature scoring and clinical advice. Saved feedback remains a separate assessment. No web search or retrieval service is needed to generate a probe; Chirp is optional for voicing it.
-
-Review anonymised or synthetic answers with a human interviewer before relying on the feedback: include vague answers, strong reflection, ethical disagreements, incomplete transcripts, repeated answers and attempts to manipulate the prompt. Measure relevance and usefulness alongside response time and cost.
-
-## Paid cost comparison
-
-Illustrative usage: **2,000 input tokens and 100 total billable output tokens per probe**, including the examiner instructions, relevant answer/context and any reasoning tokens. These are planning assumptions, not measured usage or an output guarantee. Prices below are ordinary uncached text rates, without search, batch discounts or voice.
-
-| Provider/model | USD per million input/output tokens | USD per 1,000 probes |
-| --- | ---: | ---: |
-| Groq, `openai/gpt-oss-20b` | $0.075 / $0.30 | **$0.18** |
-| Google, `gemini-2.5-flash-lite` | $0.10 / $0.40 | **$0.24** |
-| Google, `gemini-3.1-flash-lite` | $0.25 / $1.50 | $0.65 |
-| Google, `gemini-3.5-flash-lite` | $0.30 / $2.50 | $0.85 |
-
-Sources: [Google pricing](https://ai.google.dev/gemini-api/docs/pricing?hl=en), [Groq model pricing](https://console.groq.com/docs/model/openai/gpt-oss-20b).
-
-These paid prices are for a possible future upgrade; the requested setup targets free quota on an unbilled project. Groq is the cheapest of these checked options under the same token assumptions. Its model still needs interview-quality evaluation and a separate provider integration; a lower token rate does not guarantee a lower bill if it generates more reasoning or retries. Gemini 2.5 Flash-Lite is cheaper on paper but unavailable to the configured key; 3.5 Flash-Lite is the verified working Gemini choice. This is not an exhaustive market comparison or a claim that either model has been clinically or educationally validated.
-
-Formula: `probes * (input_tokens * input_rate + billable_output_tokens * output_rate) / 1,000,000`. Add 20% for retry/usage variance when budgeting; 1,000 paid Gemini 3.5 Flash-Lite probes would then be about $1.02. Three probes cost three requests. Station feedback, transcription, generated speech, hosting, storage and taxes are additional. Browser speech playback does not become more natural merely by changing the text model.
-
-## Quotas and operation
-
-Google limits requests per minute, input tokens per minute and requests per day at project level. Multiple keys do not multiply the project's allowance. Exact limits vary by model and account; inspect the project's active limits in AI Studio rather than hard-coding a public free-tier number. Daily provider quotas reset at midnight Pacific time. [Google rate limits](https://ai.google.dev/gemini-api/docs/rate-limits)
-
-The Med interview flow bounds follow-ups to one per original question and at most three per attempt. Existing application allowances remain free: 2 station starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days. These application quotas are separate from Google's project quota and do not establish simultaneous-user capacity. Reuse saved probes, keep generation requests bounded, monitor actual token usage and use the catalogue fallback when generation is unavailable.
-
-`429 RESOURCE_EXHAUSTED` means a provider limit was hit; it does not mean the key is invalid. A quota error naming `free_tier` identifies the free quota involved in that request. A reported limit of zero means that model/request currently has no usable allocation; it does not promise that waiting will restore access. Do not enable billing to work around that error in this personal setup. Check AI Studio's model quota, wait if a nonzero daily/minute quota was exhausted, and continue with saved or catalogue questions. [Google error reference](https://ai.google.dev/gemini-api/docs/generate-content/api-errors), [Google quota documentation](https://ai.google.dev/gemini-api/docs/rate-limits)
-
-## Before any wider rollout
-
-Google requires Paid Services for API clients offered to UK/EEA/Swiss users and prohibits clients directed towards or likely accessed by under-18s. Revisit those restrictions before opening this personal setup to applicants. For UK/EEA/Swiss developers, paid-service data-use terms apply even to unpaid quota: prompts/responses are not used for product improvement, though limited safety logging remains. Other unpaid use may include product improvement and human review. [Gemini API terms](https://ai.google.dev/gemini-api/terms)

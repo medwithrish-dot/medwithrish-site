@@ -83,7 +83,8 @@ test("checkout price matches the Premium amount, currency and monthly interval s
     product: "prod_123",
     unit_amount: 1499,
     currency: "gbp",
-    recurring: { interval: "month" },
+    billing_scheme: "per_unit",
+    recurring: { interval: "month", interval_count: 1, usage_type: "licensed" },
   };
   const stripe = { prices: { retrieve: async () => price } };
 
@@ -92,7 +93,10 @@ test("checkout price matches the Premium amount, currency and monthly interval s
     for (const mismatch of [
       { unit_amount: 1490 },
       { currency: "usd" },
-      { recurring: { interval: "year" } },
+      { recurring: { interval: "year", interval_count: 1, usage_type: "licensed" } },
+      { recurring: { interval: "month", interval_count: 3, usage_type: "licensed" } },
+      { billing_scheme: "tiered" },
+      { recurring: { interval: "month", interval_count: 1, usage_type: "metered" } },
     ]) {
       stripe.prices.retrieve = async () => ({ ...price, ...mismatch });
       await assert.rejects(resolvePremiumPriceId(stripe), /does not match the advertised Premium monthly price/);

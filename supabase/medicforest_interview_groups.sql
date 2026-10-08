@@ -194,7 +194,7 @@ begin
       -- No attempt IDs, answers, feedback, or other account data are exposed.
       'whyMedicineScore', (select max(a.score) from public.interview_attempts a
         where a.user_id = ranked.user_id and a.mode = 'free' and a.station_slug = 'why-medicine'
-        and a.status = 'completed' and a.rubric_version = 'why-medicine-v1')
+        and a.status = 'completed' and a.rubric_version = 'why-medicine-v2')
     ) order by ranked.rank, ranked.joined_at), '[]'::jsonb) into v_members
       from (
         select m.*,

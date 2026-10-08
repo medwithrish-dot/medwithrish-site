@@ -40,7 +40,7 @@ async function seedAttempt(user, values = {}) {
     values.preparationSeconds ?? 60, values.stationSeconds ?? 480,
     JSON.stringify([{ question: "Why medicine?", answer: transcript }]), values.score ?? null,
     values.startedAt || "2026-01-01T10:00:00Z", values.completedAt === undefined ? "2026-01-01T10:40:00Z" : values.completedAt,
-    values.submittedAt ?? null, values.rubric || "why-medicine-v1",
+    values.submittedAt ?? null, values.rubric || "why-medicine-v2",
   ]);
   return id;
 }

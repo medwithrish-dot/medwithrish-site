@@ -4,6 +4,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 import { publicNameError, safePublicName } from "./public-name";
 import { InterviewError } from "./server";
+import { INTERVIEW_RUBRIC_VERSION } from "./scoring";
 
 type BoardRow = { rank: number; display_name: string; score: number; completed_at: string; is_you: boolean | null };
 type Preference = { display_name: string; leaderboard_opt_in: boolean };
@@ -34,7 +35,7 @@ export async function getInterviewLeaderboard() {
     userId = user?.id ?? null;
   } catch { /* Public scores remain available if account lookup fails. */ }
   const boardClient = userId ? supabase : anonymousClient();
-  const boardRequest = boardClient.rpc("interview_leaderboard");
+  const boardRequest = boardClient.rpc("interview_leaderboard_v2");
 
   if (!userId) {
     const board = await boardRequest;
@@ -49,7 +50,7 @@ export async function getInterviewLeaderboard() {
   const [board, preference, best] = await Promise.all([
     boardRequest,
     supabase.from("interview_preferences").select("display_name,leaderboard_opt_in").eq("user_id", userId).maybeSingle(),
-    supabase.from("interview_attempts").select("score").eq("user_id", userId).eq("mode", "free").eq("station_slug", "why-medicine").eq("status", "completed").eq("rubric_version", "why-medicine-v1").not("score", "is", null).order("score", { ascending: false }).limit(1).maybeSingle(),
+    supabase.from("interview_attempts").select("score").eq("user_id", userId).eq("mode", "free").eq("station_slug", "why-medicine").eq("status", "completed").eq("rubric_version", INTERVIEW_RUBRIC_VERSION).not("score", "is", null).order("score", { ascending: false }).limit(1).maybeSingle(),
   ]);
   if (board.error || preference.error || best.error) readError();
   const savedPreference = (preference.data as Preference | null) ?? { display_name: `Candidate ${userId.slice(0, 6)}`, leaderboard_opt_in: false };

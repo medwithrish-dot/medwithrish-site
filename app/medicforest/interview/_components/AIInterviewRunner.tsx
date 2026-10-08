@@ -62,6 +62,21 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [saveWarning, setSaveWarning] = useState("");
   const [saved, setSaved] = useState(false);
   const [followUpBusy, setFollowUpBusy] = useState(false);
+  const [probingEnabled, setProbingEnabled] = useState(true);
+  const [probingPreferenceLoaded, setProbingPreferenceLoaded] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      try { setProbingEnabled(localStorage.getItem("medicforest:interview:probing") !== "off"); } catch { /* Default on when storage is unavailable. */ }
+      setProbingPreferenceLoaded(true);
+    });
+    return () => { cancelled = true; };
+  }, []);
+  const setProbingPreference = (enabled: boolean) => {
+    setProbingEnabled(enabled);
+    try { localStorage.setItem("medicforest:interview:probing", enabled ? "on" : "off"); } catch { /* The current session still honours the preference. */ }
+  };
   const [followUpNotice, setFollowUpNotice] = useState("");
   const [awaitingDone, setAwaitingDone] = useState(false);
   const [micWanted, setMicWanted] = useState(false);
@@ -410,7 +425,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       : findInterviewStation(attempt.stationSlug)?.questions ?? []
     : [], [attempt]);
   const followingQuestion = attempt?.questions[questionIndex + 1];
-  const followUpAvailable = !preview && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
+  const followUpAvailable = probingPreferenceLoaded && probingEnabled && !preview && secondsRemaining >= 45
+    && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
+    && (attempt?.questions.length ?? 0) - originalQuestions.length < 3
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
   const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && !originalQuestions.includes(question)
     ? `/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`
@@ -721,6 +738,10 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 403 && <Link href="/medicforest/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
     {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI feedback is paused. Timed practice and saved answers are available.</p>}
+    {!reviewing && <div className="mb-4 rounded-xl border border-[#d9e6e1] bg-white p-4 text-sm text-[#415b61]">
+      <label className="flex items-center gap-3 font-semibold"><input type="checkbox" checked={probingEnabled} disabled={followUpBusy} onChange={(event) => setProbingPreference(event.target.checked)} />Automatic follow-up questions</label>
+      <p className="mt-2">The interviewer can ask one brief probe after each main answer, including ethics answers. Up to three per station. Your choice is remembered on this device.</p>
+    </div>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your Med interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}

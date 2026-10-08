@@ -1,12 +1,11 @@
-// The inverse of exponential effort: each extra point needs more rubric evidence.
-// Fixed v1 mapping, shared by all candidates. No relative/population-based scores.
+// Fixed v2 scale: the rubric average is displayed without a generosity boost.
+// Saved v1 reports retain their stored scores; they are not silently regraded.
 export function interviewPercentage(raw: number): number {
   if (!Number.isFinite(raw)) throw new Error("Invalid rubric score");
-  const quality = Math.min(100, Math.max(0, raw)) / 100;
-  return Math.min(99, Math.round((99 * Math.log1p(9 * quality) / Math.log(10)) * 10) / 10);
+  return Math.min(99, Math.round(Math.min(100, Math.max(0, raw)) * 10) / 10);
 }
 
-export const INTERVIEW_RUBRIC_VERSION = "why-medicine-v1";
+export const INTERVIEW_RUBRIC_VERSION = "why-medicine-v2";
 export const RUBRIC_CRITERIA = ["Relevance and motivation", "Evidence and reflection", "Reasoning and balance", "Structure and clarity", "Insight and professionalism"] as const;
 
 export function validateFeedback(value: unknown) {

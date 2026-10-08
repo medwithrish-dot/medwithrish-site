@@ -1,4 +1,5 @@
 import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
+import { requireHumanRequest } from "@/utils/security/human-check";
 import { findInterviewStation } from "@/app/medicforest/interview/_data/interview-stations";
 import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/openai";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
     const bankOriginals = snapshot.questions.filter((_, index) => Boolean(snapshot.questionIds?.[index]));
     const originals: readonly string[] = bankOriginals.length ? bankOriginals : station.questions;
     const questionNumber = originals.indexOf(body.question);
-    if (questionNumber < 0 || !row.questions.includes(body.question)) throw new InterviewError("Follow-ups are available once for each main question");
+    if (questionNumber < 0 || questionNumber >= 8 || !row.questions.includes(body.question)) throw new InterviewError("Follow-ups are available once for each main question");
     const question = body.question;
     const reply = (saved: Record<string, unknown>, followUp: string, source: "ai" | "practice" | "saved") => {
       const attempt = toInterviewAttempt(saved);
@@ -44,14 +45,18 @@ export async function POST(request: Request) {
     validateWindow(row);
     const existing = existingFollowUp(row.questions, question, originals);
     if (existing) return reply(row, existing, "saved");
+    const endsAt = Date.parse(row.started_at) + (Number(row.preparation_seconds) + Number(row.station_seconds)) * 1000;
+    if (endsAt - Date.now() < 45_000) throw new InterviewError("Continue your answer; there is too little time for another follow-up.", 409);
 
     const answer = snapshot.answers.find((saved) => saved.question === question)?.answer.trim() ?? "";
     if (answer.split(/\s+/).filter(Boolean).length < 20) throw new InterviewError("Save at least 20 words in this answer before asking a follow-up.");
     if (answer.length > 8000 || snapshot.answers.reduce((sum, saved) => sum + saved.answer.length, 0) > 18000) throw new InterviewError("Please shorten your answer before asking a follow-up.");
+    await requireHumanRequest();
 
     // Atomically reserve one provider call per original question. The daily/monthly
     // attempt quotas therefore also bound AI usage; retries cannot spend more quota.
     const mask = followUpClaimMask(row.last_error);
+    if (mask.toString(2).replace(/0/g, "").length >= 3) throw new InterviewError("This station has reached its three follow-up limit.", 429);
     const bit = 1 << questionNumber;
     if (mask & bit) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
     let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress");
@@ -61,7 +66,7 @@ export async function POST(request: Request) {
     if (!claimed) throw new InterviewError("Another Med interview update is running. Please try again.", 409);
 
     let source: "ai" | "practice" = "practice";
-    let followUp = practiceFollowUp(answer, questionNumber);
+    let followUp = practiceFollowUp(answer, questionNumber, station.theme);
     const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
     const applicant = readApplicant(preparation?.applicant);
     if (interviewAiConfigured()) {
@@ -75,7 +80,7 @@ export async function POST(request: Request) {
     }
 
     if (!questionEligible(followUp, applicant)) {
-      followUp = practiceFollowUp(answer, questionNumber);
+      followUp = practiceFollowUp(answer, questionNumber, station.theme);
       source = "practice";
     }
 

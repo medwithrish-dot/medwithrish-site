@@ -63,7 +63,7 @@ returns jsonb language sql stable security invoker set search_path=public as $$
     'completedCount',count(*) filter(where status='completed'),
     'scoredCount',count(*) filter(where status='completed' and score is not null),
     'averageScore',round(avg(score) filter(where status='completed'),1),
-    'bestFreeScore',max(score) filter(where status='completed' and mode='free' and station_slug='why-medicine' and rubric_version='why-medicine-v1'),
+    'bestFreeScore',max(score) filter(where status='completed' and mode='free' and station_slug='why-medicine' and rubric_version='why-medicine-v2'),
     'practiceSeconds',coalesce(round(sum(least(station_seconds,greatest(0,
       extract(epoch from (coalesce(answer_submitted_at,completed_at)-started_at))-preparation_seconds
     ))) filter(where status='completed' and completed_at is not null)),0),

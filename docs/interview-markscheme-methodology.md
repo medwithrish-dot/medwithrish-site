@@ -33,7 +33,7 @@ The scoring anchors currently used by the assessor are:
 - **90:** exceptionally nuanced throughout;
 - **100:** all criteria fully evidenced with no material omission.
 
-The five raw criterion scores are averaged. `interviewPercentage()` then applies the versioned logarithmic calibration in `utils/interviews/scoring.ts`, with the displayed result capped at 99%. This mapping must remain consistent across candidates; it is not a percentile or comparison with other users.
+The five raw criterion scores are averaged. `interviewPercentage()` then applies the versioned direct-average calibration in `utils/interviews/scoring.ts`, with the displayed result capped at 99%. The v2 scale does not boost the rubric average. Saved v1 reports retain their original scores and are excluded from the v2 leaderboard. This mapping must remain consistent across candidates; it is not a percentile or comparison with other users.
 
 ## Station-specific interpretation
 

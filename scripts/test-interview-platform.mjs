@@ -55,7 +55,7 @@ async function attempt(user, options = {}) {
     values ($1,$2,$3,$4,'Practice',$5,$6,0,480,0,'["Why medicine?"]',$7::jsonb,$8,$9,$10,$11)`, [
     id, user, options.mode || "free", options.stationSlug || "why-medicine", options.status || "completed", randomUUID(),
     JSON.stringify([{ question: "Why medicine?", answer: transcript }]), options.score ?? null,
-    options.completedAt || "2026-01-02T10:00:00Z", options.startedAt || new Date().toISOString(), options.rubric || "why-medicine-v1",
+    options.completedAt || "2026-01-02T10:00:00Z", options.startedAt || new Date().toISOString(), options.rubric || "why-medicine-v2",
   ]);
   return id;
 }
@@ -85,8 +85,14 @@ try {
   const questionProgressSql = (await readFile(new URL("../supabase/medicforest_interview_question_progress.sql", import.meta.url), "utf8"))
     .replace('create extension if not exists "pgcrypto";', "");
   const groupsSql = await readFile(new URL("../supabase/medicforest_interview_groups.sql", import.meta.url), "utf8");
+  const scoringV2Sql = await readFile(new URL("../supabase/medicforest_interview_scoring_v2.sql", import.meta.url), "utf8");
   await check("actual platform, groups and grading guard SQL install and can be rerun", async () => {
-    await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
+    await db.exec(platformSql.replaceAll("why-medicine-v2", "why-medicine-v1"));
+    await db.exec(questionProgressSql);
+    await db.exec(groupsSql.replaceAll("why-medicine-v2", "why-medicine-v1"));
+    await db.exec(scoringV2Sql); await db.exec(scoringV2Sql);
+    const readers = await db.query("select pg_get_functiondef(oid) as definition from pg_proc where proname in ('interview_leaderboard','interview_groups_action')");
+    assert.ok(readers.rows.every(row => row.definition.includes("why-medicine-v2") && !row.definition.includes("why-medicine-v1")));
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(gradingGuardSql); await db.exec(gradingGuardSql);
     await db.exec(publicLeaderboardSql); await db.exec(publicLeaderboardSql);

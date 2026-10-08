@@ -16,13 +16,9 @@ test("scores are bounded, finite, monotonic and reach exactly 99", () => {
   for (const value of [NaN, Infinity, -Infinity]) assert.throws(() => interviewPercentage(value));
 });
 
-test("higher percentages need successively more rubric evidence", () => {
-  const thresholds = [50, 60, 70, 80, 90, 98].map((target) => {
-    for (let raw = 0; raw <= 100; raw += 0.01) if (interviewPercentage(raw) >= target) return raw;
-    throw new Error("Unreachable score");
-  });
-  assert.ok(thresholds[4] - thresholds[3] > thresholds[3] - thresholds[2]);
-  assert.ok(thresholds[3] - thresholds[2] > thresholds[2] - thresholds[1]);
+test("strict scores do not inflate weak or adequate evidence", () => {
+  for (const raw of [0, 20, 40, 60, 80, 90]) assert.equal(interviewPercentage(raw), raw);
+  assert.equal(interviewPercentage(99.9), 99);
 });
 
 const valid = () => ({ summary: "A clear and reflective answer.", strengths: ["Uses a specific example."], improvements: ["Explain what changed in your understanding."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence with room for deeper reflection." })) });

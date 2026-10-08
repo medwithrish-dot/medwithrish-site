@@ -62,7 +62,7 @@ Create a group and share its invitation yourself. No email or message is sent by
 
 The current group page shows invitations, the member roster, question-bank progress and each member's best free Why medicine? score. The earlier shared-station panel has been removed from the page. The database retains its room records and RPC actions for compatibility; they are not part of the current group interface.
 
-The overall leaderboard is readable without signing in and includes only opted-in, completed free Why medicine? attempts under rubric `why-medicine-v1`. It shows a nickname, score and rank, never email, user IDs or transcripts. One best attempt per person is ranked; equal scores use earliest completion. Signed-in members can withdraw their score or change their nickname.
+The overall leaderboard is readable without signing in and includes only opted-in, completed free Why medicine? attempts under rubric `why-medicine-v2`. It shows a nickname, score and rank, never email, user IDs or transcripts. One best attempt per person is ranked; equal scores use earliest completion. Signed-in members can withdraw their score or change their nickname.
 
 Public nickname validation runs in the browser and authenticated API. The moderation migration adds a database constraint and a guard on the leaderboard RPC, so direct calls cannot bypass it. The API also replaces unsafe legacy names when reading before the migration has been installed. The application and SQL normalization rules are checked against the same profanity/evasion and legitimate-name examples by `node --test scripts/test-interview-public-names.mjs`.
 

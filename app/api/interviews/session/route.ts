@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { requireHumanRequest } from "@/utils/security/human-check";
 import { interviewAiConfigured } from "@/utils/interviews/openai";
 import { findInterviewUniversity } from "@/app/medicforest/interview/_data/universities";
 import { findInterviewStation, interviewStations } from "@/app/medicforest/interview/_data/interview-stations";
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
   try {
     const body = await readInterviewBody(request);
     const { user, admin, isPremium } = await interviewContext();
+    await requireHumanRequest();
     const requestedFree = body.mode === "free";
     let mode = body.mode;
     if (!["free", "university", "station", "reference"].includes(String(mode))) throw new InterviewError("Choose a Med interview mode");

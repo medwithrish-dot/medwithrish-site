@@ -1,5 +1,7 @@
 import { databaseError, interviewContext, interviewFailure, InterviewError, validId } from "@/utils/interviews/server";
 import { synthesizeInterviewSpeech } from "@/utils/interviews/text-to-speech";
+import { requireHumanRequest } from "@/utils/security/human-check";
+import { followUpClaimMask } from "@/utils/interviews/follow-up";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
 
 export const runtime = "nodejs";
@@ -27,10 +29,11 @@ export async function GET(request: Request) {
     // Generated probes are inserted immediately after a saved bank question.
     // Fixed questions already have local MP3s and must not spend Cloud TTS quota.
     const lastError = typeof data.last_error === "string" ? data.last_error : "";
-    const claimed = /^ai_followup:([1-7])$/.exec(lastError);
+    const claimed = lastError.startsWith("ai_followup:") && followUpClaimMask(lastError) > 0;
     const probableProbe = claimed && index > 0 && index < questions.length && !questionIdForText(question);
     if (!probableProbe) throw new InterviewError("Recorded audio is used for this question", 400);
 
+    await requireHumanRequest();
     const audio = await synthesizeInterviewSpeech(question, voice as "female" | "male");
     const body = Uint8Array.from(audio).buffer;
     return new Response(body, {
