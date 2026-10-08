@@ -34,9 +34,10 @@ function load(file, mocks, cache = new Map()) {
 function harness({ signedIn = false } = {}) {
   const state = {
     userId: signedIn ? owner : null, authThrows: false, anonymousCalls: 0, signedInCalls: 0, reads: [], scoreFilter: null, writes: [], readError: null, writeError: null,
+    rpcErrorCode: null, attemptPages: [], publicPreferences: [], adminReads: [], fallbackError: null,
   };
-  const rows = [{ rank: 1, display_name: "f.u.c.k", score: 91, completed_at: "2026-09-01T12:00:00Z", is_you: null }];
-  const result = () => ({ data: rows, error: state.readError && { code: "XX000", message: state.readError } });
+  const rows = [{ rank: 1, display_name: "f.u.c.k", score: 91, completed_at: "2026-09-01T12:00:00Z", is_you: null, email: "private@example.test", user_id: "private-id" }];
+  const result = () => ({ data: rows, error: state.rpcErrorCode ? { code: state.rpcErrorCode, message: "Missing RPC" } : state.readError && { code: "XX000", message: state.readError } });
   const query = table => {
     state.reads.push(table);
     const chain = {
@@ -60,8 +61,15 @@ function harness({ signedIn = false } = {}) {
   };
   const admin = {
     from(table) {
-      assert.equal(table, "interview_preferences");
-      return { upsert: async value => { state.writes.push(value); return { error: state.writeError && { code: "XX000", message: state.writeError } }; } };
+      const chain = {
+        select: fields => { state.adminReads.push([table, fields]); return chain; },
+        eq: (field, value) => { if (field === "rubric_version") assert.equal(value, "why-medicine-v2"); if (field === "leaderboard_opt_in") assert.equal(value, true); return chain; },
+        not: () => chain, order: () => chain,
+        range: async start => ({ data: state.attemptPages[start / 200] ?? [], error: state.fallbackError }),
+        in: async (_field, users) => ({ data: state.publicPreferences.filter(row => row.leaderboard_opt_in && users.includes(row.user_id)), error: state.fallbackError }),
+        upsert: async value => { state.writes.push(value); return { error: state.writeError && { code: "XX000", message: state.writeError } }; },
+      };
+      return chain;
     },
   };
   class InterviewError extends Error { constructor(message, status = 400) { super(message); this.status = status; } }
@@ -88,6 +96,7 @@ test("guests see only opted-in public scores and cannot save preferences", async
   const response = await api.route.GET();
   const data = await response.json();
   assert.equal(response.status, 200);
+  assert.doesNotMatch(JSON.stringify(data), /private@example|private-id|user_id/);
   assert.deepEqual(data.entries.map(({ display_name, is_you }) => [display_name, is_you]), [["Candidate", false]]);
   assert.equal(data.preference, null);
   assert.equal(data.bestScore, null);
@@ -99,6 +108,61 @@ test("guests see only opted-in public scores and cannot save preferences", async
   api.state.authThrows = true;
   assert.equal((await api.route.GET()).status, 200);
   assert.equal(api.state.anonymousCalls, 2);
+});
+
+test("missing v2 RPC uses current scores only, honours opt-in and strips private identifiers", async () => {
+  const api = harness({ signedIn: true });
+  api.state.rpcErrorCode = "PGRST202";
+  const completed_at = "2026-10-08T09:00:00Z";
+  api.state.attemptPages = [[
+    { user_id: "private-user", score: 99, completed_at },
+    { user_id: owner, score: 90, completed_at },
+    { user_id: owner, score: 89, completed_at },
+    { user_id: "other", score: 80, completed_at },
+  ]];
+  api.state.publicPreferences = [
+    { user_id: "private-user", display_name: "Hidden", leaderboard_opt_in: false },
+    { user_id: owner, display_name: "Rish", leaderboard_opt_in: true },
+    { user_id: "other", display_name: "Student", leaderboard_opt_in: true },
+  ];
+  const response = await api.route.GET();
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.deepEqual(data.entries.map(row => [row.rank, row.display_name, row.score, row.is_you]), [[1, "Rish", 90, true], [2, "Student", 80, false]]);
+  assert.doesNotMatch(JSON.stringify(data.entries), /user_id|private-user|Hidden/);
+  assert.deepEqual(api.state.adminReads, [["interview_attempts", "user_id,score,completed_at"], ["interview_preferences", "user_id,display_name"]]);
+});
+
+test("compatibility paginates duplicate attempts and returns an honest empty board", async () => {
+  const api = harness();
+  api.state.rpcErrorCode = "42883";
+  assert.deepEqual((await (await api.route.GET()).json()).entries, []);
+  api.state.attemptPages = [Array.from({ length: 200 }, () => ({ user_id: owner, score: 90, completed_at: "2026-10-08T09:00:00Z" })), [{ user_id: "other", score: 80, completed_at: "2026-10-08T10:00:00Z" }]];
+  api.state.publicPreferences = [{ user_id: owner, display_name: "Rish", leaderboard_opt_in: true }, { user_id: "other", display_name: "Student", leaderboard_opt_in: true }];
+  const data = await (await api.route.GET()).json();
+  assert.equal(data.entries.length, 2);
+  assert.equal(data.entries[1].rank, 2);
+  api.state.fallbackError = { code: "XX000", message: "Private database detail" };
+  const failed = await api.route.GET();
+  assert.equal(failed.status, 503);
+  assert.doesNotMatch(JSON.stringify(await failed.json()), /Private database/);
+});
+
+test("compatibility limits the board to 100 people and bounds database work", async () => {
+  const api = harness();
+  api.state.rpcErrorCode = "PGRST202";
+  const page = Array.from({ length: 200 }, (_, index) => ({ user_id: `candidate-${index}`, score: 99 - index / 10, completed_at: "2026-10-08T09:00:00Z" }));
+  api.state.attemptPages = [page];
+  api.state.publicPreferences = page.map(row => ({ user_id: row.user_id, display_name: "Student", leaderboard_opt_in: true }));
+  const response = await api.route.GET();
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).entries.length, 100);
+  api.state.publicPreferences = [];
+  api.state.attemptPages = Array.from({ length: 10 }, () => page);
+  api.state.adminReads = [];
+  const capped = await api.route.GET();
+  assert.equal(capped.status, 503);
+  assert.equal(api.state.adminReads.filter(([table]) => table === "interview_attempts").length, 10);
 });
 
 test("signed-in members see their own preference and save only their own validated name", async () => {
@@ -130,7 +194,7 @@ test("leaderboard read and write failures never expose database details", async 
   assert.doesNotMatch((await write.json()).error, /Private database diagnostic/);
 });
 
-test("the guest leaderboard shows a sign-in action instead of editable preferences", async () => {
+for (const failed of [false, true]) test(failed ? "a failed load does not pretend the leaderboard is empty" : "the guest leaderboard shows a sign-in action instead of editable preferences", async () => {
   const source = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewLeaderboard.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true,
@@ -164,7 +228,7 @@ test("the guest leaderboard shows a sign-in action instead of editable preferenc
     if (name === "lucide-react") return new Proxy({}, { get: () => "icon" });
     if (name === "@/utils/interviews/public-name") return { publicNameError: () => null };
     throw new Error(`Unexpected leaderboard dependency: ${name}`);
-  }, loaded, loaded.exports, async () => Response.json({ entries: [], preference: null, bestScore: null }));
+  }, loaded, loaded.exports, async () => failed ? Response.json({ error: "Please retry." }, { status: 503 }) : Response.json({ entries: [], preference: null, bestScore: null }));
   const render = () => {
     cursor = 0;
     const tree = loaded.exports.InterviewLeaderboard();
@@ -180,6 +244,12 @@ test("the guest leaderboard shows a sign-in action instead of editable preferenc
   render();
   await new Promise(resolve => setImmediate(resolve));
   const guest = render();
+  if (failed) {
+    assert.ok(find(guest, node => node.props?.role === "alert"));
+    assert.equal(find(guest, node => node.props?.children === "A fresh start for everyone"), undefined);
+    assert.ok(find(guest, node => node.props?.children === "Scores are currently unavailable. Use Try again above."));
+    return;
+  }
   assert.ok(find(guest, node => node.type === "link" && node.props?.href === "/medicforest/account"));
   assert.equal(find(guest, node => node.type === "input" && node.props?.id === "leaderboard-name"), undefined);
 });

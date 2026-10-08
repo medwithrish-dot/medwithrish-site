@@ -13,7 +13,7 @@
 
 ## Deployment steps still requiring account access
 
-1. Apply `supabase/medicforest_interview_scoring_v2.sql` before deployment. It updates installed scoring readers without changing saved reports or removing moderation and permissions. The v2 public RPC deliberately remains unavailable on an unmigrated installation.
+1. Apply `supabase/medicforest_interview_scoring_v2.sql` to update all scoring readers. It updates installed scoring readers without changing saved reports or removing moderation and permissions. The leaderboard now has a bounded server-side compatibility query when the v2 public RPC is missing; it still includes only current-rubric, completed free attempts from opted-in users and returns no account identifiers. The migration remains recommended for efficient database ranking and the other scoring readers.
 2. Confirm the host has `OPENAI_API_KEY` and `INTERVIEW_OPENAI_MODEL=gpt-6-luna`. Local configuration does not establish production configuration.
 3. After deployment, check a signed-in browser can start a station, answer an ethics probe and receive feedback; check a script without browser classification is rejected before inference. BotID Basic is configured in code and does not use the optional Deep Analysis tier. Local development is explicitly bypassed by the SDK.
 4. Configure aggregate hosting WAF limits, provider project spend/usage limits, and Supabase signup CAPTCHA and email verification. Existing database account quotas and inference claims remain in place. Instance-local throttles cannot establish a global spend ceiling.
