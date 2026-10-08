@@ -1,40 +1,21 @@
 import type { Metadata } from "next";
+import { InterviewTutoringClient } from "./_client";
 
 export const metadata: Metadata = {
-  title: "Med Interview Tutoring | MedWithRish",
-  description: "Practise medicine MMI and panel interviews with individual feedback.",
+  title: "1-to-1 Med Interview Tutoring | MedWithRish",
+  description:
+    "Personal 1-to-1 medicine interview coaching with @medwithrish and specialists. Realistic MMI and panel mock practice, station scorecards and structured technique.",
   alternates: { canonical: "/interview-tutoring" },
 };
 
-import GuidePage from "@/components/GuidePage";
-import { contactHref } from "@/utils/medwithrish/site-links";
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string | string[] }>;
+}) {
+  const { status } = await searchParams;
+  const checkoutStatus =
+    status === "success" || status === "cancelled" ? status : null;
 
-export default function Page() {
-  return (
-    <GuidePage
-      eyebrow="Tutoring"
-      title="Med Interview Tutoring"
-      intro="Targeted support for MMI and panel interviews, with a focus on structure, confidence, and stronger answers."
-      sections={[
-        {
-          title: "What support can include",
-          points: [
-            "MMI station practice and feedback.",
-            "Panel Med interview structure and delivery.",
-            "Ethics, reflection, communication, and confidence-building.",
-          ],
-        },
-        {
-          title: "Why it matters",
-          points: [
-            "Interviews often decide final outcomes.",
-            "Preparation improves confidence under pressure.",
-            "Strong structure helps answers sound more mature and convincing.",
-          ],
-        },
-      ]}
-      ctaLabel="Contact for Med interview tutoring"
-      ctaHref={contactHref("interview-tutoring")}
-    />
-  );
+  return <InterviewTutoringClient checkoutStatus={checkoutStatus} />;
 }

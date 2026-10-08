@@ -16,12 +16,24 @@ const navItems: {
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
   {
+    label: "1-to-1 Tutoring",
+    href: "/tutoring",
+    badge: "POPULAR",
+    items: [
+      { label: "All Tutoring Packages", href: "/tutoring" },
+      { label: "UCAT Crash Course (£100 / £140)", href: "/ucat-tutoring" },
+      { label: "Med Interview Tutoring (£100 / £140)", href: "/interview-tutoring" },
+      { label: "Complete Admissions Package (£200)", href: "/tutoring#packages" },
+      { label: "Personal Statement Support", href: "/personal-statement-session" },
+    ],
+  },
+  {
     label: "UCAT",
     href: "/ucat-timeline",
     items: [
       { label: "UCAT Notes", href: MEDWITHRISH_NOTES_URL, external: true },
       { label: "UCAT Prep Timeline", href: "/ucat-timeline" },
-      { label: "UCAT Tutoring", href: "/ucat-tutoring" },
+      { label: "UCAT Tutoring & Crash Course", href: "/ucat-tutoring" },
       { label: "Free UCAT Score Tracker", href: "/ucat-score-tracker" },
       { label: "UCAT Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
     ],

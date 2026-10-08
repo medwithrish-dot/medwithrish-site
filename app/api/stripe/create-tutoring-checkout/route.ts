@@ -68,10 +68,22 @@ export async function POST(request: Request) {
     const returnPath =
       body.returnTo === "interviews"
         ? "/medicforest/interview/tutoring"
+        : body.returnTo === "ucat"
+        ? "/ucat-tutoring"
+        : body.returnTo === "interview-tutoring"
+        ? "/interview-tutoring"
+        : body.returnTo === "tutoring"
+        ? "/tutoring"
         : "/medicforest/tutoring";
     const source =
       body.returnTo === "interviews"
         ? "medicforest-interview-tutoring"
+        : body.returnTo === "ucat"
+        ? "medwithrish-ucat-tutoring"
+        : body.returnTo === "interview-tutoring"
+        ? "medwithrish-interview-tutoring"
+        : body.returnTo === "tutoring"
+        ? "medwithrish-tutoring"
         : "medicforest-tutoring";
 
     const session = await stripe.checkout.sessions.create({
