@@ -8,6 +8,7 @@ test("standalone account setup protects plans and credits and reruns preserve us
   try {
     await db.exec(`
       create role authenticated;
+      create role anon;
       create schema auth;
       grant usage on schema auth to authenticated;
       create table auth.users(id uuid primary key, email text, raw_user_meta_data jsonb default '{}');
@@ -22,12 +23,23 @@ test("standalone account setup protects plans and credits and reruns preserve us
     const practice = await readSql("medicforest_practice_setup.sql");
     await db.exec(base);
     await db.exec("insert into auth.users(id,email) values ('11111111-1111-4111-8111-111111111111','student@example.test')");
+    await db.exec("insert into auth.users(id,email) values ('22222222-2222-4222-8222-222222222222','other@example.test')");
     await db.exec("set role authenticated");
+    const ownProfiles = (await db.query("select id,email from public.profiles")).rows;
+    assert.equal(ownProfiles.length, 1);
+    assert.equal(ownProfiles[0].email, "student@example.test");
+    assert.equal((await db.query("select email from public.profiles where id='22222222-2222-4222-8222-222222222222'")).rows.length, 0);
+    assert.equal((await db.query("update public.profiles set full_name='Intruder' where id='22222222-2222-4222-8222-222222222222' returning id")).rows.length, 0);
+    await assert.rejects(db.query("select * from auth.users"), /permission denied/);
     await db.exec("update public.profiles set full_name='Student'");
     await assert.rejects(db.exec("update public.profiles set current_plan='premium'"), /permission denied/);
     await assert.rejects(db.exec("update public.profiles set diagnostic_credits=100"), /permission denied/);
     await assert.rejects(db.exec("delete from public.profiles"), /permission denied/);
     await assert.rejects(db.exec("insert into public.profiles(id,current_plan) values ('11111111-1111-4111-8111-111111111111','premium')"), /permission denied/);
+    await db.exec("reset role");
+    await db.exec("set role anon");
+    await assert.rejects(db.query("select email from public.profiles"), /permission denied/);
+    await assert.rejects(db.query("select * from auth.users"), /permission denied/);
     await db.exec("reset role");
     await db.exec("update public.profiles set diagnostic_credits=0");
     await db.exec(practice); await db.exec(base); await db.exec(practice);

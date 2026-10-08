@@ -173,6 +173,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
         if (error) throw error;
 
+        setPassword("");
         if (data.session) {
           setUser(data.user);
           setAuthMessage("Account created successfully!");
@@ -189,6 +190,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
         if (error) throw error;
 
+        setPassword("");
         setUser(data.user);
         setAuthMessage("Logged in successfully.");
       }
@@ -205,6 +207,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
     if (!supabase) return;
     try {
       await supabase.auth.signOut();
+      setPassword("");
       setUser(null);
       setProfile(null);
       router.refresh();
