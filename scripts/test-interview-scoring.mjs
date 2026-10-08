@@ -25,16 +25,17 @@ const valid = () => ({ summary: "A clear and reflective answer.", strengths: ["U
 
 test("practice pass requires the overall standard and independent criterion minimums", () => {
   const result = scores => practiceResult(scores.map(score => ({ score })));
-  assert.equal(result([60, 60, 60, 60, 60]).outcome, "pass");
-  assert.equal(result([80, 40, 50, 80, 50]).outcome, "pass");
-  assert.equal(result([59, 59, 59, 59, 59]).outcome, "fail");
+  assert.equal(result([75, 75, 75, 75, 75]).outcome, "pass");
+  assert.equal(result([60, 60, 60, 60, 60]).outcome, "fail");
+  assert.equal(result([100, 75, 50, 100, 50]).outcome, "pass");
+  assert.equal(result([74, 74, 74, 74, 74]).outcome, "fail");
   assert.equal(result([100, 100, 100, 100, 30]).outcome, "fail");
   assert.equal(result([100, 100, 49, 100, 100]).outcome, "fail");
   assert.equal(result([100, 39, 100, 100, 100]).outcome, "fail");
-  assert.equal(result([60, 60, 60, 60, 60]).borderline, true);
-  assert.equal(result([80, 80, 80, 80, 80]).borderline, false);
+  assert.equal(result([75, 75, 75, 75, 75]).borderline, true);
+  assert.equal(result([85, 85, 85, 85, 85]).borderline, false);
   assert.equal(result([20, 20, 20, 20, 20]).borderline, false);
-  assert.equal(result([59.99, 59.99, 59.99, 59.99, 59.99]).outcome, "fail");
+  assert.equal(result([74.99, 74.99, 74.99, 74.99, 74.99]).outcome, "fail");
   assert.throws(() => result([100]));
   assert.throws(() => result([100, 100, NaN, 100, 100]));
 });

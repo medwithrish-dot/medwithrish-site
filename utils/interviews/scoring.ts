@@ -7,6 +7,7 @@ export function interviewPercentage(raw: number): number {
 
 export const INTERVIEW_RUBRIC_VERSION = "why-medicine-v2";
 export const RUBRIC_CRITERIA = ["Relevance and motivation", "Evidence and reflection", "Reasoning and balance", "Structure and clarity", "Insight and professionalism"] as const;
+export const PRACTICE_PASS_AVERAGE = 75;
 
 // Product practice standard, not a university cutoff. Compute it once on the server.
 export function practiceResult(rubric: readonly { score: number }[]) {
@@ -14,13 +15,13 @@ export function practiceResult(rubric: readonly { score: number }[]) {
   const average = rubric.reduce((sum, row) => sum + row.score, 0) / rubric.length;
   const minimums = [40, 40, 50, 40, 50] as const;
   const reasons: string[] = [];
-  if (average < 60) reasons.push("Your overall rubric average needs to reach 60/100.");
+  if (average < PRACTICE_PASS_AVERAGE) reasons.push(`Your overall rubric average needs to reach ${PRACTICE_PASS_AVERAGE}/100.`);
   rubric.forEach((row, index) => {
     if (row.score < minimums[index]) reasons.push(`${RUBRIC_CRITERIA[index]} needs to reach ${minimums[index]}/100. Review the evidence and fix for this criterion.`);
   });
-  const margin = Math.min(average - 60, ...rubric.map((row, index) => row.score - minimums[index]));
+  const margin = Math.min(average - PRACTICE_PASS_AVERAGE, ...rubric.map((row, index) => row.score - minimums[index]));
   return {
-    version: "practice-pass-v1" as const,
+    version: "practice-pass-v2" as const,
     outcome: reasons.length ? "fail" as const : "pass" as const,
     borderline: Math.abs(margin) <= 5,
     reasons: reasons.length ? reasons : ["You met the overall practice standard and every required criterion minimum. Keep developing the improvements below."],

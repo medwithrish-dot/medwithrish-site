@@ -13,7 +13,7 @@ export type InterviewFeedback = {
   weaknesses?: string[];
   fixes?: string[];
   practiceResult?: {
-    version: "practice-pass-v1";
+    version: "practice-pass-v1" | "practice-pass-v2";
     outcome: "pass" | "fail";
     borderline: boolean;
     reasons: string[];

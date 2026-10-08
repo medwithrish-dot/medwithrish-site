@@ -37,7 +37,7 @@ The five raw criterion scores are averaged. `interviewPercentage()` then applies
 
 ## Practice pass/fail
 
-New reports calculate a practice pass/fail decision on the server from the validated rubric: mean at least 60, reasoning and professionalism at least 50 each, all other criteria at least 40. Weak reasoning or professionalism cannot be hidden by a high average. Students see the unmet minimums alongside the content weaknesses and fixes. Near-cutoff results are flagged. These are MedicForest practice thresholds, not university admissions criteria. See [decision rules and repeated live calibration results](interview-practice-pass-fail.md).
+New reports calculate a practice pass/fail decision on the server from the validated rubric: mean at least 75, reasoning and professionalism at least 50 each, all other criteria at least 40. Weak reasoning or professionalism cannot be hidden by a high average. Students see the unmet minimums alongside the content weaknesses and fixes. Near-cutoff results are flagged. These are MedicForest practice thresholds, not university admissions criteria. See [decision rules and repeated live calibration results](interview-practice-pass-fail.md).
 
 ## Station-specific interpretation
 

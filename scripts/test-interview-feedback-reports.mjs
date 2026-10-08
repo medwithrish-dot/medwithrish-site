@@ -27,6 +27,7 @@ function renderReview(feedback = null, preview = false) {
   const loaded = { exports: {} };
   const React = require("react");
   new Function("require", "module", "exports", output)(name => {
+    if (name === "@/utils/interviews/scoring") return { practiceResult: scores => validateFeedback({ summary: "Valid", strengths: ["Valid"], improvements: ["Valid"], rubric: scores }).practiceResult, PRACTICE_PASS_AVERAGE: 75 };
     if (name === "react" || name === "react/jsx-runtime") return require(name);
     if (name === "next/link") return { __esModule: true, default: ({ children, href }) => React.createElement("a", { href }, children) };
     if (name === "lucide-react") return new Proxy({}, { get: () => () => null });
@@ -62,8 +63,12 @@ test("students see pass/fail blockers and borderline guidance, while old reports
   const fail = renderReview(report([90, 90, 90, 90, 30]));
   assert.match(fail, /Practice fail/);
   assert.match(fail, /Insight and professionalism needs to reach 50/);
-  const pass = renderReview(report([60, 60, 60, 60, 60]));
+  const pass = renderReview(report([75, 75, 75, 75, 75]));
   assert.match(pass, /Practice pass/);
+  assert.match(pass, /average at least 75\/100/);
+  const old = report([60, 60, 60, 60, 60]);
+  old.practiceResult = { version: "practice-pass-v1", outcome: "pass", borderline: true, reasons: ["Old threshold"] };
+  assert.match(renderReview(old), /Practice fail/);
   assert.match(pass, /Close to a practice cutoff/);
   assert.match(pass, /medical schools set their own admissions criteria/);
   const legacy = report([60, 60, 60, 60, 60]);

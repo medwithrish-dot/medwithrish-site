@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import type { InterviewAttempt } from "../_lib/interview-types";
+import { practiceResult, PRACTICE_PASS_AVERAGE } from "@/utils/interviews/scoring";
 import { findInterviewUniversity } from "../_data/universities";
 import { AttemptMarkSchemes } from "./AttemptMarkSchemes";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
@@ -38,6 +39,8 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
   const answered = transcript.filter((item) => item.answer.trim()).length;
   const feedback = attempt.feedback;
+  // Apply the current practice cutoff to existing classified reports without regrading.
+  const decision = feedback?.practiceResult ? practiceResult(feedback.rubric) : null;
   const speechSamples = attempt.metrics.speechSampleCount ?? 0;
   const speechWords = attempt.metrics.speechWordsPerSevenSeconds ?? 0;
   const speechSpeed = speechSamples ? (speechWords < 13 ? "slow" : speechWords > 21 ? "fast" : "medium") : null;
@@ -70,7 +73,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
       ...transcript.map((item) => `Interviewer: ${[item.interviewerIntro, item.question].filter(Boolean).join(" ")}\n${answerConversation(item).map((turn) => `${turn.speaker}: ${turn.text || "No answer saved."}`).join("\n")}`),
       ...(speechSideNote ? ["", "SPEECH DELIVERY SIDE NOTE", speechSideNote] : []),
-      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, ...(feedback.practiceResult && !preview ? [`Practice result: ${feedback.practiceResult.outcome}`, ...feedback.practiceResult.reasons, ...(feedback.practiceResult.borderline ? ["Close to a practice cutoff; review the marking reasons."] : []), "Practice standard: average 60; reasoning and professionalism 50 each; other criteria 40 each. Not a university admissions cutoff."] : []), feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 - ${item.reason}`)] : []),
+      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, ...(decision && !preview ? [`Practice result: ${decision.outcome}`, ...decision.reasons, ...(decision.borderline ? ["Close to a practice cutoff; review the marking reasons."] : []), `Practice standard: average ${PRACTICE_PASS_AVERAGE}; reasoning and professionalism 50 each; other criteria 40 each. Not a university admissions cutoff.`] : []), feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 - ${item.reason}`)] : []),
     ].join("\n\n");
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
@@ -129,13 +132,13 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
 
     {feedback && <section className={styles.assessment} id="station-feedback" ref={assessmentRef} tabIndex={-1} aria-labelledby="feedback-heading">
       <header><div><p className={styles.eyebrow}>{preview ? "ILLUSTRATIVE SAMPLE" : "YOUR AI FEEDBACK"}</p><h2 id="feedback-heading">Your feedback</h2><p>{feedback.summary}</p></div><div className={styles.score}><strong>{feedback.score}<span>%</span></strong><span>{preview ? "Example score" : "Practice score"}</span></div></header>
-      {!preview && feedback.practiceResult && <section className="my-5 rounded-xl border border-[#d9e6e1] bg-[#f5f8f7] p-5" aria-label="Practice pass or fail">
-        <h3 className="text-xl font-bold text-[#042724]">{feedback.practiceResult.outcome === "pass" ? "Practice pass" : "Practice fail — needs improvement"}</h3>
-        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[#415b61]">{feedback.practiceResult.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>
-        {feedback.practiceResult.borderline && <p className="mt-3 text-sm font-semibold text-[#785819]">Close to a practice cutoff. Review the marking reasons and compare another attempt; small scoring differences can change this result.</p>}
-        <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least 60/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; medical schools set their own admissions criteria.</p>
+      {!preview && decision && <section className="my-5 rounded-xl border border-[#d9e6e1] bg-[#f5f8f7] p-5" aria-label="Practice pass or fail">
+        <h3 className="text-xl font-bold text-[#042724]">{decision.outcome === "pass" ? "Practice pass" : "Practice fail — needs improvement"}</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[#415b61]">{decision.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>
+        {decision.borderline && <p className="mt-3 text-sm font-semibold text-[#785819]">Close to a practice cutoff. Review the marking reasons and compare another attempt; small scoring differences can change this result.</p>}
+        <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least {PRACTICE_PASS_AVERAGE}/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; medical schools set their own admissions criteria.</p>
       </section>}
-      {!preview && !feedback.practiceResult && <p className={styles.sourceNote}>This older report was not assessed under the current practice pass/fail standard.</p>}
+      {!preview && !decision && <p className={styles.sourceNote}>This older report was not assessed under the current practice pass/fail standard.</p>}
       <div className={styles.takeaways}>{feedbackSections.map((group) => <section key={group.title}><h3>{group.title}</h3>{group.items.length ? <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className={styles.sourceNote}>This older report did not include a separate weaknesses section.</p>}</section>)}</div>
       <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each criterion is marked out of 100; the calibrated overall score is capped at 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
