@@ -171,3 +171,46 @@ test("account profile requests cannot restore an earlier user's data after switc
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(states[1], null, "the late profile cannot update an unmounted account view");
 });
+
+test("verification waits for browser auth initialization without exchanging the one-use code again", async () => {
+  const states = []; const effects = []; const timers = [];
+  let authChanged; let resolveSession; let reads = 0; let exchanges = 0; let cleanedUrl;
+  const client = {
+    auth: {
+      getSession: () => { reads++; return new Promise(resolve => { resolveSession = resolve; }); },
+      exchangeCodeForSession: async () => { exchanges++; throw new Error("code already consumed"); },
+      onAuthStateChange: callback => { authChanged = callback; return { data: { subscription: { unsubscribe() {} } } }; },
+    },
+    from: () => ({ select() { return this; }, eq() { return this; }, maybeSingle: async () => ({ data: { full_name: "Verified student" }, error: null }) }),
+  };
+  const react = {
+    useState(initial) { const index = states.length; states.push(typeof initial === "function" ? initial() : initial); return [states[index], value => { states[index] = typeof value === "function" ? value(states[index]) : value; }]; },
+    useRef: current => ({ current }), useMemo: callback => callback(), useCallback: callback => callback,
+    useEffect: callback => effects.push(callback),
+  };
+  const output = ts.transpileModule(readFileSync(resolve(root, "app/medicforest/account/_client.tsx"), "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+  const compiled = { exports: {} };
+  new Function("require", "module", "exports", "window", output)(name => {
+    if (name === "react") return react;
+    if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
+    if (name === "next/navigation") return { useRouter: () => ({}) };
+    if (name === "@/utils/supabase/client") return { hasSupabaseConfig: () => true, createClient: () => client };
+    return {};
+  }, compiled, compiled.exports, {
+    location: { search: "?code=one-use&next=%2Finterviews%2Fdashboard", pathname: "/account", hash: "" },
+    history: { replaceState(_state, _title, url) { cleanedUrl = url; } },
+    setTimeout: callback => timers.push(callback), clearTimeout() {},
+  });
+  compiled.exports.ManageAccountClient({});
+  const cleanup = effects[0]();
+  authChanged("INITIAL_SESSION", { user: { id: "verified" } });
+  resolveSession({ data: { session: { user: { id: "verified" } } }, error: null });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(reads, 1);
+  assert.equal(exchanges, 0);
+  assert.equal(states[0].id, "verified");
+  assert.equal(states[1].full_name, "Verified student");
+  assert.equal(states[2], false, "INITIAL_SESSION must not leave the account stuck loading");
+  assert.equal(cleanedUrl, "/account?next=%2Finterviews%2Fdashboard", "keep the signup origin but remove the consumed code");
+  cleanup();
+});

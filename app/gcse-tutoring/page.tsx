@@ -12,6 +12,7 @@ import { contactHref } from "@/utils/medwithrish/site-links";
 export default function Page() {
   return (
     <GuidePage
+      resourceLabel="Tutoring overview"
       eyebrow="Tutoring"
       title="GCSE Tutoring"
       intro="Focused GCSE support for students who want stronger grades, better revision structure, and more confidence across key subjects."

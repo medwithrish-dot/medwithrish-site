@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { interviewHistory } from "@/utils/interviews/history";
 import { interviewStations } from "../_data/interview-stations";

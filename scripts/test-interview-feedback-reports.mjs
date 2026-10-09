@@ -29,7 +29,7 @@ function renderReview(feedback = null, preview = false) {
   new Function("require", "module", "exports", output)(name => {
     if (name === "@/utils/interviews/scoring") return { practiceResult: scores => validateFeedback({ summary: "Valid", strengths: ["Valid"], improvements: ["Valid"], rubric: scores }).practiceResult, PRACTICE_PASS_AVERAGE: 75 };
     if (name === "react" || name === "react/jsx-runtime") return require(name);
-    if (name === "next/link") return { __esModule: true, default: ({ children, href }) => React.createElement("a", { href }, children) };
+    if (name === "@/app/medicforest/_components/MedicForestLink") return { __esModule: true, default: ({ children, href }) => React.createElement("a", { href }, children) };
     if (name === "lucide-react") return new Proxy({}, { get: () => () => null });
     if (name.endsWith("/universities")) return { findInterviewUniversity: () => null };
     if (name === "./AttemptMarkSchemes") return { AttemptMarkSchemes: ({ headerAction }) => React.createElement(React.Fragment, null, headerAction) };

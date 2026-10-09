@@ -2,7 +2,7 @@
 
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useEffect, useRef, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import {

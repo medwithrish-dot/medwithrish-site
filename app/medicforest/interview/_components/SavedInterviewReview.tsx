@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
@@ -130,7 +131,7 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
           setNotice("You already have an active Med interview. Resume it before starting another attempt of this station.");
           return;
         }
-        router.push(`/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(response.attempt.id)}`);
+        router.push(medicForestPublicHref(window.location.pathname, `/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(response.attempt.id)}`));
       }
     } catch (failure) {
       if (liveRef.current) {

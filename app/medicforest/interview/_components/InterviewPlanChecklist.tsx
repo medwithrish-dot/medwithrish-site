@@ -2,7 +2,7 @@
 
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowUpRight, BookOpen, Check, Circle, Loader2, Mic, MessageSquare } from "lucide-react";

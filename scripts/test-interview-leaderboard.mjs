@@ -224,7 +224,7 @@ for (const failed of [false, true]) test(failed ? "a failed load does not preten
     if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return react;
     if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
-    if (name === "next/link") return { __esModule: true, default: "link" };
+    if (name === "@/app/medicforest/_components/MedicForestLink") return { __esModule: true, default: "link" };
     if (name === "lucide-react") return new Proxy({}, { get: () => "icon" });
     if (name === "@/utils/interviews/public-name") return { publicNameError: () => null };
     throw new Error(`Unexpected leaderboard dependency: ${name}`);

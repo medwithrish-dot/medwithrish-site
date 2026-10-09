@@ -12,6 +12,7 @@ import { contactHref } from "@/utils/medwithrish/site-links";
 export default function Page() {
   return (
     <GuidePage
+      resourceLabel="Tutoring overview"
       eyebrow="Tutoring"
       title="A-Level Tutoring"
       intro="A-Level support designed to help students improve grades, stay consistent, and meet offer conditions."

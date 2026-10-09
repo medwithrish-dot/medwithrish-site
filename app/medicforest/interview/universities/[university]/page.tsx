@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { notFound } from "next/navigation";
 import { ArrowRight, Clock3, ExternalLink, Users } from "lucide-react";
 import { InterviewShell } from "../../_components/InterviewShell";

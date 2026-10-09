@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, Search, X } from "lucide-react";
 import { filterSavedInterviews, groupSavedInterviews, savedInterviewHref, savedInterviewStatus, type SavedInterviewStatus, type SavedInterviewSummary } from "../_lib/saved-interviews";
 

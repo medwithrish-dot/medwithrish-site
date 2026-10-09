@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpenCheck, Clock3, Mic, RotateCcw, Search } from "lucide-react";
 import styles from "../_components/AIInterviewLanding.module.css";
 import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";

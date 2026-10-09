@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, ArrowUpRight, CheckCircle2, Mic, Sparkles, TrendingUp } from "lucide-react";
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
 import type { getInterviewPathwayData } from "@/utils/interviews/pathway-data";

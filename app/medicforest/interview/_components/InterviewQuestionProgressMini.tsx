@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpenCheck } from "lucide-react";
 import {
   deriveInterviewQuestionProgress,

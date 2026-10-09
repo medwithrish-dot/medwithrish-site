@@ -7,7 +7,7 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
   return (
     <div
       data-interview-shell
-      className="medicforest-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-[100dvh] lg:overflow-hidden"
+      className="soft-wave-bg medicforest-dashboard-compact min-h-screen text-[#071923] lg:fixed lg:inset-0 lg:h-[100dvh] lg:overflow-hidden"
     >
       <a
         href="#medicforest-content"

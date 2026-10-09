@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 
 export default function InterviewError({ error, retry }: {
   error: Error & { digest?: string };

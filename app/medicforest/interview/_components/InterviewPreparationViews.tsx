@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, CalendarDays, CheckCircle2, Clock3, TrendingUp } from "lucide-react";
 import { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
 import { getInterviewPathwayData } from "@/utils/interviews/pathway-data";

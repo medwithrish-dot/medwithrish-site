@@ -475,11 +475,10 @@ export function TutoringPageClient() {
           className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[200px]"
           aria-hidden="true"
           style={{
-            backgroundColor: "#F7FAF7",
-            backgroundImage: `
-              radial-gradient(circle at 92% 15%, rgba(77, 190, 163, 0.16), transparent 32%),
-              radial-gradient(circle at 8% 75%, rgba(178, 232, 214, 0.18), transparent 26%)
-            `,
+            backgroundColor: "#f7fbf6",
+            backgroundImage: 'url("/backgrounds/sage-waves.svg")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           {/* Thin, graceful abstract curve */}

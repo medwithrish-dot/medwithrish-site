@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { MedicForestLogo } from "../_components/MedicForestLogo";
 import {
   Brain,

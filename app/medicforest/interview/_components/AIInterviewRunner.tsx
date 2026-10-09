@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { findInterviewStation, interviewStations } from "../_data/interview-stations";
@@ -182,7 +183,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     attemptRef.current = next;
     setAttempt(next);
     if (!next) return;
-    if (!previewRef.current) window.history?.replaceState(null, "", `/medicforest/interview/ai-interviews?attempt=${next.id}`);
+    if (!previewRef.current) window.history?.replaceState(null, "", medicForestPublicHref(window.location.pathname, `/medicforest/interview/ai-interviews?attempt=${encodeURIComponent(next.id)}`));
     if (questionsChanged && !restore) {
       // Match by question text: inserting a probe must never shift a candidate's
       // answer onto a different question, including an unsaved typed answer.

@@ -1,0 +1,20 @@
+.page { max-width: 1200px; padding: 54px 24px 70px; margin: 0 auto; }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) 335px; gap: 64px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: #477044; }
+.hero h1 { margin-top: 24px; font-size: clamp(38px, 5vw, 60px); font-weight: 600; letter-spacing: -.045em; line-height: 1.1; color: #1c432e; }
+.intro { margin-top: 25px; max-width: 540px; font-size: 16px; line-height: 1.85; color: #5d725d; }
+.tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.tags span { padding: 6px 10px; background: #ffffffb8; border: 1px solid #d9e6cf; border-radius: 7px; font-size: 11px; color: #5e7652; }
+.featured { border: 1px solid #d1dfc7; border-radius: 22px; background: #ffffffdc; padding: 28px; box-shadow: 0 12px 40px #24452807; }
+.featuredIcon { display: flex; align-items: center; justify-content: center; width: 54px; height: 54px; margin-top: 24px; background: #eaf2df; color: #517d42; border-radius: 15px; }
+.featured h2 { margin-top: 18px; font-size: 26px; line-height: 1.25; letter-spacing: -.02em; color: #294833; font-weight: 600; }
+.featured p { margin-top: 16px; color: #61725a; font-size: 13px; line-height: 1.8; }
+.featured a { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; padding: 13px 17px; border-radius: 10px; font-size: 12px; color: #fff; background: #355f40; }
+.featured a:hover { background: #274b30; }
+.support { display: flex; gap: 24px; align-items: center; justify-content: space-between; margin-top: 50px; padding: 28px 32px; border-radius: 18px; border: 1px solid #d5e2ca; background: #f5f9eff0; }
+.support h2 { font-size: 20px; font-weight: 600; color: #294c34; }
+.support p { margin-top: 8px; font-size: 13px; line-height: 1.8; color: #66765d; }
+.support a { display: inline-flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; padding: 12px 17px; border: 1px solid #bacaac; border-radius: 10px; background: #fff; color: #41623c; font-size: 12px; }
+.page a:focus-visible { outline: 3px solid #638950; outline-offset: 5px; }
+@media (max-width: 900px) { .hero { gap: 30px; grid-template-columns: minmax(0, 1fr) 290px; } }
+@media (max-width: 700px) { .page { padding: 32px 18px 50px; } .hero { grid-template-columns: 1fr; gap: 28px; } .intro { font-size: 14px; } .featured { padding: 25px; } .support { flex-direction: column; align-items: start; padding: 25px; } }

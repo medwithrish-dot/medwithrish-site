@@ -44,6 +44,18 @@ test("public shell links stay on MedicForest on both supported path forms", () =
   assert.equal(medicForestPublicHref("/medicforest", "/"), "/medicforest");
   assert.equal(medicForestPublicHref("/medicforest/about", "/medicforest/ucat/dashboard"), "/medicforest/ucat/dashboard");
   assert.equal(medicForestPublicHref("/medicforest-extra", "/about"), "/about");
+  assert.equal(medicForestPublicHref("/medicforest/interview/dashboard", "/terms-and-conditions"), "/terms-and-conditions");
+  assert.equal(medicForestPublicHref("/medicforest/account", "/privacy-policy"), "/privacy-policy");
+  assert.equal(medicForestPublicHref("/medicforest", "/medicforest-disclaimer"), "/medicforest-disclaimer");
+});
+
+test("interview links keep the visible route form without canonical document redirects", () => {
+  assert.equal(medicForestPublicHref("/interviews/dashboard", "/medicforest/interview/question-bank?question=q1"), "/interviews/question-bank?question=q1");
+  assert.equal(medicForestPublicHref("/interviews/dashboard", "/medicforest/account?next=%2Finterviews%2Fdashboard"), "/account?next=%2Finterviews%2Fdashboard");
+  assert.equal(medicForestPublicHref("/interviews/dashboard", "/medicforest/interview"), "/interviews/dashboard");
+  assert.equal(medicForestPublicHref("/medicforest/interview/dashboard", "/interviews/groups"), "/medicforest/interview/groups");
+  assert.equal(medicForestPublicHref("/medicforest/interview/dashboard", "https://www.medwithrish.com/resources"), "https://www.medwithrish.com/resources");
+  assert.equal(medicForestPublicHref("/interviews/dashboard", "/medicforest/interview-stimuli/figure.png"), "/medicforest/interview-stimuli/figure.png");
 });
 
 test("Medic Forest serves the product landing page without changing the visible URL", async () => {

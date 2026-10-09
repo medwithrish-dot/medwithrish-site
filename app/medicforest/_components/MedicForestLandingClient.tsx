@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useRouter } from "next/navigation";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useEffect, useState } from "react";
 import {
   Activity,
@@ -146,7 +147,7 @@ function RedesignedTutorHero() {
       };
 
       if (response.status === 401) {
-        router.push("/medicforest/ucat/dashboard");
+        router.push(medicForestPublicHref(window.location.pathname, "/medicforest/ucat/dashboard"));
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -166,7 +167,7 @@ function RedesignedTutorHero() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="soft-wave-bg">
       <section className="bg-[#050b1f] text-white">
         <div className="mx-auto max-w-5xl px-5 pt-4 pb-4 lg:px-6 lg:pt-5">
           <div className="grid items-center gap-6 lg:grid-cols-[0.9fr_0.72fr]">

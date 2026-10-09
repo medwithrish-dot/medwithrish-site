@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -172,7 +172,7 @@ export function MedicForestPricingPage() {
       };
 
       if (response.status === 401) {
-        router.push("/medicforest/interview/dashboard");
+        router.push(medicForestPublicHref(pathname, "/account?mode=signup&next=%2Finterviews%2Fdashboard"));
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -193,7 +193,7 @@ export function MedicForestPricingPage() {
 
   return (
     <MedicForestLandingShell>
-      <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16">
+      <div className="min-h-screen text-slate-900 pb-16">
         <main className="mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10">
           {/* Back Navigation Link */}
           <div>

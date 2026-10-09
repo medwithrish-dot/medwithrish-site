@@ -131,7 +131,7 @@ test("an older checklist refresh cannot erase a newly saved pathway step", async
     if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return react;
     if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
-    if (name === "next/link") return { default: "link" };
+    if (name === "@/app/medicforest/_components/MedicForestLink") return { default: "link" };
     if (name === "lucide-react") return { Check: "icon", Loader2: "icon" };
     if (name === "@/utils/interviews/pathway") return load(resolve(root, "utils/interviews/pathway.ts"));
     throw new Error(`Unexpected checklist dependency: ${name}`);

@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
 import { INTERVIEW_QUESTIONS } from "../app/medicforest/interview/_data/interviewQuestionBank.ts";
 import { stationQuestionCount } from "../app/medicforest/interview/_data/interview-stations.ts";
+import { medicForestPublicHref } from "../utils/medicforest/public-navigation.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -261,6 +262,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     module: loaded, exports: loaded.exports, AbortController, URLSearchParams, Date, Error,
     require(name) {
       if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
+      if (name === "@/utils/medicforest/public-navigation") return { medicForestPublicHref };
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
@@ -276,7 +278,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     localStorage: { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
     document: { addEventListener() {}, removeEventListener() {} },
     window: {
-      dispatchEvent: () => true, location: { search: "" }, setTimeout: () => 1, clearTimeout() {},
+      dispatchEvent: () => true, location: { search: "", pathname: "/medicforest/interview/ai-interviews" }, setTimeout: () => 1, clearTimeout() {},
       history: { replaceState: (_state, _title, url) => { currentUrl = url; } },
       setInterval: (callback, milliseconds) => { intervals.set(milliseconds, callback); return milliseconds; },
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},

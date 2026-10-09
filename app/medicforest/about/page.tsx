@@ -98,11 +98,10 @@ export default function MedicForestAboutPage() {
           className="pointer-events-none fixed inset-0 -z-20 select-none overflow-hidden lg:left-[200px]"
           aria-hidden="true"
           style={{
-            backgroundColor: "#F7FAF7",
-            backgroundImage: `
-              radial-gradient(circle at 95% 65%, rgba(77, 190, 163, 0.18), transparent 32%),
-              radial-gradient(circle at 10% 5%, rgba(178, 232, 214, 0.20), transparent 24%)
-            `,
+            backgroundColor: "#f7fbf6",
+            backgroundImage: 'url("/backgrounds/sage-waves.svg")',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           {/* Thin, graceful abstract curve */}

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import {
   Bell,
   Bookmark,

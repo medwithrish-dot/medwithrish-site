@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import type { ComponentProps } from "react";
 import { requestFeatureAccess, type FeatureTier } from "@/utils/medicforest/feature-access";
 

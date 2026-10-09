@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, BookOpen, Check, CheckCircle2, ChevronDown, Flag, Loader2, LockKeyhole, MessageSquare, Target } from "lucide-react";
 import { changePathwayTask, derivePathwayProgress, PATHWAY_GUEST_KEY, pathwayTaskId, sanitisePathwayProgress, type PathwayStation } from "@/utils/interviews/pathway";

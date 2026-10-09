@@ -3,7 +3,7 @@
   --mint: #4ce8c7;
   --ink: #102839;
   color: var(--ink);
-  background: white;
+  background: #f7fbf6 url("/backgrounds/sage-waves.svg") center / cover fixed;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -448,7 +448,7 @@
 
 /* Features */
 .features {
-  background: #fff;
+  background: transparent;
   padding-block: 28px 24px;
   scroll-margin-top: 20px;
 }
@@ -519,7 +519,7 @@
 
 /* How it works */
 .how {
-  background: white;
+  background: transparent;
   padding: 24px 0 36px;
 }
 .sectionHeading {
@@ -616,7 +616,7 @@
 /* Free Question Bank section */
 .freeBank {
   padding-block: 32px;
-  background: linear-gradient(110deg, #eaf6f3, #f2faf8);
+  background: #eaf6f380;
   border-block: 1px solid #d3e9e2;
 }
 .bankGrid {

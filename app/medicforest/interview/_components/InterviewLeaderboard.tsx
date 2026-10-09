@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowRight, Award, Check, Loader2, Trophy, Users } from "lucide-react";

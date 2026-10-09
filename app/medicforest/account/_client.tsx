@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useRouter } from "next/navigation";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -95,15 +96,22 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
         const params = new URLSearchParams(window.location.search);
         const confirmationCode = params.get("code");
 
-        if (confirmationCode) {
-          const { error } = await supabase.auth.exchangeCodeForSession(confirmationCode);
-          if (!active) return;
-          if (error) {
-            setAuthError("That verification link could not be used. Please log in with your email and password.");
-            setLoading(false);
-            return;
-          }
+        // createBrowserClient detects and exchanges the callback code itself.
+        // getSession waits for that initialization; exchanging it again consumes
+        // the same one-use code twice and reports an error after successful login.
+        const {
+          data: { session: initialSession },
+          error,
+        } = await supabase.auth.getSession();
 
+        if (!active || initialVersion !== profileLoadVersion.current) return;
+        if (confirmationCode && (error || !initialSession)) {
+          setAuthError("That verification link could not be used. Please log in with your email and password.");
+        } else if (error) {
+          setAuthError("Your account could not be loaded. Please refresh to retry.");
+        }
+
+        if (confirmationCode && initialSession) {
           params.delete("code");
           const nextQuery = params.toString();
           window.history.replaceState(
@@ -113,11 +121,6 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
           );
         }
 
-        const {
-          data: { session: initialSession },
-        } = await supabase.auth.getSession();
-
-        if (!active || initialVersion !== profileLoadVersion.current) return;
         setUser(initialSession?.user ?? null);
 
         if (initialSession?.user) {
@@ -134,8 +137,9 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      if (!active) return;
+    } = supabase.auth.onAuthStateChange((event, newSession) => {
+      // initAuth owns the initial read. Other events invalidate stale reads.
+      if (!active || event === "INITIAL_SESSION") return;
       const version = ++profileLoadVersion.current;
       setUser(newSession?.user ?? null);
       setProfile(null);
@@ -161,7 +165,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
   useEffect(() => {
     if (!user || !returnTo) return;
-    router.replace(returnTo);
+    router.replace(medicForestPublicHref(window.location.pathname, returnTo));
     router.refresh();
   }, [user, returnTo, router]);
 
@@ -310,7 +314,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
   return (
     <MedicForestLandingShell>
-      <div className="min-h-screen bg-[#f7faf9] px-5 py-10 sm:px-8 sm:py-12">
+      <div className="min-h-screen px-5 py-10 sm:px-8 sm:py-12">
         <main className="mx-auto max-w-4xl space-y-8">
           {/* Header */}
           <div>

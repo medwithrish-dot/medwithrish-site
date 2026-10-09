@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
 import { ArrowRight, AudioLines, BookOpenCheck, Mic, RotateCcw, ShieldCheck } from "lucide-react";
 import { interviewHistory } from "@/utils/interviews/history";

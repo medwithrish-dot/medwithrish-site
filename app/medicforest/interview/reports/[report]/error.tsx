@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 
 export default function ReportDetailError({

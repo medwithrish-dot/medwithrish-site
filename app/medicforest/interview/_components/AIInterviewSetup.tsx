@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, AudioLines, Check, CheckCircle2, Clock3, Headphones, Mic, MonitorPlay, ShieldCheck, SlidersHorizontal, Sparkles, Video, VideoOff, Volume2 } from "lucide-react";
 import { REPEATABLE_STATION_SLUGS, standardInterviewUniversities as interviewUniversities, universityCircuitIsResearched, universityStationPresets, universityStationSlugs } from "../_data/university-stations";
 import { findInterviewStation, interviewSetupStations, stationQuestionCount } from "../_data/interview-stations";

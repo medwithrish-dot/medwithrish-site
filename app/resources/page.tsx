@@ -1,338 +1,54 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  FileSpreadsheet,
-  GraduationCap,
-  MessageSquare,
-  Sparkles,
-  Stethoscope,
-} from "lucide-react";
+import { ArrowUpRight, BookOpen } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import ResourceLibrary, { type ResourceCategory } from "@/components/ResourceLibrary";
 import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Admissions Resources & Revision Guides | MedWithRish",
-  description:
-    "Explore free medical admissions resources - UCAT tools, free Medicine interview guide, personal statement support and 1-to-1 tutoring.",
+  description: "Free guides, UCAT planning tools and focused tutoring for medicine and dentistry applications. Explore personal statements, experience, revision and interviews.",
   alternates: { canonical: "/resources" },
 };
 
-type Resource = {
-  title: string;
-  href: string;
-  badge: string;
-  description: string;
-  external?: boolean;
-  featured?: boolean;
-};
-
-type ResourceCategory = {
-  id: string;
-  name: string;
-  icon: typeof MessageSquare;
-  description: string;
-  items: Resource[];
-};
-
 const categories: ResourceCategory[] = [
-  {
-    id: "interviews",
-    name: "Med Interviews",
-    icon: MessageSquare,
-    description: "Realistic MMI station frameworks, ethical scenarios, NHS hot topics and model reflections.",
-    items: [
-      {
-        title: "The Complete Medicine Interview Guide",
-        href: FREE_INTERVIEW_GUIDE_URL,
-        badge: "★ Featured Free Guide",
-        description: "High-yield guide with ethical frameworks, NHS hot topics and STARR model answers. Free PDF download.",
-        external: true,
-        featured: true,
-      },
-      {
-        title: "Med Interview Prep Hub",
-        href: "/interviews",
-        badge: "550+ Questions",
-        description: "Full question bank, detailed markschemes, station timers and university-specific station guides.",
-      },
-      {
-        title: "1-to-1 Med Interview Tutoring",
-        href: "/interview-tutoring",
-        badge: "Mock Tuition",
-        description: "Realistic MMI and panel mocks with instant verbal analysis and written rubrics.",
-      },
-    ],
-  },
-  {
-    id: "ucat",
-    name: "UCAT Preparation",
-    icon: Stethoscope,
-    description: "Tools, timing strategies and pacing schedules across all 4 core UCAT subtests.",
-    items: [
-      {
-        title: "UCAT Mock Difficulty Spreadsheet",
-        href: "/ucat-mock-difficulty",
-        badge: "Free Tool",
-        description: "Benchmark mock test difficulty, average scores and SJT bands across Medify, MedEntry and official exams.",
-      },
-      {
-        title: "UCAT Preparation Timeline",
-        href: "/ucat-timeline",
-        badge: "Free Guide",
-        description: "A week-by-week roadmap of when to begin practice, select mocks and pace drills effectively.",
-      },
-      {
-        title: "1-to-1 UCAT Crash Courses & Tuition",
-        href: "/ucat-tutoring",
-        badge: "1-to-1 Tuition",
-        description: "Intensive 4-hour subtest coaching with timing shortcuts and mental arithmetic frameworks.",
-      },
-      {
-        title: "MedWithRish UCAT Study Notes",
-        href: MEDWITHRISH_NOTES_URL,
-        badge: "Notes & Cheatsheets",
-        description: "High-yield Decision Making logic trees, syllogisms and formula sheets.",
-        external: true,
-      },
-    ],
-  },
-  {
-    id: "personal-statements",
-    name: "Personal Statements",
-    icon: BookOpen,
-    description: "Clear evidence, clinical reflection and structural refinement for your written UCAS draft.",
-    items: [
-      {
-        title: "Personal Statement Complete Guide",
-        href: "/personal-statements-guide",
-        badge: "Free Guide",
-        description: "Structure breakdown, model opening lines and common reflection mistakes to avoid.",
-      },
-      {
-        title: "1-to-1 Personal Statement Review Session",
-        href: "/personal-statement-session",
-        badge: "1-to-1 Review",
-        description: "Comprehensive line-by-line feedback, structural reorganisation and paragraph polish.",
-      },
-    ],
-  },
-  {
-    id: "academics",
-    name: "Academics & Experience",
-    icon: GraduationCap,
-    description: "GCSE and A-Level grade assurance, Year 12 planning and healthcare work experience insight.",
-    items: [
-      {
-        title: "Work Experience & Shadowing Guide",
-        href: "/work-experience-guide",
-        badge: "Free Guide",
-        description: "What medical schools look for in clinical exposure and reflection diary templates.",
-      },
-      {
-        title: "Year 12 Medical Preparation Guide",
-        href: "/year12-guide",
-        badge: "Free Guide",
-        description: "Term-by-term milestone checklist for predicted grades, UCAT and admissions prep.",
-      },
-      {
-        title: "A-Level 1-to-1 Tutoring",
-        href: "/alevel-tutoring",
-        badge: "Private Tuition",
-        description: "Focused coaching in Biology, Chemistry and Maths to secure AAA/A*AA predictions.",
-      },
-      {
-        title: "GCSE Revision Guide & Tutoring",
-        href: "/gcse-revision-guide",
-        badge: "Revision & Tuition",
-        description: "Techniques and tuition to achieve Grade 8s and 9s for initial admissions screening.",
-      },
-    ],
-  },
+  { id: "interviews", name: "Interviews", description: "Build clear answers, explore scenarios and practise reflecting on your own experiences.", items: [
+    { title: "The Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, badge: "Free PDF", description: "Ethical frameworks, interview topics and reflection guidance to help structure your preparation.", external: true },
+    { title: "Interview preparation hub", href: "/interviews", badge: "Practice & guidance", description: "Explore interview resources and the MedicForest question bank, station practice and feedback." },
+    { title: "1-to-1 interview tutoring", href: "/interview-tutoring", badge: "Tutoring", description: "Practise a mock interview and work through specific feedback with a tutor." },
+  ] },
+  { id: "ucat", name: "UCAT", description: "Plan your practice, record your progress and target the mistakes behind the scores.", items: [
+    { title: "UCAT preparation timeline", href: "/ucat-timeline", badge: "Free guide", description: "An adaptable plan for learning techniques, timed practice, mock review and test-day preparation." },
+    { title: "Free mock score tracker", href: "/ucat-score-tracker", badge: "Free download", description: "Download an Excel workbook and turn your practice results into a focused plan." },
+    { title: "Mock difficulty spreadsheet", href: "/ucat-mock-difficulty", badge: "Community resource", description: "Compare student-reported mock results and understand what the averages can tell you." },
+    { title: "UCAT tutoring", href: "/ucat-tutoring", badge: "Tutoring", description: "Work on timing, question methods and the subtests you find hardest." },
+    { title: "MedWithRish study notes", href: MEDWITHRISH_NOTES_URL, badge: "Study resources", description: "Browse the MedWithRish notes and revision resources available on Payhip.", external: true },
+  ] },
+  { id: "application", name: "Your application", description: "Gather useful evidence and explain your course choice with clarity.", items: [
+    { title: "Personal statement guide", href: "/personal-statements-guide", badge: "Free guide", description: "The current three-question UCAS format, reflective examples and a practical editing checklist." },
+    { title: "Work experience guide", href: "/work-experience-guide", badge: "Free guide", description: "Find accessible opportunities, keep anonymous reflection notes and discuss what you learned." },
+    { title: "Year 12 application roadmap", href: "/year12-guide", badge: "Free guide", description: "A term-by-term plan that brings academics, experience and admissions preparation together." },
+    { title: "Personal statement review", href: "/personal-statement-session", badge: "1-to-1 support", description: "Get feedback on structure, clarity and reflection while keeping your own voice." },
+  ] },
+  { id: "academics", name: "Study & revision", description: "Make revision specific, learn from mistakes and strengthen your academic foundations.", items: [
+    { title: "GCSE revision guide", href: "/gcse-revision-guide", badge: "Free guide", description: "Use active recall, exam questions and an error log to make revision worthwhile." },
+    { title: "GCSE tutoring", href: "/gcse-tutoring", badge: "Tutoring", description: "Build understanding and exam technique with focused support." },
+    { title: "A-Level tutoring", href: "/alevel-tutoring", badge: "Tutoring", description: "Work through difficult concepts and develop a more consistent approach to exams." },
+  ] },
+  { id: "pathways", name: "Explore your options", description: "Understand different entry routes and investigate the wider healthcare team.", items: [
+    { title: "Gateway & foundation routes", href: "/gateway-foundation-guide", badge: "Free guide", description: "Check programme eligibility, progression conditions and the exact qualification before applying." },
+    { title: "Related healthcare careers", href: "/related-careers-guide", badge: "Free guide", description: "Compare roles, training and responsibilities to find the profession that fits your interests." },
+  ] },
 ];
 
 export default function ResourcesPage() {
-  return (
-    <div className="min-h-screen medwithrish-bg text-slate-900">
-      <Navbar />
-
-      <main className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-14">
-        {/* Simple Back Link */}
-        <div>
-          <Link
-            href="/"
-            className="inline-flex items-center text-xs font-semibold text-slate-500 transition hover:text-slate-900"
-          >
-            ← Back to homepage
-          </Link>
-        </div>
-
-        {/* Minimal Hero Header */}
-        <div className="mt-6">
-          <h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-            Admissions Resources
-          </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
-            High-yield revision guides, free interactive tools, interview frameworks and 1-to-1 coaching.
-          </p>
-        </div>
-
-        {/* FEATURED BANNER: Free Medicine Interview Guide */}
-        <div className="mt-8 rounded-2xl bg-[#042724] p-6 text-white shadow-sm sm:p-7">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-xl space-y-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-400/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-teal-300">
-                <Sparkles className="h-3 w-3 text-teal-300" />
-                Featured Free Guide
-              </span>
-              <h2 className="text-xl font-bold text-white sm:text-2xl">
-                The Complete Medicine Interview Guide
-              </h2>
-              <p className="text-xs leading-relaxed text-teal-100/90 sm:text-sm">
-                Over 350+ medical applicants used this guide to structure ethical dilemmas, MMI stations, NHS hot topics and model reflections. 100% free PDF download.
-              </p>
-            </div>
-
-            <div className="shrink-0">
-              <a
-                href={FREE_INTERVIEW_GUIDE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-400 px-5 py-3 text-xs font-bold text-[#042724] shadow-xs transition hover:bg-teal-300 sm:w-auto"
-              >
-                <span>Get Free Guide (PDF)</span>
-                <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Category Navigation Pills */}
-        <div className="mt-8 flex flex-wrap items-center gap-2 border-b border-slate-200/80 pb-4">
-          <span className="text-xs font-semibold text-slate-400">Jump to:</span>
-          {categories.map((cat) => (
-            <a
-              key={cat.id}
-              href={`#${cat.id}`}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow-2xs transition hover:border-teal-400 hover:text-teal-800"
-            >
-              {cat.name}
-            </a>
-          ))}
-        </div>
-
-        {/* Streamlined Flat Directory List */}
-        <div className="mt-10 space-y-12">
-          {categories.map((category) => {
-            const CategoryIcon = category.icon;
-            return (
-              <section key={category.id} id={category.id} className="scroll-mt-20">
-                {/* Category Header */}
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
-                    <CategoryIcon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-950">
-                      {category.name}
-                    </h2>
-                  </div>
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  {category.description}
-                </p>
-
-                {/* Flat Row List */}
-                <div className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
-                  {category.items.map((item) => {
-                    const isFeatured = item.featured;
-
-                    const rowContent = (
-                      <div className="flex flex-col justify-between gap-2 p-4 sm:flex-row sm:items-center sm:gap-4 sm:px-5">
-                        <div className="flex-1 space-y-0.5">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span
-                              className={`text-sm font-bold transition ${
-                                isFeatured
-                                  ? "text-teal-900 group-hover:text-teal-700"
-                                  : "text-slate-900 group-hover:text-teal-700"
-                              }`}
-                            >
-                              {item.title}
-                            </span>
-                            <span
-                              className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
-                                isFeatured
-                                  ? "bg-teal-100 text-teal-800"
-                                  : "bg-slate-100 text-slate-600"
-                              }`}
-                            >
-                              {item.badge}
-                            </span>
-                          </div>
-                          <p className="text-xs leading-relaxed text-slate-500">
-                            {item.description}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-1 text-xs font-semibold text-slate-400 group-hover:text-teal-700 sm:shrink-0">
-                          <span className="hidden sm:inline">Open</span>
-                          {item.external ? (
-                            <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                          ) : (
-                            <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-                          )}
-                        </div>
-                      </div>
-                    );
-
-                    if (item.external) {
-                      return (
-                        <a
-                          key={item.title}
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`group block transition hover:bg-slate-50/70 ${
-                            isFeatured ? "bg-teal-50/40" : ""
-                          }`}
-                        >
-                          {rowContent}
-                        </a>
-                      );
-                    }
-
-                    return (
-                      <Link
-                        key={item.title}
-                        href={item.href}
-                        className="group block transition hover:bg-slate-50/70"
-                      >
-                        {rowContent}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-
-        {/* Minimal Footer Support Prompt */}
-        <div className="mt-14 border-t border-slate-200/80 pt-6 text-center text-xs text-slate-500">
-          <p>
-            Have a question about which resource or tutor fits your application?{" "}
-            <Link
-              href="/contact"
-              className="font-semibold text-teal-700 underline underline-offset-2 hover:text-teal-900"
-            >
-              Get in touch with MedWithRish
-            </Link>
-          </p>
-        </div>
-      </main>
-    </div>
-  );
+  return <div className="medwithrish-bg"><Navbar /><main className={styles.page}>
+    <header className={styles.hero}>
+      <div><p className={styles.eyebrow}><BookOpen size={15} aria-hidden="true" /> The MedWithRish library</p><h1>A clearer path<br />to your next step.</h1><p className={styles.intro}>Practical guides, useful tools and a little direction for your medicine or dentistry application. Start where you are, and find what helps next.</p><div className={styles.tags}><span>Free reading guides</span><span>Downloadable tools</span><span>Focused support</span></div></div>
+      <aside className={styles.featured}><span className={styles.eyebrow}>A good place to start</span><span className={styles.featuredIcon}><BookOpen size={27} aria-hidden="true" /></span><h2>The Medicine<br />Interview Guide</h2><p>A free PDF to help you organise ethical scenarios, interview topics and personal reflections.</p><a href={FREE_INTERVIEW_GUIDE_URL} target="_blank" rel="noopener noreferrer">Get the free guide<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a></aside>
+    </header>
+    <ResourceLibrary categories={categories} />
+    <footer className={styles.support}><div><h2>Not sure where to start?</h2><p>Tell us what stage you are at and which part of your preparation feels unclear.</p></div><Link href="/contact">Get in touch <ArrowUpRight size={16} aria-hidden="true" /></Link></footer>
+  </main></div>;
 }

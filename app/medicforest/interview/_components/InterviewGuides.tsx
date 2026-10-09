@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen, Search, X } from "lucide-react";
 import { interviewGuideCategories, interviewGuides, searchInterviewGuides } from "../_data/interviewGuides";
 

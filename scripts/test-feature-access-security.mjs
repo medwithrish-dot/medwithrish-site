@@ -53,7 +53,7 @@ test("account signup preserves the popup page through email verification", () =>
 
   assert.match(provider, /window\.location\.pathname \+ window\.location\.search/);
   assert.doesNotMatch(provider, /safeInterviewReturnPath\(next\)/);
-  assert.match(account, /exchangeCodeForSession\(confirmationCode\)/);
+  assert.doesNotMatch(account, /\.exchangeCodeForSession\(/, "the browser client already exchanges verification codes during initialization");
   assert.match(account, /window\.location\.origin\}\$\{window\.location\.pathname/);
   assert.match(account, /Check your email inbox and click the link to verify your account email!/);
 });

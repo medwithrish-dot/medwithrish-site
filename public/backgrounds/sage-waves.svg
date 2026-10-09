@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 960" fill="none">
+  <defs>
+    <linearGradient id="base" x1="840" y1="0" x2="840" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f7fbf6"/><stop offset=".48" stop-color="#fff"/><stop offset="1" stop-color="#f3faf4"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="30" y1="320" x2="1530" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a6cfb8" stop-opacity=".58"/><stop offset=".44" stop-color="#e5f1dd" stop-opacity=".35"/><stop offset="1" stop-color="#acd2b8" stop-opacity=".58"/>
+    </linearGradient>
+    <radialGradient id="wash"><stop stop-color="#c5dfbd" stop-opacity=".58"/><stop offset="1" stop-color="#e9f5e7" stop-opacity="0"/></radialGradient>
+    <filter id="soft" x="-25%" y="-40%" width="150%" height="180%"><feGaussianBlur stdDeviation="32"/></filter>
+  </defs>
+  <path fill="url(#base)" d="M0 0h1680v960H0z"/>
+  <ellipse cx="1440" cy="80" rx="490" ry="330" fill="url(#wash)"/>
+  <path d="M-160 218C166 88 368 572 759 647c345 66 394-207 744-126 172 40 239 150 338 219v320H-160V218Z" fill="url(#wave)" filter="url(#soft)"/>
+  <path d="M-130 202C155 135 328 470 594 559c158 53 282 84 400 179-211 62-284 59-459-12C287 625 96 620-130 490V202Z" fill="url(#wave)" opacity=".34"/>
+  <path d="M954 714c234-132 436-241 729-116v362H702c86-79 135-180 252-246Z" fill="url(#wave)" opacity=".28"/>
+  <path d="M1280-20c-139 172-129 262 30 308 159 46 280 13 390 113V-20h-420Z" fill="#d7e9ce" opacity=".19"/>
+</svg>

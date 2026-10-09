@@ -3,7 +3,7 @@
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useId, useRef, useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, Check, ChevronDown, GraduationCap, Loader2, Plus, Search, Settings2, Target, X } from "lucide-react";

@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { test } from "node:test";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
+import { medicForestPublicHref } from "../utils/medicforest/public-navigation.ts";
 
 const source = readFileSync(new URL("../app/medicforest/interview/_components/SavedInterviewReview.tsx", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
@@ -16,7 +17,7 @@ function find(node, predicate) {
   return predicate(node) ? node : find(node.props?.children, predicate);
 }
 
-async function savedReview({ overrides = {}, serverNow = new Date().toISOString(), onRequest } = {}) {
+async function savedReview({ overrides = {}, serverNow = new Date().toISOString(), onRequest, pathname = "/medicforest/interview/saved-interviews" } = {}) {
   const state = { attempt: {
     id: randomUUID(), circuitId: randomUUID(), mode: "university", universitySlug: "aberdeen", stationSlug: "why-medicine", title: question,
     status: "submitted", startedAt: new Date(Date.now() - 600_000).toISOString(), completedAt: new Date().toISOString(), answerSubmittedAt: new Date().toISOString(),
@@ -50,14 +51,15 @@ async function savedReview({ overrides = {}, serverNow = new Date().toISOString(
     module: loaded, exports: loaded.exports, AbortController, Date, crypto: { randomUUID },
     require(name) {
       if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
+      if (name === "@/utils/medicforest/public-navigation") return { medicForestPublicHref };
       if (name === "react") return react;
       if (name === "next/navigation") return { useRouter: () => router };
-      if (name === "next/link") return { default: "link" };
+      if (name === "@/app/medicforest/_components/MedicForestLink") return { default: "link" };
       if (name === "./AIInterviewReview") return { AIInterviewReview: "review" };
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       return {};
     },
-    window: { setTimeout: () => 1, clearTimeout() {}, setInterval: callback => { state.intervals.push(callback); return 1; }, clearInterval() {} },
+    window: { location: { pathname }, setTimeout: () => 1, clearTimeout() {}, setInterval: callback => { state.intervals.push(callback); return 1; }, clearInterval() {} },
     async fetch(path, options) {
       const request = { path, method: options.method, body: options.body ? JSON.parse(options.body) : undefined };
       state.requests.push(request);
@@ -144,6 +146,12 @@ test("retry after a timeout reuses its reservation ID without modifying the old 
   assert.equal(page.state.requests[0].body.circuitId, page.state.requests[1].body.circuitId);
   assert.equal(page.review().attempt.answers[0].answer, words);
   assert.equal(page.state.routes.length, 1);
+});
+
+test("retry on MedicForest keeps the clean public route", async () => {
+  const page = await savedReview({ pathname: "/interviews/saved-interviews" });
+  page.review().onRetry(); await page.flush();
+  assert.equal(page.state.routes[0], "/interviews/ai-interviews?attempt=new-attempt");
 });
 
 test("an expired legacy attempt finalizes the current account snapshot without grading", async () => {

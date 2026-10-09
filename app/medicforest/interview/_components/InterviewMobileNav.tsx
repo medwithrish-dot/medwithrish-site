@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
 import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
 import { getLandingActiveLabel } from "./InterviewSidebar";
