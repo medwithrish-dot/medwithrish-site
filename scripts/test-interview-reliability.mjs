@@ -149,7 +149,12 @@ test("account profile requests cannot restore an earlier user's data after switc
     if (name === "next/navigation") return { useRouter: () => ({}) };
     if (name === "@/utils/supabase/client") return { hasSupabaseConfig: () => true, createClient: () => client };
     return {};
-  }, compiled, compiled.exports, { setTimeout: callback => timers.push(callback), clearTimeout() {} });
+  }, compiled, compiled.exports, {
+    location: { search: "", pathname: "/medicforest/account", hash: "" },
+    history: { replaceState() {} },
+    setTimeout: callback => timers.push(callback),
+    clearTimeout() {},
+  });
   compiled.exports.ManageAccountClient({});
   const cleanup = effects[0]();
   authChanged("SIGNED_IN", { user: { id: "first" } }); timers.shift()();
