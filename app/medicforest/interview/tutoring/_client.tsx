@@ -628,7 +628,7 @@ export function InterviewTutoringPageClient({
             onClick={() => startBooking(selectedInterviewPackage.id)}
             className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#08756a] bg-white px-3 py-2 text-xs font-bold text-[#08756a] shadow-xs transition hover:bg-[#f2faf7]"
           >
-            Book 1-1 Interview (£{selectedInterviewPackage.price})
+            Book Interview Package (£{selectedInterviewPackage.price})
           </button>
           <button
             type="button"
