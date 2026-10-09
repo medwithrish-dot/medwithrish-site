@@ -112,7 +112,7 @@ export default function InterviewsPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
               Med Interview preparation
             </p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl lg:text-6xl">
+            <h1 className="mt-4 max-w-3xl text-4xl font-bold text-slate-950 md:text-5xl lg:text-6xl">
               Medicine Interviews
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">

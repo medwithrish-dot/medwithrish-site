@@ -352,17 +352,17 @@ export function TutoringPageClient({
           {/* Hero Section */}
           <section className="rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
                 1-TO-1 ADMISSIONS TUTORING
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
                 <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" />
                 350+ Students Taught
               </span>
             </div>
 
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 max-w-3xl text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
               1-to-1 medical school admissions coaching with{" "}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 proven results.
@@ -370,26 +370,26 @@ export function TutoringPageClient({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-              Work 1-to-1 with <strong className="text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Get structured preparation across UCAT, Personal Statement and Medical School Interviews with realistic mock practice and transparent pricing.
+              Work 1-to-1 with <strong className="font-semibold text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Get structured preparation across UCAT, Personal Statement and Medical School Interviews with realistic mock practice and transparent pricing.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2.5">
               <a
                 href="#packages"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
               >
                 Browse packages & pricing
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
               <Link
                 href="/ucat-tutoring"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 UCAT Crash Course
               </Link>
               <Link
                 href="/interview-tutoring"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
               >
                 Med Interview Tutoring
               </Link>
@@ -465,8 +465,8 @@ export function TutoringPageClient({
           <section className="mt-10" id="packages">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-blue-600">All Packages</p>
-                <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">All Packages</p>
+                <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
                   Transparent 1-to-1 Tutoring Packages
                 </h2>
                 <p className="mt-0.5 text-xs text-slate-600 sm:text-sm">
@@ -488,7 +488,7 @@ export function TutoringPageClient({
                     key={key}
                     type="button"
                     onClick={() => setActiveCategory(key)}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                    className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
                       activeCategory === key
                         ? "bg-blue-600 text-white shadow-2xs"
                         : "text-slate-600 hover:text-slate-900"
@@ -520,7 +520,7 @@ export function TutoringPageClient({
                     <div>
                       {pkg.badge && (
                         <span
-                          className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+                          className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
                             isBundle
                               ? "bg-emerald-700 text-white"
                               : "bg-blue-600 text-white"
@@ -532,7 +532,7 @@ export function TutoringPageClient({
                       <h3 className="mt-2 text-base font-bold text-slate-900">{pkg.name}</h3>
                       <p className="mt-0.5 text-xs text-slate-500">{pkg.tutor}</p>
                       <div className="mt-3 flex items-baseline gap-1">
-                        <span className="text-3xl font-extrabold text-slate-900">£{pkg.price}</span>
+                        <span className="text-3xl font-bold text-slate-900">£{pkg.price}</span>
                         <span className="text-xs text-slate-500">one-off</span>
                       </div>
                       <p className="mt-2 text-xs leading-relaxed text-slate-600">{pkg.description}</p>

@@ -44,7 +44,7 @@ export default function Year12GuidePage() {
             Application Guide
           </p>
 
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold text-slate-950 sm:text-4xl md:text-5xl">
             Year 12 Guide
           </h1>
 

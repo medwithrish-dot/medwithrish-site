@@ -142,12 +142,12 @@ export function PersonalStatementClient({
 
           {/* Hero Section */}
           <section className="mt-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
               <Sparkles className="h-3.5 w-3.5 text-blue-600" />
               PERSONAL STATEMENT SUPPORT
             </span>
 
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 max-w-3xl text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
               Turn your draft into a{" "}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 standout personal statement.
@@ -241,11 +241,11 @@ export function PersonalStatementClient({
 
             {/* Featured Complete Admissions Package */}
             <div className="flex flex-col justify-between rounded-2xl border-2 border-emerald-600 bg-gradient-to-b from-emerald-50/40 via-white to-white p-6 shadow-md relative">
-              <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+              <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-xs">
                 ⭐ ALL-IN-ONE · BEST VALUE
               </span>
               <div>
-                <span className="rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800">
+                <span className="rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
                   ALL-INCLUSIVE ADMISSIONS
                 </span>
                 <h3 className="mt-3 text-lg font-bold text-slate-900">
@@ -256,7 +256,7 @@ export function PersonalStatementClient({
                 </p>
 
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold text-emerald-900">£200</span>
+                  <span className="text-3xl font-bold text-emerald-900">£200</span>
                   <span className="text-xs text-slate-500">/ one-off payment</span>
                 </div>
 

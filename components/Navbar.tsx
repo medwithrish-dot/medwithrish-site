@@ -130,7 +130,7 @@ export default function Navbar() {
                     >
                       <span>{item.label}</span>
                       {item.badge && (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white shadow-2xs">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-2xs">
                           <Sparkles className="h-2.5 w-2.5" />
                           <span>{item.badge}</span>
                         </span>
@@ -263,7 +263,7 @@ export default function Navbar() {
                         <span className="inline-flex items-center gap-1.5">
                           <span>{item.label}</span>
                           {item.badge && (
-                            <span className="inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-2xs">
+                            <span className="inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-2xs">
                               <Sparkles className="h-2.5 w-2.5" />
                               <span>{item.badge}</span>
                             </span>

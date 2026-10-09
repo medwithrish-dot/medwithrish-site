@@ -272,12 +272,12 @@ export function InterviewTutoringClient({
           {/* Hero Section */}
           <section className="mt-6 grid grid-cols-1 items-center gap-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:grid-cols-12">
             <div className="lg:col-span-7">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
                 1-TO-1 MED INTERVIEW TUTORING
               </span>
 
-              <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              <h1 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
                 Personal coaching for your{" "}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   strongest interview yet.
@@ -285,13 +285,13 @@ export function InterviewTutoringClient({
               </h1>
 
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                Work 1-to-1 with <strong className="text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Turn prepared answers into natural, mature, and confident performance - with realistic mock interviews and detailed scorecards.
+                Work 1-to-1 with <strong className="font-semibold text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Turn prepared answers into natural, mature, and confident performance - with realistic mock interviews and detailed scorecards.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href="#packages"
-                  className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                  className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
                 >
                   View packages & pricing
                 </a>
@@ -299,7 +299,7 @@ export function InterviewTutoringClient({
                   href="https://wa.me/447305422619"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
                 >
                   Ask a question on WhatsApp
                 </a>
@@ -309,7 +309,7 @@ export function InterviewTutoringClient({
             {/* Outcome Card */}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xs lg:col-span-5">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                <p className="text-xs font-bold text-slate-900">Verified Outcome</p>
+                <p className="text-xs font-semibold text-slate-900">Verified Outcome</p>
                 <span className="text-[11px] font-semibold text-emerald-600">4 / 4 Offers</span>
               </div>
               <div className="mt-3 flex items-center gap-3">
@@ -323,7 +323,7 @@ export function InterviewTutoringClient({
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xl font-extrabold text-slate-900">4 out of 4 Offers</p>
+                  <p className="text-xl font-bold text-slate-900">4 out of 4 Offers</p>
                   <p className="mt-1 text-xs italic text-slate-600">
                     “Forgot to update you but got all 4 offers! Once again thanks for all your help.”
                   </p>
@@ -338,10 +338,10 @@ export function InterviewTutoringClient({
           {/* Pricing & Packages Section */}
           <section className="mt-10" id="packages">
             <div className="text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
                 Transparent Pricing
               </span>
-              <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+              <h2 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
                 Choose your Med interview package
               </h2>
               <p className="mt-1 text-sm text-slate-600">
@@ -353,7 +353,7 @@ export function InterviewTutoringClient({
               {/* Package 1: Specialist £100 */}
               <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
                 <div>
-                  <span className="inline-block rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                  <span className="inline-block rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
                     SPECIALIST COACHING
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">Interview with Specialist</h3>
@@ -361,7 +361,7 @@ export function InterviewTutoringClient({
                     With an experienced MedicForest Med Interview Tutor.
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-slate-900">£100</span>
+                    <span className="text-3xl font-bold text-slate-900">£100</span>
                     <span className="text-xs text-slate-500">/ 4 hours total</span>
                   </div>
 
@@ -379,7 +379,7 @@ export function InterviewTutoringClient({
                   <button
                     type="button"
                     onClick={() => openBooking("specialist")}
-                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
                   >
                     Book with Specialist (£100)
                   </button>
@@ -387,7 +387,7 @@ export function InterviewTutoringClient({
                     href={whatsappHrefForPackage(packages.specialist)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
                     <MessageCircle className="h-3.5 w-3.5" />
                     WhatsApp question
@@ -397,11 +397,11 @@ export function InterviewTutoringClient({
 
               {/* Package 2: Rishoo £140 */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-blue-600 bg-white p-5 shadow-sm relative">
-                <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-xs">
                   DIRECT WITH RISHOO
                 </span>
                 <div>
-                  <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
+                  <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
                     FOUNDER 1-ON-1
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">Interview with MedWithRish</h3>
@@ -409,7 +409,7 @@ export function InterviewTutoringClient({
                     Direct coaching with Rishoo (@medwithrish).
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-slate-900">£140</span>
+                    <span className="text-3xl font-bold text-slate-900">£140</span>
                     <span className="text-xs text-slate-500">/ 4 hours total</span>
                   </div>
 
@@ -427,7 +427,7 @@ export function InterviewTutoringClient({
                   <button
                     type="button"
                     onClick={() => openBooking("rish")}
-                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
                   >
                     Book with Rishoo (£140)
                   </button>
@@ -435,7 +435,7 @@ export function InterviewTutoringClient({
                     href={whatsappHrefForPackage(packages.rish)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
                     <MessageCircle className="h-3.5 w-3.5" />
                     WhatsApp question
@@ -445,11 +445,11 @@ export function InterviewTutoringClient({
 
               {/* Package 3: Featured £200 Complete Admissions */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-emerald-600 bg-gradient-to-b from-emerald-50/40 via-white to-white p-5 shadow-md relative">
-                <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-xs">
                   ⭐ MOST POPULAR · SAVE £140+
                 </span>
                 <div>
-                  <span className="inline-block rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800">
+                  <span className="inline-block rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
                     COMPLETE ADMISSIONS
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">Complete Specialist Admissions Package</h3>
@@ -457,7 +457,7 @@ export function InterviewTutoringClient({
                     All-inclusive guidance across UCAT, Personal Statement and Interviews.
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-emerald-900">£200</span>
+                    <span className="text-3xl font-bold text-emerald-900">£200</span>
                     <span className="text-xs text-slate-500">/ 8 hrs tuition + PS</span>
                   </div>
 

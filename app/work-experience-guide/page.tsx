@@ -58,7 +58,7 @@ export default function WorkExperienceGuidePage() {
             Application Guide
           </p>
 
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold text-slate-950 sm:text-4xl md:text-5xl">
             Work Experience Guide
           </h1>
           <p className="mt-2 text-xs font-medium text-slate-500 italic">by medwithrish, leading medical admissions tutor.</p>

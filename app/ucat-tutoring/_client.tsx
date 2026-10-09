@@ -328,7 +328,7 @@ export function UCATTutoringClient({
               </span>
             </div>
 
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 max-w-3xl text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
               Turn your UCAT preparation into a{" "}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 high-percentile score.
@@ -413,10 +413,10 @@ export function UCATTutoringClient({
           {/* Pricing & Packages Section */}
           <section className="mt-10" id="packages">
             <div className="text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
                 Transparent Pricing
               </span>
-              <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+              <h2 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
                 Choose your UCAT tutoring package
               </h2>
               <p className="mt-1 text-sm text-slate-600">
@@ -428,7 +428,7 @@ export function UCATTutoringClient({
               {/* Package 1: Specialist £100 */}
               <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
                 <div>
-                  <span className="inline-block rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                  <span className="inline-block rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
                     SPECIALIST COACHING
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">UCAT with Specialist</h3>
@@ -436,7 +436,7 @@ export function UCATTutoringClient({
                     With an experienced MedicForest UCAT Specialist.
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-slate-900">£100</span>
+                    <span className="text-3xl font-bold text-slate-900">£100</span>
                     <span className="text-xs text-slate-500">/ 4 hours total</span>
                   </div>
 
@@ -454,7 +454,7 @@ export function UCATTutoringClient({
                   <button
                     type="button"
                     onClick={() => openBooking("specialist")}
-                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
                   >
                     Book with Specialist (£100)
                   </button>
@@ -462,7 +462,7 @@ export function UCATTutoringClient({
                     href={whatsappHrefForPackage(packages.specialist)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
                     <MessageCircle className="h-3.5 w-3.5" />
                     WhatsApp question
@@ -472,11 +472,11 @@ export function UCATTutoringClient({
 
               {/* Package 2: Rishoo £140 */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-blue-600 bg-white p-5 shadow-sm relative">
-                <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-xs">
                   DIRECT WITH RISHOO
                 </span>
                 <div>
-                  <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
+                  <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
                     FOUNDER 1-ON-1
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">UCAT with MedWithRish</h3>
@@ -484,7 +484,7 @@ export function UCATTutoringClient({
                     Direct coaching with Rishoo (@medwithrish).
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-slate-900">£140</span>
+                    <span className="text-3xl font-bold text-slate-900">£140</span>
                     <span className="text-xs text-slate-500">/ 4 hours total</span>
                   </div>
 
@@ -502,7 +502,7 @@ export function UCATTutoringClient({
                   <button
                     type="button"
                     onClick={() => openBooking("rish")}
-                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                    className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
                   >
                     Book with Rishoo (£140)
                   </button>
@@ -510,7 +510,7 @@ export function UCATTutoringClient({
                     href={whatsappHrefForPackage(packages.rish)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                    className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
                     <MessageCircle className="h-3.5 w-3.5" />
                     WhatsApp question
@@ -520,11 +520,11 @@ export function UCATTutoringClient({
 
               {/* Package 3: Featured £200 Complete Package */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-emerald-600 bg-gradient-to-b from-emerald-50/40 via-white to-white p-5 shadow-md relative">
-                <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                <span className="absolute -top-3 right-4 rounded-full bg-emerald-700 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-xs">
                   ⭐ MOST POPULAR · SAVE £140+
                 </span>
                 <div>
-                  <span className="inline-block rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800">
+                  <span className="inline-block rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
                     COMPLETE ADMISSIONS
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">Complete Specialist Admissions Package</h3>
@@ -532,7 +532,7 @@ export function UCATTutoringClient({
                     End-to-end guidance across UCAT, Personal Statement and Interviews.
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-emerald-900">£200</span>
+                    <span className="text-3xl font-bold text-emerald-900">£200</span>
                     <span className="text-xs text-slate-500">/ 8 hrs tuition + PS</span>
                   </div>
 

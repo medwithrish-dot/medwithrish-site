@@ -171,7 +171,7 @@ export default function ResourcesPage() {
 
         {/* Minimal Hero Header */}
         <div className="mt-6">
-          <h1 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+          <h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
             Admissions Resources
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">

@@ -63,7 +63,7 @@ export default function UCATTimelinePage() {
             UCAT Guide
           </p>
 
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold text-slate-950 sm:text-4xl md:text-5xl">
             UCAT Prep Timeline
           </h1>
 

@@ -39,7 +39,7 @@ export default function UCATMockDifficultyPage() {
               Free UCAT resource
             </p>
 
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950 md:text-4xl">
+            <h1 className="mt-3 text-3xl font-bold text-slate-950 md:text-4xl">
               UCAT Mock Difficulty Spreadsheet
             </h1>
 
