@@ -26,7 +26,8 @@ const experiences = [
 
 const themes: InterviewTheme[] = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"];
 const schoolNames = new Map(interviewUniversities.map((university) => [university.slug, university.name]));
-const field = "w-full min-w-0 rounded-xl border border-[#d4dfe1] bg-white px-3.5 py-2.5 text-sm text-[#123a3c] outline-none transition focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15 disabled:cursor-not-allowed disabled:bg-[#f4f7f7] disabled:opacity-60";
+const baseField = "w-full min-w-0 rounded-xl border border-[#d4dfe1] bg-white py-2.5 text-sm text-[#123a3c] outline-none transition focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15 disabled:cursor-not-allowed disabled:bg-[#f4f7f7] disabled:opacity-60";
+const field = `${baseField} px-3.5`;
 const primary = "inline-flex items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#065d60] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#08787b] disabled:cursor-not-allowed disabled:opacity-50";
 
 function emptyProfile(): PreparationProfile {
@@ -207,7 +208,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
             </div>)}
           </div>}
           {draft.targets.length < 10 && <div className="mt-4 rounded-xl border border-[#dce8e2] bg-white p-3">
-            <label className="relative block" htmlFor={`${uniqueId}-university-search`}><span className="sr-only">Search universities to add</span><Search size={16} className="pointer-events-none absolute left-3.5 top-3 text-[#789085]" aria-hidden="true" /><input ref={searchRef} id={`${uniqueId}-university-search`} value={query} onChange={(event) => { setQuery(event.target.value); setShowAllUniversities(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }} placeholder="Search a university or medical school" autoComplete="off" className={`${field} pl-10`} aria-describedby={`${uniqueId}-university-help`} /></label>
+            <label className="relative block" htmlFor={`${uniqueId}-university-search`}><span className="sr-only">Search universities to add</span><Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#789085]" aria-hidden="true" /><input ref={searchRef} id={`${uniqueId}-university-search`} value={query} onChange={(event) => { setQuery(event.target.value); setShowAllUniversities(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }} placeholder="Search a university or medical school" autoComplete="off" className={`${baseField} pl-10 pr-3.5`} aria-describedby={`${uniqueId}-university-help`} /></label>
             <div className="mt-2 max-h-52 overflow-y-auto" aria-label="Available universities">
               {visibleUniversities.map((university) => <button type="button" key={university.slug} onClick={() => addUniversity(university.slug)} className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-xs text-[#355852] hover:bg-[#eef7f1] focus-visible:bg-[#eef7f1]" aria-label={`Add ${university.name}`}><span className="font-semibold">{university.name}</span><Plus size={15} className="shrink-0 text-[#08787b]" aria-hidden="true" /></button>)}
               {matches.length === 0 && <p className="px-3 py-4 text-xs leading-5 text-[#738882]">No universities match. Try a different name.</p>}

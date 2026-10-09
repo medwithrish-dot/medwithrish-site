@@ -6,7 +6,8 @@ import { ArrowRight, BookOpen, CheckCircle2, Clock3, Search, X } from "lucide-re
 import { filterSavedInterviews, groupSavedInterviews, savedInterviewHref, savedInterviewStatus, type SavedInterviewStatus, type SavedInterviewSummary } from "../_lib/saved-interviews";
 
 const PAGE_SIZE = 20;
-const fieldClass = "w-full rounded-xl border border-[#ccdcda] bg-white px-3 py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15";
+const baseFieldClass = "w-full rounded-xl border border-[#ccdcda] bg-white py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15";
+const fieldClass = `${baseFieldClass} px-3`;
 
 export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSummary[] }) {
   const [query, setQuery] = useState("");
@@ -32,8 +33,8 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
           <div>
             <label htmlFor="saved-interview-search" className="mb-2 block text-xs font-bold text-[#244b48]">Find a Med interview</label>
             <div className="relative">
-              <Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-3.5 text-[#64807e]" />
-              <input id="saved-interview-search" type="search" value={query} onChange={(event) => { setQuery(event.target.value); setVisibleCount(PAGE_SIZE); }} placeholder="Search station or university" className={`${fieldClass} pl-10`} />
+              <Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64807e]" />
+              <input id="saved-interview-search" type="search" value={query} onChange={(event) => { setQuery(event.target.value); setVisibleCount(PAGE_SIZE); }} placeholder="Search station or university" className={`${baseFieldClass} pl-10 pr-3`} />
             </div>
           </div>
           <div>
