@@ -146,14 +146,14 @@ const stages = [
 
 function buttonClasses(variant: string) {
   if (variant === "tutoring") {
-    return "bg-yellow-300 text-blue-950 hover:bg-yellow-200";
+    return "bg-yellow-300 text-blue-950 font-bold hover:bg-yellow-200 shadow-xs";
   }
 
   if (variant === "primary") {
-    return "bg-blue-600 text-white hover:bg-blue-700";
+    return "bg-blue-600 text-white font-semibold hover:bg-blue-700 shadow-xs";
   }
 
-  return "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100";
+  return "bg-white text-blue-700 font-semibold border border-blue-200 hover:bg-blue-50 shadow-2xs";
 }
 
 export default function AdmissionsJourney() {
@@ -174,27 +174,22 @@ export default function AdmissionsJourney() {
 
   return (
     <section
-  id="journey"
-  ref={journeyRef}
-  className="relative overflow-hidden bg-gradient-to-b from-[#eaf0f8] via-[#f1f6fc] to-[#eaf1f8] px-6 py-12 md:py-16"
->
-      {/* Ambient background glows */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute right-0 top-10 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
-        <div className="absolute left-0 bottom-10 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
-      </div>
+      id="journey"
+      ref={journeyRef}
+      className="relative overflow-hidden bg-transparent px-6 py-12 md:py-16"
+    >
       <Reveal className="mx-auto max-w-6xl">
-      <div className="rounded-[2.5rem] border border-white/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(38,62,105,0.08)] backdrop-blur-sm md:p-10">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm md:p-10">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Admissions Roadmap
           </p>
 
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-4xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
             Your journey into medicine/dentistry
           </h2>
 
-          <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">
             From GCSEs to final offers, each stage plays a role in building a
             strong and competitive application. 
           </p>
@@ -208,14 +203,14 @@ export default function AdmissionsJourney() {
             return (
               <div
                 key={stage.number}
-                className={`relative overflow-hidden rounded-[2rem] border transition-all duration-200 hover:shadow-md ${
+                className={`relative overflow-hidden rounded-xl border transition-all duration-200 ${
                   isOpen
                     ? isFeatured
-                      ? "border-blue-400 bg-blue-50 shadow-[0_12px_30px_rgba(37,99,235,0.10)]"
-                      : "border-blue-200 bg-white shadow-md"
+                      ? "border-blue-400 bg-blue-50/70 shadow-sm"
+                      : "border-slate-300 bg-white shadow-sm"
                     : isFeatured
-                    ? "border-blue-300 bg-blue-50/70 shadow-sm"
-                    : "border-gray-200 bg-white shadow-sm hover:border-blue-300 hover:bg-blue-50/60 cursor-pointer"
+                    ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
+                    : "border-slate-200/80 bg-white hover:border-blue-200 hover:bg-slate-50/50 cursor-pointer"
                 }`}
               >
                 {isOpen && (

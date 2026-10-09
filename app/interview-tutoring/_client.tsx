@@ -60,15 +60,15 @@ const packages: Record<InterviewTier, InterviewPackage> = {
   rish: {
     id: "interview-rish",
     name: "1-1 Interview Coaching with MedWithRish",
-    shortLabel: "Rish",
-    badge: "DIRECT WITH RISH",
+    shortLabel: "Rishoo",
+    badge: "DIRECT WITH RISHOO",
     price: 140,
     tutor: "Direct 1-to-1 with @medwithrish",
     durationLabel: "4 hours total · arranged around you",
     description:
-      "Direct personal coaching with Rish from foundational structure to your final university mock interviews.",
+      "Direct personal coaching with Rishoo from foundational structure to your final university mock interviews.",
     features: [
-      "4 hours direct 1-to-1 coaching with Rish (@medwithrish)",
+      "4 hours direct 1-to-1 coaching with Rishoo (@medwithrish)",
       "2 hours on answer structure, ethical reasoning and confident delivery",
       "2 full realistic mock interviews with university-specific stations",
       "Actionable feedback breakdown and personalized question priorities",
@@ -215,7 +215,7 @@ export function InterviewTutoringClient({
     ) +
     "&body=" +
     encodeURIComponent(
-      "Hi Rish,\n\nI would like to book the " +
+      "Hi Rishoo,\n\nI would like to book the " +
         activePackage.name +
         " (£" +
         activePackage.price +
@@ -227,14 +227,14 @@ export function InterviewTutoringClient({
   const whatsappHrefForPackage = (pkg: InterviewPackage) =>
     "https://wa.me/447305422619?text=" +
     encodeURIComponent(
-      "Hi Rish, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
+      "Hi Rishoo, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
     );
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f7fafe] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+      <main className="min-h-screen medwithrish-bg px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           {/* Back Link */}
           <Link
@@ -251,7 +251,7 @@ export function InterviewTutoringClient({
               <div>
                 <p className="text-sm font-bold">Your Interview Tutoring booking is confirmed!</p>
                 <p className="mt-0.5 text-xs text-emerald-700">
-                  We have received your payment. Rish or our team will email you shortly to confirm your session schedule.
+                  We have received your payment. Rishoo or our team will email you shortly to confirm your session schedule.
                 </p>
               </div>
             </div>
@@ -270,7 +270,7 @@ export function InterviewTutoringClient({
           )}
 
           {/* Hero Section */}
-          <section className="mt-6 grid grid-cols-1 items-center gap-6 rounded-3xl border border-blue-100 bg-gradient-to-b from-white to-[#f4f8fd] p-6 shadow-sm sm:p-10 lg:grid-cols-12">
+          <section className="mt-6 grid grid-cols-1 items-center gap-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
@@ -395,10 +395,10 @@ export function InterviewTutoringClient({
                 </div>
               </div>
 
-              {/* Package 2: Rish £140 */}
+              {/* Package 2: Rishoo £140 */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-blue-600 bg-white p-5 shadow-sm relative">
                 <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
-                  DIRECT WITH RISH
+                  DIRECT WITH RISHOO
                 </span>
                 <div>
                   <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
@@ -406,7 +406,7 @@ export function InterviewTutoringClient({
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">Interview with MedWithRish</h3>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                    Direct coaching with Rish (@medwithrish).
+                    Direct coaching with Rishoo (@medwithrish).
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
                     <span className="text-3xl font-extrabold text-slate-900">£140</span>
@@ -429,7 +429,7 @@ export function InterviewTutoringClient({
                     onClick={() => openBooking("rish")}
                     className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
                   >
-                    Book with Rish (£140)
+                    Book with Rishoo (£140)
                   </button>
                   <a
                     href={whatsappHrefForPackage(packages.rish)}
@@ -587,7 +587,7 @@ export function InterviewTutoringClient({
                     : "text-slate-600 hover:bg-white"
                 }`}
               >
-                Rish · £140
+                Rishoo · £140
               </button>
               <button
                 type="button"
@@ -662,7 +662,7 @@ export function InterviewTutoringClient({
                   className="flex items-center justify-center gap-1 rounded-lg border border-slate-300 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   <Mail className="h-3.5 w-3.5" />
-                  Email Rish
+                  Email Rishoo
                 </a>
                 <a
                   href={whatsappHrefForPackage(activePackage)}

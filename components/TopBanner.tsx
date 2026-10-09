@@ -21,27 +21,27 @@ export default function TopBanner() {
         <div className="absolute right-56 bottom-24 h-1.5 w-1.5 rounded-full bg-white/25" />
       </div>
 
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-b from-transparent to-black/10" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-white/20" />
 
       {/* Main Content */}
       <div className="mx-auto flex max-w-6xl flex-col items-center px-6 pt-10 pb-6 text-center md:pt-12 md:pb-8">
 
         {/* Badge */}
-        <span className="mb-4 rounded-full bg-yellow-300 px-5 py-1.5 text-xs font-extrabold tracking-wide text-blue-950 shadow-[0_8px_30px_rgba(0,0,0,0.18)]">
+        <span className="mb-4 rounded-full bg-yellow-300 px-5 py-1.5 text-xs font-bold tracking-wide text-blue-950 shadow-[0_4px_16px_rgba(0,0,0,0.14)]">
           MOST POPULAR RESOURCES
         </span>
 
         {/* Headline */}
-        <h2 className="max-w-4xl text-2xl font-extrabold leading-tight tracking-tight md:text-4xl">
+        <h2 className="max-w-4xl text-2xl font-bold leading-tight tracking-tight md:text-4xl">
           UCAT Notes +{" "}
-          <span className="text-yellow-300">FREE</span>{" "}
+          <span className="text-yellow-300 font-extrabold">FREE</span>{" "}
           Medicine Med Interview Guide
         </h2>
 
         {/* Subtext */}
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-white/92 md:text-base">
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 md:text-base">
           Everything you need to ace the UCAT + a FREE 20-page Medicine Med interview guide.
-  
         </p>
 
         {/* Buttons */}
@@ -51,7 +51,7 @@ export default function TopBanner() {
             href={MEDWITHRISH_NOTES_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-white px-7 py-3 text-base font-bold text-blue-700 shadow transition hover:-translate-y-0.5"
+            className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-blue-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-50"
           >
             View UCAT Notes
           </a>
@@ -60,7 +60,7 @@ export default function TopBanner() {
             href={FREE_INTERVIEW_GUIDE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-yellow-300 px-7 py-3 text-base font-extrabold text-blue-950 shadow-[0_12px_30px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-yellow-200"
+            className="rounded-full bg-yellow-300 px-7 py-3 text-sm font-bold text-blue-950 shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:bg-yellow-200"
           >
             Get FREE Guide
           </a>
@@ -68,8 +68,8 @@ export default function TopBanner() {
         </div>
 
         {/* Credibility Line */}
-        <p className="mt-4 text-xs text-white/80">
-          Trusted by <strong>350+</strong> students receiving medical/dental school offers.
+        <p className="mt-4 text-xs font-normal text-white/80">
+          Trusted by <strong className="font-semibold text-white">350+</strong> students receiving medical/dental school offers.
         </p>
 
         {/* Scroll Arrow */}

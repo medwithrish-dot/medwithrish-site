@@ -32,8 +32,8 @@ export function contactDetails(value: string | string[] | undefined) {
     : null;
   const subject = topic?.subject ?? "MedWithRish enquiry";
   const message = topic
-    ? `Hi Rish, I'm interested in ${topic.label}.`
-    : "Hi Rish, I'd like to ask about MedWithRish.";
+    ? `Hi Rishoo, I'm interested in ${topic.label}.`
+    : "Hi Rishoo, I'd like to ask about MedWithRish.";
 
   return {
     heading: topic ? `Ask about ${topic.label}` : "Get in touch",

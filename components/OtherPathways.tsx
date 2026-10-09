@@ -45,20 +45,16 @@ export default function OtherPathways() {
   const [selected, setSelected] = useState(pathways[0]);
 const cardRef = useRef<HTMLDivElement | null>(null);
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#eaf1f8] via-[#f4f7fc] to-[#e9f0f8] px-6 py-16">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-10 top-10 h-80 w-80 rounded-full bg-blue-200/30 blur-3xl" />
-        <div className="absolute -right-10 bottom-10 h-80 w-80 rounded-full bg-indigo-200/25 blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden bg-transparent px-6 py-14">
       <div className="mx-auto max-w-6xl">
         <Reveal className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Other Pathways
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
             There is more than one route into medicine or dentistry
           </h2>
-          <p className="mt-4 text-base leading-7 text-gray-600">
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">
             Not getting in first time does not mean the journey is over. Explore
             alternative routes and realistic next steps.
           </p>
@@ -84,16 +80,16 @@ const cardRef = useRef<HTMLDivElement | null>(null);
     }, 100);
   }
 }}
-                className={`rounded-2xl border p-4 text-left transition ${
+                className={`rounded-xl border p-4 text-left transition ${
                   active
-                    ? "border-blue-600 bg-blue-50 shadow-sm"
-                    : "border-gray-200 bg-white hover:border-blue-300 hover:bg-gray-50"
+                    ? "border-blue-600 bg-blue-50/70 shadow-2xs"
+                    : "border-slate-200/80 bg-white hover:border-blue-200 hover:bg-slate-50/50"
                 }`}
               >
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-slate-900">
                   {pathway.title}
                 </p>
-                <p className="mt-2 text-xs text-gray-500">{pathway.audience}</p>
+                <p className="mt-1.5 text-xs text-slate-500">{pathway.audience}</p>
               </button>
             );
           })}
@@ -102,15 +98,15 @@ const cardRef = useRef<HTMLDivElement | null>(null);
         <Reveal delay={150}>
         <div
           ref={cardRef}
-          className="mt-8 rounded-3xl border border-blue-100/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.88))] p-6 shadow-[0_16px_50px_rgba(37,99,235,0.06)] sm:p-8"
+          className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8"
         >
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
             {selected.audience}
           </p>
-          <h3 className="mt-2 text-2xl font-bold text-gray-900">
+          <h3 className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
             {selected.title}
           </h3>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-gray-700">
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-base">
             {selected.description}
           </p>
         </div>

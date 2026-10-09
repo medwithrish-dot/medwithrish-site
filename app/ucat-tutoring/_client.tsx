@@ -64,16 +64,16 @@ const packages: Record<UcatTutorTier, UcatPackage> = {
     id: "ucat-rish",
     tierKey: "rish",
     name: "UCAT Crash Course with MedWithRish",
-    shortLabel: "Rish",
-    badge: "DIRECT WITH RISH",
+    shortLabel: "Rishoo",
+    badge: "DIRECT WITH RISHOO",
     price: 140,
     tutor: "Direct with @medwithrish",
     durationLabel: "4 hours intensive tuition",
     description:
-      "Direct 1-to-1 coaching with Rish focusing on high-yield mental maths, calculator shortcuts, and triage techniques.",
+      "Direct 1-to-1 coaching with Rishoo focusing on high-yield mental maths, calculator shortcuts, and triage techniques.",
     features: [
-      "4 hours direct 1-to-1 coaching with Rish (@medwithrish)",
-      "High-yield mental maths and online calculator estimation techniques (Rish scored 890/900 in QR)",
+      "4 hours direct 1-to-1 coaching with Rishoo (@medwithrish)",
+      "High-yield mental maths and online calculator estimation techniques (Rishoo scored 890/900 in QR)",
       "Syllogism and logical puzzle decision-tree frameworks for Decision Making",
       "Verbal Reasoning speed-reading and keyword scanning rules",
       "Diagnostic breakdown pinpointing your personal time-drains",
@@ -118,7 +118,7 @@ const subtestBreakdown = [
   {
     title: "Quantitative Reasoning (QR)",
     tag: "890/900 Calculator Method",
-    copy: "Rish's signature online calculator method (M+, M-, MRC) combined with mental estimation so you never run out of time.",
+    copy: "Rishoo's signature online calculator method (M+, M-, MRC) combined with mental estimation so you never run out of time.",
     points: ["Calculator memory shortcut drill", "Rough estimation for rapid answer elimination", "Percentage change and ratio fast tracks"],
   },
   {
@@ -134,7 +134,7 @@ const ucatReviews = [
     src: "/success-stories/story5.jpeg",
     tag: "2370 B2",
     headline: "2370 Band 2!",
-    quote: "Rish’s support gave me the confidence and structure I needed. The advice was tailored to my application and made a huge difference.",
+    quote: "Rishoo’s support gave me the confidence and structure I needed. The advice was tailored to my application and made a huge difference.",
     sub: "Offers: Manchester",
   },
   {
@@ -261,7 +261,7 @@ export function UCATTutoringClient({
     ) +
     "&body=" +
     encodeURIComponent(
-      "Hi Rish,\n\nI would like to book the " +
+      "Hi Rishoo,\n\nI would like to book the " +
         activePackage.name +
         " (£" +
         activePackage.price +
@@ -273,14 +273,14 @@ export function UCATTutoringClient({
   const whatsappHrefForPackage = (pkg: UcatPackage) =>
     "https://wa.me/447305422619?text=" +
     encodeURIComponent(
-      "Hi Rish, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
+      "Hi Rishoo, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
     );
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f7fafe] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+      <main className="min-h-screen medwithrish-bg px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           {/* Back Link */}
           <Link
@@ -297,7 +297,7 @@ export function UCATTutoringClient({
               <div>
                 <p className="text-sm font-bold">Your UCAT Tutoring booking is confirmed!</p>
                 <p className="mt-0.5 text-xs text-emerald-700">
-                  We have received your payment. Rish or our team will email you shortly to confirm your session schedule.
+                  We have received your payment. Rishoo or our team will email you shortly to confirm your session schedule.
                 </p>
               </div>
             </div>
@@ -316,7 +316,7 @@ export function UCATTutoringClient({
           )}
 
           {/* Hero Header */}
-          <section className="mt-6 rounded-3xl border border-blue-100 bg-gradient-to-b from-white to-[#f4f8fd] p-6 shadow-sm sm:p-10">
+          <section className="mt-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
@@ -470,10 +470,10 @@ export function UCATTutoringClient({
                 </div>
               </div>
 
-              {/* Package 2: Rish £140 */}
+              {/* Package 2: Rishoo £140 */}
               <div className="flex flex-col justify-between rounded-2xl border-2 border-blue-600 bg-white p-5 shadow-sm relative">
                 <span className="absolute -top-3 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
-                  DIRECT WITH RISH
+                  DIRECT WITH RISHOO
                 </span>
                 <div>
                   <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
@@ -481,7 +481,7 @@ export function UCATTutoringClient({
                   </span>
                   <h3 className="mt-3 text-lg font-bold text-slate-900">UCAT with MedWithRish</h3>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                    Direct coaching with Rish (@medwithrish).
+                    Direct coaching with Rishoo (@medwithrish).
                   </p>
                   <div className="mt-4 flex items-baseline gap-1">
                     <span className="text-3xl font-extrabold text-slate-900">£140</span>
@@ -504,7 +504,7 @@ export function UCATTutoringClient({
                     onClick={() => openBooking("rish")}
                     className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
                   >
-                    Book with Rish (£140)
+                    Book with Rishoo (£140)
                   </button>
                   <a
                     href={whatsappHrefForPackage(packages.rish)}
@@ -620,7 +620,7 @@ export function UCATTutoringClient({
                 onClick={() => openBooking("rish")}
                 className="rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-blue-700 shadow-xs transition hover:bg-blue-50"
               >
-                Book with Rish (£140)
+                Book with Rishoo (£140)
               </button>
               <button
                 type="button"
@@ -696,7 +696,7 @@ export function UCATTutoringClient({
                     : "text-slate-600 hover:bg-white"
                 }`}
               >
-                Rish · £140
+                Rishoo · £140
               </button>
               <button
                 type="button"
@@ -771,7 +771,7 @@ export function UCATTutoringClient({
                   className="flex items-center justify-center gap-1 rounded-lg border border-slate-300 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   <Mail className="h-3.5 w-3.5" />
-                  Email Rish
+                  Email Rishoo
                 </a>
                 <a
                   href={whatsappHrefForPackage(activePackage)}

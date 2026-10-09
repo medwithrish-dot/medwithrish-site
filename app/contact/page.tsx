@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Help & Support | MedWithRish",
-  description: "Contact Rish about UCAT tutoring, interviews, personal statement sessions and admissions resources.",
+  description: "Contact Rishoo about UCAT tutoring, interviews, personal statement sessions and admissions resources.",
   alternates: { canonical: "/contact" },
 };
 
@@ -30,7 +30,7 @@ function StoryGrid({ images }: { images: string[] }) {
       {images.map((src, index) => (
         <div
           key={src}
-          className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-gray-200 bg-gray-100 shadow-sm"
+          className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-slate-200/80 bg-gray-100 shadow-sm"
         >
           <Image
             src={src}
@@ -53,16 +53,16 @@ export default async function ContactPage({
   const contact = contactDetails((await searchParams).topic);
 
   return (
-    <main className="bg-[#f7fafe] px-6 pb-14 pt-8 md:pb-16 md:pt-10">
+    <main className="medwithrish-bg min-h-screen px-6 pb-14 pt-8 md:pb-16 md:pt-10 text-slate-900">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
-          className="inline-flex rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"
+          className="inline-flex rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-2xs transition hover:border-blue-300 hover:text-blue-700"
         >
           ← Back to homepage
         </Link>
 
-        <section className="mt-8 rounded-[2.5rem] border border-gray-200 bg-white p-6 shadow-sm md:p-10">
+        <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm md:p-10">
           <div className="grid gap-8 lg:grid-cols-[300px_1fr_300px] lg:items-center">
             <div className="hidden lg:block">
               <StoryGrid images={leftStories} />
@@ -72,7 +72,7 @@ export default async function ContactPage({
               <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full border-4 border-blue-100 bg-gray-100 shadow-sm">
                 <Image
                   src="/rish-profile.jpg"
-                  alt="Rish profile photo"
+                  alt="Rishoo profile photo"
                   width={112}
                   height={112}
                   className="h-full w-full object-cover"

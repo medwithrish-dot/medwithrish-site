@@ -155,7 +155,7 @@ const categories: ResourceCategory[] = [
 
 export default function ResourcesPage() {
   return (
-    <div className="min-h-screen bg-[#fcfdfd] text-slate-900">
+    <div className="min-h-screen medwithrish-bg text-slate-900">
       <Navbar />
 
       <main className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-14">
@@ -245,7 +245,7 @@ export default function ResourcesPage() {
                 </p>
 
                 {/* Flat Row List */}
-                <div className="mt-3 divide-y divide-slate-100 rounded-xl border border-slate-200/80 bg-white shadow-2xs">
+                <div className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
                   {category.items.map((item) => {
                     const isFeatured = item.featured;
 

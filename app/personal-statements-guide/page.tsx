@@ -33,125 +33,123 @@ const mistakes = [
 
 export default function PersonalStatementsGuidePage() {
   return (
-    <main className="bg-white px-6 pb-20 pt-10">
+    <main className="medwithrish-bg min-h-screen px-6 pb-20 pt-10 text-slate-900">
       <div className="mx-auto max-w-4xl">
         <Link href="/resources" className="text-sm font-semibold text-blue-600 hover:underline">
           ← Back to resources
         </Link>
 
-        <header className="mt-10 border-b border-gray-200 pb-10">
+        <header className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Application Guide
           </p>
 
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
+          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
             Personal Statements Guide
           </h1>
 
-          <p className="mt-5 text-lg leading-8 text-gray-700">
+          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
             A personal statement should show motivation, reflection, and suitability. It should not be a list of achievements or a dramatic story about why you want to study medicine or dentistry.
           </p>
 
-          <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 px-6 py-5">
-            <p className="text-sm font-semibold text-blue-700">
+          <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50/70 p-5">
+            <p className="text-sm font-bold text-blue-900">
               Need help improving your personal statement?
             </p>
 
-            <p className="mt-2 text-sm leading-6 text-gray-700">
-              I offer 1-to-1 personal statement support and review to improve structure, reflection, clarity, and application strength.
+            <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-slate-700">
+              Dedicated 1-to-1 personal statement support and review to improve structure, reflection, clarity, and application strength.
             </p>
 
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/personal-statement-session"
-                className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="inline-flex rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
               >
                 Personal statement session
               </Link>
-
             </div>
           </div>
         </header>
 
-        <section className="border-b border-gray-200 py-10">
-          <h2 className="text-2xl font-bold text-gray-900">
-            What a personal statement is actually for
-          </h2>
+        <div className="mt-6 space-y-6">
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
+              What a personal statement is actually for
+            </h2>
 
-          <div className="mt-5 space-y-5 text-base leading-8 text-gray-700">
-            <p>
-              For medicine, many universities do not heavily score the personal statement. However, it can still matter for certain universities and may be used as a discussion point at Med interview.
-            </p>
+            <div className="mt-4 space-y-4 text-sm sm:text-base leading-relaxed text-slate-600">
+              <p>
+                For medicine, many universities do not heavily score the personal statement. However, it can still matter for certain universities and may be used as a discussion point at Med interview.
+              </p>
 
-            <p>
-              For dentistry, the personal statement can be more important because universities often want clearer evidence that you understand dentistry specifically and are not treating it as a backup option.
-            </p>
-          </div>
-        </section>
+              <p>
+                For dentistry, the personal statement can be more important because universities often want clearer evidence that you understand dentistry specifically and are not treating it as a backup option.
+              </p>
+            </div>
+          </section>
 
-        <section className="border-b border-gray-200 py-10">
-          <h2 className="text-2xl font-bold text-gray-900">What matters most</h2>
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">What matters most</h2>
 
-          <div className="mt-6 grid gap-5">
-            {keyIdeas.map((item) => (
-              <div key={item.title} className="border-l-4 border-blue-600 pl-5">
-                <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-base leading-7 text-gray-700">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+            <div className="mt-5 grid gap-4">
+              {keyIdeas.map((item) => (
+                <div key={item.title} className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 border-l-4 border-l-blue-600">
+                  <h3 className="text-base font-bold text-slate-900">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <section className="border-b border-gray-200 py-10">
-          <h2 className="text-2xl font-bold text-gray-900">Common mistakes</h2>
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">Common mistakes</h2>
 
-          <ul className="mt-5 space-y-3 text-base leading-7 text-gray-700">
-            {mistakes.map((mistake) => (
-              <li key={mistake} className="flex gap-3">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
-                <span>{mistake}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+            <ul className="mt-4 space-y-2.5 text-sm sm:text-base leading-relaxed text-slate-600">
+              {mistakes.map((mistake) => (
+                <li key={mistake} className="flex items-start gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
+                  <span>{mistake}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <section className="border-b border-gray-200 py-10">
-          <h2 className="text-2xl font-bold text-gray-900">
-            How to make it stronger
-          </h2>
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
+              How to make it stronger
+            </h2>
 
-          <div className="mt-5 space-y-5 text-base leading-8 text-gray-700">
-            <p>
-              A strong paragraph usually includes an experience, a reflection, and a link back to the course. The reflection is the most important part.
-            </p>
+            <div className="mt-4 space-y-4 text-sm sm:text-base leading-relaxed text-slate-600">
+              <p>
+                A strong paragraph usually includes an experience, a reflection, and a link back to the course. The reflection is the most important part.
+              </p>
 
-            <p>
-              Instead of saying “I learned communication is important,” explain what made the communication effective and why it matters in healthcare.
-            </p>
-          </div>
-        </section>
+              <p>
+                Instead of saying “I learned communication is important,” explain what made the communication effective and why it matters in healthcare.
+              </p>
+            </div>
+          </section>
 
-        <section className="py-10">
-          <div className="rounded-2xl border border-blue-100 bg-[#f7fafe] p-7">
-            <h2 className="text-2xl font-bold text-gray-900">
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
               Want feedback on your personal statement?
             </h2>
 
-            <p className="mt-3 text-base leading-7 text-gray-700">
+            <p className="mt-2 text-sm sm:text-base leading-relaxed text-slate-600">
               Personal statement feedback can help improve structure, remove generic writing, and make your reflections stronger.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-5">
               <Link
                 href="/personal-statement-session"
-                className="inline-flex justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
+                className="inline-flex rounded-xl bg-blue-600 px-5 py-3 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
               >
                 Book PS support
               </Link>
-
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </main>
   );

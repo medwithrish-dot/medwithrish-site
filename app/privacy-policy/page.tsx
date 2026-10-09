@@ -113,7 +113,7 @@ const sections = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-[#f8fbff] text-slate-950">
+    <main className="min-h-screen medwithrish-bg text-slate-950">
       <Navbar />
       <div className="mx-auto max-w-4xl px-5 py-10">
         <Link

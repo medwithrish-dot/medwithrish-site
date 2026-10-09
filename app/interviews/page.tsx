@@ -103,19 +103,19 @@ const quickLinks = [
 
 export default function InterviewsPage() {
   return (
-    <main className="min-h-screen bg-[#f7fafe] text-gray-900">
+    <main className="min-h-screen medwithrish-bg text-slate-900">
       <Navbar />
 
-      <section className="border-b border-blue-100 bg-white">
+      <section className="border-b border-slate-200/80 bg-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 lg:grid-cols-[1fr_360px] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
               Med Interview preparation
             </p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-gray-950 md:text-6xl">
+            <h1 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl lg:text-6xl">
               Medicine Interviews
             </h1>
-            <p className="mt-5 max-w-3xl text-base leading-8 text-gray-700 md:text-lg">
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-600 md:text-lg">
               A focused prep hub for MMI, panel, ethics, motivation,
               reflection and communication. Use this before jumping into
               tutoring or the free guide.
@@ -125,30 +125,30 @@ export default function InterviewsPage() {
                 href={FREE_INTERVIEW_GUIDE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-bold text-white transition hover:bg-blue-700"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
               >
                 Free medicine MMI guide
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
               <Link
                 href="/interview-tutoring"
-                className="inline-flex h-12 items-center justify-center rounded-lg border border-gray-200 bg-white px-5 text-sm font-bold text-gray-800 transition hover:border-blue-300 hover:text-blue-700"
+                className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-xs font-bold text-slate-700 shadow-2xs transition hover:border-blue-300 hover:text-blue-700"
               >
                 Med Interview tutoring
               </Link>
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-[#fbfdff] p-4 shadow-sm">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
             <Image
               src="/rish-profile.jpg"
-              alt="Rish from MedWithRish"
+              alt="Rishoo from MedWithRish"
               width={360}
               height={360}
-              className="aspect-square w-full rounded-lg object-cover"
+              className="aspect-square w-full rounded-xl object-cover"
               priority
             />
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-black text-blue-700">
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-bold text-blue-700">
               {["MMI", "Panel", "Ethics"].map((label) => (
                 <span key={label} className="rounded-lg bg-blue-50 px-3 py-2">
                   {label}
@@ -166,13 +166,13 @@ export default function InterviewsPage() {
             return (
               <article
                 key={item.title}
-                className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm"
               >
                 <Icon className="h-6 w-6 text-blue-600" aria-hidden="true" />
-                <h2 className="mt-4 text-lg font-bold text-gray-950">
+                <h2 className="mt-4 text-base font-bold text-slate-950">
                   {item.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-gray-600">
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
                   {item.text}
                 </p>
               </article>
@@ -181,10 +181,10 @@ export default function InterviewsPage() {
         </div>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3">
               <ClipboardCheck className="h-6 w-6 text-blue-600" aria-hidden="true" />
-              <h2 className="text-2xl font-bold text-gray-950">
+              <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
                 A simple prep system
               </h2>
             </div>
@@ -195,16 +195,16 @@ export default function InterviewsPage() {
                     className="mt-0.5 h-5 w-5 shrink-0 text-blue-600"
                     aria-hidden="true"
                   />
-                  <p className="text-sm leading-7 text-gray-700">{item}</p>
+                  <p className="text-sm leading-relaxed text-slate-600">{item}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-3">
               <BookOpen className="h-6 w-6 text-blue-600" aria-hidden="true" />
-              <h2 className="text-2xl font-bold text-gray-950">
+              <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
                 Core areas to prepare
               </h2>
             </div>
@@ -212,12 +212,12 @@ export default function InterviewsPage() {
               {coreAreas.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.title} className="rounded-lg bg-[#f7fafe] p-4">
+                  <div key={item.title} className="rounded-xl border border-slate-100 bg-slate-50/70 p-4">
                     <Icon className="h-5 w-5 text-blue-600" aria-hidden="true" />
-                    <h3 className="mt-3 text-sm font-bold text-gray-950">
+                    <h3 className="mt-3 text-sm font-bold text-slate-950">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-gray-600">
+                    <p className="mt-1 text-xs leading-relaxed text-slate-600">
                       {item.text}
                     </p>
                   </div>
@@ -227,8 +227,8 @@ export default function InterviewsPage() {
           </section>
         </div>
 
-        <section className="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-2xl font-bold text-gray-950">
+        <section className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-950 sm:text-2xl">
             Common mistakes to avoid
           </h2>
           <div className="mt-5 grid gap-3 md:grid-cols-2">

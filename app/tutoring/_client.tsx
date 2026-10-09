@@ -71,15 +71,15 @@ const allTutoringPackages: TutoringPackage[] = [
     id: "ucat-rish",
     category: "ucat",
     name: "UCAT Crash Course with MedWithRish",
-    badge: "DIRECT WITH RISH",
+    badge: "DIRECT WITH RISHOO",
     price: 140,
     tutor: "Direct 1-to-1 with @medwithrish",
     durationLabel: "4 hours total intensive tuition",
     description:
-      "Direct personal coaching with Rish focusing on high-speed mental maths, calculator shortcuts, and triage techniques.",
+      "Direct personal coaching with Rishoo focusing on high-speed mental maths, calculator shortcuts, and triage techniques.",
     features: [
-      "4 hours direct 1-to-1 coaching with Rish",
-      "High-yield mental maths & calculator estimation (Rish scored 890 in QR)",
+      "4 hours direct 1-to-1 coaching with Rishoo",
+      "High-yield mental maths & calculator estimation (Rishoo scored 890 in QR)",
       "Syllogism and logical puzzle decision-tree frameworks",
       "Verbal Reasoning speed-reading and keyword scanning rules",
       "Diagnostic breakdown targeting weakest subtests",
@@ -106,14 +106,14 @@ const allTutoringPackages: TutoringPackage[] = [
     id: "interview-rish",
     category: "interview",
     name: "1-1 Interview Coaching with MedWithRish",
-    badge: "DIRECT WITH RISH",
+    badge: "DIRECT WITH RISHOO",
     price: 140,
     tutor: "Direct 1-to-1 with @medwithrish",
     durationLabel: "4 hours total (2 hrs coaching + 2 mock interviews)",
     description:
-      "Direct personal coaching with Rish from foundational structure to your final university mock interviews.",
+      "Direct personal coaching with Rishoo from foundational structure to your final university mock interviews.",
     features: [
-      "4 hours direct 1-to-1 coaching with Rish",
+      "4 hours direct 1-to-1 coaching with Rishoo",
       "2 hours on answer structure, ethical reasoning and delivery",
       "2 full realistic mock interviews tailored to your target universities",
       "Actionable feedback breakdown and personalized question priorities",
@@ -156,7 +156,7 @@ const outcomeStories = [
     alt: "Student UCAT score 2370 Band 2 feedback screenshot",
     tag: "UCAT SCORE",
     scoreHeading: "2370 B2!",
-    quote: "Rish’s support gave me the confidence and structure I needed. The advice was tailored to my application and made a huge difference.",
+    quote: "Rishoo’s support gave me the confidence and structure I needed. The advice was tailored to my application and made a huge difference.",
     authorName: "Year 12 student",
     offers: "Offers: Manchester",
   },
@@ -292,7 +292,7 @@ export function TutoringPageClient({
     ) +
     "&body=" +
     encodeURIComponent(
-      "Hi Rish,\n\nI would like to book the " +
+      "Hi Rishoo,\n\nI would like to book the " +
         bookingPackage.name +
         " (£" +
         bookingPackage.price +
@@ -304,7 +304,7 @@ export function TutoringPageClient({
   const whatsappHrefForPackage = (pkg: TutoringPackage) =>
     "https://wa.me/447305422619?text=" +
     encodeURIComponent(
-      "Hi Rish, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
+      "Hi Rishoo, I'm interested in the " + pkg.name + " (£" + pkg.price + ")."
     );
 
   const filteredPackages =
@@ -322,7 +322,7 @@ export function TutoringPageClient({
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f7fafe] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+      <main className="min-h-screen medwithrish-bg px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           {/* Checkout Status Notification */}
           {checkoutStatus === "success" && (
@@ -350,7 +350,7 @@ export function TutoringPageClient({
           )}
 
           {/* Hero Section */}
-          <section className="rounded-3xl border border-blue-100 bg-gradient-to-b from-white to-[#f4f8fd] p-6 shadow-sm sm:p-10">
+          <section className="rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
@@ -736,7 +736,7 @@ export function TutoringPageClient({
                   className="flex items-center justify-center gap-1 rounded-lg border border-slate-300 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
                   <Mail className="h-3.5 w-3.5" />
-                  Email Rish
+                  Email Rishoo
                 </a>
                 <a
                   href={whatsappHrefForPackage(bookingPackage)}

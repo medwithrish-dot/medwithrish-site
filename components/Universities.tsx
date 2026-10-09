@@ -13,19 +13,19 @@ export default function Universities() {
   return (
     <section className="mx-auto mt-8 max-w-5xl px-2">
       <div className="text-center">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-black">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           Students received offers from
         </p>
       </div>
 
-      <div className="mt-5 flex flex-wrap justify-center items-center gap-6">
+      <div className="mt-5 flex flex-wrap justify-center items-center gap-5">
         {universities.map((uni) => (
           <div
             key={uni.name}
-            className={`flex justify-center rounded-2xl px-3 py-3 transition ${
+            className={`flex justify-center rounded-xl px-3.5 py-2.5 transition ${
               uni.featured
-                ? "border border-blue-200 bg-blue-50 shadow-sm"
-                : "opacity-70"
+                ? "border border-slate-200 bg-white shadow-2xs"
+                : "opacity-60 hover:opacity-90"
             }`}
           >
             <Image

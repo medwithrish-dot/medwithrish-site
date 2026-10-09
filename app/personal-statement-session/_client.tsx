@@ -103,7 +103,7 @@ export function PersonalStatementClient({
   const psWhatsappHref =
     "https://wa.me/447305422619?text=" +
     encodeURIComponent(
-      "Hi Rish, I'm interested in personal statement review and support."
+      "Hi Rishoo, I'm interested in personal statement review and support."
     );
 
   const psEmailHref =
@@ -111,14 +111,14 @@ export function PersonalStatementClient({
     encodeURIComponent("Personal Statement Review & Support") +
     "&body=" +
     encodeURIComponent(
-      "Hi Rish,\n\nI would like support with my Medicine/Dentistry personal statement.\n\nTarget course: Medicine / Dentistry\nCurrent draft status: Outline / First draft / Nearly finished\nAny specific deadlines: October 15\n\nThank you!"
+      "Hi Rishoo,\n\nI would like support with my Medicine/Dentistry personal statement.\n\nTarget course: Medicine / Dentistry\nCurrent draft status: Outline / First draft / Nearly finished\nAny specific deadlines: October 15\n\nThank you!"
     );
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f7fafe] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+      <main className="min-h-screen medwithrish-bg px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <Link
             href="/personal-statements-guide"
@@ -141,7 +141,7 @@ export function PersonalStatementClient({
           )}
 
           {/* Hero Section */}
-          <section className="mt-6 rounded-3xl border border-blue-100 bg-gradient-to-b from-white to-[#f4f8fd] p-6 shadow-sm sm:p-10">
+          <section className="mt-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
               <Sparkles className="h-3.5 w-3.5 text-blue-600" />
               PERSONAL STATEMENT SUPPORT
@@ -166,7 +166,7 @@ export function PersonalStatementClient({
                 className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
-                Message Rish on WhatsApp
+                Message Rishoo on WhatsApp
               </a>
               <a
                 href={psEmailHref}
@@ -203,7 +203,7 @@ export function PersonalStatementClient({
                   Personal Statement Review & Consultation
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                  Detailed line-by-line mark-up, structural rewrite suggestions, and 1-to-1 consultation with Rish.
+                  Detailed line-by-line mark-up, structural rewrite suggestions, and 1-to-1 consultation with Rishoo.
                 </p>
 
                 <ul className="mt-4 space-y-2 text-xs text-slate-700">

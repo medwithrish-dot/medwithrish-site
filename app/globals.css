@@ -1,33 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #edf3fa;
-  --foreground: #171717;
+  --background: #f0f5ff;
+  --foreground: #172554;
+  --color-primary: #2563eb;
+  --color-navy: #172554;
+  --color-body: #475569;
+  --color-border: #e2e8f0;
+  --color-card: #ffffff;
+  --color-soft-blue: #eff6ff;
+  --color-soft-lavender: #f3f0ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
 html {
   scroll-behavior: smooth;
-  background: #edf3fa;
+  background: #f0f5ff;
 }
 
 body {
-  background: #edf3fa;
+  background: #f0f5ff;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
 }
 
+.medwithrish-bg,
 .medwithrish-home {
   position: relative;
   isolation: isolate;
   min-height: 100vh;
-  background: linear-gradient(180deg, #edf4fb 0%, #f3f6fc 35%, #edf1f8 70%, #f2f1f9 100%);
+  background-color: #f8faff;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -5%, rgba(219, 234, 254, 0.5) 0%, rgba(244, 240, 255, 0.4) 45%, transparent 80%),
+    radial-gradient(circle 700px at 10% 25%, rgba(239, 246, 255, 0.75) 0%, transparent 70%),
+    radial-gradient(circle 700px at 90% 55%, rgba(243, 240, 255, 0.7) 0%, transparent 70%),
+    linear-gradient(180deg, #f0f5ff 0%, #f4f0ff 30%, #f9f8fe 65%, #ffffff 100%);
+  background-attachment: fixed;
+}
+
+.medwithrish-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .medicforest-landing {

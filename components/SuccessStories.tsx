@@ -87,14 +87,8 @@ export default function SuccessStories() {
   return (
     <section
       id="success-stories"
-      className="relative overflow-hidden bg-gradient-to-b from-[#e8f1fb] via-[#eef5fc] to-[#eaf0f8] px-6 pt-8 pb-12 md:pt-10 md:pb-16"
+      className="relative overflow-hidden bg-transparent px-6 pt-10 pb-12 md:pt-14 md:pb-16"
     >
-      {/* Ambient background glows */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -left-20 -top-10 h-[440px] w-[440px] rounded-full bg-blue-300/30 blur-3xl" />
-        <div className="absolute -right-20 top-20 h-[460px] w-[460px] rounded-full bg-indigo-300/25 blur-3xl" />
-        <div className="absolute left-1/3 bottom-10 h-80 w-80 rounded-full bg-cyan-200/25 blur-3xl" />
-      </div>
       <div className="mx-auto max-w-6xl">
         {/* Section heading */}
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -102,70 +96,63 @@ export default function SuccessStories() {
             Student Success Stories
           </p>
 
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-4xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-4xl">
             Real messages. Real offers. Real results.
           </h2>
 
-          <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 md:text-base">
             A few of the messages and outcomes from students we’ve helped with
-            UCAT, interviews, and competitive applications that received <strong>Oxbridge</strong> and other Russel group uni offers.
-
-          
+            UCAT, interviews, and competitive applications that received <strong className="font-semibold text-slate-800">Oxbridge</strong> and other Russell Group university offers.
           </p>
 
           <div className="mt-5 flex justify-center">
-  <a
-    href="#more-results"
-    className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-blue-300 hover:text-blue-600 hover:shadow"
-  >
-    Scroll down for more
-    <span className="text-base">↓</span>
-  </a>
-</div>
+            <a
+              href="#more-results"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:border-blue-300 hover:text-blue-600"
+            >
+              Scroll down for more
+              <span className="text-sm">↓</span>
+            </a>
+          </div>
         </Reveal>
 
         {/* Featured result */}
-<Reveal delay={80} className="mx-auto mt-8 max-w-3xl">
-<div id="featured-result">
-  <div className="relative overflow-hidden rounded-[1.75rem] border border-blue-200 bg-white p-4 shadow-[0_14px_40px_rgba(59,130,246,0.10)] md:p-5">
-    <div className="pointer-events-none absolute inset-0">
-      <div className="absolute -left-10 top-6 h-24 w-24 rounded-full bg-blue-100/70 blur-3xl" />
-      <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-yellow-100/60 blur-3xl" />
-    </div>
+        <Reveal delay={80} className="mx-auto mt-8 max-w-3xl">
+          <div id="featured-result">
+            <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm md:p-7">
+              <div className="relative grid items-center gap-6 md:grid-cols-[1fr_260px]">
+                <div className="max-w-md">
+                  <span className="inline-flex rounded-full bg-blue-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
+                    Featured Result
+                  </span>
 
-    <div className="relative grid items-center gap-5 md:grid-cols-[0.9fr_260px]">
-      <div className="max-w-md">
-        <span className="inline-flex rounded-full bg-blue-600 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-          Featured Result
-        </span>
+                  <h3 className="mt-3 text-xl font-bold tracking-tight text-slate-900 md:text-2xl">
+                    A UCAT score that beat 97% of test-takers.
+                  </h3>
 
-        <h3 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
-          A UCAT score that beat 97% of test-takers.
-        </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                    This is one of MULTIPLE students who I have helped get a UCAT score that was within the top 5%. This particular student went from &apos;failing&apos; his UCAT mock-tests to out-competing approximately 40,000 test-takers, using my guidance and resources!
+                  </p>
 
-        <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
-          This is one of MULTIPLE students who I have helped get a UCAT score that was within the top 5%. This particular student went from &apos;failing&apos; his UCAT mock-tests to out-competing approximately 40,000 test-takers, using my guidance and resources!
-        </p>
+                  <div className="mt-4 inline-flex rounded-full bg-amber-50 border border-amber-200/80 px-3 py-1 text-xs font-semibold text-amber-900">
+                    Standout student result (2370 B2)
+                  </div>
+                </div>
 
-        <div className="mt-4 inline-flex rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-semibold text-yellow-800">
-          Standout student result (2370 B2)
-        </div>
-      </div>
-
-      <div className="mx-auto w-full max-w-[260px] rounded-[1.25rem] border border-blue-100 bg-white p-2.5 shadow-sm">
-        <Image
-          src={featuredStory.src}
-          alt={featuredStory.alt}
-          width={1200}
-          height={1600}
-          sizes="240px"
-          className="h-auto w-full rounded-[0.9rem] object-cover"
-        />
-      </div>
-    </div>
-  </div>
-</div>
-</Reveal>
+                <div className="mx-auto w-full max-w-[260px] rounded-xl border border-slate-100 bg-white p-2 shadow-xs">
+                  <Image
+                    src={featuredStory.src}
+                    alt={featuredStory.alt}
+                    width={1200}
+                    height={1600}
+                    sizes="240px"
+                    className="h-auto w-full rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
 <Reveal delay={120}><Universities /></Reveal>
         {/* More results heading */}
         <Reveal className="mt-10 text-center">
@@ -180,42 +167,42 @@ export default function SuccessStories() {
         </div>
         </Reveal>
 
-       {/* Grid */}
-<div className="mx-auto mt-6 max-w-6xl columns-1 gap-6 sm:columns-2 lg:columns-3">
-  {visibleStories.map((story, index) => (
-    <Reveal
-      key={story.src}
-      delay={(index % 3) * 70}
-      className="mb-6 break-inside-avoid"
-    >
-    <div
-      className="rounded-3xl border border-gray-200/90 bg-white/95 p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-    >
-      <Image
-        src={story.src}
-        alt={story.alt}
-        width={900}
-        height={1200}
-        sizes="(max-width: 639px) calc(100vw - 74px), (max-width: 1023px) calc((100vw - 98px) / 2), (max-width: 1199px) calc((100vw - 122px) / 3), 342px"
-        className="h-auto w-full rounded-2xl object-contain"
-      />
+        {/* Grid */}
+        <div className="mx-auto mt-6 max-w-6xl columns-1 gap-6 sm:columns-2 lg:columns-3">
+          {visibleStories.map((story, index) => (
+            <Reveal
+              key={story.src}
+              delay={(index % 3) * 70}
+              className="mb-6 break-inside-avoid"
+            >
+              <div
+                className="rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <Image
+                  src={story.src}
+                  alt={story.alt}
+                  width={900}
+                  height={1200}
+                  sizes="(max-width: 639px) calc(100vw - 74px), (max-width: 1023px) calc((100vw - 98px) / 2), (max-width: 1199px) calc((100vw - 122px) / 3), 342px"
+                  className="h-auto w-full rounded-xl object-contain"
+                />
 
-      {story.caption && (
-        <p className="mt-3 text-center text-sm font-semibold text-gray-700">
-          {story.caption}
-        </p>
-      )}
-    </div>
-    </Reveal>
-  ))}
-</div>
+                {story.caption && (
+                  <p className="mt-3 text-center text-xs font-medium text-slate-700">
+                    {story.caption}
+                  </p>
+                )}
+              </div>
+            </Reveal>
+          ))}
+        </div>
 
         {/* View More button */}
         {!showAll && stories.length > initialCount && (
           <div className="mt-7 flex justify-center">
             <button
               onClick={() => setShowAll(true)}
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+              className="rounded-full bg-blue-600 px-6 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-blue-700"
             >
               View More Success Stories
             </button>

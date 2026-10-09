@@ -12,7 +12,7 @@ const terms = [
   {
     title: "1. About these terms and merchant identity",
     body: [
-      "These Terms and Conditions ('Terms') constitute a legally binding agreement between you and MedWithRish ('we', 'us', 'our'), operated by Rish (support contact: medwithrish@gmail.com).",
+      "These Terms and Conditions ('Terms') constitute a legally binding agreement between you and MedWithRish ('we', 'us', 'our'), operated by Rishoo (support contact: medwithrish@gmail.com).",
       "These Terms govern your use of the MedWithRish website (medwithrish.com), the MedicForest UCAT preparation and question bank platform, the MedicForest AI Medical Interview simulator, 1-to-1 admissions tutoring packages, personal statement reviews, and all associated digital resources.",
       "By creating an account, booking a tutoring session, or purchasing a MedicForest subscription, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you are under 18 years of age, you must have the permission and involvement of a parent or legal guardian.",
     ],
@@ -107,7 +107,7 @@ const terms = [
 
 export default function TermsAndConditionsPage() {
   return (
-    <main className="min-h-screen bg-[#f8fbff] text-slate-950">
+    <main className="min-h-screen medwithrish-bg text-slate-950">
       <Navbar />
       <div className="mx-auto max-w-4xl px-5 py-10">
         <Link
