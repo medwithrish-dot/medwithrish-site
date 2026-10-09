@@ -1,6 +1,6 @@
 # helpwithfinalstep
 
-Launch handover — 5 October 2026. UCAT internals were excluded from this review.
+Launch handover - 5 October 2026. UCAT internals were excluded from this review.
 
 ## What is ready, and what still needs attention
 

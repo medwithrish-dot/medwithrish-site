@@ -24,7 +24,7 @@ export function containsPublicNameProfanity(value: string): boolean {
 export function publicNameError(value: string): string | null {
   const name = value.trim();
   if (Array.from(name).length < 2 || Array.from(name).length > 32 || !/^[\p{L}\p{M}\p{N} ._'’\-]+$/u.test(name) || !/\p{L}/u.test(name)) {
-    return "Use 2–32 letters, numbers, spaces, dots, apostrophes, hyphens or underscores, including at least one letter.";
+    return "Use 2-32 letters, numbers, spaces, dots, apostrophes, hyphens or underscores, including at least one letter.";
   }
   if (containsPublicNameProfanity(name)) return "Choose a nickname without profanity or offensive language.";
   return null;

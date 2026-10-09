@@ -294,7 +294,7 @@ export function InterviewTutoringPageClient({
           </h1>
           <p className="mt-2 max-w-xl text-xs leading-relaxed text-[#46606b] sm:text-sm">
             Work with an experienced <strong className="font-bold text-[#071923]">MedicForest specialist</strong> or directly with{" "}
-            <strong className="font-bold text-[#071923]">@medwithrish</strong> to turn prepared answers into confident, natural performance—tailored to your target universities.
+            <strong className="font-bold text-[#071923]">@medwithrish</strong> to turn prepared answers into confident, natural performance - tailored to your target universities.
           </p>
           <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#d6e4e2] pt-3">
             {heroFeatures.map(({ icon: Icon, label }) => (

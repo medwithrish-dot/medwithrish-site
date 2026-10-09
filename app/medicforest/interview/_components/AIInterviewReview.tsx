@@ -133,7 +133,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
     {feedback && <section className={styles.assessment} id="station-feedback" ref={assessmentRef} tabIndex={-1} aria-labelledby="feedback-heading">
       <header><div><p className={styles.eyebrow}>{preview ? "ILLUSTRATIVE SAMPLE" : "YOUR AI FEEDBACK"}</p><h2 id="feedback-heading">Your feedback</h2><p>{feedback.summary}</p></div><div className={styles.score}><strong>{feedback.score}<span>%</span></strong><span>{preview ? "Example score" : "Practice score"}</span></div></header>
       {!preview && decision && <section className="my-5 rounded-xl border border-[#d9e6e1] bg-[#f5f8f7] p-5" aria-label="Practice pass or fail">
-        <h3 className="text-xl font-bold text-[#042724]">{decision.outcome === "pass" ? "Practice pass" : "Practice fail — needs improvement"}</h3>
+        <h3 className="text-xl font-bold text-[#042724]">{decision.outcome === "pass" ? "Practice pass" : "Practice fail - needs improvement"}</h3>
         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[#415b61]">{decision.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>
         {decision.borderline && <p className="mt-3 text-sm font-semibold text-[#785819]">Close to a practice cutoff. Review the marking reasons and compare another attempt; small scoring differences can change this result.</p>}
         <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least {PRACTICE_PASS_AVERAGE}/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; medical schools set their own admissions criteria.</p>

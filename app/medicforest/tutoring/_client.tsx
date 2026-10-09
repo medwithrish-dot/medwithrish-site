@@ -359,15 +359,15 @@ export function TutoringPageClient() {
           id: "ucat-rish",
           name: "UCAT Crash Course with MedWithRish",
           price: 140,
-          tutorLabel: "Direct 1–to–1 coaching with @medwithrish",
+          tutorLabel: "Direct 1-to-1 coaching with @medwithrish",
           durationLabel: "4 hours total intensive tuition",
           description:
-            "Intensive 1–to–1 tuition covering 1hr 20 VR, 1hr 20 DM, 1hr 20 QR (or 1hr across all 4 subtests).",
+            "Intensive 1-to-1 tuition covering 1hr 20 VR, 1hr 20 DM, 1hr 20 QR (or 1hr across all 4 subtests).",
           features: [
-            "4 hours of direct 1–to–1 coaching with Rish",
+            "4 hours of direct 1-to-1 coaching with Rish",
             "Flexible allocation: 1hr 20 VR, 1hr 20 DM, 1hr 20 QR or 1hr VR, 1hr DM, 1hr QR, 1hr SJT",
-            "High–yield mental maths and calculator estimation techniques",
-            "Syllogism and logical puzzle decision–tree frameworks",
+            "High-yield mental maths and calculator estimation techniques",
+            "Syllogism and logical puzzle decision-tree frameworks",
             "Tailored diagnostic breakdown targeting your weakest subtests",
             "Actionable revision plan and personalised question schedule",
           ],
@@ -379,11 +379,11 @@ export function TutoringPageClient() {
           tutorLabel: "With an experienced MedicForest UCAT Specialist",
           durationLabel: "4 hours total intensive tuition",
           description:
-            "Complete 4–hour subtest breakdown covering VR, DM, QR and SJT timing and accuracy strategy.",
+            "Complete 4-hour subtest breakdown covering VR, DM, QR and SJT timing and accuracy strategy.",
           features: [
-            "4 hours of structured 1–to–1 tuition with an experienced specialist",
+            "4 hours of structured 1-to-1 tuition with an experienced specialist",
             "Choose 1hr 20 VR, 1hr 20 DM, 1hr 20 QR or 1hr across all 4 sections",
-            "Step–by–step question walkthroughs and timed passage reading drills",
+            "Step-by-step question walkthroughs and timed passage reading drills",
             "Official markscheme criteria and common pitfall analysis",
             "Focused homework tasks with review between sessions",
           ],
@@ -394,13 +394,13 @@ export function TutoringPageClient() {
     name: "Complete Admissions Package",
     price: 200,
     tutorLabel: "With a MedicForest Admissions Specialist",
-    durationLabel: "All–inclusive package • 8 hours tuition + PS support",
+    durationLabel: "All-inclusive package • 8 hours tuition + PS support",
     description:
-      "All–inclusive support covering UCAT, Personal Statement and Med Interview coaching from start to finish.",
+      "All-inclusive support covering UCAT, Personal Statement and Med Interview coaching from start to finish.",
     features: [
       "4 hours UCAT Crash Course across all 4 core subtests",
-      "Personal Statement complete support: brainstorming, draft review and line–by–line refinement",
-      "4 hours 1–1 Med Interview Tutoring: 2 hrs technique mastery + 2 full realistic mock interviews",
+      "Personal Statement complete support: brainstorming, draft review and line-by-line refinement",
+      "4 hours 1-1 Med Interview Tutoring: 2 hrs technique mastery + 2 full realistic mock interviews",
       "Detailed written feedback and scorecard after each mock Med interview",
       "University shortlisting strategy and application guidance",
       "Priority scheduling and mentor messaging between sessions",
@@ -411,29 +411,29 @@ export function TutoringPageClient() {
     interviewTutor === "rish"
       ? {
           id: "interview-rish",
-          name: "1–1 Med Interview Tutoring with MedWithRish",
+          name: "1-1 Med Interview Tutoring with MedWithRish",
           price: 140,
-          tutorLabel: "Direct 1–to–1 coaching with @medwithrish",
+          tutorLabel: "Direct 1-to-1 coaching with @medwithrish",
           durationLabel: "4 hours total: 2 hrs coaching + 2 mock interviews",
           description:
-            "Complete 1–to–1 Med interview preparation including 2 hrs on core basics and 2 realistic mock interviews with feedback.",
+            "Complete 1-to-1 Med interview preparation including 2 hrs on core basics and 2 realistic mock interviews with feedback.",
           features: [
-            "2 hours on core basics, answer structures and ethical decision–making",
+            "2 hours on core basics, answer structures and ethical decision-making",
             "2 full realistic mock interviews (MMI and panel stations)",
             "Detailed verbal and written feedback after each mock",
-            "University–specific station frameworks and scoring rubrics",
+            "University-specific station frameworks and scoring rubrics",
             "Techniques for NHS hot topics, STARR examples and reflective answers",
-            "Direct post–session feedback summaries and practice tasks",
+            "Direct post-session feedback summaries and practice tasks",
           ],
         }
       : {
           id: "interview-specialist",
-          name: "1–1 Med Interview Tutoring with MedicForest Specialist",
+          name: "1-1 Med Interview Tutoring with MedicForest Specialist",
           price: 100,
           tutorLabel: "With an experienced MedicForest Med Interview Specialist",
           durationLabel: "4 hours total: 2 hrs coaching + 2 mock interviews",
           description:
-            "Complete 1–to–1 Med interview tutoring including 2 hrs on techniques and 2 realistic mock interviews with feedback.",
+            "Complete 1-to-1 Med interview tutoring including 2 hrs on techniques and 2 realistic mock interviews with feedback.",
           features: [
             "2 hours on proven Med interview techniques and station confidence",
             "2 full realistic mock interviews simulating real medical school formats",
@@ -757,7 +757,7 @@ export function TutoringPageClient() {
                 </div>
               </div>
 
-              {/* Package 3: 1–1 Med Interview Tutoring */}
+              {/* Package 3: 1-1 Med Interview Tutoring */}
               <div className="flex min-w-0 flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <div>
                   <div className="flex items-start gap-4">
@@ -896,7 +896,7 @@ export function TutoringPageClient() {
                   Ongoing support
                 </h3>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
-                  Direct follow–up between sessions to review homework drills, check answers and track progress.
+                  Direct follow-up between sessions to review homework drills, check answers and track progress.
                 </p>
               </div>
             </div>

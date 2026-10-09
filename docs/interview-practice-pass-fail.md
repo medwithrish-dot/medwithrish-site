@@ -2,7 +2,7 @@
 
 Existing classified reports are evaluated against the current 75-average cutoff when viewed or downloaded, without another AI call; their saved rubric marks remain unchanged.
 
-The student sees **Practice pass** or **Practice fail — needs improvement**, the numerical score, the criterion minimums they missed, and the existing strengths, weaknesses and fixes. Results close to a cutoff are flagged. The downloaded report includes the same decision. Saved reports without a decision are labelled as older reports; previews do not classify the student's answer.
+The student sees **Practice pass** or **Practice fail - needs improvement**, the numerical score, the criterion minimums they missed, and the existing strengths, weaknesses and fixes. Results close to a cutoff are flagged. The downloaded report includes the same decision. Saved reports without a decision are labelled as older reports; previews do not classify the student's answer.
 
 ## Fixed decision rule
 

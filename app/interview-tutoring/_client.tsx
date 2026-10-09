@@ -285,7 +285,7 @@ export function InterviewTutoringClient({
               </h1>
 
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                Work 1-to-1 with <strong className="text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Turn prepared answers into natural, mature, and confident performance—with realistic mock interviews and detailed scorecards.
+                Work 1-to-1 with <strong className="text-slate-900">@medwithrish</strong> or an experienced MedicForest Specialist. Turn prepared answers into natural, mature, and confident performance - with realistic mock interviews and detailed scorecards.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">

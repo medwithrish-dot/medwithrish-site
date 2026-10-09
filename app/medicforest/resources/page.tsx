@@ -47,7 +47,7 @@ const categories: ResourceCategory[] = [
         title: "The Complete Medicine Interview Guide",
         href: FREE_INTERVIEW_GUIDE_URL,
         badge: "★ Featured Free Guide",
-        description: "High–yield guide with ethical frameworks, NHS hot topics and STARR model answers. Free PDF download.",
+        description: "High-yield guide with ethical frameworks, NHS hot topics and STARR model answers. Free PDF download.",
         external: true,
         featured: true,
       },
@@ -55,10 +55,10 @@ const categories: ResourceCategory[] = [
         title: "Med Interview Prep Hub",
         href: "/interviews",
         badge: "550+ Questions",
-        description: "Full question bank, detailed markschemes, station timers and university–specific station guides.",
+        description: "Full question bank, detailed markschemes, station timers and university-specific station guides.",
       },
       {
-        title: "1–to–1 Med Interview Tutoring",
+        title: "1-to-1 Med Interview Tutoring",
         href: "/medicforest/tutoring",
         badge: "Mock Tuition",
         description: "Realistic MMI and panel mocks with instant verbal analysis and written rubrics.",
@@ -81,19 +81,19 @@ const categories: ResourceCategory[] = [
         title: "UCAT Preparation Timeline",
         href: "/ucat-timeline",
         badge: "Free Guide",
-        description: "A week–by–week roadmap of when to begin practice, select mocks and pace drills effectively.",
+        description: "A week-by-week roadmap of when to begin practice, select mocks and pace drills effectively.",
       },
       {
-        title: "1–to–1 UCAT Crash Courses & Tuition",
+        title: "1-to-1 UCAT Crash Courses & Tuition",
         href: "/medicforest/tutoring",
-        badge: "1–to–1 Tuition",
-        description: "Intensive 4–hour subtest coaching with timing shortcuts and mental arithmetic frameworks.",
+        badge: "1-to-1 Tuition",
+        description: "Intensive 4-hour subtest coaching with timing shortcuts and mental arithmetic frameworks.",
       },
       {
         title: "MedWithRish UCAT Study Notes",
         href: MEDWITHRISH_NOTES_URL,
         badge: "Notes & Cheatsheets",
-        description: "High–yield Decision Making logic trees, syllogisms and formula sheets.",
+        description: "High-yield Decision Making logic trees, syllogisms and formula sheets.",
         external: true,
       },
     ],
@@ -111,10 +111,10 @@ const categories: ResourceCategory[] = [
         description: "Structure breakdown, model opening lines and common reflection mistakes to avoid.",
       },
       {
-        title: "1–to–1 Personal Statement Review Session",
+        title: "1-to-1 Personal Statement Review Session",
         href: "/personal-statement-session",
-        badge: "1–to–1 Review",
-        description: "Comprehensive line–by–line feedback, structural reorganisation and paragraph polish.",
+        badge: "1-to-1 Review",
+        description: "Comprehensive line-by-line feedback, structural reorganisation and paragraph polish.",
       },
     ],
   },
@@ -122,7 +122,7 @@ const categories: ResourceCategory[] = [
     id: "academics",
     name: "Academics & Experience",
     icon: GraduationCap,
-    description: "GCSE and A–Level grade assurance, Year 12 planning and healthcare work experience insight.",
+    description: "GCSE and A-Level grade assurance, Year 12 planning and healthcare work experience insight.",
     items: [
       {
         title: "Work Experience & Shadowing Guide",
@@ -134,10 +134,10 @@ const categories: ResourceCategory[] = [
         title: "Year 12 Medical Preparation Guide",
         href: "/year12-guide",
         badge: "Free Guide",
-        description: "Term–by–term milestone checklist for predicted grades, UCAT and admissions prep.",
+        description: "Term-by-term milestone checklist for predicted grades, UCAT and admissions prep.",
       },
       {
-        title: "A–Level 1–to–1 Tutoring",
+        title: "A-Level 1-to-1 Tutoring",
         href: "/alevel-tutoring",
         badge: "Private Tuition",
         description: "Focused coaching in Biology, Chemistry and Maths to secure AAA/A*AA predictions.",
@@ -173,7 +173,7 @@ export default function ResourcesPage() {
               Admissions Resources
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
-              High–yield revision guides, free interactive tools, interview frameworks and 1–to–1 coaching.
+              High-yield revision guides, free interactive tools, interview frameworks and 1-to-1 coaching.
             </p>
           </div>
 

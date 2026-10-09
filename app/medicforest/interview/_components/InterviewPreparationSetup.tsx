@@ -125,7 +125,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
     const invalidTarget = draft.targets.find((target) => !schoolNames.has(target.universitySlug) || (target.interviewDate !== null && !validDate(target.interviewDate)));
     if (invalidTarget) { setError("Check your Med interview dates. Leave a date blank if it is not confirmed."); return; }
     if (!Number.isInteger(draft.weeklyTarget) || draft.weeklyTarget < 1 || draft.weeklyTarget > 14 || draft.focusThemes.length > 3) {
-      setError("Choose 1–14 stations per week and up to three focus areas."); return;
+      setError("Choose 1-14 stations per week and up to three focus areas."); return;
     }
     savingRef.current = true;
     setSaving(true);

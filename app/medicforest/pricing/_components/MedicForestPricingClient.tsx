@@ -30,7 +30,7 @@ const INTERVIEW_PREMIUM_FEATURES = [
   "Unlimited saved Med interview reports and transcripts",
   "AI feedback, scoring and mark scheme breakdowns",
   "Personalised Med interview plan and revision tasks",
-  "MMI circuits, panel practice and university–specific stations",
+  "MMI circuits, panel practice and university-specific stations",
   "Advanced analytics for timing, structure, confidence and improvement",
 ];
 
@@ -72,7 +72,7 @@ const COMPARE_ROWS: CompareRow[] = [
     premium: true,
   },
   {
-    feature: "MMI circuits, panel practice and university–specific stations",
+    feature: "MMI circuits, panel practice and university-specific stations",
     free: false,
     premium: true,
   },
@@ -282,7 +282,7 @@ export function MedicForestPricingPage() {
                   Cancel anytime
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  No long–term commitment.
+                  No long-term commitment.
                 </p>
               </div>
             </div>
@@ -462,7 +462,7 @@ export function MedicForestPricingPage() {
                           <Check className="h-3 w-3 stroke-[3]" />
                         </span>
                       ) : row.free === false ? (
-                        <span className="font-bold text-slate-300">–</span>
+                        <span className="font-bold text-slate-300">-</span>
                       ) : (
                         <span>{row.free}</span>
                       )}

@@ -312,7 +312,7 @@ export default function InterviewsPage() {
               </p>
               <h2>How it works</h2>
               <p>
-                From your first question to a more confident answer &mdash; in
+                From your first question to a more confident answer - in
                 three free steps.
               </p>
             </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { TutoringPageClient } from "./_client";
 
 export const metadata: Metadata = {
-  title: "1–1 Tutoring | MedicForest",
+  title: "1-1 Tutoring | MedicForest",
   description:
     "Book personalised UCAT, Med interview and personal statement tutoring with @medwithrish - leading medical admissions expert.",
 };

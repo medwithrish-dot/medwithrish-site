@@ -1,4 +1,4 @@
-# Interview release checks — 8 October 2026
+# Interview release checks - 8 October 2026
 
 ## Verified
 
