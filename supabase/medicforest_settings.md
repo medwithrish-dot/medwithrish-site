@@ -46,11 +46,17 @@ In Supabase Dashboard:
   - Production: `https://medicforest.com`
   - Local, only if testing locally: `http://localhost:3000`
 - Authentication > URL Configuration > Redirect URLs:
+  - `http://localhost:3000/medicforest/account**`
+  - `http://localhost:3001/medicforest/account**`
+  - `https://medicforest.com/account**`
+  - `https://www.medwithrish.com/medicforest/account**`
+  - `https://medwithrish.com/medicforest/account**`
   - `http://localhost:3000/medicforest/ucat/dashboard`
   - `http://localhost:3001/medicforest/ucat/dashboard`
   - `https://medicforest.com/medicforest/ucat/dashboard`
   - `https://www.medwithrish.com/medicforest/ucat/dashboard`
   - `https://medwithrish.com/medicforest/ucat/dashboard`
+  - The `**` suffix on account callbacks allows the validated `next` query parameter that returns a verified user to the page where the signup popup appeared.
 - Authentication > Signups: enabled.
 - Email confirmations:
   - Recommended for production: enabled.
