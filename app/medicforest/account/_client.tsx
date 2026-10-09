@@ -92,6 +92,27 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
     async function initAuth() {
       if (!supabase) return;
       try {
+        const params = new URLSearchParams(window.location.search);
+        const confirmationCode = params.get("code");
+
+        if (confirmationCode) {
+          const { error } = await supabase.auth.exchangeCodeForSession(confirmationCode);
+          if (!active) return;
+          if (error) {
+            setAuthError("That verification link could not be used. Please log in with your email and password.");
+            setLoading(false);
+            return;
+          }
+
+          params.delete("code");
+          const nextQuery = params.toString();
+          window.history.replaceState(
+            null,
+            "",
+            `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash}`
+          );
+        }
+
         const {
           data: { session: initialSession },
         } = await supabase.auth.getSession();
@@ -167,7 +188,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
           password,
           options: {
             data: { full_name: trimmedName },
-            emailRedirectTo: `${window.location.origin}/medicforest/account${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ""}`,
+            emailRedirectTo: `${window.location.origin}${window.location.pathname}${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ""}`,
           },
         });
 
@@ -178,9 +199,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
           setUser(data.user);
           setAuthMessage("Account created successfully!");
         } else {
-          setAuthMessage(
-            "Account created. If required, check your email to verify your account."
-          );
+          setAuthMessage("Check your email inbox and click the link to verify your account email!");
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({

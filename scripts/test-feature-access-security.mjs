@@ -47,6 +47,17 @@ test("login return paths cannot redirect to another host or escape the interview
   assert.equal(safeInterviewReturnPath("/medicforest/interview/ai-interviews?station=why-medicine"), "/medicforest/interview/ai-interviews?station=why-medicine");
 });
 
+test("account signup preserves the popup page through email verification", () => {
+  const provider = readFileSync(new URL("../app/medicforest/_components/FeatureAccessProvider.tsx", import.meta.url), "utf8");
+  const account = readFileSync(new URL("../app/medicforest/account/_client.tsx", import.meta.url), "utf8");
+
+  assert.match(provider, /window\.location\.pathname \+ window\.location\.search/);
+  assert.doesNotMatch(provider, /safeInterviewReturnPath\(next\)/);
+  assert.match(account, /exchangeCodeForSession\(confirmationCode\)/);
+  assert.match(account, /window\.location\.origin\}\$\{window\.location\.pathname/);
+  assert.match(account, /Check your email inbox and click the link to verify your account email!/);
+});
+
 test("API guard rejects cross-site mutations and oversized input but accepts signed webhook transport", () => {
   const request = (path, headers = {}, method = "POST") => new Request(`https://medicforest.com${path}`, { method, headers });
   assert.equal(guardApiRequest(request("/api/interviews/session", { origin: "https://attacker.test" })).status, 403);

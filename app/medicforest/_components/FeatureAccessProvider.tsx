@@ -15,11 +15,12 @@ export function FeatureAccessProvider({ entitlements, children }: { entitlements
 
   useEffect(() => {
     const onRequest = (event: Event) => {
-      const { tier, label, deniedByServer, next } = (event as CustomEvent<{ tier: FeatureTier; label: string; deniedByServer?: boolean; next?: string }>).detail;
+      const { tier, label, deniedByServer } = (event as CustomEvent<{ tier: FeatureTier; label: string; deniedByServer?: boolean }>).detail;
       const kind = deniedByServer ? tier === "premium" ? "premium" : "signup" : featureAccessDecision(entitlements.userId, entitlements.isPremium, tier, entitlements.freeInterviewUsed);
       if (kind === "allowed") return;
       event.preventDefault();
-      setPrompt({ kind, label, next: safeInterviewReturnPath(next) ?? window.location.pathname + window.location.search });
+      const currentPage = window.location.pathname + window.location.search;
+      setPrompt({ kind, label, next: safeInterviewReturnPath(currentPage) ?? "/medicforest/interview/dashboard" });
     };
     window.addEventListener(FEATURE_ACCESS_EVENT, onRequest);
     return () => window.removeEventListener(FEATURE_ACCESS_EVENT, onRequest);
