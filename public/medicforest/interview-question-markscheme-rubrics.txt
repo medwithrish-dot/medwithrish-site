@@ -1,7 +1,7 @@
 MEDICFOREST INTERVIEW MARKSCHEMES
 561 question-specific markschemes
 
-Practice guidance, not official admissions criteria. Credit equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.
+Practice guidance, not official admissions criteria. Mark the general skill or reasoning. Details in brackets are illustrative examples, not facts or phrases that must be repeated: credit other accurate examples and equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.
 
 iq-01-001-motivation-for-medicine
 Personal & Motivation / Motivation for Medicine
@@ -11052,18 +11052,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- States that the chart compares average routine GP waits in two districts from 2019 to 2024
+- Identifies what the graph measures and the groups being compared (e.g. routine GP waiting times in two districts)
 
 MIDDLE
-- Describes North rising from 6 days to a 13-day peak in 2022, then falling to 10
-- Describes South rising steadily from 5 to 12 days and becoming higher than North in 2024
-- Notes that the number of practices reporting changed and patient demand was not recorded
+- Recognises the general upward, downward or unchanged trend (e.g. North rises to a 13-day peak in 2022, then falls)
+- Compares patterns between groups using relevant figures (e.g. South rises from 5 to 12 days and overtakes North)
+- Recognises limits to a fair comparison (e.g. different practices reported each year and demand was not recorded)
 
 END
-- Summarises the different trends without assuming that online triage caused them
+- Summarises the main finding without claiming an unproven cause (e.g. the chart alone cannot show the effect of online triage)
 
 MISTAKES
-- Saying waits fell overall in North or claiming that the chart proves why waits changed
+- Misreading the overall trend or treating a possible explanation as proven (e.g. saying North waits fell overall)
 
 ------------------------------------------------------------
 
@@ -11078,18 +11078,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Makes clear that some enrolled participants were not followed up
+- Checks who is included in each result and whether outcomes are missing (e.g. enrolled participants versus those followed up)
 
 MIDDLE
-- Compares quitting among those followed up: 48/150 = 32%, 43/108 ≈ 40% and 30/60 = 50%
-- Gives known quitters as a share of everyone enrolled: 24%, about 36% and 37.5%, while explaining that these are not complete quit rates because the missing outcomes are unknown
-- Explains that people chose their programme, the groups differed at the start and quitting was self-reported
+- Compares groups using appropriate percentages (e.g. 48/150 = 32%, 43/108 ≈ 40% and 30/60 = 50%)
+- Explains how missing results affect interpretation (e.g. known quitters are 24%, about 36% and 37.5% of everyone enrolled, but missing outcomes are unknown)
+- Recognises differences between groups and how results were measured (e.g. people chose their programme and quitting was self-reported)
 
 END
-- Concludes that one-to-one support had the highest observed quitting percentage, but the study cannot prove it is the best programme
+- Separates the best observed result from proof that an option is best (e.g. the highest observed quitting percentage does not prove one-to-one support is most effective)
 
 MISTAKES
-- Comparing only the raw numbers of quitters or assuming everyone lost to follow-up was still smoking
+- Comparing raw totals without considering group size or guessing missing outcomes (e.g. assuming everyone not followed up was still smoking)
 
 ------------------------------------------------------------
 
@@ -11104,18 +11104,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- States that the survey shows a relationship, not proof that exercise improves wellbeing
+- Identifies the variables and distinguishes a relationship from cause and effect (e.g. exercise and wellbeing)
 
 MIDDLE
-- Describes wellbeing generally rising up to 4–6 hours of exercise in both age groups
-- Notes that the groups exercising more than 6 hours were small and their results were less precise
-- Explains that wellbeing and exercise were self-reported and that sleep, income and health conditions were not measured
+- Recognises the general positive, negative or neutral trend and any exceptions (e.g. wellbeing generally rises up to 4–6 hours of exercise)
+- Considers how group size affects confidence in a finding (e.g. the highest-exercise groups are smaller)
+- Identifies other explanations or measurement limits (e.g. self-reported results and unrecorded sleep, income or health)
 
 END
-- Concludes that the pattern is interesting but no best amount of exercise or cause can be established
+- Gives a cautious conclusion that fits the evidence (e.g. the survey cannot establish the best amount of exercise)
 
 MISTAKES
-- Saying more exercise always improves wellbeing or claiming the age groups are definitely different
+- Overstating a pattern or claiming a definite cause (e.g. saying more exercise always improves wellbeing)
 
 ------------------------------------------------------------
 
@@ -11130,18 +11130,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises the £200,000 first-year budget must cover both setup and running costs
+- Identifies the decision and its practical limits (e.g. a £200,000 first-year budget covering setup and running costs)
 
 MIDDLE
-- Calculates first-year totals: mobile £215,000, evening £135,000 and online £135,000
-- Compares likely attendance, launch time, staffing and the fact that 18% may lack reliable internet
-- Asks for comparable health outcomes, longer-term attendance and local demand before deciding
+- Checks whether each option is feasible using the relevant totals (e.g. mobile £215,000, evening £135,000 and online £135,000)
+- Compares benefits, access and practical demands (e.g. attendance, staffing and internet access)
+- Identifies missing information that could change the decision (e.g. health outcomes and longer-term attendance)
 
 END
-- Chooses a programme that fits the budget and explains what new evidence could change that choice
+- Justifies an affordable choice while remaining open to new evidence (e.g. either evening or online support could be defended)
 
 MISTAKES
-- Choosing the mobile clinic without finding extra funding or assuming attendance automatically means better health
+- Ignoring a stated limit or assuming activity guarantees benefit (e.g. choosing the mobile clinic without extra funding)
 
 ------------------------------------------------------------
 
@@ -11156,18 +11156,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Explains that each point represents one sampled day on a ward
+- Explains what each plotted point and axis represent (e.g. a sampled ward-day, admissions and discharge delay in hours)
 
 MIDDLE
-- Identifies the Ward B result near 24 admissions and 7.5 hours as the clearest unusual value
-- Describes the general pattern that more admissions tend to accompany longer discharge delays
-- Suggests checking that day's records, patient needs, staffing, weekend working and transport availability
+- Identifies an unusual result using a reasonable visual estimate (e.g. Ward B near 24 admissions and 7.5 hours)
+- Recognises the general positive, negative or neutral relationship (e.g. more admissions tend to accompany longer delays)
+- Suggests plausible explanations to investigate (e.g. staffing, patient needs or transport availability)
 
 END
-- Treats the unusual point as something to investigate rather than automatically remove
+- Explains how an unusual result should be checked before drawing conclusions (e.g. reviewing that day’s records rather than automatically removing the point)
 
 MISTAKES
-- Calling the unusual value an error without evidence or confusing hours with days
+- Assuming an unusual value is an error or misreading units (e.g. confusing hours with days)
 
 ------------------------------------------------------------
 
@@ -11182,18 +11182,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises that the chart compares two hospitals in 2024 and does not show a rise over time
+- Checks whether the headline describes what the data actually show (e.g. comparing two hospitals does not show a rise over time)
 
 MIDDLE
-- Explains that starting the vertical axis at 80% makes 82% versus 86% look much larger than a 4 percentage-point difference
-- Notes that only 25% of Hospital A invitees and 10% of Hospital B invitees responded
-- Highlights the different survey methods, different times of year and missing information about the patients
+- Recognises how the scale can exaggerate differences (e.g. an axis starting at 80% exaggerates a 4 percentage-point difference)
+- Considers response rates and whether respondents represent the wider group (e.g. 25% versus 10% responded)
+- Checks whether groups were measured in comparable ways (e.g. different survey methods and times of year)
 
 END
-- Suggests showing the full scale, response numbers and limitations clearly
+- Suggests a clearer presentation that includes relevant context (e.g. the full scale, response numbers and limitations)
 
 MISTAKES
-- Saying satisfaction rose over time, that Hospital B is several times better or that misleading presentation means the data are fake
+- Accepting a misleading headline or treating presentation problems as proof of false data (e.g. saying satisfaction rose over time)
 
 ------------------------------------------------------------
 
@@ -11208,18 +11208,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Describes uptake falling until 2021 and then partly recovering in both districts
+- Recognises the overall trend and changes in direction (e.g. vaccination uptake falls and then partly recovers)
 
 MIDDLE
-- Uses key figures such as North 93% to 86% to 91% and South 94% to 90% to 93%
-- Mentions record changes, reminder texts and weekend clinics as possible explanations rather than proven causes
-- Notes that the number of eligible children changed and individual reasons for missed vaccination were not recorded
+- Supports the comparison with relevant figures (e.g. North 93% to 86% to 91% and South 94% to 90% to 93%)
+- Suggests possible explanations without treating them as proven (e.g. reminders or weekend clinics)
+- Recognises changes in the population or information collected (e.g. eligible numbers changed and reasons for missed vaccination were unknown)
 
 END
-- Explains what comparison or further information would be needed before crediting one service change
+- Explains what further comparison would help test an explanation (e.g. similar areas with and without a service change)
 
 MISTAKES
-- Treating the timing of reminder texts or weekend clinics as proof that they caused the recovery
+- Assuming that events happening together prove a cause (e.g. crediting reminder texts alone for the recovery)
 
 ------------------------------------------------------------
 
@@ -11234,18 +11234,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- States that students reporting more sleep tended to have higher exam scores, but there is wide variation
+- Recognises the general positive, negative or neutral relationship and the spread of results (e.g. more sleep tends to accompany higher scores, with variation)
 
 MIDDLE
-- Recognises that students doing 10 or more revision hours often scored higher at similar sleep levels
-- Notes that only 40 of 120 invited students responded and sleep and revision were recalled after the exam
-- Suggests prior attainment, stress, health and caffeine as other possible explanations
+- Considers how another measured factor affects the comparison (e.g. revision time differs between groups)
+- Recognises sampling and measurement limits (e.g. 40 of 120 students responded and recalled sleep after the exam)
+- Suggests other possible explanations (e.g. prior attainment, stress or caffeine)
 
 END
-- Concludes that the survey cannot prove extra sleep causes a particular increase in marks
+- Distinguishes an observed relationship from a proven effect (e.g. the survey cannot show that extra sleep causes higher marks)
 
 MISTAKES
-- Ignoring revision time or claiming the plot shows an exact mark gain for every extra hour of sleep
+- Ignoring other relevant factors or claiming a precise effect for everyone (e.g. an exact mark gain for each extra hour of sleep)
 
 ------------------------------------------------------------
 
@@ -11260,18 +11260,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Makes clear that both groups are compared over five years and uses figures out of 100 people
+- Uses a clear time period and an understandable way to express risk (e.g. outcomes over five years, out of 100 people)
 
 MIDDLE
-- Says another heart event occurred in 20 out of 100 people with standard care and 15 out of 100 with the new treatment: 5 fewer people
-- Balances this with major bleeding increasing from 3 to 6 out of 100: 3 more people
-- Mentions one extra tablet every day, two extra monitoring visits each year and that an individual's risk may differ
+- Explains the size of a potential benefit in plain language (e.g. 20 versus 15 heart events out of 100 means 5 fewer)
+- Balances the benefit with possible harm (e.g. bleeding increases from 3 to 6 out of 100)
+- Considers practical burden and individual differences (e.g. an extra tablet, monitoring visits and different personal risks)
 
 END
-- Concludes that the possible benefit must be weighed against extra bleeding risk and treatment burden
+- Summarises the trade-off without making the decision for everyone (e.g. fewer heart events must be weighed against bleeding and treatment burden)
 
 MISTAKES
-- Saying the treatment prevents every event, quoting only a relative percentage or ignoring the bleeding risk
+- Overstating benefit or leaving out important harm (e.g. quoting only a relative percentage or implying every event is prevented)
 
 ------------------------------------------------------------
 
@@ -11286,18 +11286,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Explains that each programme started with 100 people and missing responses remain unknown
+- Checks the original group sizes and what missing responses mean (e.g. 100 per programme and unknown outcomes for non-responders)
 
 MIDDLE
-- At 12 weeks, compares 54 versus 62 feeling much better and 80 versus 85 reporting at least some improvement
-- At six months, notes both programmes have 70 people reporting some improvement, while 12 versus 18 did not respond
-- Compares 4 versus 8 sessions, 20 versus 50 minutes of travel and 10 versus 18 temporary pain flares
+- Compares outcomes at each relevant time point (e.g. 80 versus 85 report some improvement at 12 weeks)
+- Recognises whether an early difference lasts (e.g. both groups have 70 reporting some improvement at six months)
+- Balances outcomes with burden, harm and missing information (e.g. session numbers, travel time and pain flares)
 
 END
-- Concludes that the longer-term results look similar and should be balanced against burden and missing responses
+- Gives a balanced conclusion that reflects uncertainty (e.g. similar later results do not prove the programmes are equally effective)
 
 MISTAKES
-- Counting people who did not respond as recovered or claiming Programme B has a proven lasting advantage
+- Guessing missing outcomes or claiming a lasting advantage without enough evidence (e.g. counting non-responders as recovered)
 
 ------------------------------------------------------------
 
@@ -11312,18 +11312,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies that participants chose their drink, knew what they received and were recruited through the manufacturer's social media
+- Identifies how study design could influence the results (e.g. participants chose their drink and knew what they received)
 
 MIDDLE
-- Notes that regular caffeine use differed greatly between the groups
-- Recognises that sleep and other caffeine were not recorded and three people in each group did not complete both tests
-- Compares both the final scores and the change from before to after, rather than relying on the report's headline
+- Checks whether the groups were similar before the study (e.g. different levels of regular caffeine use)
+- Considers missing participants and unmeasured factors (e.g. sleep and other caffeine)
+- Checks the reported claim against the actual comparison (e.g. considering both final scores and change from the starting score)
 
 END
-- Explains how these issues could skew the result without assuming fraud
+- Explains how weaknesses affect confidence without dismissing all findings (e.g. company funding calls for scrutiny but does not itself prove fraud)
 
 MISTAKES
-- Calling the study randomised or saying company funding alone makes every result false
+- Misdescribing the design or treating one limitation as proof of false results (e.g. calling the study randomised)
 
 ------------------------------------------------------------
 
@@ -11338,18 +11338,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises that 24 adults from one clinic make this a very small pilot study
+- Considers whether the sample is large and varied enough for a firm conclusion (e.g. 24 adults from one clinic)
 
 MIDDLE
-- Compares 2 of 12 missed appointments with 4 of 12: a difference of only two people
-- Notes that allocation was random and follow-up was complete, while two reminder texts were not delivered
-- Explains that a much larger study across several clinics is needed to tell whether the difference is reliable and useful
+- Expresses the result in both numbers and context (e.g. 2 of 12 versus 4 of 12 missed appointments, a difference of two people)
+- Recognises useful features as well as limitations (e.g. random allocation and complete follow-up, but two undelivered texts)
+- Explains what further evidence would improve confidence (e.g. a larger study across several clinics)
 
 END
-- Concludes that the pilot is promising but too small for a firm claim that texts reduce missed appointments
+- Gives a proportionate conclusion about the strength of the evidence (e.g. promising but too small for a firm claim)
 
 MISTAKES
-- Calling the treatment proven because the missed-appointment rate appears halved or excluding people whose texts were not delivered
+- Treating an apparent large percentage change as conclusive or selectively removing participants (e.g. excluding undelivered texts)
 
 ------------------------------------------------------------
 
@@ -11364,18 +11364,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises that the evaluation has no comparison group and lasts only eight weeks
+- Checks whether the study design can support the claimed conclusion (e.g. no comparison group and only eight weeks of follow-up)
 
 MIDDLE
-- Notes that only 50 of 80 starters completed it and asks what happened to the other 30
-- Uses the fall in symptom score cautiously because medication also changed for 18 of the 50 completers
-- Questions whether the questionnaire was suitable and notes that the protocol and full results were not published
+- Considers how missing results might affect the finding (e.g. 50 of 80 completed the evaluation)
+- Identifies other explanations for improvement (e.g. medication changed for 18 of the completers)
+- Checks whether the measurements and reporting are trustworthy (e.g. questionnaire suitability and access to the full results)
 
 END
-- Concludes that symptoms improved among completers, but the app may not be the reason
+- Separates an observed improvement from proof that the intervention caused it (e.g. symptoms improved among completers, but the app may not be the reason)
 
 MISTAKES
-- Assuming all 80 people improved or claiming the app caused the change
+- Applying the result to everyone or assuming the intervention caused the change (e.g. saying all 80 starters improved)
 
 ------------------------------------------------------------
 
@@ -11390,18 +11390,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Checks the headline against the percentages in each group
+- Checks whether the headline matches the actual results (e.g. comparing rates rather than raw diagnosis counts)
 
 MIDDLE
-- Calculates 12/200 = 6% versus 20/400 = 5%, so the risk was not halved
-- Explains that fewer diagnoses in a smaller group does not necessarily mean a lower rate
-- Notes important differences in age, smoking and income, plus diet being recorded only once
+- Uses appropriate percentages to make a fair comparison (e.g. 12/200 = 6% versus 20/400 = 5%)
+- Explains why raw counts can mislead when group sizes differ (e.g. fewer cases in the smaller group does not mean lower risk)
+- Recognises other differences that might explain the results (e.g. age, smoking, income and diet recorded only once)
 
 END
-- Reports that this observational study found no evidence that berries halved cancer risk and cannot show cause and effect
+- Suggests an accurate conclusion that reflects the study’s limits (e.g. no evidence that berries halved risk and no proof of cause and effect)
 
 MISTAKES
-- Repeating the headline, comparing raw case numbers alone or claiming berries caused either benefit or harm
+- Repeating the headline or claiming benefit or harm without adequate evidence (e.g. judging risk from case numbers alone)
 
 ------------------------------------------------------------
 
@@ -11416,18 +11416,18 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Proposes research that directly addresses the weaknesses of the small VR pilot
+- Proposes research that addresses the main gaps in the existing evidence (e.g. whether a small voluntary VR pilot produces lasting learning)
 
 MIDDLE
-- Suggests a larger study across several medical schools with students fairly allocated to VR plus usual teaching or usual teaching alone
-- Uses independent marking, different validated questions and later practical testing rather than repeating the same quiz
-- Records dropouts, dizziness, costs, accessibility and whether any learning benefit lasts
+- Suggests a fair comparison with a suitable sample (e.g. students allocated to usual teaching with or without VR)
+- Uses measurements that test meaningful and lasting benefit (e.g. independent marking and later practical assessment)
+- Considers drawbacks, access and cost as well as effectiveness (e.g. dizziness, dropouts and setup costs)
 
 END
-- Defines success as lasting useful learning without unacceptable burden or harm
+- Defines what evidence would justify using the intervention (e.g. useful learning that lasts without unacceptable burden or harm)
 
 MISTAKES
-- Treating the rise from 64% to 72% or the usefulness rating as proof that VR improves clinical ability
+- Treating a short-term score change as proof of wider benefit (e.g. assuming a rise from 64% to 72% proves better clinical ability)
 
 ------------------------------------------------------------
 
@@ -11442,19 +11442,18 @@ GENERAL
 - Explains collaboration and inclusion without inventing contributions by other group members
 
 START
-- Agrees criteria for five proposals and capacity for two launches
+- Agrees clear decision criteria and recognises the practical limit (e.g. capacity for two programme launches)
 
 MIDDLE
-- Weighs surgery's 1,400 long waits and unconfirmed staffing against maternity cover gaps
-- Considers mental-health recruitment, vaccination's 84% versus 72% gap and buildings' 18-month completion
-- Invites different views and requests costs, harms and comparable benefits
+- Compares urgency, need and likely benefit (e.g. long surgical waits versus gaps in maternity cover)
+- Considers feasibility, access and missing evidence (e.g. staffing, costs and an 18-month building project)
+- Invites different views and weighs alternatives (e.g. vaccination gaps versus mental-health recruitment needs)
 
 END
-- Gives two justified launch priorities and explains trade-offs
-- In individual practice, explains how consensus would be reached without inventing group interactions
+- Justifies a feasible choice and explains how agreement could be reached (e.g. two launch priorities, without inventing other group members’ contributions)
 
 MISTAKES
-- Ranking solely by the largest number or treating a preferred pair as the only acceptable answer
+- Ranking by one number or insisting on one correct choice (e.g. choosing only the service with the largest waiting list)
 
 ------------------------------------------------------------
 
@@ -11469,19 +11468,18 @@ GENERAL
 - Explains collaboration and inclusion without inventing contributions by other group members
 
 START
-- Recognises the £10m ceiling and whole-project rule
+- Recognises the budget and funding rules (e.g. £10m and whole-project funding only)
 
 MIDDLE
-- Compares mental health £4m, theatres £6m, diabetes £3m, records £5m and rural clinic £2m
-- Totals a feasible package and explains omitted services
-- Considers staffing, delayed benefits, transition costs and rural access while inviting group views
+- Checks the total cost of a feasible combination (e.g. £4m mental health plus £6m theatres)
+- Explains the benefits and trade-offs of included and omitted options (e.g. prevention benefits may take longer)
+- Considers delivery and fair access while hearing other views (e.g. staff recruitment or rural access)
 
 END
-- States a justified package and missing evidence
-- Accepts different affordable combinations with sound reasoning
+- Justifies an affordable package and identifies evidence that could change it (e.g. alternative combinations are valid with sound reasoning)
 
 MISTAKES
-- Exceeding £10m, part-funding whole projects or confusing activity with health benefit
+- Ignoring budget rules or equating activity with benefit (e.g. part-funding a project that requires whole-project funding)
 
 ------------------------------------------------------------
 
@@ -11496,18 +11494,18 @@ GENERAL
 - Explains collaboration and inclusion without inventing contributions by other group members
 
 START
-- Recognises four adults face rain, 3°C and dusk in 30 minutes with five-item capacity
+- Identifies immediate needs and practical limits (e.g. cold, rain, approaching dusk and five-item carrying capacity)
 
 MIDDLE
-- Prioritises shelter, help and immediate group needs using the actual equipment
-- Considers intermittent phone signal and 20% battery, two litres of water and available skills
-- Explains trade-offs between selected and omitted items while hearing others
+- Prioritises safety, shelter and access to help (e.g. a waterproof sheet or a way to contact rescuers)
+- Uses the supplied details when judging usefulness (e.g. intermittent phone signal and limited battery)
+- Explains trade-offs while considering the group’s needs and skills (e.g. water versus navigation equipment)
 
 END
-- Agrees five items and a plan with stated assumptions, allowing defensible alternatives
+- Agrees a feasible selection and plan with clear assumptions (e.g. five items, allowing other defensible choices)
 
 MISTAKES
-- Choosing more than five items or assuming matches guarantee a safe usable fire
+- Ignoring a limit or assuming equipment guarantees safety (e.g. choosing more than five items or relying on matches alone)
 
 ------------------------------------------------------------
 
@@ -11614,18 +11612,18 @@ GENERAL
 - Explains collaboration and inclusion without inventing contributions by other group members
 
 START
-- Identifies D's unusual difficulty waking and A's new chest pressure as urgent concerns
+- Recognises signs of potentially serious illness that need prompt help (e.g. unusual difficulty waking or new chest pressure)
 
 MIDDLE
-- Alerts the nearby clinician promptly for both, using team help rather than delaying one while debating a perfect order
-- Places B's walking ankle injury and C's symptom-free prescription query lower based on current information
-- Requests responsiveness, breathing, deterioration and timing without diagnosing
+- Gets appropriate help for urgent concerns without unnecessary delay (e.g. alerting the nearby clinician about both urgent presentations)
+- Explains why other requests can provisionally wait (e.g. an ankle injury in someone able to walk)
+- Seeks information that could change urgency without diagnosing independently (e.g. breathing, responsiveness or deterioration)
 
 END
-- Explains a provisional order, communication and reassessment with the group
+- Explains the provisional order, communication and reassessment (e.g. revising priorities if symptoms change)
 
 MISTAKES
-- Prioritising age alone, leaving A waiting routinely, or attempting independent diagnosis as a student
+- Prioritising on irrelevant characteristics or working beyond the student role (e.g. using age alone or making an independent diagnosis)
 
 ------------------------------------------------------------
 
@@ -11686,18 +11684,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Flags C's rapidly worsening breathing and A's sudden facial droop and slurred speech for immediate clinical help
+- Recognises immediate clinical danger (e.g. rapidly worsening breathing or sudden facial droop and slurred speech)
 
 MIDDLE
-- Explains why help is needed for both people at once rather than making one wait
-- Explains E needs prompt attention despite controlled bleeding, with B and D less urgent on present facts
-- Communicates the last-well time and deterioration while staying within the student role
+- Gets help for simultaneous urgent concerns rather than relying on a rigid queue (e.g. breathing difficulty and possible stroke symptoms)
+- Justifies relative urgency using the available facts (e.g. a routine refill can wait while acute deterioration is assessed)
+- Communicates key information within the student’s role (e.g. when symptoms started or when the person was last well)
 
 END
-- Reassesses priorities and explains delays without giving false reassurance
+- Reviews priorities and explains delays without false reassurance (e.g. checking whether a waiting person is deteriorating)
 
 MISTAKES
-- Putting a routine refill before acute deterioration or claiming a definitive diagnosis from the cards
+- Delaying urgent help or claiming certainty beyond the evidence (e.g. putting a refill before acute deterioration)
 
 ------------------------------------------------------------
 
@@ -11712,18 +11710,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Addresses the fire alarm and possible wrong patient label as immediate safety concerns
+- Identifies immediate safety concerns before less urgent commitments (e.g. a fire alarm or possible wrong-patient label)
 
 MIDDLE
-- Follows the local fire response and alerts the supervisor to the label issue
-- Clarifies whether the distressed friend is at immediate risk before deciding between that call and coursework due in two hours
-- Explains communication or delegation for delayed demands and food later
+- Takes appropriate safety action and seeks help (e.g. following the local fire response and alerting a supervisor)
+- Clarifies uncertainty that could change priorities (e.g. whether the distressed friend is at immediate risk)
+- Explains how delayed tasks will be managed (e.g. communicating, delegating or rearranging coursework)
 
 END
-- Justifies three immediate actions with a conditional plan if new risk emerges
+- Justifies immediate priorities and adapts the plan if new risks emerge (e.g. three actions with a contingency for the friend’s safety)
 
 MISTAKES
-- Ignoring the alarm for coursework or assuming the friend's distress is either harmless or an emergency without checking
+- Ignoring clear risk or making unsupported assumptions (e.g. treating the friend’s distress as definitely harmless or definitely an emergency)
 
 ------------------------------------------------------------
 
@@ -11738,18 +11736,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Alerts qualified staff promptly about the newly confused patient
+- Recognises which request may involve immediate harm (e.g. a newly confused patient)
 
 MIDDLE
-- Ensures the prescription query reaches its prescriber before 14:00
-- Arranges a family update with the patient’s permission where possible, checking with the responsible clinician and realistic timing for teaching and the survey
-- Uses delegation and communicates ownership of requests
+- Escalates urgent concerns and respects time-sensitive deadlines (e.g. clinical help now and prescription clarification before 14:00)
+- Communicates appropriately while respecting privacy (e.g. checking permission before a family update)
+- Delegates and gives realistic timings for less urgent work (e.g. tomorrow’s teaching or the survey)
 
 END
-- Reviews completion and changes priorities if clinical facts change
+- Checks tasks are completed and revises the order when facts change (e.g. new clinical deterioration)
 
 MISTAKES
-- Personally changing a prescription as a student or prioritising requests by seniority alone
+- Prioritising by seniority alone or acting beyond the student role (e.g. changing a prescription personally)
 
 ------------------------------------------------------------
 
@@ -11764,18 +11762,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Recognises a £5m year-one limit and whole-proposal funding
+- Identifies the budget and funding constraints (e.g. £5m for year one and whole proposals only)
 
 MIDDLE
-- Compares crisis line £2m, scanner £4m, falls prevention £1m and neonatal beds £3m
-- Explains that users, scans, older adults reached and admissions are different measures
-- Weighs severity, benefit, staffing and uncertainty before selecting a feasible package
+- Checks that the proposed combination is affordable (e.g. £2m crisis line plus £3m neonatal beds)
+- Recognises when activity figures are different measures and cannot be compared directly (e.g. users, scans and admissions)
+- Weighs need, likely benefit and delivery uncertainty (e.g. staffing or length of stay)
 
 END
-- Justifies choices and requests comparable outcomes rather than a single numerical ranking
+- Justifies a feasible choice and asks for more comparable evidence (e.g. health outcomes rather than a single activity ranking)
 
 MISTAKES
-- Adding all activity estimates as equivalent lives benefited or choosing a package over budget
+- Exceeding the budget or treating different activities as equivalent benefit (e.g. adding scans and admissions as lives helped)
 
 ------------------------------------------------------------
 
@@ -11790,18 +11788,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Compares health benefit, numbers reached, fair access, time to benefit and how reliable the estimates are
+- Agrees what impact means before ranking options (e.g. benefit, numbers reached, fair access and time to benefit)
 
 MIDDLE
-- Compares vaccination £120,000 for 1,200 children with smoking support £80,000 for 800 adults
-- Considers exercise £45,000 for 1,500 adults and monitoring £60,000 covering 20,000 residents
-- Explains monitoring needs policy action and all options have uptake or delivery uncertainty
+- Compares costs and potential reach without treating them as the whole answer (e.g. vaccination costs £120,000 for 1,200 children)
+- Distinguishes direct support from activity that needs further action (e.g. air monitoring only improves health if findings lead to change)
+- Considers how reliable and achievable the estimates are (e.g. uncertain uptake or continued attendance)
 
 END
-- Offers a conditional ranking and requests evidence of actual health gains
+- Gives a reasoned ranking while identifying evidence that could change it (e.g. measured health gains)
 
 MISTAKES
-- Ranking air monitoring first solely because 20,000 is the largest number or treating reach as guaranteed benefit
+- Ranking by the largest number or assuming reach guarantees benefit (e.g. choosing monitoring only because it covers 20,000 residents)
 
 ------------------------------------------------------------
 
@@ -11839,18 +11837,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Identifies fixed commitments and Friday 09:00 coursework due with three hours remaining
+- Identifies fixed commitments, deadlines and the work remaining (e.g. Friday 09:00 coursework due and three hours still needed)
 
 MIDDLE
-- Considers protecting the 09:00 seminar and long-booked 17:00 medical appointment
-- Checks rather than assumes volunteering cover and discusses group-meeting flexibility
-- Builds realistic work, travel and rest time while communicating with family and colleagues
+- Protects important commitments and considers consequences of delay (e.g. a compulsory seminar or long-booked healthcare appointment)
+- Checks what can realistically be rearranged (e.g. volunteering cover or meeting flexibility)
+- Allows time for work, travel and rest while communicating changes (e.g. informing family or colleagues)
 
 END
-- Gives a feasible plan and contingency if cover is unavailable
+- Gives a workable plan and an alternative if assumptions fail (e.g. if volunteering cover is unavailable)
 
 MISTAKES
-- Silently missing commitments, assuming cover is guaranteed or sacrificing necessary healthcare automatically
+- Ignoring commitments or assuming flexibility without checking (e.g. silently missing a shift or sacrificing necessary healthcare)
 
 ------------------------------------------------------------
 
@@ -11865,18 +11863,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Escalates the administered medicine despite a documented allergy promptly even while the patient feels well
+- Recognises actual harm and potential risks that need prompt attention (e.g. medicine given despite a documented allergy)
 
 MIDDLE
-- Seeks clinical assessment and factual reporting within the student role
-- Alerts responsible staff about the out-of-range vaccine fridge and avoids use until appropriately advised
-- Ensures the near miss is reported and the spill made safe through help or delegation
+- Seeks appropriate assessment and reports the facts within the student role (e.g. alerting clinical staff even if the patient currently feels well)
+- Prevents further risk while seeking authorised advice (e.g. an out-of-range vaccine fridge)
+- Ensures remaining concerns are addressed through help or delegation (e.g. a near miss or corridor spill)
 
 END
-- Follows through on all concerns and reassesses changing risk
+- Follows through on all concerns and reassesses changing risk (e.g. checking that responsible staff have acted)
 
 MISTAKES
-- Waiting for symptoms before reporting the allergy error or discarding vaccines without authorised advice
+- Waiting for harm before reporting or taking unauthorised action (e.g. waiting for allergy symptoms or discarding vaccines independently)
 
 ------------------------------------------------------------
 
@@ -11891,18 +11889,18 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Recognises smoke and collapse as simultaneous immediate dangers
+- Recognises simultaneous immediate dangers (e.g. smoke and a collapsed visitor)
 
 MIDDLE
-- Raises the alarm and calls appropriate emergency help without opening the store-room door
-- Keeps self and others safe and supports the collapsed visitor only where safe and within training
-- Delegates help and protects privacy without prioritising filming or notes over safety
+- Raises the alarm and requests appropriate emergency help (e.g. without opening a smoke-filled store-room)
+- Keeps self and others safe while helping within training (e.g. assisting the collapsed visitor only where safe)
+- Delegates other tasks and protects privacy without delaying urgent help (e.g. filming or confidential notes)
 
 END
-- Follows the local emergency response and reassesses as help arrives
+- Follows the local emergency response and reassesses as help arrives (e.g. updating responders about both dangers)
 
 MISTAKES
-- Entering smoke, fetching notes first or confronting the person filming while urgent help is delayed
+- Entering danger or prioritising a less urgent request (e.g. entering smoke or fetching notes before calling for help)
 
 ------------------------------------------------------------
 

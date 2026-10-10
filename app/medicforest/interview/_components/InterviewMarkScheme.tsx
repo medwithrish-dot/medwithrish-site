@@ -76,6 +76,7 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
         <p className="mt-3 text-sm font-medium text-[#4a6370]">
           {checkedCount} / {totalChecklistItems} covered
         </p>
+        <p className="mt-2 text-sm leading-6 text-[#4a6370]">Mark the general skill or reasoning. Details in brackets are examples; another accurate example or well-supported answer can also meet the point.</p>
         {headerAction && <div className={styles.actions}>{headerAction}</div>}
       </section>
 

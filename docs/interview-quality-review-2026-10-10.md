@@ -4,6 +4,8 @@
 
 Visually checked all 27 PNGs against their paired questions, text alternatives and marking points, plus the three questions sharing the GP-wait graph in the data station. This includes all 15 section-18 data images and the 12 group/prioritisation images. Retained the images and existing bank prompts: their numbers, axes, budgets and fictional-study limitations support the requested tasks. Clarified the smoking-programme percentages using everyone enrolled, without treating missing outcomes as failures. Replaced jargon in the hypothesis/investigation and prioritisation guidance with concrete explanations. Corrected the satisfaction chart's text alternative to say “Interview with ward staff”. Refreshed the downloadable text and PDF markschemes, which previously contained older data prompts and guidance.
 
+Following the owner's clarification, all 30 visual/data markschemes now lead with general skills or reasoning. Dataset and scenario details sit in brackets as examples. The checklist, downloaded guidance and AI marking instructions explain that these examples are not mandatory: another accurate example or equivalent reasoning can meet the point.
+
 ## Answer input and AI output
 
 1. Candidates speak or type an answer for each displayed question. Spoken answers use the browser's British-English speech-recognition service. Interim words appear live; final words are appended to that question's answer. Permission, connection and browser support still affect recognition. No new cloud transcription provider has been added.

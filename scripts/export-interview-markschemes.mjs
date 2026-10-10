@@ -21,7 +21,7 @@ const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/medicforest/interview/_d
 const { getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review"));
 const { getQuestionStimulus } = load(resolve(root, "app/medicforest/interview/_data/interview-stimuli"));
 const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-const note = "Practice guidance, not official admissions criteria. Credit equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.";
+const note = "Practice guidance, not official admissions criteria. Mark the general skill or reasoning. Details in brackets are illustrative examples, not facts or phrases that must be repeated: credit other accurate examples and equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.";
 const sections = INTERVIEW_QUESTIONS.map(question => {
   const groups = getQuestionMarkScheme(question);
   const stimulus = getQuestionStimulus(question.id);
