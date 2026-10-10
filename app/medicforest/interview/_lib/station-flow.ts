@@ -2,15 +2,9 @@
 // arbitrary stations. Each original question is still limited to one probe and
 // the server caps an attempt at three probes.
 export const FOLLOW_UP_STATIONS: readonly string[] = [
-  "why-medicine",
-  "work-experience",
   "disability-in-medicine",
   "equality-diversity-inclusion",
-  "ozempic",
   "ethics-confidentiality",
-  "nhs-waiting-lists",
-  "teamwork-group-discussion",
-  "data-analysis",
 ];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 

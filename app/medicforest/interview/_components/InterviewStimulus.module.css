@@ -6,9 +6,11 @@
 .heading button:focus-visible, .textVersion summary:focus-visible { outline: 3px solid #159a9d; outline-offset: 3px; }
 .image { position: relative; width: 100%; aspect-ratio: 1.6; background: #fff; }
 .picture { object-fit: contain; }
+.fullSize { display: flex; align-items: center; min-height: 44px; padding: 8px 16px; color: #08787b; font-size: 13px; text-decoration: underline; }
 .image > p { padding: 20px; }
 .textVersion { border-top: 1px solid #d8e0e6; padding: 12px 16px; font-size: 13px; line-height: 1.7; }
 .textVersion summary { cursor: pointer; font-weight: 700; }
 .textVersion p { margin: 12px 0 0; white-space: pre-wrap; }
 .presentation { flex-shrink: 0; box-shadow: 0 16px 40px #0003; }
 @media (max-width: 767px) { .heading { padding: 10px; gap: 8px; } .heading h2 { font-size: 14px; } .heading button { padding: 6px 8px; font-size: 12px; } }
+@media (max-width: 400px) { .heading { align-items: flex-start; flex-direction: column; } .heading button { min-height: 44px; } }

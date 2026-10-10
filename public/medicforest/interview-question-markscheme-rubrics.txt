@@ -11043,7 +11043,7 @@ MISTAKES
 
 iq-18-001-data-stations
 Practical MMI & Role Play / Data Stations
-Question: Briefly describe the main trend shown in this graph.
+Question: Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?
 Image: /medicforest/interview-stimuli/iq-18-001-data-stations.png
 Source facts: Routine appointments, 2019–2024. Mean wait in days, in year order: North 6, 7, 11, 13, 12, 10; South 5, 6, 8, 9, 11, 12. Practices submitting data: North 18, 18, 17, 15, 15, 14; South 20, 20, 20, 21, 22, 22. North introduced online triage in January 2022; South in January 2024. Annual means use each year's reporting practices. Urgent appointments excluded. Patient age and appointment demand were not recorded. Fictional regional audit.
 GENERAL
@@ -11052,23 +11052,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies routine GP appointment waits in days across 2019–2024
+- States that the chart compares average routine GP waits in two districts from 2019 to 2024
 
 MIDDLE
-- Describes North rising from 6 to a 13-day peak in 2022, then falling to 10
-- Describes South rising from 5 to 12 days and overtaking North in 2024
+- Describes North rising from 6 days to a 13-day peak in 2022, then falling to 10
+- Describes South rising steadily from 5 to 12 days and becoming higher than North in 2024
+- Notes that the number of practices reporting changed and patient demand was not recorded
 
 END
-- Summarises the contrasting recent directions without inventing causes
+- Summarises the different trends without assuming that online triage caused them
 
 MISTAKES
-- Saying waits fall overall in North or attributing the change to triage as proven causation
+- Saying waits fell overall in North or claiming that the chart proves why waits changed
 
 ------------------------------------------------------------
 
 iq-18-002-data-stations
 Practical MMI & Role Play / Data Stations
-Question: Which conclusions can reasonably be drawn from these data?
+Question: Compare the smoking-cessation programmes using appropriate percentages. What can and cannot be concluded from the results?
 Image: /medicforest/interview-stimuli/iq-18-002-data-stations.png
 Source facts: Service evaluation of three self-selected programmes. Columns: enrolled; followed up; reported quitting; still smoking; not followed up. Text support: 200; 150; 48; 102; 50. Group sessions: 120; 108; 43; 65; 12. One-to-one support: 80; 60; 30; 30; 20. Mean age, median cigarettes/day at entry and total cost: text 29, 12, £8,000; group 46, 18, £18,000; one-to-one 52, 22, £24,000. Participants chose their programme. Quitting was self-reported at six months, without biochemical confirmation. Quitters and still-smoking counts refer only to those followed up. Missing outcomes are unknown. Fictional data.
 GENERAL
@@ -11077,24 +11078,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Distinguishes enrolled participants from those followed up
+- Makes clear that some enrolled participants were not followed up
 
 MIDDLE
-- Compares reported quitting among completers: 48/150 = 32%, 43/108 ≈ 39.8%, 30/60 = 50%
-- Recognises enrolled-denominator figures are 24%, about 35.8% and 37.5%, with missing outcomes unknown
-- Explains self-selection, different baseline smoking and self-reported quitting limit causal comparison
+- Compares quitting among those followed up: 48/150 = 32%, 43/108 ≈ 40% and 30/60 = 50%
+- Gives known quitters as a share of everyone enrolled: 24%, about 36% and 37.5%, while explaining that these are not complete quit rates because the missing outcomes are unknown
+- Explains that people chose their programme, the groups differed at the start and quitting was self-reported
 
 END
-- Concludes one-to-one has the highest observed proportion, while text support has the most reported quitters, without declaring one programme universally best
+- Concludes that one-to-one support had the highest observed quitting percentage, but the study cannot prove it is the best programme
 
 MISTAKES
-- Comparing raw counts as success rates or classifying every missing participant as still smoking
+- Comparing only the raw numbers of quitters or assuming everyone lost to follow-up was still smoking
 
 ------------------------------------------------------------
 
 iq-18-003-data-stations
 Practical MMI & Role Play / Data Stations
-Question: Which conclusions cannot be drawn from these data?
+Question: Describe the relationship between weekly exercise and wellbeing across the two age groups. Can the survey show that exercise caused the differences?
 Image: /medicforest/interview-stimuli/iq-18-003-data-stations.png
 Source facts: Cross-sectional online survey of 240 adults. Exercise groups: less than 1 hour, 1–3 hours, 4–6 hours, more than 6 hours weekly. Mean wellbeing scores out of 10 (95% confidence interval; sample size), in group order. Ages 18–39: 5.4 (4.9–5.9; 30), 6.2 (5.8–6.6; 45), 7.1 (6.7–7.5; 30), 6.9 (6.0–7.8; 15). Ages 40–65: 4.9 (4.4–5.4; 35), 5.8 (5.4–6.2; 40), 6.5 (6.0–7.0; 30), 6.7 (5.7–7.7; 15). The chart shows means; intervals are in the table. Exercise and wellbeing were self-reported. Income, health conditions and sleep were not recorded. Fictional data.
 GENERAL
@@ -11103,24 +11104,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises the survey shows association rather than proof exercise causes wellbeing
+- States that the survey shows a relationship, not proof that exercise improves wellbeing
 
 MIDDLE
-- Notes younger means peak at 7.1 for 4–6 hours then 6.9 above 6 hours, while older means reach 6.7
-- Uses the wide intervals and n=15 in each highest-exercise group to qualify differences
-- Explains reverse causation, self-report and unrecorded income, health and sleep
+- Describes wellbeing generally rising up to 4–6 hours of exercise in both age groups
+- Notes that the groups exercising more than 6 hours were small and their results were less precise
+- Explains that wellbeing and exercise were self-reported and that sleep, income and health conditions were not measured
 
 END
-- Avoids claiming an optimal exercise dose, a significant age difference or a population-wide causal effect
+- Concludes that the pattern is interesting but no best amount of exercise or cause can be established
 
 MISTAKES
-- Claiming more exercise always improves wellbeing or inventing significance from overlapping intervals alone
+- Saying more exercise always improves wellbeing or claiming the age groups are definitely different
 
 ------------------------------------------------------------
 
 iq-18-004-data-stations
 Practical MMI & Role Play / Data Stations
-Question: Which additional information would you want before making a decision?
+Question: Which community diabetes programme would you choose within the £200,000 first-year budget, and what further information could change your decision?
 Image: /medicforest/interview-stimuli/iq-18-004-data-stations.png
 Source facts: First-year budget £200,000; funding for one programme. Columns: annual invitations, expected attendance, annual running cost, one-off setup cost. Mobile clinic: 1,200, 68%, £180,000, £35,000. Evening clinic: 800, 81%, £120,000, £15,000. Online support: 2,400, 42%, £90,000, £45,000. Mobile launches in 5 months and needs two nurses for weekly rural visits. Evening launches in 2 months with one nurse at a town-centre site. Online launches in 3 months and requires internet access and a remote educator. Budget covers setup and running costs; no extra funding confirmed. Attendance estimates come from small pilots in different areas. An estimated 18% of the local target population lacks reliable internet. Health outcomes, long-term retention and adverse effects were not measured. Fictional planning data.
 GENERAL
@@ -11129,24 +11130,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies the £200,000 first-year limit and need to include setup costs
+- Recognises the £200,000 first-year budget must cover both setup and running costs
 
 MIDDLE
-- Calculates first-year totals: mobile £215,000, evening £135,000, online £135,000
-- Requests comparable health outcomes, retention and local demand rather than attendance alone
-- Considers estimated attendance of 816, 648 and 1,008, differing launch times, staffing and 18% without reliable internet
+- Calculates first-year totals: mobile £215,000, evening £135,000 and online £135,000
+- Compares likely attendance, launch time, staffing and the fact that 18% may lack reliable internet
+- Asks for comparable health outcomes, longer-term attendance and local demand before deciding
 
 END
-- Explains which missing evidence could change the choice between feasible options
+- Chooses a programme that fits the budget and explains what new evidence could change that choice
 
 MISTAKES
-- Selecting the mobile clinic within the stated budget without new funding or treating attendance as proven health benefit
+- Choosing the mobile clinic without finding extra funding or assuming attendance automatically means better health
 
 ------------------------------------------------------------
 
 iq-18-005-data-stations
 Practical MMI & Role Play / Data Stations
-Question: Can you identify any unusual values or outliers?
+Question: Describe the relationship between ward admissions and discharge delays. Which result is unusual, and what might help explain it?
 Image: /medicforest/interview-stimuli/iq-18-005-data-stations.png
 Source facts: Twenty sampled ward-days across two wards. Scatterplot: daily admissions on x-axis; mean time from discharge decision to leaving in hours on y-axis. Approximate plotted pairs for Ward A: (12,2.1), (16,2.8), (20,2.4), (24,3.3), (28,3.0), (32,3.8), (36,3.4), (40,4.4), (44,4.0), (48,4.8). Ward B: (14,2.8), (18,3.5), (22,3.1), (24,7.5), (26,4.0), (30,3.6), (34,4.5), (38,4.0), (42,5.0), (46,4.6). Ward A has 28 beds, median nurse-to-patient ratio 1:6, and 2 of 10 sampled days at weekends. Ward B has 36 beds, ratio 1:8, and 4 of 10 days at weekends. Sampling covered six weeks. Patient complexity and transport availability were not recorded. Fictional audit.
 GENERAL
@@ -11155,50 +11156,50 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies each point as a ward-day, with admissions and discharge-delay hours
+- Explains that each point represents one sampled day on a ward
 
 MIDDLE
-- Spots Ward B near 24 admissions and 7.5 hours as unusual relative to the general positive association
-- Compares ward size, nurse ratios and weekend sampling
-- Suggests checking that day's records, patient complexity and transport availability
+- Identifies the Ward B result near 24 admissions and 7.5 hours as the clearest unusual value
+- Describes the general pattern that more admissions tend to accompany longer discharge delays
+- Suggests checking that day's records, patient needs, staffing, weekend working and transport availability
 
 END
-- Investigates the unusual observation before excluding it and avoids a causal verdict
+- Treats the unusual point as something to investigate rather than automatically remove
 
 MISTAKES
-- Calling the outlier an error without evidence or confusing hours with days
+- Calling the unusual value an error without evidence or confusing hours with days
 
 ------------------------------------------------------------
 
 iq-18-006-graphs-and-trends
 Data, Research & Critical Thinking / Graphs & Trends
-Question: In what ways could the graph be misleading?
+Question: The briefing says patient satisfaction ‘rises sharply’. How could the graph and comparison be misleading?
 Image: /medicforest/interview-stimuli/iq-18-006-graphs-and-trends.png
-Source facts: Hospital communications headline: Patient satisfaction rises sharply. 2024 inpatient survey bar chart: Hospital A 82%, Hospital B 86%; vertical axis runs from 80% to 87%. Measure: overall satisfaction with inpatient care. Hospital A: 2,000 invitations, 500 responses, 410 answered yes; anonymous postal form, January–March. Hospital B: 1,000 invitations, 100 responses, 86 answered yes; Med interview with ward staff, October–December. Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided. Fictional communications extract.
+Source facts: Hospital communications headline: Patient satisfaction rises sharply. 2024 inpatient survey bar chart: Hospital A 82%, Hospital B 86%; vertical axis runs from 80% to 87%. Measure: overall satisfaction with inpatient care. Hospital A: 2,000 invitations, 500 responses, 410 answered yes; anonymous postal form, January–March. Hospital B: 1,000 invitations, 100 responses, 86 answered yes; Interview with ward staff, October–December. Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided. Fictional communications extract.
 GENERAL
 - Answers the specific task with clear, relevant reasoning
 - Supports claims with examples or evidence appropriate to this question
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies a comparison of two hospitals rather than a time trend
+- Recognises that the chart compares two hospitals in 2024 and does not show a rise over time
 
 MIDDLE
-- Explains the 80–87% axis exaggerates the 82% versus 86% difference of 4 percentage points
-- Calculates response rates of 500/2,000 = 25% and 100/1,000 = 10%
-- Notes postal versus staff-interview methods, different collection periods and absent prior-year data
+- Explains that starting the vertical axis at 80% makes 82% versus 86% look much larger than a 4 percentage-point difference
+- Notes that only 25% of Hospital A invitees and 10% of Hospital B invitees responded
+- Highlights the different survey methods, different times of year and missing information about the patients
 
 END
-- Suggests a clearly labelled fair-scale display with denominators and limitations
+- Suggests showing the full scale, response numbers and limitations clearly
 
 MISTAKES
-- Claiming satisfaction rose over time, that B is three times as good, or that the data themselves must be fabricated
+- Saying satisfaction rose over time, that Hospital B is several times better or that misleading presentation means the data are fake
 
 ------------------------------------------------------------
 
 iq-18-007-graphs-and-trends
 Data, Research & Critical Thinking / Graphs & Trends
-Question: Which factors could explain the observed trend?
+Question: Describe the vaccination-uptake trends in both districts. What might explain the changes, and what cannot be concluded?
 Image: /medicforest/interview-stimuli/iq-18-007-graphs-and-trends.png
 Source facts: Completed scheduled vaccinations by age two, 2018–2024. Percent eligible children vaccinated in year order: North 93, 92, 89, 86, 87, 89, 91; South 94, 93, 91, 90, 90, 92, 93. Eligible children recorded: North 1,000, 1,000, 1,100, 1,200, 1,300, 1,400, 1,500; South 1,500, 1,500, 1,600, 1,600, 1,700, 1,700, 1,800. In 2021 both districts updated child-registration records. In 2022 North introduced reminder texts. In 2023 both added weekend clinics. Uptake uses each year's registered eligible population. Migration and individual reasons for missed vaccination were not recorded. Fictional audit.
 GENERAL
@@ -11207,24 +11208,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Describes falling uptake to 2021 followed by partial recovery
+- Describes uptake falling until 2021 and then partly recovering in both districts
 
 MIDDLE
-- Uses North 93% to 86% to 91% and South 94% to 90% to 93%
-- Explores 2021 register changes, North's 2022 reminders and 2023 weekend clinics as possible influences
-- Considers changing eligible populations, migration and unrecorded reasons for missed vaccination
+- Uses key figures such as North 93% to 86% to 91% and South 94% to 90% to 93%
+- Mentions record changes, reminder texts and weekend clinics as possible explanations rather than proven causes
+- Notes that the number of eligible children changed and individual reasons for missed vaccination were not recorded
 
 END
-- Requests comparison evidence before attributing recovery to a service change
+- Explains what comparison or further information would be needed before crediting one service change
 
 MISTAKES
-- Presenting the timing of reminders as proof of effect or confusing percentage points with relative percentage changes
+- Treating the timing of reminder texts or weekend clinics as proof that they caused the recovery
 
 ------------------------------------------------------------
 
 iq-18-008-graphs-and-trends
 Data, Research & Critical Thinking / Graphs & Trends
-Question: Does this dataset show causation or simply an association?
+Question: What does the sleep and exam-score plot show? Discuss the role of revision time and whether the data prove causation.
 Image: /medicforest/interview-stimuli/iq-18-008-graphs-and-trends.png
 Source facts: Survey of 40 students sitting the same exam; 40 of 120 invited responded. Scatterplot x-axis self-reported sleep 4–10 hours/night, y-axis exam score 40–100%. Twenty students per revision group. Approximate under-10-hours/week pairs: (4.3,46), (4.6,60), (4.9,51), (5.2,65), (5.5,49), (5.8,68), (6.1,56), (6.4,72), (6.6,45), (6.7,59), (7.0,76), (7.3,62), (7.6,71), (7.9,65), (8.2,80), (8.5,68), (8.8,74), (9.1,70), (9.4,83), (9.7,73). Approximate 10-plus-hours/week pairs: (4.4,58), (4.7,72), (5.0,61), (5.3,77), (5.6,64), (5.9,80), (6.2,67), (6.5,83), (6.8,69), (7.1,86), (7.4,73), (7.7,90), (7.85,58), (8.0,76), (8.3,88), (8.6,79), (8.9,93), (9.2,82), (9.5,89), (9.8,85). Sleep and revision were recalled after the exam. Prior attainment, stress, health and caffeine were not recorded. Fictional student survey.
 GENERAL
@@ -11233,24 +11234,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies a sleep/exam-score association in 40 survey respondents
+- States that students reporting more sleep tended to have higher exam scores, but there is wide variation
 
 MIDDLE
-- Recognises higher-revision students often score more at similar sleep levels
-- Discusses self-reported sleep after the exam and only 40/120 responding
-- Considers prior attainment, stress, health and caffeine as unmeasured explanations
+- Recognises that students doing 10 or more revision hours often scored higher at similar sleep levels
+- Notes that only 40 of 120 invited students responded and sleep and revision were recalled after the exam
+- Suggests prior attainment, stress, health and caffeine as other possible explanations
 
 END
-- Says the observational dataset cannot establish that extra sleep causes a specified mark increase
+- Concludes that the survey cannot prove extra sleep causes a particular increase in marks
 
 MISTAKES
-- Ignoring revision groups or claiming a precise causal gain per hour
+- Ignoring revision time or claiming the plot shows an exact mark gain for every extra hour of sleep
 
 ------------------------------------------------------------
 
 iq-18-009-data-interpretation
 Data, Research & Critical Thinking / Data Interpretation
-Question: How might you explain these results to a patient?
+Question: According to the heart-event chart, what are the main potential benefits, harms and practical burdens of the new treatment?
 Image: /medicforest/interview-stimuli/iq-18-009-data-interpretation.png
 Source facts: Fictional randomised treatment study with 1,000 adults per group and complete five-year outcomes. Standard care: 20 in 100 had another heart event; 3 in 100 had major bleeding; no extra tablets or visits. Standard care plus new treatment: 15 in 100 had another heart event; 6 in 100 had major bleeding; one extra daily tablet; two extra monitoring visits per year. Each chart icon represents 1 in 100 people. Heart events and major bleeding may affect the same person. Individual risks may differ.
 GENERAL
@@ -11259,25 +11260,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Explains results using the same 100-person denominator and five-year period
+- Makes clear that both groups are compared over five years and uses figures out of 100 people
 
 MIDDLE
-- States heart events fall from 20 to 15 in 100: 5 fewer, not a 25-point drop
-- Balances this against major bleeding rising from 3 to 6 in 100
-- Explains one extra daily tablet and two monitoring visits per year, with individual risks differing
+- Says another heart event occurred in 20 out of 100 people with standard care and 15 out of 100 with the new treatment: 5 fewer people
+- Balances this with major bleeding increasing from 3 to 6 out of 100: 3 more people
+- Mentions one extra tablet every day, two extra monitoring visits each year and that an individual's risk may differ
 
 END
-- Checks understanding and preferences without promising personal benefit
-- If using relative reduction or NNT, explains 25% relative reduction or about 20 treated over five years in plain language
+- Concludes that the possible benefit must be weighed against extra bleeding risk and treatment burden
 
 MISTAKES
-- Adding event and bleeding figures as separate people or presenting relative benefit without absolute numbers
+- Saying the treatment prevents every event, quoting only a relative percentage or ignoring the bleeding risk
 
 ------------------------------------------------------------
 
 iq-18-010-data-interpretation
 Data, Research & Critical Thinking / Data Interpretation
-Question: How might you explain these results to someone without a scientific background?
+Question: Compare recovery after programmes A and B at 12 weeks and six months. What limitations and practical trade-offs should be considered?
 Image: /medicforest/interview-stimuli/iq-18-010-data-interpretation.png
 Source facts: 200 adults randomly assigned, 100 per programme. At 12 weeks, categories much better / a little better / no better or worse / did not respond: A 54 / 26 / 15 / 5; B 62 / 23 / 10 / 5. At six months: A 50 / 20 / 18 / 12; B 52 / 18 / 12 / 18. All counts use the original 100 per group. A has 4 supervised sessions, typical 20-minute travel per session, 10 in 100 reporting a temporary pain flare. B has 8 sessions, 50-minute travel, 18 in 100 reporting a flare. Missing outcomes unknown. Recovery self-reported; participants knew their programme. Both received home exercises. No follow-up beyond six months. Fictional study.
 GENERAL
@@ -11286,24 +11286,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Explains recovery outcomes out of the original 100 people per programme
+- Explains that each programme started with 100 people and missing responses remain unknown
 
 MIDDLE
-- At 12 weeks, compares 54 versus 62 much better and 80 versus 85 at least a little better
-- At six months, notes both have 70 reporting some improvement, with 12 versus 18 missing responses
-- Explains B requires 8 rather than 4 sessions, 50 rather than 20 minutes travel, and has 18 versus 10 temporary pain flares
+- At 12 weeks, compares 54 versus 62 feeling much better and 80 versus 85 reporting at least some improvement
+- At six months, notes both programmes have 70 people reporting some improvement, while 12 versus 18 did not respond
+- Compares 4 versus 8 sessions, 20 versus 50 minutes of travel and 10 versus 18 temporary pain flares
 
 END
-- Balances observed improvement with burden, self-report and unknown missing outcomes
+- Concludes that the longer-term results look similar and should be balanced against burden and missing responses
 
 MISTAKES
-- Treating non-responders as recovered or claiming B has a proven lasting advantage
+- Counting people who did not respond as recovered or claiming Programme B has a proven lasting advantage
 
 ------------------------------------------------------------
 
 iq-18-011-critical-appraisal
 Data, Research & Critical Thinking / Critical Appraisal
-Question: Which possible sources of bias can you identify?
+Question: What sources of bias or uncertainty limit the energy-drink study and its reported conclusion?
 Image: /medicforest/interview-stimuli/iq-18-011-critical-appraisal.png
 Source facts: 60 volunteers aged 18–30 recruited via the maker's social media chose an energy drink or water. One-hour test, no blinding. Drink/water: enrolled 36/24; completed both tests 33/21; mean score before out of 100 48/49; after 54/50; regular caffeine users 24/33 and 8/21. Scores are for completers. Report states the drink group scored 8% higher than water after one hour. Company-funded. Sleep and other caffeine unrecorded. Fictional study.
 GENERAL
@@ -11312,24 +11312,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies a self-selected, unblinded company-funded study
+- Identifies that participants chose their drink, knew what they received and were recruited through the manufacturer's social media
 
 MIDDLE
-- Explains recruitment through the maker's social media and unequal habitual caffeine use of 24/33 versus 8/21 completers
-- Recognises 3 missing from each group and unrecorded sleep or other caffeine
-- Distinguishes 54 versus 50 after-test scores from within-group changes of 6 versus 1 points
+- Notes that regular caffeine use differed greatly between the groups
+- Recognises that sleep and other caffeine were not recorded and three people in each group did not complete both tests
+- Compares both the final scores and the change from before to after, rather than relying on the report's headline
 
 END
-- Explains how identified features could bias results without assuming deliberate fraud
+- Explains how these issues could skew the result without assuming fraud
 
 MISTAKES
-- Calling the study randomised or claiming sponsorship alone invalidates all data
+- Calling the study randomised or saying company funding alone makes every result false
 
 ------------------------------------------------------------
 
 iq-18-012-critical-appraisal
 Data, Research & Critical Thinking / Critical Appraisal
-Question: To what extent is the sample size sufficient?
+Question: What do the reminder-text results show, and why is this 24-person pilot too small to support a firm conclusion?
 Image: /medicforest/interview-stimuli/iq-18-012-critical-appraisal.png
 Source facts: 24 adults, random allocation, one clinic, four weeks. Extra text: 2/12 missed an appointment, 10 attended. Usual care: 4/12 missed, 8 attended. Two texts were undelivered; participants analysed as assigned. £0.08 per text, staff costs unrecorded. Report says difference not statistically significant. No sample-size calculation or confidence interval. Phone owners only, one appointment each, complete follow-up. Fictional pilot study.
 GENERAL
@@ -11338,24 +11338,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Recognises 24 adults at one clinic provide a small pilot sample
+- Recognises that 24 adults from one clinic make this a very small pilot study
 
 MIDDLE
-- Compares 2/12 versus 4/12 missed appointments: about 16.7% versus 33.3%, only two people apart
-- Notes random allocation, complete follow-up and analysis as assigned despite two undelivered texts
-- Requests a sample-size calculation and confidence interval for a clinically meaningful difference
+- Compares 2 of 12 missed appointments with 4 of 12: a difference of only two people
+- Notes that allocation was random and follow-up was complete, while two reminder texts were not delivered
+- Explains that a much larger study across several clinics is needed to tell whether the difference is reliable and useful
 
 END
-- Concludes reported non-significance does not establish no effect and supports a larger multi-clinic study
+- Concludes that the pilot is promising but too small for a firm claim that texts reduce missed appointments
 
 MISTAKES
-- Claiming sufficient power from the apparent 50% relative reduction or removing undelivered texts from the denominator
+- Calling the treatment proven because the missed-appointment rate appears halved or excluding people whose texts were not delivered
 
 ------------------------------------------------------------
 
 iq-18-013-article-analysis
 Data, Research & Critical Thinking / Article Analysis
-Question: Which information would help you judge whether the study was reliable?
+Question: How reliable is the asthma-app evaluation? Discuss the missing follow-up, outcome measurements and other possible explanations for the change.
 Image: /medicforest/interview-stimuli/iq-18-013-article-analysis.png
 Source facts: Single hospital: 80 started, 50 completed, 30 missing. Missing reasons: 10 technical problems, 6 reporting burden, 14 unknown. Means for 50 completers, before / eight weeks: symptoms out of 10 6.2 / 4.1; missed-activity days per month 3 / 2; reliever-use days per week 4 / 3. Higher symptom score means more symptoms. No comparison group. Medication changed in 18/50 completers. Developer-funded. Questionnaire validation not described. Full questionnaire, protocol and raw data unpublished. Fictional evaluation.
 GENERAL
@@ -11364,24 +11364,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Identifies an uncontrolled eight-week asthma-app evaluation
+- Recognises that the evaluation has no comparison group and lasts only eight weeks
 
 MIDDLE
-- Notes only 50/80 completed and asks about outcomes and reasons for all 30 missing
-- Uses symptom scores 6.2 to 4.1 cautiously because medication changed in 18/50 completers
-- Requests recruitment, protocol, raw data, questionnaire validation and a comparison group
+- Notes that only 50 of 80 starters completed it and asks what happened to the other 30
+- Uses the fall in symptom score cautiously because medication also changed for 18 of the 50 completers
+- Questions whether the questionnaire was suitable and notes that the protocol and full results were not published
 
 END
-- Balances observed improvement against confounding, attrition and developer funding
+- Concludes that symptoms improved among completers, but the app may not be the reason
 
 MISTAKES
-- Assuming all 80 improved or that the app caused the change
+- Assuming all 80 people improved or claiming the app caused the change
 
 ------------------------------------------------------------
 
 iq-18-014-article-analysis
 Data, Research & Critical Thinking / Article Analysis
-Question: How could the media misrepresent these findings?
+Question: Does the headline ‘Berry halves cancer risk’ match the study results? Explain how the findings should be reported more accurately.
 Image: /medicforest/interview-stimuli/iq-18-014-article-analysis.png
 Source facts: Fictional news headline: Berry halves cancer risk. Subheading: Fewer diagnoses among berry eaters. Study: 600 adults, 18 months, observational. Berry eaters / others: participants 200 / 400; new diagnoses 12 / 20; mean age 54 / 61; current smokers 20% / 30%; higher-income households 75% / 40%. Diet self-reported once. Complete follow-up with clinical-record diagnoses. No adjustment for age, smoking or income. Fictional article and dataset.
 GENERAL
@@ -11390,24 +11390,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Compares the headline with the actual participant denominators
+- Checks the headline against the percentages in each group
 
 MIDDLE
-- Calculates 12/200 = 6% versus 20/400 = 5%, contradicting the claim that risk halves
-- Explains fewer diagnoses in the smaller group does not mean lower risk
-- Notes unadjusted age, smoking and income differences and one-time diet self-report
+- Calculates 12/200 = 6% versus 20/400 = 5%, so the risk was not halved
+- Explains that fewer diagnoses in a smaller group does not necessarily mean a lower rate
+- Notes important differences in age, smoking and income, plus diet being recorded only once
 
 END
-- Communicates a small observed difference in an observational study without claiming berries prevent or cause cancer
+- Reports that this observational study found no evidence that berries halved cancer risk and cannot show cause and effect
 
 MISTAKES
-- Repeating the headline, comparing counts alone or interpreting the 1-point difference as causal harm
+- Repeating the headline, comparing raw case numbers alone or claiming berries caused either benefit or harm
 
 ------------------------------------------------------------
 
 iq-18-015-article-analysis
 Data, Research & Critical Thinking / Article Analysis
-Question: Which further research would you conduct?
+Question: What further research would you conduct to test whether virtual reality improves anatomy learning?
 Image: /medicforest/interview-stimuli/iq-18-015-article-analysis.png
 Source facts: One medical school, four-week optional pilot. 32 of 160 students volunteered; 4 missed the final quiz. Mean score before 64%, after 72%; same 28 students and same 20 questions. 24/28 rated sessions useful. 6/32 reported dizziness. No comparison group; usual teaching continued. Setup £8,000. Lecturer taught and marked. No later or practical assessment. Fictional education pilot.
 GENERAL
@@ -11416,24 +11416,24 @@ GENERAL
 - Uses the supplied image accurately and distinguishes observation from interpretation
 
 START
-- Proposes research addressing the VR pilot's specific limitations
+- Proposes research that directly addresses the weaknesses of the small VR pilot
 
 MIDDLE
-- Suggests a larger multi-school randomised comparison with usual teaching
-- Uses independent assessment, different validated questions and later practical testing to address repeat-test and lecturer effects
-- Tracks missing outcomes, dizziness, costs and accessibility after 32 volunteers and 28 completers
+- Suggests a larger study across several medical schools with students fairly allocated to VR plus usual teaching or usual teaching alone
+- Uses independent marking, different validated questions and later practical testing rather than repeating the same quiz
+- Records dropouts, dizziness, costs, accessibility and whether any learning benefit lasts
 
 END
-- Defines success through sustained useful learning as well as acceptability
+- Defines success as lasting useful learning without unacceptable burden or harm
 
 MISTAKES
-- Treating the 64% to 72% rise or 24/28 usefulness rating as proof VR improves clinical performance
+- Treating the rise from 64% to 72% or the usefulness rating as proof that VR improves clinical ability
 
 ------------------------------------------------------------
 
 iq-19-001-group-discussion
 Practical MMI & Role Play / Group Discussion
-Question: Explain how you would rank a list of healthcare priorities and agree on a group decision.
+Question: Rank the five healthcare improvement proposals and choose two to launch next year. Explain your criteria, trade-offs and how the group could reach agreement.
 Image: /medicforest/interview-stimuli/iq-19-001-group-discussion.png
 Source facts: Capacity for two programme launches next year. A Surgery: 1,400 waiting over a year; weekend operating lists; launch 3 months; staff cover unconfirmed. B Mental health: median wait 18 weeks; two community teams; launch 9 months; recruitment uncertain. C Maternity: gaps in overnight senior cover; extra cover and training; launch 6 months; harm rates not estimated. D Vaccination: uptake 84% locally and 72% in one area; outreach and translated invitations; launch 2 months; participation uncertain. E Buildings: 120 appointments cancelled last quarter; replace ventilation and electrics; completion 18 months; clinics must relocate. Fictional planning brief.
 GENERAL
@@ -11460,7 +11460,7 @@ MISTAKES
 
 iq-19-002-group-tasks
 Practical MMI & Role Play / Group Tasks
-Question: Work through allocating a limited NHS budget across several competing services.
+Question: Choose a package of whole NHS projects costing no more than £10 million. Explain your trade-offs and what further evidence you would request.
 Image: /medicforest/interview-stimuli/iq-19-002-group-tasks.png
 Source facts: Total budget £10m, whole-project funding only. Community mental-health team £4m: earlier local support, specialist recruitment needed. Two operating theatres £6m: more surgical capacity, additional staff needed. Diabetes prevention £3m: reduce future illness, benefits take time. Digital-record upgrade £5m: information shared across services, training and transition needed. Rural mobile clinic £2m: reaches isolated communities, limited weekly visits. Fictional one-year project costs.
 GENERAL
@@ -11487,7 +11487,7 @@ MISTAKES
 
 iq-19-003-group-tasks
 Practical MMI & Role Play / Group Tasks
-Question: Your group must choose equipment for a survival exercise. Explain how you would compare suggestions and reach agreement.
+Question: Choose five items for the group to take overnight on the mountain. Explain your assumptions, trade-offs and how you would reach agreement.
 Image: /medicforest/interview-stimuli/iq-19-003-group-tasks.png
 Source facts: Four adults, rain, 3°C overnight, dusk in 30 minutes. Carrying capacity five items. Available: waterproof sheet, first-aid kit, map, compass, dry matches, water (two litres total), rope (10 metres), torch, chocolate bars, phone (20% battery). Phone signal is intermittent. Fictional survival exercise.
 GENERAL
@@ -11605,7 +11605,7 @@ MISTAKES
 
 iq-19-008-group-tasks
 Practical MMI & Role Play / Group Tasks
-Question: Prioritise how you would handle patients using limited information.
+Question: Put the four patient presentations in a provisional order for assessment. Explain who you would alert and what further information you need.
 Image: /medicforest/interview-stimuli/iq-19-008-group-tasks.png
 Source facts: You are a student on placement; a clinician is nearby. A, age 67: new chest pressure and sweating, started 20 minutes ago. B, age 24: ankle pain after a fall, able to walk, injury one hour ago. C, age 45: prescription query, no current symptoms, routine medicine running low. D, age 5: fever, unusually difficult to wake, parent says this is not normal. Fictional cases.
 GENERAL
@@ -11677,7 +11677,7 @@ MISTAKES
 
 iq-20-001-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: How would you decide which patients need attention most urgently, and communicate your reasoning?
+Question: Put the five people in a provisional order for attention. Explain your immediate safety actions, who you would alert and how you would communicate delays.
 Image: /medicforest/interview-stimuli/iq-20-001-prioritisation-stations.png
 Source facts: Five people need attention; clinical help is available. A: sudden facial droop and slurred speech, last well 15 minutes ago. B: mild rash for three weeks, no breathing difficulty. C: worsening breathlessness and blue lips, deteriorating over five minutes. D: routine medication refill, supply lasts three more days. E: deep cut, bleeding controlled by pressure. Fictional Med interview scenario.
 GENERAL
@@ -11686,10 +11686,10 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Flags C's rapidly worsening breathing and A's sudden neurological symptoms for immediate clinical help
+- Flags C's rapidly worsening breathing and A's sudden facial droop and slurred speech for immediate clinical help
 
 MIDDLE
-- Recognises the need for parallel escalation rather than a rigid one-at-a-time queue
+- Explains why help is needed for both people at once rather than making one wait
 - Explains E needs prompt attention despite controlled bleeding, with B and D less urgent on present facts
 - Communicates the last-well time and deterioration while staying within the student role
 
@@ -11703,7 +11703,7 @@ MISTAKES
 
 iq-20-002-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Five tasks need attention, but you can deal with only three straight away. Explain how you would choose what to do now and what can wait.
+Question: Choose three demands to address immediately. Explain what you would do about the other two and who you would involve.
 Image: /medicforest/interview-stimuli/iq-20-002-prioritisation-stations.png
 Source facts: You are a student on placement. A: a fire alarm is sounding on your floor. B: a distressed friend has asked you to call. C: coursework is due in two hours. D: a patient's identification label may be wrong. E: you need food before the shop closes tonight. Fictional task sheet.
 GENERAL
@@ -11729,7 +11729,7 @@ MISTAKES
 
 iq-20-003-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Several members of your team ask for help at once. How might you prioritise?
+Question: Prioritise the five requests in the team inbox. Explain what you would do first, what could be delegated and who needs an update.
 Image: /medicforest/interview-stimuli/iq-20-003-prioritisation-stations.png
 Source facts: You are a student on placement. Requests arriving at 10:00. Nurse: a patient has become suddenly confused. Receptionist: a family wants an update. Pharmacist: a routine prescription needs clarification by the prescriber before 14:00. Student colleague: help requested with tomorrow's teaching. Manager: the monthly survey is due today. Fictional team messages.
 GENERAL
@@ -11742,7 +11742,7 @@ START
 
 MIDDLE
 - Ensures the prescription query reaches its prescriber before 14:00
-- Arranges an appropriate consent-aware family update and realistic timing for teaching and the survey
+- Arranges a family update with the patient’s permission where possible, checking with the responsible clinician and realistic timing for teaching and the survey
 - Uses delegation and communicates ownership of requests
 
 END
@@ -11755,7 +11755,7 @@ MISTAKES
 
 iq-20-004-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Several services are competing for a limited healthcare budget. How would you decide their relative priority?
+Question: Choose a package of whole proposals within the £5 million budget. Explain your trade-offs and what further evidence you would need.
 Image: /medicforest/interview-stimuli/iq-20-004-prioritisation-stations.png
 Source facts: £5m available for year one, whole-proposal funding only. Mental-health crisis line: £2m, estimated 4,000 users, repeat calls may affect capacity. New cancer scanner: £4m, 1,100 scans, staffing may delay full use. Community falls prevention: £1m, 3,000 older adults, attendance uncertain. Extra neonatal beds: £3m, 240 admissions, length of stay varies. These figures describe different activities, not equivalent health benefits. Fictional year-one estimates.
 GENERAL
@@ -11781,7 +11781,7 @@ MISTAKES
 
 iq-20-005-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Explain how you would rank several public-health interventions according to likely impact.
+Question: Rank the four public-health options by likely impact. Explain your criteria and why reach alone does not show health benefit.
 Image: /medicforest/interview-stimuli/iq-20-005-prioritisation-stations.png
 Source facts: School vaccination outreach: year-one reach 1,200 children, cost £120,000, benefit horizon 3–12 months, parental consent uncertain. Smoking-cessation support: 800 adults, £80,000, 1–5 years, programme uptake uncertain. Air-quality monitoring: area covers 20,000 residents, £60,000, benefit depends on policy action, uncertainty about action on findings. Free community exercise: 1,500 adults, £45,000, 6–12 months, continued attendance uncertain. All costs are year one. Fictional estimates.
 GENERAL
@@ -11790,7 +11790,7 @@ GENERAL
 - Makes priorities explicit, works within their role and revises decisions when facts change
 
 START
-- Defines impact using benefit, reach, equity, time and uncertainty
+- Compares health benefit, numbers reached, fair access, time to benefit and how reliable the estimates are
 
 MIDDLE
 - Compares vaccination £120,000 for 1,200 children with smoking support £80,000 for 800 adults
@@ -11830,7 +11830,7 @@ MISTAKES
 
 iq-20-007-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Prioritise how you would handle competing academic, personal and volunteering commitments.
+Question: Using the diary, explain what you would keep, rearrange or delegate, and how you would communicate the changes.
 Image: /medicforest/interview-stimuli/iq-20-007-prioritisation-stations.png
 Source facts: Thursday: 09:00 compulsory seminar; 12:00 volunteering shift, cover may be available; 15:00 group-project meeting; 17:00 medical appointment booked two months ago; 18:00 family celebration. Friday 09:00 coursework due; three hours of coursework still to do. Fictional planning exercise.
 GENERAL
@@ -11856,7 +11856,7 @@ MISTAKES
 
 iq-20-008-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Explain how you would decide which patient-safety concern needs escalating first.
+Question: Which patient-safety concern would you escalate first? Explain your immediate actions, who you would involve and what should be recorded.
 Image: /medicforest/interview-stimuli/iq-20-008-prioritisation-stations.png
 Source facts: You are a student on placement; senior help available. A: medicine administered despite a documented allergy to it; patient currently feels well. B: vaccine fridge 1°C above its displayed permitted range, vaccines inside, duration unknown. C: medicine nearly given to the wrong patient, caught before administration. D: small corridor spill with missing wet-floor sign; corridor currently empty. Fictional incidents.
 GENERAL
@@ -11882,7 +11882,7 @@ MISTAKES
 
 iq-20-009-prioritisation-stations
 Practical MMI & Role Play / Prioritisation Stations
-Question: Prioritise how you would handle responses during an emergency situation.
+Question: What would you do first in this hospital-corridor emergency? Explain who you would call and how you would protect people while staying within the student role.
 Image: /medicforest/interview-stimuli/iq-20-009-prioritisation-stations.png
 Source facts: Hospital corridor; you are a student on placement. A: smoke visible at a closed store-room door. B: a visitor has collapsed nearby. C: another visitor is filming. D: a colleague asks you to fetch confidential notes. E: the fire alarm has not sounded. Fictional Med interview scenario.
 GENERAL

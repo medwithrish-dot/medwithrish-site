@@ -86,6 +86,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const awaitingDoneRef = useRef(false);
   const promptingRef = useRef(false);
   const completionLockRef = useRef(false);
+  const completingConfirmationRef = useRef(false);
   const confirmationPendingRef = useRef(false);
   const onSilenceRef = useRef<() => void>(() => {});
   const completeAnswerRef = useRef<() => void>(() => {});
@@ -136,7 +137,10 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
 
   const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, silenceMs: ANSWER_SILENCE_MS, onSilence: () => onSilenceRef.current(), onTranscript: (text) => {
     const current = attemptRef.current;
-    if (!current || current.status !== "in_progress" || completionLockRef.current) return;
+    // stopListening flushes the last recognition result while completion is locked.
+    if (!current || current.status !== "in_progress") return;
+    // A late yes/no reply belongs to the confirmation, not to the scored answer.
+    if (completionLockRef.current && completingConfirmationRef.current) return;
     if (awaitingDoneRef.current) {
       const reply = parseDoneReply(text);
       awaitingDoneRef.current = false;
@@ -497,7 +501,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
       || actionLockRef.current || submitLockRef.current || completionLockRef.current || spokenQuestionRef.current !== `${attempt?.id}:${questionIndex}`) return;
     startListening();
-  }, [active, micWanted, prompting, speech.speaking, speech.listening, speech.error, startListening, questionIndex, attempt?.id, awaitingDone]);
+  }, [active, micWanted, prompting, speech.speaking, speech.listening, speech.error, startListening, questionIndex, attempt?.id, awaitingDone, entryReady]);
 
   const startAttempt = async (options: StartOptions, asPreview = previewRef.current, plan = planRef.current) => {
     if (actionLockRef.current || submitLockRef.current) return;
@@ -635,6 +639,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const completeAnswer = async () => {
     if (!active || completionLockRef.current || actionLockRef.current || submitLockRef.current) return;
     completionLockRef.current = true;
+    completingConfirmationRef.current = awaitingDoneRef.current;
     awaitingDoneRef.current = false;
     setAwaitingDone(false);
     promptingRef.current = false;
@@ -646,7 +651,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (await askFollowUp()) return;
       if (questionIndexRef.current + 1 < (attemptRef.current?.questions.length ?? 0)) await moveQuestion(questionIndexRef.current + 1);
       else await finishStation();
-    } finally { completionLockRef.current = false; }
+    } finally { completingConfirmationRef.current = false; completionLockRef.current = false; }
   };
 
   const keepAnswering = () => {
@@ -739,9 +744,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 403 && <Link href="/medicforest/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
     {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI feedback is paused. Timed practice and saved answers are available.</p>}
-    {!reviewing && <div className="mb-4 rounded-xl border border-[#d9e6e1] bg-white p-4 text-sm text-[#415b61]">
+    {!reviewing && (!attempt || followUpsEnabled(attempt.stationSlug)) && <div className={`${styles.probingSettings} mb-4 rounded-xl border border-[#d9e6e1] bg-white p-4 text-sm text-[#415b61]`}>
       <label className="flex items-center gap-3 font-semibold"><input type="checkbox" checked={probingEnabled} disabled={followUpBusy} onChange={(event) => setProbingPreference(event.target.checked)} />Automatic follow-up questions</label>
-      <p className="mt-2">The interviewer can ask one brief probe after each main answer, including ethics answers. Up to three per station. Your choice is remembered on this device.</p>
+      <p className="mt-2">{attempt ? "Ethics only · One probe per main answer · Up to three." : "For ethics stations only, the interviewer can ask one brief follow-up based on each main answer. Up to three per station. Your choice is remembered on this device."}</p>
     </div>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your Med interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}

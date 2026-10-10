@@ -367,6 +367,20 @@ test("denied microphone access leaves a usable typed station", async () => {
   assert.equal(room.latestCall().answers[0].answer, "A typed answer");
 });
 
+test("advancing an answer flushes final recognition words while completion is locked", async () => {
+  const room = await autosaveRoom({ questions: ["First question?", "Second question?"] });
+  await room.flush(); room.render();
+  room.edit("I would listen");
+  room.finalSpeech("and ask what matters to them.");
+  room.latestCall().onConfirmDone();
+  await room.flush();
+  const call = room.latestCall();
+  assert.equal(call.questionIndex, 1);
+  assert.equal(call.answers[0].answer, "I would listen and ask what matters to them.");
+  assert.equal(room.requests[0].body.answers[0].answer, call.answers[0].answer);
+  room.requests[0].complete();
+});
+
 test("the lobby and completed attempts do not automatically ask for microphone access", async () => {
   assert.equal((await autosaveRoom({ hasAttempt: false })).microphoneRequests, 0);
   assert.equal((await autosaveRoom({ status: "completed" })).microphoneRequests, 0);
@@ -628,10 +642,12 @@ test("question practice timer follows elapsed time through delayed callbacks", (
 function questionRecordingRoom({ recorderFails = false } = {}) {
   const effects = [];
   const recorders = [];
+  const recognitions = [];
+  const restartTimers = new Map();
   let grantPermission;
   let trackStops = 0;
   const stream = { getTracks: () => [{ stop: () => { trackStops += 1; } }] };
-  class Recognition { start() {} stop() {} }
+  class Recognition { constructor() { this.starts = 0; recognitions.push(this); } start() { this.starts += 1; } stop() {} }
   class Recorder {
     constructor() {
       if (recorderFails) throw new Error("Recording format unavailable");
@@ -643,7 +659,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   }
   const recordingWindow = {
     SpeechRecognition: Recognition, MediaRecorder: Recorder,
-    setTimeout: () => 1, clearTimeout() {}, setInterval: () => 1, clearInterval() {},
+    setTimeout: (callback, ms) => { if (ms === 200) restartTimers.set(1, callback); return 1; }, clearTimeout: id => restartTimers.delete(id), setInterval: () => 1, clearInterval() {},
   };
   const source = readFileSync(resolve(root, "app/medicforest/interview/_components/QuestionPracticeView.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
@@ -687,7 +703,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   assert.ok(voice);
   voice.onClick();
   return {
-    recorders, get trackStops() { return trackStops; },
+    recorders, recognitions, restart: () => { const callbacks = [...restartTimers.values()]; restartTimers.clear(); callbacks.forEach(callback => callback()); }, get trackStops() { return trackStops; },
     switchToText: () => findButton(tree, "Text").onClick(),
     unmount: () => cleanups.forEach(cleanup => cleanup()),
     grant: async () => { grantPermission(); await new Promise(resolve => setImmediate(resolve)); },
@@ -715,6 +731,22 @@ test("recorder construction failures release the newly granted microphone", asyn
   const room = questionRecordingRoom({ recorderFails: true });
   await room.grant();
   assert.equal(room.trackStops, 1);
+  room.unmount();
+});
+
+test("question-bank recognition restarts after a normal pause and cancels when typing", async () => {
+  const room = questionRecordingRoom();
+  const recognition = room.recognitions[0];
+  assert.equal(recognition.starts, 1);
+  recognition.onerror({ error: "no-speech" });
+  recognition.onend();
+  room.restart();
+  assert.equal(recognition.starts, 2);
+  recognition.onend();
+  room.switchToText();
+  room.restart();
+  assert.equal(recognition.starts, 2, "A pending restart cannot reopen the mic after switching to text");
+  await room.grant();
   room.unmount();
 });
 

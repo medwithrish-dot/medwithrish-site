@@ -120,7 +120,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
 
         <section id="ai-feedback" ref={feedbackRef} tabIndex={-1} className={styles.feedback} aria-labelledby="ai-feedback-heading" aria-busy={busy && !feedback}>
           <div className={styles.panelHeading}><Sparkles size={20} /><div><h2 id="ai-feedback-heading">AI feedback</h2><p>{feedback ? "Your assessment is ready below." : "A second perspective, when you want it."}</p></div></div>
-          <p>{feedback ? "Strengths, weaknesses and practical fixes." : "Generate a practice score and suggestions based on your saved answers."}</p>
+          <p>{feedback ? "Strengths, weaknesses and practical fixes." : "All your saved answers, including ethics follow-ups, are assessed together against the station questions and markschemes. You’ll receive one station score, strengths, weaknesses and practical fixes. Private notes are not marked."}</p>
           {speechSideNote && <aside className={styles.deliverySideNote} aria-label="Speech delivery side note"><strong>Speech delivery side note</strong><p>{speechSideNote}</p><span>Approximate coaching only; it does not affect your score.</span></aside>}
           {feedback ? <a className={styles.feedbackLink} href="#station-feedback">Read your feedback <ArrowRight size={16} /></a> : <>
             {busy && <p className={styles.feedbackStatus} role="status"><Loader2 size={16} className="animate-spin" /> Preparing your feedback. It will appear here when ready.</p>}

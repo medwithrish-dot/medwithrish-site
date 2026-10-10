@@ -120,6 +120,7 @@ export function QuestionPracticeView({
   >(() => []);
   const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const recognitionRestartRef = useRef<number | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -571,6 +572,8 @@ export function QuestionPracticeView({
 
   const stopListening = useCallback(
     ({ commitInterim = false }: { commitInterim?: boolean } = {}) => {
+      if (recognitionRestartRef.current !== null) window.clearTimeout(recognitionRestartRef.current);
+      recognitionRestartRef.current = null;
       if (commitInterim) {
         commitInterimTranscript();
       }
@@ -691,7 +694,12 @@ export function QuestionPracticeView({
     setSpeechError(null);
     setPracticeMode("voice");
 
-    const recognition = new SpeechRecognition();
+    let recognition: SpeechRecognitionLike;
+    try { recognition = new SpeechRecognition(); }
+    catch {
+      setSpeechError("Voice transcription could not start. Try again or type your answer.");
+      return;
+    }
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-GB";
@@ -742,6 +750,8 @@ export function QuestionPracticeView({
     };
     recognition.onerror = (event) => {
       if (recognitionRef.current !== recognition) return;
+      // A pause is normal; onend restarts the same answer below.
+      if (event.error === "no-speech") return;
 
       commitInterimTranscript();
       activityStopRef.current?.();
@@ -750,11 +760,11 @@ export function QuestionPracticeView({
       recognition.onend = null;
       recognition.onerror = null;
       recognition.onresult = null;
-      setSpeechError(
-        event.error
-          ? `Voice transcription stopped: ${event.error}.`
-          : "Voice transcription stopped."
-      );
+      setSpeechError(event.error === "not-allowed" || event.error === "service-not-allowed"
+        ? "Microphone access was not allowed. Enable it in your browser’s site permissions, or type your answer."
+        : event.error === "network"
+          ? "Your browser’s transcription service could not connect. Check your connection and try Chrome or Edge, or type your answer. Your words so far are kept."
+          : "Voice transcription stopped. Your words so far are kept; restart the mic or type to continue.");
       setIsListening(false);
       setIsTimerRunning(false);
       pauseAudioRecording();
@@ -763,12 +773,18 @@ export function QuestionPracticeView({
       if (recognitionRef.current !== recognition) return;
 
       commitInterimTranscript();
-      activityStopRef.current?.();
-      activityStopRef.current = null;
-      recognitionRef.current = null;
-      setIsListening(false);
-      setIsTimerRunning(false);
-      pauseAudioRecording();
+      if (recognitionRestartRef.current !== null) window.clearTimeout(recognitionRestartRef.current);
+      recognitionRestartRef.current = window.setTimeout(() => {
+        recognitionRestartRef.current = null;
+        if (recognitionRef.current !== recognition || attemptPhaseRef.current === "review" || currentTimeRemaining() <= 0) return;
+        try { recognition.start(); }
+        catch {
+          stopListening({ commitInterim: true });
+          setIsTimerRunning(false);
+          pauseAudioRecording();
+          setSpeechError("Voice transcription could not restart. Your answer is kept; restart the mic or type to continue.");
+        }
+      }, 200);
     };
 
     recognitionRef.current = recognition;

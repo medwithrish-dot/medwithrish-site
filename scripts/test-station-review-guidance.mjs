@@ -202,13 +202,13 @@ test("a data Med interview asks three staged questions about one visual", () => 
     assert.equal(new Set(questions.map(question => question.id)).size, 3);
     assert.equal(new Set(questions.map(question => getQuestionStimulus(question.id)?.src)).size, 1);
     assert.deepEqual(questions.map(question => question.text), interviewStations.find(station => station.slug === "data-analysis").questions);
-    assert.match(JSON.stringify(getQuestionMarkScheme(questions[1])), /possible confounders/);
+    assert.match(JSON.stringify(getQuestionMarkScheme(questions[1])), /unmeasured factors that could explain the pattern/);
     assert.match(JSON.stringify(getQuestionMarkScheme(questions[2])), /support or weaken the hypothesis/);
   }
 });
 
-test("probing is owner-enabled for every current station but never unknown slugs", () => {
-  assert.deepEqual(FOLLOW_UP_STATIONS, interviewStations.map(station => station.slug));
-  for (const slug of interviewStations.map(station => station.slug)) assert.equal(followUpsEnabled(slug), true);
+test("probing is enabled only for ethics stations, including retired ethics links", () => {
+  assert.deepEqual(FOLLOW_UP_STATIONS, interviewStations.filter(station => station.theme === "Ethics").map(station => station.slug));
+  for (const slug of interviewStations.map(station => station.slug)) assert.equal(followUpsEnabled(slug), interviewStations.find(station => station.slug === slug).theme === "Ethics");
   for (const slug of ["unknown", "constructor"]) assert.equal(followUpsEnabled(slug), false);
 });

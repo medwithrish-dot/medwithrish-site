@@ -247,6 +247,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         ? "Microphone access was not allowed. You can enable it in your browser or type your answer."
         : event.error === "audio-capture"
           ? "No microphone was found. Connect one or type your answer."
+          : event.error === "network"
+            ? "Your browser’s transcription service could not connect. Check your connection and try Chrome or Edge, or type your answer. Your transcript is kept."
           : "Speech recognition stopped. Your transcript is kept; restart the microphone or type to continue.";
       setError(message);
       void stop();

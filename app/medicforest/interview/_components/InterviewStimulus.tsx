@@ -31,7 +31,7 @@ export function InterviewStimulus({ stimulus, presentation = false, slideLabel }
         {imageOpen ? <><ChevronUp size={16} aria-hidden="true" /> Collapse image</> : <><ChevronDown size={16} aria-hidden="true" /> Open image</>}
       </button>
     </div>
-    {imageOpen && image}
+    {imageOpen && <>{image}<a className={styles.fullSize} href={stimulus.src} target="_blank" rel="noreferrer">View full-size image (opens a new tab)</a></>}
     {textVersion}
   </section>;
 }
