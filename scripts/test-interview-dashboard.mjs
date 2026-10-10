@@ -67,9 +67,10 @@ function completedOn(date, overrides = {}) {
   return attempt({ startedAt: `${date}T09:00:00Z`, completedAt: `${date}T09:08:00Z`, ...overrides });
 }
 
-test("desktop Med interview shell retains the full viewport height after client updates", () => {
-  assert.match(interviewShellSource, /lg:h-\[100dvh\]/);
-  assert.doesNotMatch(interviewShellSource, /lg:h-auto/);
+test("desktop Med interview shell fills the viewport without trapping page scrolling", () => {
+  assert.match(interviewShellSource, /min-h-\[100dvh\]/);
+  assert.doesNotMatch(interviewShellSource, /lg:fixed lg:inset-0/);
+  assert.doesNotMatch(interviewShellSource, /data-interview-shell-main[^>]+lg:overflow-y-auto/);
 });
 
 test("dashboard pairs its expandable plan with a saved daily-question calendar", () => {

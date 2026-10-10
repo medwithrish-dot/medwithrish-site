@@ -26,11 +26,11 @@ export async function InterviewShell({
   const { isPremium } = await getMedicForestEntitlements();
 
   return (
-    <main data-interview-shell className="soft-wave-bg medicforest-dashboard-compact flex-1 text-[#071923] overflow-x-clip lg:fixed lg:inset-0 lg:h-[100dvh] lg:overflow-hidden">
+    <main data-interview-shell className="soft-wave-bg medicforest-dashboard-compact min-h-[100dvh] flex-1 text-[#071923]">
       <a href="#interview-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-bold text-[#08787b] focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to page content</a>
-      <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-full lg:min-h-0 lg:grid-cols-[200px_1fr]">
+      <div data-interview-shell-grid className="grid min-h-[100dvh] lg:grid-cols-[200px_1fr]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />
-        <div data-interview-shell-main className="min-w-0 overflow-x-clip lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
+        <div data-interview-shell-main className="min-w-0 overflow-x-clip">
           <InterviewMobileNav activeLabel={activeLabel} />
           <section id="interview-content" className="mx-auto w-full max-w-[1600px] min-w-0 px-4 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
             <header className={`flex flex-col gap-5 sm:flex-row sm:justify-between ${heroHeader ? "sm:items-center" : "border-b border-[#d3dfe1] pb-7 sm:items-start"}`}>

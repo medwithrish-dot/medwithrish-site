@@ -214,3 +214,17 @@ test("verification waits for browser auth initialization without exchanging the 
   assert.equal(cleanedUrl, "/account?next=%2Finterviews%2Fdashboard", "keep the signup origin but remove the consumed code");
   cleanup();
 });
+
+test("platform pages use native document scrolling for wheel and touchpad gestures", () => {
+  const interviewShell = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewShell.tsx"), "utf8");
+  const landingShell = readFileSync(resolve(root, "app/medicforest/ucat/_components/MedicForestLandingShell.tsx"), "utf8");
+  const sidebar = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewSidebar.tsx"), "utf8");
+  const globals = readFileSync(resolve(root, "app/globals.css"), "utf8");
+  for (const shell of [interviewShell, landingShell]) {
+    assert.doesNotMatch(shell, /lg:fixed lg:inset-0/);
+    assert.doesNotMatch(shell, /data-interview-shell-main[^>]+lg:overflow-y-auto/);
+  }
+  assert.match(sidebar, /lg:sticky lg:top-0/);
+  assert.doesNotMatch(globals, /html,\s*\nbody\s*\{[^}]*overflow-x:\s*hidden/s);
+  assert.match(globals, /\[data-interview-shell-main\]\s*\{\s*touch-action:\s*pan-y/);
+});
