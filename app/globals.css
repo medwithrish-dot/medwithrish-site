@@ -114,6 +114,16 @@ body {
   touch-action: pan-y;
 }
 
+/* Some production CSS bundles can retain the former root overflow rule while
+   a deployment rolls over. Force platform pages back onto the viewport
+   scroller so dragging, mouse wheels and precision touchpads all use the same
+   scroll position. Keep this scoped to MedicForest shells. */
+html:has([data-interview-shell]),
+body:has([data-interview-shell]) {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
 @keyframes medicforest-loading {
   0% {
     transform: translateX(-110%);
