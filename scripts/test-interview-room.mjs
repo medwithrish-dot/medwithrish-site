@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/medicforest/interview/_lib/station-flow.ts";
+import { parseDoneReply, parsePreviousAnswerInterrupt, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/medicforest/interview/_lib/station-flow.ts";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -212,6 +212,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   let speechOptions;
   let pendingSpeech = "";
   let finishVoice;
+  let interruptVoice;
   let currentUrl = "";
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
@@ -242,9 +243,10 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const speech = { listening: false, speaking: false, error: speechError, stop: async () => {
     speech.listening = false;
     if (pendingSpeech) { const finalText = pendingSpeech; pendingSpeech = ""; speechOptions.onTranscript(finalText); }
-  }, stopSpeaking() { speech.speaking = false; finishVoice = undefined; }, speak: async (text, onComplete) => {
+  }, stopSpeaking() { speech.speaking = false; finishVoice = undefined; interruptVoice = undefined; }, speak: async (text, onComplete, _audioSrc, onInterrupt) => {
     spoken.push(text);
     speech.speaking = true;
+    interruptVoice = onInterrupt;
     const complete = () => { speech.speaking = false; finishVoice = undefined; onComplete?.(); };
     if (delayedVoice) finishVoice = complete;
     else complete();
@@ -268,7 +270,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("interview-question-audio")) return { getInterviewQuestionAudioSrc: () => undefined };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
-      if (name.endsWith("station-flow")) return { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition, followUpsEnabled: () => followUps };
+      if (name.endsWith("station-flow")) return { parseDoneReply, parsePreviousAnswerInterrupt, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition, followUpsEnabled: () => followUps };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };
       if (name === "./AIInterviewCall") return { AIInterviewCall: "interview-call" };
       if (name === "./AIInterviewReview") return { AIInterviewReview: "interview-review" };
@@ -343,6 +345,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(), leave: () => call.onLeave(),
     finalSpeech: text => { pendingSpeech = text; },
     completeVoice: () => finishVoice?.(),
+    interruptVoice: continuation => interruptVoice?.(continuation),
     say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
   };
 }
@@ -951,6 +954,91 @@ test("spoken questions use varied transitions and late confirmation words cannot
   assert.notEqual(questionTransition(1), questionTransition(1, true));
   assert.equal(room.latestCall().answers[1].interviewerIntro, questionTransition(1));
   assert.equal(room.latestCall().answers[0].interviewerPrompts[0].text, DONE_PROMPT);
+});
+
+test("second and third questions can be interrupted to extend the previous answer and replay the same question", async () => {
+  const questions = ["Why medicine?", "What did you learn?", "Why this role?"];
+  const room = await autosaveRoom({ voiceSupported: true, questions });
+  await room.flush(); room.render();
+  assert.equal(room.latestCall().canInterruptQuestion, false, "The first question has no previous answer");
+  for (let index = 1; index < questions.length; index++) {
+    room.latestCall().onAnswer(`Original answer ${index}`); room.render();
+    room.latestCall().onConfirmDone(); await room.flush(); room.render();
+    assert.equal(room.latestCall().questionIndex, index);
+    assert.equal(room.latestCall().canInterruptQuestion, true);
+    room.latestCall().onInterruptQuestion(); await room.flush(); room.render();
+    assert.equal(room.latestCall().questionIndex, index - 1, "The interrupted question is removed from the visible transcript");
+    assert.equal(room.latestCall().resumingPrevious, true);
+    room.say(`Extra detail ${index}`); room.render();
+    assert.equal(room.latestCall().answers[index - 1].answer, `Original answer ${index} Extra detail ${index}`);
+    assert.equal(room.latestCall().answers[index].answer, "");
+    room.silence(); await room.flush(); room.render();
+    assert.equal(room.latestCall().awaitingDone, true);
+    room.say("No."); room.render();
+    assert.equal(room.latestCall().questionIndex, index - 1);
+    room.latestCall().onConfirmDone(); await room.flush(); room.render();
+    assert.equal(room.latestCall().questionIndex, index);
+    assert.equal(room.spoken.at(-1), questions[index]);
+    assert.equal(room.latestCall().resumingPrevious, false);
+  }
+  assert.equal(room.followUpRequests.length, 0);
+});
+
+test("spoken interruption stops playback, preserves the added words and cannot interrupt an answered question", async () => {
+  const room = await autosaveRoom({ voiceSupported: true, delayedVoice: true, questions: ["Why medicine?", "What did you learn?"] });
+  await room.flush(); room.render();
+  room.completeVoice(); room.render();
+  room.say("Original answer."); room.render();
+  room.latestCall().onConfirmDone(); await room.flush(); room.render();
+  assert.equal(room.latestCall().questionIndex, 1);
+  assert.equal(room.latestCall().speech.speaking, true);
+  room.interruptVoice("I also listened carefully."); await room.flush(); room.render();
+  assert.equal(room.latestCall().questionIndex, 0);
+  assert.equal(room.latestCall().speech.speaking, false);
+  assert.equal(room.latestCall().answers[0].answer, "Original answer. I also listened carefully.");
+  room.latestCall().onConfirmDone(); await room.flush(); room.render();
+  room.completeVoice(); await room.flush(); room.render();
+  room.completeVoice(); await room.flush(); room.render();
+  room.say("Answer to the next question."); room.render();
+  assert.equal(room.latestCall().canInterruptQuestion, false);
+  room.latestCall().onInterruptQuestion(); await room.flush();
+  assert.equal(room.latestCall().questionIndex, 1);
+});
+
+test("a generated ethics probe is hidden during additions and replayed repeatedly without another AI request", async () => {
+  const room = await autosaveRoom({ followUps: true, voiceSupported: true, questions: ["Why medicine?", "Why this role?"] });
+  await room.flush(); room.render();
+  room.latestCall().onAnswer("Volunteering taught me to listen carefully to what each resident needed and to work with the wider team before making assumptions about their care."); room.render();
+  room.latestCall().onConfirmDone(); await room.flush();
+  room.requests[0].complete(); await room.flush();
+  const probe = "How did you adapt your listening?";
+  room.followUpRequests[0].complete(probe); await room.flush(); room.render();
+  for (let count = 0; count < 2; count++) {
+    room.say("Wait, I also asked for support."); await room.flush(); room.render();
+    assert.equal(room.latestCall().questionIndex, 0);
+    assert.equal(room.latestCall().resumingPrevious, true);
+    assert.equal(room.latestCall().attempt.questions[1], probe, "The generated question stays saved");
+    assert.match(room.latestCall().answers[0].answer, /I also asked for support/);
+    assert.doesNotMatch(room.latestCall().answers[0].answer, /Wait/);
+    assert.equal(room.latestCall().answers[1].answer, "");
+    room.latestCall().onConfirmDone(); await room.flush(); room.render();
+    assert.equal(room.latestCall().questionIndex, 1);
+    assert.equal(room.spoken.at(-1), probe);
+    assert.equal(room.followUpRequests.length, 1);
+  }
+});
+
+test("reloading while adding to an answer retains the pending question and skips generation", async () => {
+  const questions = ["Why medicine?", "What did you learn?"];
+  const room = await autosaveRoom({ followUps: true, questions, initialDraft: {
+    answers: [{ question: questions[0], answer: "A saved answer with further details." }, { question: questions[1], answer: "" }],
+    questionIndex: 0, resumeQuestion: questions[1],
+  } });
+  await room.flush(); room.render();
+  assert.equal(room.latestCall().resumingPrevious, true);
+  room.latestCall().onConfirmDone(); await room.flush(); room.render();
+  assert.equal(room.latestCall().questionIndex, 1);
+  assert.equal(room.followUpRequests.length, 0);
 });
 
 test("standard university circuits reject academic formats and preselect fallback topics", async () => {

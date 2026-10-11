@@ -15,6 +15,10 @@ new Function("module", "exports", ts.transpileModule(readFileSync(new URL("../ap
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText)(deliveryModule, deliveryModule.exports);
 const { createSpeechBoundaryTracker, normalizeSpeechTranscript, getTranscriptHints, getSpeechDelivery } = deliveryModule.exports;
+const flowModule = { exports: {} };
+new Function("module", "exports", ts.transpileModule(readFileSync(new URL("../app/medicforest/interview/_lib/station-flow.ts", import.meta.url), "utf8"), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText)(flowModule, flowModule.exports);
 
 // Exercise the production hook with a delayed browser recognition service.
 // Each harness has isolated browser globals; no microphone or real timers run.
@@ -81,6 +85,7 @@ function speechHarness(options = {}) {
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports,
     require: name => {
+      if (name === "./station-flow") return flowModule.exports;
       if (name === "./speech-delivery") return options.measuredActivity ? {
         ...deliveryModule.exports,
         monitorSpeechActivity: (_recognition, onActivity) => {
@@ -120,7 +125,8 @@ function speechHarness(options = {}) {
     advanceTime: milliseconds => { now += milliseconds; },
     reportActivity: active => reportActivity?.(active),
     get cancellations() { return cancellations; },
-    fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === (options.silenceMs ?? 4000)) { timers[index] = null; callback?.(); } }); },
+    fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === (options.silenceMs ?? 5000)) { timers[index] = null; callback?.(); } }); },
+    get pendingTimerDelays() { return delays.filter((_delay, index) => timers[index]); },
     fireRestartTimers() { timers.forEach((callback, index) => { if (delays[index] === 200) { timers[index] = null; callback?.(); } }); },
     finishStopTimeouts() {
       for (let index = 0; index < timers.length; index += 1) {
@@ -167,6 +173,78 @@ test("recorded questions use their matched MP3 at the selected pace", async t =>
   assert.deepEqual(room.played, [], "Browser text-to-speech is not used when recorded audio starts");
   room.recorded[0].end();
   assert.equal(completed, true);
+});
+
+test("a spoken interruption stops recorded playback without scoring its command or interviewer echo", async t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  const additions = [];
+  let completed = 0;
+  await room.speech.speak("What did you learn?", () => completed++, "/audio/female/q018.mp3", text => additions.push(text));
+  const recognition = room.recognitions[0];
+  const lateResult = recognition.onresult;
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "What did you learn?" } }] });
+  assert.deepEqual(additions, [], "Question playback never becomes a candidate answer");
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "Wait, I also asked for support." } }] });
+  room.render();
+  assert.equal(room.recorded[0].paused, true);
+  assert.equal(room.speech.speaking, false);
+  assert.equal(recognition.abortCalls, 1);
+  assert.deepEqual(additions, ["I also asked for support."]);
+  lateResult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Wait, a stale recognition result." } }] });
+  room.recorded[0].end();
+  assert.equal(additions.length, 1);
+  assert.equal(completed, 0, "Interrupted playback must not advance the question");
+  assert.deepEqual(room.transcripts, []);
+  room.speech.start();
+  room.recognitions[1].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Further detail for the previous answer." } }] });
+  assert.deepEqual(room.transcripts, ["Further detail for the previous answer."]);
+});
+
+test("browser voice interruption and normal completion release the command microphone", async t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  const additions = [];
+  await room.speech.speak("Follow-up question?", undefined, undefined, text => additions.push(text));
+  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Hold on." } }] });
+  assert.deepEqual(additions, [""]);
+  assert.ok(room.cancellations > 0);
+  let completed = 0;
+  await room.speech.speak("The same follow-up question?", () => completed++, undefined, text => additions.push(text));
+  room.utterances.at(-1).onend();
+  assert.equal(room.recognitions[1].abortCalls, 1);
+  assert.equal(completed, 1);
+});
+
+test("stopping the mic or leaving cancels interruption recognition and its pending restart", async t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  const additions = [];
+  await room.speech.speak("Question two?", undefined, undefined, text => additions.push(text));
+  const recognition = room.recognitions[0];
+  recognition.end();
+  await room.speech.stop();
+  room.fireRestartTimers();
+  assert.equal(recognition.startCalls, 1);
+  assert.equal(recognition.abortCalls, 1);
+  await room.speech.speak("Question three?", undefined, undefined, text => additions.push(text));
+  const lateResult = room.recognitions[1].onresult;
+  room.unmount();
+  lateResult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Wait, a late result." } }] });
+  assert.equal(room.recognitions[1].abortCalls, 1);
+  assert.deepEqual(additions, []);
+});
+
+test("interruption recognition failures leave question playback available", async t => {
+  for (const options of [{ recognitionConstructorThrows: true }, { recognitionStartThrows: true }]) {
+    const room = speechHarness(options);
+    t.after(() => room.unmount());
+    let completed = 0;
+    await room.speech.speak("Question two?", () => completed++, "/audio/female/q018.mp3", () => {});
+    assert.equal(room.recorded.length, 1);
+    room.recorded[0].end();
+    assert.equal(completed, 1);
+  }
 });
 
 test("a failed question recording falls back to browser text-to-speech", async t => {
@@ -423,7 +501,7 @@ test("a suspended mobile audio context retains native speech boundaries", async 
 });
 
 
-test("answer silence uses four seconds, requires words and cancels on speech or manual stop", async t => {
+test("answer silence uses five seconds, requires words and cancels on speech or manual stop", async t => {
   let prompts = 0;
   const room = speechHarness({ onSilence: () => prompts++ });
   t.after(() => room.unmount());
@@ -435,6 +513,9 @@ test("answer silence uses four seconds, requires words and cancels on speech or 
   room.fireSilenceTimers();
   assert.equal(prompts, 0, "An empty speech boundary or background noise is not an answer");
   recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "My first answer." } }] });
+  assert.equal(flowModule.exports.ANSWER_SILENCE_MS, 5000);
+  assert.ok(room.pendingTimerDelays.includes(5000));
+  assert.ok(!room.pendingTimerDelays.includes(4000));
   recognition.onspeechstart(); recognition.onspeechend();
   recognition.onspeechstart();
   room.fireSilenceTimers();

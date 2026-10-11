@@ -11,7 +11,7 @@ import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/i
 import { getInterviewQuestionAudioSrc, type InterviewerVoice } from "../_lib/interview-question-audio";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import type { SpeechDelivery } from "../_lib/speech-delivery";
-import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, questionTransition } from "../_lib/station-flow";
+import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, parsePreviousAnswerInterrupt, questionTransition } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
 import { AIInterviewCall } from "./AIInterviewCall";
@@ -20,7 +20,7 @@ import styles from "./AIInterviewRoom.module.css";
 
 type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; usedSavedAnswers?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
 type StartOptions = { mode: InterviewMode; universitySlug?: string; stationSlug?: string; circuitId?: string; stationIndex?: number; stationCount?: number };
-type LocalDraft = { answers: InterviewAnswer[]; questionIndex: number };
+type LocalDraft = { answers: InterviewAnswer[]; questionIndex: number; resumeQuestion?: string };
 
 class InterviewRequestError extends Error {
   constructor(message: string, public status: number) { super(message); }
@@ -90,6 +90,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const confirmationPendingRef = useRef(false);
   const onSilenceRef = useRef<() => void>(() => {});
   const completeAnswerRef = useRef<() => void>(() => {});
+  const interruptQuestionRef = useRef<(continuation?: string) => void>(() => {});
+  const [resumeQuestion, setResumeQuestion] = useState<string | null>(null);
+  const resumeQuestionRef = useRef<string | null>(null);
   const [configured, setConfigured] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
   const [now, setNow] = useState(0);
@@ -124,7 +127,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const persistLocal = useCallback((nextAnswers: InterviewAnswer[], index = questionIndexRef.current) => {
     const current = attemptRef.current;
     if (!current || previewRef.current) return;
-    try { localStorage.setItem(draftKey(current.id), JSON.stringify({ answers: nextAnswers, questionIndex: index })); }
+    try { localStorage.setItem(draftKey(current.id), JSON.stringify({ answers: nextAnswers, questionIndex: index, resumeQuestion: resumeQuestionRef.current ?? undefined })); }
     catch { /* Account autosave remains available when browser storage is disabled. */ }
   }, []);
 
@@ -141,6 +144,10 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (!current || current.status !== "in_progress") return;
     // A late yes/no reply belongs to the confirmation, not to the scored answer.
     if (completionLockRef.current && completingConfirmationRef.current) return;
+    if (!awaitingDoneRef.current && questionIndexRef.current > 0 && !resumeQuestionRef.current && !answersRef.current[questionIndexRef.current]?.answer.trim()) {
+      const continuation = parsePreviousAnswerInterrupt(text);
+      if (continuation !== null) { interruptQuestionRef.current(continuation); return; }
+    }
     if (awaitingDoneRef.current) {
       const reply = parseDoneReply(text);
       awaitingDoneRef.current = false;
@@ -210,6 +217,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     }
     if (changed || restore) {
       speechDeliveryRef.current.clear();
+      resumeQuestionRef.current = null;
       let restoredAnswers = next.questions.map((question) => ({ question, answer: "", ...next.answers.find((item) => item.question === question) }));
       let restoredIndex = 0;
       savedSignatureRef.current = JSON.stringify(restoredAnswers);
@@ -225,10 +233,14 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
             });
             const localQuestion = Number.isInteger(draft.questionIndex) ? draft.answers[draft.questionIndex]?.question : undefined;
             restoredIndex = Math.max(0, next.questions.indexOf(localQuestion ?? ""));
+            if (draft.resumeQuestion === next.questions[restoredIndex + 1] && restoredAnswers[restoredIndex]?.answer.trim() && !restoredAnswers[restoredIndex + 1]?.answer.trim()) {
+              resumeQuestionRef.current = draft.resumeQuestion ?? null;
+            }
           }
         } catch { /* Recover the saved account transcript if the local draft is unavailable. */ }
       }
       answersRef.current = restoredAnswers;
+      setResumeQuestion(resumeQuestionRef.current);
       questionIndexRef.current = restoredIndex;
       setAnswers(restoredAnswers);
       setQuestionIndex(restoredIndex);
@@ -244,7 +256,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         } catch { /* A circuit can continue with its default topics if browser storage is unavailable. */ }
       }
       expirySubmittedRef.current = null;
-      spokenQuestionRef.current = "";
+      spokenQuestionRef.current = resumeQuestionRef.current ? `${next.id}:${restoredIndex}` : "";
       awaitingDoneRef.current = false;
       setAwaitingDone(false);
       promptingRef.current = false;
@@ -423,6 +435,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
+  const canInterruptQuestion = Boolean(active && questionIndex > 0 && !resumeQuestion && !awaitingDone
+    && !answers[questionIndex]?.answer.trim() && answers[questionIndex - 1]?.answer.trim());
   const recordedQuestionAudioSrc = getInterviewQuestionAudioSrc(attempt?.questionIds?.[questionIndex], question, interviewerVoice);
   const originalQuestions: readonly string[] = useMemo(() => attempt
     ? attempt.questionIds?.some(Boolean)
@@ -488,14 +502,15 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       promptingRef.current = false;
       setPrompting(false);
     };
+    const onInterrupt = canInterruptQuestion && micWanted ? (continuation: string) => interruptQuestionRef.current(continuation) : undefined;
     if (transition) {
       void speak(transition, () => {
-        if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc);
-      }, getInterviewQuestionAudioSrc(null, transition, interviewerVoice));
+        if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc, onInterrupt);
+      }, getInterviewQuestionAudioSrc(null, transition, interviewerVoice), onInterrupt);
     } else {
-      void speak(question, finishPrompt, questionAudioSrc);
+      void speak(question, finishPrompt, questionAudioSrc, onInterrupt);
     }
-  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice]);
+  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice, canInterruptQuestion, micWanted]);
 
   useEffect(() => {
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
@@ -577,6 +592,35 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     finally { actionLockRef.current = false; setNow(Date.now() + clockOffsetRef.current); }
   };
 
+  const interruptQuestion = async (continuation = "") => {
+    const current = attemptRef.current;
+    const interruptedIndex = questionIndexRef.current;
+    if (!current || !active || interruptedIndex <= 0 || resumeQuestionRef.current || awaitingDoneRef.current
+      || answersRef.current[interruptedIndex]?.answer.trim() || !answersRef.current[interruptedIndex - 1]?.answer.trim()
+      || actionLockRef.current || completionLockRef.current || submitLockRef.current) return;
+    actionLockRef.current = true;
+    // Keep the question in the saved station. Moving the visible turn back hides
+    // it from the transcript, and completion will replay it without generating AI.
+    resumeQuestionRef.current = current.questions[interruptedIndex];
+    const previousIndex = interruptedIndex - 1;
+    questionIndexRef.current = previousIndex;
+    spokenQuestionRef.current = `${current.id}:${previousIndex}`;
+    stopSpeaking();
+    promptingRef.current = false;
+    setPrompting(false);
+    try {
+      await stopListening();
+      if (!mountedRef.current || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress" || submitLockRef.current) return;
+      setQuestionIndex(previousIndex);
+      setResumeQuestion(resumeQuestionRef.current);
+      if (continuation) replaceAnswers(answersRef.current.map((answer, index) => index === previousIndex
+        ? { ...answer, answer: `${answer.answer} ${continuation}`.slice(0, 6_000) } : answer));
+      persistLocal(answersRef.current, previousIndex);
+      setFollowUpNotice("");
+      void saveDraft().catch(() => setSaveWarning("Your addition is kept in this browser. Account autosave will retry shortly."));
+    } finally { actionLockRef.current = false; }
+  };
+
   const askFollowUp = async () => {
     const current = attemptRef.current;
     if (!current || !active || !followUpAvailable || followUpRequestRef.current || actionLockRef.current || submitLockRef.current) return;
@@ -648,6 +692,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       rememberSpeechDelivery();
       stopSpeaking();
       await stopListening();
+      const pendingQuestion = resumeQuestionRef.current;
+      if (pendingQuestion) {
+        resumeQuestionRef.current = null;
+        setResumeQuestion(null);
+        await moveQuestion(attemptRef.current?.questions.indexOf(pendingQuestion) ?? -1);
+        return;
+      }
       if (await askFollowUp()) return;
       if (questionIndexRef.current + 1 < (attemptRef.current?.questions.length ?? 0)) await moveQuestion(questionIndexRef.current + 1);
       else await finishStation();
@@ -670,6 +721,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       else void requestDone();
     };
     completeAnswerRef.current = () => { void completeAnswer(); };
+    interruptQuestionRef.current = (continuation) => { void interruptQuestion(continuation); };
   });
 
   const leaveAttempt = async () => {
@@ -769,7 +821,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
         followUpBusy={followUpBusy} followUpNotice={followUpNotice} awaitingDone={awaitingDone} prompting={prompting || speech.speaking} micWanted={micWanted}
-        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc); } }}
+        canInterruptQuestion={canInterruptQuestion} resumingPrevious={Boolean(resumeQuestion)} onInterruptQuestion={() => void interruptQuestion()}
+        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc, canInterruptQuestion && micWanted ? (continuation) => interruptQuestionRef.current(continuation) : undefined); } }}
         onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
         onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}

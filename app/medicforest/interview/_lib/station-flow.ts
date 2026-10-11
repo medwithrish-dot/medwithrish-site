@@ -11,8 +11,15 @@ export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(sl
 
 // A short thinking interval for Med interview answers, followed by confirmation.
 // This is a product default, not a scientifically validated Med interview threshold.
-export const ANSWER_SILENCE_MS = 4_000;
+export const ANSWER_SILENCE_MS = 5_000;
 export const DONE_PROMPT = "Done? Say yes or no.";
+
+/** Explicit commands avoid treating interviewer audio as a candidate interruption. */
+export function parsePreviousAnswerInterrupt(text: string): string | null {
+  const match = text.trim().match(/^(?:wait|hold on)(?:\b[,.!?]?\s*)/i);
+  if (!match) return null;
+  return text.trim().slice(match[0].length).replace(/^(?:please[,.!?]?\s*)?(?:i (?:want|would like) to|can i) add (?:something )?to (?:my |the )?previous answer[,.!?]?\s*/i, "").trim();
+}
 
 const QUESTION_TRANSITIONS = [
   "Great. Moving on to the next question.",

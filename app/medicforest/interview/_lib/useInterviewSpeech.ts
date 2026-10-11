@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { monitorSpeechActivity, createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
+import { ANSWER_SILENCE_MS, parsePreviousAnswerInterrupt } from "./station-flow";
 export { getTranscriptHints } from "./speech-delivery";
 
 type RecognitionResult = { isFinal: boolean; 0: { transcript: string; confidence?: number } };
@@ -31,7 +32,7 @@ const recognitionAvailable = () => {
 };
 const voicePlaybackAvailable = () => "Audio" in window || "speechSynthesis" in window;
 
-export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = 4_000 }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = ANSWER_SILENCE_MS }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, voicePlaybackAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
@@ -48,6 +49,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<Recognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const interruptionCleanupRef = useRef<(() => void) | null>(null);
+  const stopInterruptionListening = useCallback(() => {
+    const cleanup = interruptionCleanupRef.current;
+    interruptionCleanupRef.current = null;
+    cleanup?.();
+  }, []);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
   const stoppingRef = useRef<Promise<void> | null>(null);
@@ -65,6 +72,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
   const stop = useCallback((): Promise<void> => {
+    stopInterruptionListening();
     listeningWantedRef.current = false;
     clearSilence();
     if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
@@ -108,7 +116,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     stoppingRef.current = pending;
     void pending.then(() => { if (stoppingRef.current === pending) stoppingRef.current = null; });
     return pending;
-  }, [clearSilence]);
+  }, [clearSilence, stopInterruptionListening]);
 
   useEffect(() => {
     answerKeyRef.current = answerKey;
@@ -116,6 +124,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   }, [answerKey, stop]);
 
   const stopSpeaking = useCallback(() => {
+    stopInterruptionListening();
     speechRequestRef.current += 1;
     const audio = audioRef.current;
     audioRef.current = null;
@@ -127,7 +136,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     }
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     if (mountedRef.current) setSpeaking(false);
-  }, []);
+  }, [stopInterruptionListening]);
 
   const start = useCallback(() => {
     if (!mountedRef.current || recognitionRef.current || stoppingRef.current) return;
@@ -296,16 +305,67 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     }
   }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
 
-  const speak = useCallback(async (text: string, onComplete?: () => void, audioSrc?: string) => {
+  const speak = useCallback(async (text: string, onComplete?: () => void, audioSrc?: string, onInterrupt?: (continuation: string) => void) => {
     const request = ++speechRequestRef.current;
     await stop();
     if (!mountedRef.current || request !== speechRequestRef.current) return;
     const finish = () => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
+      stopInterruptionListening();
       audioRef.current = null;
       setSpeaking(false);
       onComplete?.();
     };
+    // Recognition here listens only for an explicit interruption command. It
+    // never transcribes interviewer playback into the candidate's scored answer.
+    if (onInterrupt) {
+      const speechWindow = window as SpeechWindow;
+      const Constructor = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
+      if (Constructor) {
+        let recognition: Recognition | undefined;
+        let restartTimer: number | undefined;
+        const cleanup = () => {
+          if (restartTimer !== undefined) window.clearTimeout(restartTimer);
+          if (!recognition) return;
+          recognition.onresult = null;
+          recognition.onend = null;
+          recognition.onerror = null;
+          try { recognition.abort(); } catch { /* Already stopped. */ }
+        };
+        try {
+          recognition = new Constructor();
+          const listener = recognition;
+          listener.lang = "en-GB";
+          listener.continuous = true;
+          listener.interimResults = true;
+          const current = () => mountedRef.current && request === speechRequestRef.current && interruptionCleanupRef.current === cleanup;
+          listener.onresult = (event) => {
+            if (!current()) return;
+            for (let index = event.resultIndex; index < event.results.length; index++) {
+              const continuation = parsePreviousAnswerInterrupt(event.results[index][0].transcript);
+              if (continuation === null) continue;
+              stopSpeaking();
+              onInterrupt(continuation);
+              return;
+            }
+          };
+          listener.onend = () => {
+            if (!current()) return;
+            restartTimer = window.setTimeout(() => {
+              if (!current()) return;
+              try { listener.start(); } catch { stopInterruptionListening(); }
+            }, 200);
+          };
+          listener.onerror = () => { if (current()) stopInterruptionListening(); };
+          interruptionCleanupRef.current = cleanup;
+          listener.start();
+        } catch {
+          cleanup();
+          if (interruptionCleanupRef.current === cleanup) interruptionCleanupRef.current = null;
+          // The visible interruption control remains available.
+        }
+      }
+    }
     const speakWithBrowserVoice = () => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
       if (!("speechSynthesis" in window)) {
@@ -359,12 +419,13 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       return;
     }
     speakWithBrowserVoice();
-  }, [stop, rate]);
+  }, [stop, rate, stopSpeaking, stopInterruptionListening]);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      stopInterruptionListening();
       listeningWantedRef.current = false;
       clearSilence();
       if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
@@ -392,7 +453,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       }
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
-  }, [clearSilence]);
+  }, [clearSilence, stopInterruptionListening]);
 
   return { supported, voiceSupported, listening, speaking, interimTranscript,
     deliveryHints: deliveryKey === answerKey ? deliveryHints : getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }),

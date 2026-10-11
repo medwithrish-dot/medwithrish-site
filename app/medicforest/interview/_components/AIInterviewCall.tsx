@@ -27,6 +27,7 @@ type Props = {
   wordCount: number; onSkipPreparation: () => void;
   followUpBusy: boolean; followUpNotice: string; awaitingDone: boolean; prompting: boolean; micWanted: boolean; onReadQuestion: () => void;
   onDone: () => void; onConfirmDone: () => void; onKeepAnswering: () => void;
+  canInterruptQuestion: boolean; resumingPrevious: boolean; onInterruptQuestion: () => void;
 };
 
 function ParticipantWaves() {
@@ -178,6 +179,8 @@ export function AIInterviewCall(props: Props) {
               {stimulus && <div className={styles.transcriptStimulus}><InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question} /></div>}
             </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
+            {props.canInterruptQuestion && <div className={styles.answerProgress}><span>{props.micWanted ? 'Say “wait” or “hold on” to add to your previous answer.' : "You can still add to your previous answer."}</span><button type="button" onClick={props.onInterruptQuestion}>Add to previous answer</button></div>}
+            {props.resumingPrevious && <p role="status" className={styles.followUpNotice}>Continue your previous answer. The next question is paused.</p>}
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>
             <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
             <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening || props.awaitingDone} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here…" : "Your words will appear here. You can type, too…"} className={styles.answerInput} />
@@ -187,7 +190,7 @@ export function AIInterviewCall(props: Props) {
               <p role="status">{DONE_PROMPT}</p>
               <span>Say yes to continue, or no to keep answering. You can also carry on speaking.</span>
               <div><button type="button" onClick={props.onConfirmDone} disabled={!active}>Yes, I&apos;m done</button><button type="button" onClick={props.onKeepAnswering} disabled={!active}>No, keep answering</button></div>
-            </section> : <div className={styles.answerProgress}><span>{speech.listening ? "After a short pause, I'll check whether you're done." : "Speak with the microphone on, or type and select Done answering."}</span><button type="button" onClick={props.onDone} disabled={!active || props.prompting || !liveAnswer.trim()}>Done answering</button></div>}
+            </section> : <div className={styles.answerProgress}><span>{speech.listening ? "After a five-second pause, I'll check whether you're done." : "Speak with the microphone on, or type and select Done answering."}</span><button type="button" onClick={props.onDone} disabled={!active || props.prompting || !liveAnswer.trim()}>Done answering</button></div>}
             {props.followUpNotice && <p role="status" className={styles.followUpNotice}>{props.followUpNotice}</p>}
           </div>
           <div className={styles.transcriptFooter}><span><Check size={14} />{preview ? "Preview · nothing saved to your account" : props.saved ? "Saved to your account" : "Autosaves every 15 seconds"}</span><p>Your browser’s speech service may process audio. MedicForest saves only your transcript.</p></div>

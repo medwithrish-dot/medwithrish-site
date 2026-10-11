@@ -117,11 +117,15 @@ HOW TO TEST IT
 
 1. Start a normal scored Med interview rather than the setup preview.
 2. Enable the microphone and answer a question with at least 20 words.
-3. Stop talking for about four seconds.
+3. Stop talking for five seconds.
 4. The interviewer should play "Done? Say yes or no."
 5. Say "yes".
 6. If a probe is appropriate, an AI-generated follow-up should appear and be
    read aloud with Google Chirp.
+7. During the follow-up, say "wait" or select "Add to previous answer".
+   The follow-up should disappear from the visible transcript while you add
+   to the previous answer. Confirm you are done; the same saved follow-up
+   should return without another follow-up generation request.
 
 Expected fallbacks:
 - If Chirp is disabled or fails, the browser voice reads the generated probe.
@@ -152,7 +156,7 @@ No generated probe appears:
 
 The done prompt does not appear automatically:
 - Permit microphone and speech-recognition access in the browser.
-- Begin speaking, then leave roughly four seconds of quiet.
+- Begin speaking, then leave five seconds of quiet.
 - Continuous background noise can prevent the silence timer from firing.
 - Use "Done answering" as the preserved manual fallback.
 
