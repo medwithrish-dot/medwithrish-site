@@ -7,6 +7,7 @@ import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
+import { AiFeedbackUpgradeDialog, FREE_AI_FEEDBACK_USED_MESSAGE, useAiFeedbackAccess } from "./AiFeedbackAccess";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import {
   AlertTriangle,
@@ -542,7 +543,7 @@ function getAiCreditStateFromProfile(profile?: {
     nextAvailableAt: null,
     status: credits > 0 ? "Ready" : "No credit remaining",
     message:
-      credits > 0 ? null : "No diagnostic AI feedback credits remaining.",
+      credits > 0 ? null : FREE_AI_FEEDBACK_USED_MESSAGE,
   };
 }
 
@@ -568,7 +569,7 @@ function getAiCreditDisplay(
       helper:
         state?.plan === "premium"
           ? "Premium includes 1 AI diagnostic credit every 24 hours."
-          : "Use this on your free diagnostic report.",
+          : "Free accounts include one AI feedback report, once per account.",
     };
   }
 
@@ -586,7 +587,7 @@ function getAiCreditDisplay(
     helper:
       state?.plan === "premium"
         ? "Refresh the page to re-check your daily credit."
-        : "Free accounts include 1 AI diagnostic credit.",
+        : FREE_AI_FEEDBACK_USED_MESSAGE,
   };
 }
 
@@ -5365,6 +5366,7 @@ function MarkedReviewScreen({
     ? `/medicforest/ucat/report?attempt=${encodeURIComponent(attemptId)}`
     : "/medicforest/ucat/report";
   const [creditNow, setCreditNow] = useState(() => Date.now());
+  const feedbackAccess = useAiFeedbackAccess(isPremium);
   const aiCreditDisplay = getAiCreditDisplay(aiFeedbackState, creditNow);
   const aiCreditLabel =
     aiFeedbackState?.plan === "premium"
@@ -5462,6 +5464,11 @@ function MarkedReviewScreen({
           )}
         </section>
 
+        <AiFeedbackUpgradeDialog open={feedbackAccess.upgradeOpen} onClose={feedbackAccess.closeUpgrade} onUpgrade={onUpgrade} checkoutLoading={checkoutLoading} />
+        {isDiagnostic && !isPremium && aiFeedbackState && <p className="rounded-md bg-violet-50 p-4 text-sm font-semibold text-violet-800">
+          {aiFeedbackState.credits === 0 || feedbackAccess.exhausted ? FREE_AI_FEEDBACK_USED_MESSAGE : "Free accounts include one AI feedback report, once per account."}
+          {(aiFeedbackState.credits === 0 || feedbackAccess.exhausted) && <button type="button" onClick={() => feedbackAccess.checkAccess(true)} className="ml-2 underline">Upgrade to Premium</button>}
+        </p>}
         {isDiagnostic && aiFeedbackState && onRequestAiFeedback && (
           aiFeedbackState.text ? (
             <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
@@ -5503,18 +5510,20 @@ function MarkedReviewScreen({
                 </div>
                 <button
                   type="button"
-                  onClick={() => void onRequestAiFeedback?.()}
+                  onClick={() => {
+                    if (feedbackAccess.checkAccess(aiFeedbackState.plan === "free" && !aiCreditDisplay.available)) void onRequestAiFeedback?.();
+                  }}
                   disabled={
                     aiFeedbackState.requesting ||
-                    !aiCreditDisplay.available
+                    (aiFeedbackState.plan === "premium" && !aiCreditDisplay.available)
                   }
                   className="inline-flex h-11 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-black text-white shadow-md shadow-violet-100 hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   {aiFeedbackState.requesting
                     ? "Generating..."
                     : !aiCreditDisplay.available
-                      ? aiCreditDisplay.label
-                      : "Use AI diagnostic credit"}
+                      ? aiFeedbackState.plan === "free" ? "Upgrade to Premium" : aiCreditDisplay.label
+                      : "Generate AI feedback"}
                 </button>
               </div>
               {aiFeedbackState.message && (
@@ -7062,6 +7071,7 @@ function UCATQuestionBankSection({
 
       const aiPayload = (await aiResponse.json()) as {
         feedback?: string;
+        upgradeRequired?: boolean;
         error?: string;
         requestedAt?: string | null;
         status?: string;
@@ -7070,6 +7080,8 @@ function UCATQuestionBankSection({
         plan?: "free" | "premium";
       };
 
+      window.dispatchEvent(new Event("ai-feedback-allowance-changed"));
+      if (aiPayload.upgradeRequired) window.dispatchEvent(new Event("ai-feedback-upgrade-required"));
       const aiOk = aiResponse.ok && Boolean(aiPayload.feedback);
       if (!aiOk) {
         setAiFeedbackState((current) =>

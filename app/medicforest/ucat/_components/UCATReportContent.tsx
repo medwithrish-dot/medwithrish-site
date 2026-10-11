@@ -8,6 +8,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { AiFeedbackUpgradeDialog, FREE_AI_FEEDBACK_USED_MESSAGE, useAiFeedbackAccess } from "./AiFeedbackAccess";
 import { ClientPremiumGate } from "./ClientPremiumGate";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import { ReportIssueSignalCard } from "./ReportIssueSignalCard";
@@ -50,6 +51,7 @@ export function UCATReportContent({
   completedDashboardTaskIds,
   removedDashboardTaskIds,
 }: UCATReportContentProps) {
+  const feedbackAccess = useAiFeedbackAccess(isPremium);
   const [reportFilter, setReportFilter] = useState<ReportSectionFilter>("All");
   const selectedReportId = initialReportId ?? null;
   const selectedMockId = initialMockId ?? null;
@@ -281,7 +283,7 @@ export function UCATReportContent({
   };
 
   const requestSelectedReportAiFeedback = async () => {
-    if (!selectedDiagnostic?.id) return;
+    if (!selectedDiagnostic?.id || !feedbackAccess.checkAccess()) return;
 
     setAiRequestingReportId(selectedDiagnostic.id);
     setAiFeedbackNotice(null);
@@ -311,8 +313,12 @@ export function UCATReportContent({
         feedback?: string;
         error?: string;
         attemptIds?: string[];
+        credits?: number;
+        plan?: "free" | "premium";
+        upgradeRequired?: boolean;
       };
 
+      feedbackAccess.receive(payload);
       if (!response.ok || !payload.feedback) {
         throw new Error(payload.error ?? "AI feedback could not be generated.");
       }
@@ -350,6 +356,7 @@ export function UCATReportContent({
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
+      <AiFeedbackUpgradeDialog open={feedbackAccess.upgradeOpen} onClose={feedbackAccess.closeUpgrade} onUpgrade={onUpgrade} checkoutLoading={checkoutLoading} />
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="grid gap-5 md:grid-cols-[1fr_220px_220px] md:items-center">
           <div className="flex gap-4">
@@ -418,6 +425,10 @@ export function UCATReportContent({
             {feedbackStatus}
           </span>
         </div>
+        {!isPremium && <p className="mt-3 text-sm font-semibold text-violet-700">
+          {feedbackAccess.exhausted ? FREE_AI_FEEDBACK_USED_MESSAGE : "Free accounts include one AI feedback report, once per account."}
+          {feedbackAccess.exhausted && <button type="button" onClick={() => feedbackAccess.checkAccess()} className="ml-2 underline">Upgrade to Premium</button>}
+        </p>}
         {selectedAiFeedbackText ? (
           <ExpandableAiFeedback
             text={selectedAiFeedbackText}
