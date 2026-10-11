@@ -78,6 +78,56 @@ test("rate limits expire, isolate identities and cannot be reset by filling the 
   assert.equal(allow("c", 2), true); assert.equal(allow("a", 2), true);
 });
 
+test("shared-network interview autosaves are allowed without classifying users as bots", () => {
+  const previous = process.env.VERCEL;
+  process.env.VERCEL = "1";
+  try {
+    for (let index = 0; index < 180; index++) {
+      const request = new Request("https://medicforest.com/api/interviews/session", {
+        method: "PATCH", headers: { origin: "https://medicforest.com", "x-vercel-forwarded-for": "192.0.2.174" },
+      });
+      assert.equal(guardApiRequest(request), null);
+    }
+  } finally {
+    if (previous === undefined) delete process.env.VERCEL; else process.env.VERCEL = previous;
+  }
+});
+
+test("both account forms send CAPTCHA to Supabase for signup and login, and renew tokens after failures", async () => {
+  for (const path of ["../app/medicforest/account/_client.tsx", "../app/medicforest/ucat/_components/MedicForestClient.tsx"]) {
+    const source = ts.createSourceFile(path, readFileSync(new URL(path, import.meta.url), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    let handler;
+    const visit = node => {
+      if (ts.isVariableDeclaration(node) && node.name.getText(source) === "handleAuthSubmit") handler = node.initializer.getText(source);
+      ts.forEachChild(node, visit);
+    };
+    visit(source);
+    assert.ok(handler);
+    const code = ts.transpileModule(`const submit = ${handler};`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+    for (const mode of ["signup", "login"]) for (const token of ["single-use-token", ""]) {
+      const calls = [];
+      const state = {};
+      const context = {
+        supabase: { auth: {
+          signUp: async args => { calls.push(args); throw new Error("Retryable auth error"); },
+          signInWithPassword: async args => { calls.push(args); throw new Error("Retryable auth error"); },
+        } },
+        email: "person@example.com", password: "sensible-password", fullName: "Person", legalAccepted: true,
+        authTab: mode, authMode: mode, captchaToken: token, authCaptchaSiteKey: "site-key", returnTo: null,
+        window: { location: { origin: "https://medicforest.com", pathname: "/account" } },
+      };
+      for (const key of ["AuthSubmitting", "Submitting", "AuthError", "AuthMessage", "CaptchaToken", "CaptchaVersion", "Password", "User", "Session"]) context[`set${key}`] = value => { state[key] = typeof value === "function" ? value(0) : value; };
+      const submit = new Function(...Object.keys(context), `${code}\nreturn submit;`)(...Object.values(context));
+      await submit({ preventDefault() {} });
+      assert.equal(calls.length, token ? 1 : 0);
+      if (token) assert.equal(calls[0].options.captchaToken, token);
+      assert.equal(state.CaptchaToken, "");
+      assert.equal(state.CaptchaVersion, 1);
+      assert.match(state.AuthError, token ? /Retryable auth error/ : /verification/);
+    }
+  }
+});
+
 test("streamed requests are capped even when Content-Length is missing or dishonest", async () => {
   const stream = () => new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode("12345")); controller.enqueue(new TextEncoder().encode("67890")); controller.close(); } });
   for (const headers of [{}, { "content-length": "1" }]) {

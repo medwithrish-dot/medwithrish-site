@@ -1,4 +1,5 @@
 import "server-only";
+import { requireAiUsage } from "@/utils/security/ai-usage";
 import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
 import { randomUUID } from "node:crypto";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
@@ -51,6 +52,7 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
     throw error;
   }
   const token = randomUUID();
+  await requireAiUsage(admin, user.id, "generation");
   const { data: claimed, error: claimError } = await admin.rpc("claim_interview_grading", { p_user: user.id, p_attempt: row.id, p_token: token });
   if (claimError) databaseError(claimError);
   if (!claimed) throw new InterviewError("Feedback could not be started. Please retry.", 503);

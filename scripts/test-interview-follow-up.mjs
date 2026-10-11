@@ -9,9 +9,11 @@ import { existingFollowUp, followUpClaimMask, practiceFollowUp, validateFollowUp
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
-function load(file, mocks = {}) {
+function load(file, mocks = {}, cache = new Map()) {
   const filename = resolve(root, file);
+  if (cache.has(filename)) return cache.get(filename);
   const compiled = { exports: {} };
+  cache.set(filename, compiled.exports);
   const javascript = ts.transpileModule(readFileSync(filename, "utf8"), {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
@@ -19,8 +21,8 @@ function load(file, mocks = {}) {
     if (Object.hasOwn(mocks, name)) return mocks[name];
     if (name === "server-only") return {};
     if (name === "botid/server") return { checkBotId: async () => ({ isHuman: true, isBot: false, isVerifiedBot: false }) };
-    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks);
-    if (name.startsWith(".")) return load(resolve(dirname(filename), `${name}.ts`), mocks);
+    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks, cache);
+    if (name.startsWith(".")) return load(resolve(dirname(filename), `${name}.ts`), mocks, cache);
     return require(name);
   };
   new Function("require", "module", "exports", javascript)(localRequire, compiled, compiled.exports);
@@ -49,7 +51,7 @@ const words = "During my care home volunteering I listened to residents and help
 const probe = "What changed in your understanding of listening when you worked with those residents?";
 const request = (body) => new Request("https://example.test/api/interviews/follow-up", { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://example.test" }, body: JSON.stringify(body) });
 
-function harness({ generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {}, applicant = {}, selectedQuestions, botCheck = async () => ({ isHuman: true, isBot: false, isVerifiedBot: false }) } = {}) {
+function harness({ usageAllowed = true, generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {}, applicant = {}, selectedQuestions, botCheck = async () => ({ isHuman: true, isBot: false, isVerifiedBot: false }) } = {}) {
   const state = { row: {
     id: attemptId, user_id: "user-1", station_slug: "why-medicine", title: "Why medicine?", status: "in_progress",
     started_at: new Date(Date.now() - 120_000).toISOString(), preparation_seconds: 60, station_seconds: 480,
@@ -71,7 +73,10 @@ function harness({ generate = async () => probe, configured = true, enabled = tr
       return { data: structuredClone(state.row), error: null };
     }
   }
-  const admin = { from: (table) => new Query(table) };
+  const admin = { from: (table) => new Query(table), rpc: async name => {
+    assert.equal(name, "consume_interview_ai_usage");
+    return { data: usageAllowed, error: null };
+  } };
   const { POST } = load("app/api/interviews/follow-up/route.ts", {
     "botid/server": { checkBotId: botCheck },
     ...(selectedQuestions ? { "@/utils/interviews/station-question-selection": { questionIdForText: question => selectedQuestions.includes(question) ? `bank-${selectedQuestions.indexOf(question)}` : null } } : {}),
@@ -82,6 +87,13 @@ function harness({ generate = async () => probe, configured = true, enabled = tr
   });
   return { state, post: (question = originals[0], extra = {}) => POST(request({ attemptId, question, ...extra })), POST };
 }
+
+test("an account AI cooldown stops probes before reserving or calling the model", async () => {
+  const api = harness({ usageAllowed: false });
+  assert.equal((await api.post()).status, 429);
+  assert.equal(api.state.providerCalls, 0);
+  assert.equal(api.state.row.last_error, null);
+});
 
 test("generated personal-history probes require a saved applicant confirmation", async () => {
   for (const applicant of [{}, { previousDegree: false }, { entryRoute: "graduate" }]) {
@@ -392,6 +404,27 @@ test("scenario follow-up audio is rejected before any Google request", async () 
   const response = await GET(new Request(`https://example.test/api/interviews/speech?attempt=${attemptId}&question=1&voice=female`));
   assert.equal(response.status, 403);
   assert.equal(calls, 0);
+});
+
+test("speech quota exhaustion stops before Google while keeping the saved probe intact", async () => {
+  let calls = 0;
+  const row = { station_slug: "disability-in-medicine", status: "in_progress", questions: [originals[0], probe], last_error: "ai_followup:1" };
+  const { GET } = load("app/api/interviews/speech/route.ts", {
+    "@/utils/security/human-check": { requireHumanRequest: async () => {} },
+    "@/utils/interviews/server": {
+      validId: () => true,
+      interviewContext: async () => ({ user: { id: "user-1" }, admin: {
+        rpc: async (name, args) => { assert.equal(name, "consume_interview_ai_usage"); assert.equal(args.p_kind, "speech"); return { data: false, error: null }; },
+        from: () => ({ select() { return this; }, eq() { return this; }, maybeSingle: async () => ({ data: row }) }),
+      } }),
+      InterviewError: class extends Error { constructor(message, status) { super(message); this.status = status; } },
+      interviewFailure: error => Response.json({ error: error.message }, { status: error.status ?? 503 }),
+    },
+    "@/utils/interviews/text-to-speech": { synthesizeInterviewSpeech: async () => { calls++; return Buffer.from("audio"); } },
+  });
+  assert.equal((await GET(new Request(`https://example.test/api/interviews/speech?attempt=${attemptId}&question=1&voice=female`))).status, 429);
+  assert.equal(calls, 0);
+  assert.equal(row.questions[1], probe);
 });
 
 test("Google Chirp audio shares concurrent calls and replays, keeping voices separate", async () => {

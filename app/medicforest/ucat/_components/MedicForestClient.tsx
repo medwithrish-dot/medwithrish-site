@@ -1,4 +1,5 @@
 "use client";
+import { AuthCaptcha, authCaptchaSiteKey } from "@/app/medicforest/_components/AuthCaptcha";
 
 import {
   useState,
@@ -3898,6 +3899,9 @@ function AuthPanel({
   error,
   onSubmit,
   presentation = "page",
+  captchaVersion,
+  captchaToken,
+  setCaptchaToken,
 }: {
   mode: AuthMode;
   setMode: (mode: AuthMode) => void;
@@ -3914,6 +3918,9 @@ function AuthPanel({
   error: string | null;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   presentation?: "page" | "overlay";
+  captchaVersion: number;
+  captchaToken: string;
+  setCaptchaToken: (token: string) => void;
 }) {
   const authCard = (
     <div
@@ -4025,6 +4032,8 @@ function AuthPanel({
           </div>
         )}
 
+        <AuthCaptcha key={`${mode}-${captchaVersion}`} onToken={setCaptchaToken} />
+
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
             {error}
@@ -4038,7 +4047,7 @@ function AuthPanel({
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || Boolean(authCaptchaSiteKey && !captchaToken)}
           className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
         >
           {submitting
@@ -4744,6 +4753,8 @@ function UCATDashboard({
   const [profile, setProfile] = useState<MedicForestProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [authMode, setAuthMode] = useState<AuthMode>("signup");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaVersion, setCaptchaVersion] = useState(0);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -5329,6 +5340,7 @@ function UCATDashboard({
 
     try {
       const trimmedEmail = email.trim().toLowerCase();
+      if (authCaptchaSiteKey && !captchaToken) throw new Error("Please complete the verification before continuing.");
 
       if (!trimmedEmail) {
         setAuthError("Add your email address before continuing.");
@@ -5354,6 +5366,7 @@ function UCATDashboard({
           email: trimmedEmail,
           password,
           options: {
+            captchaToken: captchaToken || undefined,
             data: {
               full_name: trimmedName,
               legal_accepted_at: acceptedAt,
@@ -5380,6 +5393,7 @@ function UCATDashboard({
         const { data, error } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
           password,
+          options: { captchaToken: captchaToken || undefined },
         });
 
         if (error) throw error;
@@ -5393,6 +5407,8 @@ function UCATDashboard({
         error instanceof Error ? error.message : "Something went wrong."
       );
     } finally {
+      setCaptchaToken("");
+      setCaptchaVersion(version => version + 1);
       setSubmitting(false);
     }
   };
@@ -6372,6 +6388,9 @@ function UCATDashboard({
       </div>
       {authGateActive && (
         <AuthPanel
+          captchaVersion={captchaVersion}
+          captchaToken={captchaToken}
+          setCaptchaToken={setCaptchaToken}
           mode={authMode}
           setMode={setAuthMode}
           fullName={fullName}

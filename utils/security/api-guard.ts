@@ -45,7 +45,10 @@ export function guardApiRequest(request: Request) {
   const identity = trustedIp?.trim() || "unidentified";
   const mutation = !safeMethods.has(request.method);
   const key = createHash("sha256").update(`${identity}:${mutation ? "write" : "read"}`).digest("hex");
-  const limit = trustedIp ? mutation ? 60 : 180 : mutation ? 300 : 1200;
+  // This is a coarse flood ceiling, not a bot classification. School networks
+  // and shared Wi-Fi need room for multiple users and interview autosaves.
+  // Paid AI has separate durable per-account limits in the route handlers.
+  const limit = trustedIp ? mutation ? 600 : 1800 : mutation ? 1200 : 3600;
   if (!allow(key, limit)) return fail("Too many requests. Please wait a minute and retry.", 429);
   return null;
 }

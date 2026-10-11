@@ -1,5 +1,6 @@
 import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
 import { requireHumanRequest } from "@/utils/security/human-check";
+import { requireAiUsage } from "@/utils/security/ai-usage";
 import { findInterviewStation } from "@/app/medicforest/interview/_data/interview-stations";
 import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/openai";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
     if (mask.toString(2).replace(/0/g, "").length >= 3) throw new InterviewError("This station has reached its three follow-up limit.", 429);
     const bit = 1 << questionNumber;
     if (mask & bit) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
+    await requireAiUsage(admin, user.id, "generation");
     let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress");
     claim = row.last_error == null ? claim.is("last_error", null) : claim.eq("last_error", row.last_error);
     const { data: claimed, error: claimError } = await claim.select("id").maybeSingle();

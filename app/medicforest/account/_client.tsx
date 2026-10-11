@@ -21,6 +21,7 @@ import {
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
+import { AuthCaptcha, authCaptchaSiteKey } from "../_components/AuthCaptcha";
 
 type AuthTab = "login" | "signup";
 
@@ -49,6 +50,8 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaVersion, setCaptchaVersion] = useState(0);
 
   // Profile Edit State
   const [displayNameDraft, setDisplayNameDraft] = useState("");
@@ -180,6 +183,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
     const trimmedEmail = email.trim().toLowerCase();
 
     try {
+      if (authCaptchaSiteKey && !captchaToken) throw new Error("Please complete the verification before continuing.");
       if (authTab === "signup") {
         const trimmedName = fullName.trim();
         if (!trimmedName) throw new Error("Please enter your full name.");
@@ -191,6 +195,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
           email: trimmedEmail,
           password,
           options: {
+            captchaToken: captchaToken || undefined,
             data: { full_name: trimmedName },
             emailRedirectTo: `${window.location.origin}${window.location.pathname}${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ""}`,
           },
@@ -209,6 +214,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
         const { data, error } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
           password,
+          options: { captchaToken: captchaToken || undefined },
         });
 
         if (error) throw error;
@@ -222,6 +228,8 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
         err instanceof Error ? err.message : "Authentication failed."
       );
     } finally {
+      setCaptchaToken("");
+      setCaptchaVersion(version => version + 1);
       setAuthSubmitting(false);
     }
   };
@@ -467,6 +475,8 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
                       </div>
                     )}
 
+                    <AuthCaptcha key={`${authTab}-${captchaVersion}`} onToken={setCaptchaToken} />
+
                     {authError && (
                       <div
                         role="alert"
@@ -484,7 +494,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
                     <button
                       type="submit"
-                      disabled={authSubmitting}
+                      disabled={authSubmitting || Boolean(authCaptchaSiteKey && !captchaToken)}
                       className="mt-2 flex h-11 w-full items-center justify-center rounded-xl bg-[#0c6b5e] px-4 text-sm font-bold text-white shadow-xs transition hover:bg-[#084e45] disabled:opacity-50"
                     >
                       {authSubmitting

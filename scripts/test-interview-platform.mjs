@@ -111,6 +111,42 @@ try {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
   }
 
+  const aiLimitsSql = await readFile(new URL("../supabase/medicforest_ai_abuse_limits.sql", import.meta.url), "utf8");
+  await db.exec(aiLimitsSql); await db.exec(aiLimitsSql);
+  const consume = async (user, kind = "generation") => role("service_role", null, async () =>
+    (await db.query("select public.consume_interview_ai_usage($1,$2) as allowed", [user, kind])).rows[0].allowed);
+  await check("AI quotas are durable, isolate accounts and speech, and recover after a minute", async () => {
+    for (let index = 0; index < 12; index++) assert.equal(await consume(ids.owner), true);
+    assert.equal(await consume(ids.owner), false);
+    assert.equal(await consume(ids.friend), true);
+    for (let index = 0; index < 30; index++) assert.equal(await consume(ids.owner, "speech"), true);
+    assert.equal(await consume(ids.owner, "speech"), false);
+    await db.query("update public.interview_ai_usage set minute_started_at=now()-interval '61 seconds' where user_id=$1", [ids.owner]);
+    assert.equal(await consume(ids.owner), true);
+    assert.equal(await consume(ids.owner, "speech"), true);
+  });
+  await check("daily AI caps persist through minute resets and automatically recover after 24 hours", async () => {
+    await db.query("update public.interview_ai_usage set minute_started_at=now()-interval '61 seconds', day_count=240 where user_id=$1 and kind='generation'", [ids.owner]);
+    assert.equal(await consume(ids.owner), false);
+    await db.query("update public.interview_ai_usage set day_started_at=now()-interval '25 hours' where user_id=$1", [ids.owner]);
+    assert.equal(await consume(ids.owner), true);
+    const result = await db.query("select day_count,minute_count from public.interview_ai_usage where user_id=$1 and kind='generation'", [ids.owner]);
+    assert.deepEqual(result.rows[0], { day_count: 1, minute_count: 1 });
+    await db.query("update public.interview_ai_usage set minute_started_at=now()-interval '61 seconds', day_started_at=now(),day_count=720 where user_id=$1 and kind='speech'", [ids.owner]);
+    assert.equal(await consume(ids.owner, "speech"), false);
+    await db.exec(aiLimitsSql);
+    assert.equal(await consume(ids.owner, "speech"), false, "rerunning setup must not reset spent quota");
+    await db.query("update public.interview_ai_usage set day_started_at=now()-interval '25 hours' where user_id=$1 and kind='speech'", [ids.owner]);
+    assert.equal(await consume(ids.owner, "speech"), true);
+  });
+  await check("browsers cannot read, consume, modify or reset AI counters", async () => {
+    for (const name of ["anon", "authenticated"]) await role(name, ids.owner, async () => {
+      await assert.rejects(db.query("select * from public.interview_ai_usage"), /permission denied/);
+      await assert.rejects(db.query("select public.consume_interview_ai_usage($1,'generation')", [ids.owner]), /permission denied/);
+      await assert.rejects(db.query("delete from public.interview_ai_usage"), /permission denied/);
+    });
+  });
+
   const ownAttempt = await attempt(ids.owner, { score: 80 });
   const friendAttempt = await attempt(ids.friend, { score: 88.5 });
   await check("RLS restricts attempt reads to the current account", async () => {

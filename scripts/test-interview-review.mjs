@@ -35,7 +35,7 @@ function load(file, mocks, cache = new Map()) {
 
 // Exercise real validation, ownership, mapping and route behaviour; substitute
 // only Supabase transport and the external AI provider.
-function harness({ overrides = {}, configured = false, user = "user-1", beforeUpdate, saveError = null, assess = async () => feedback } = {}) {
+function harness({ usageAllowed = true, overrides = {}, configured = false, user = "user-1", beforeUpdate, saveError = null, assess = async () => feedback } = {}) {
   const state = { row: {
     id: attemptId, user_id: "user-1", mode: "reference", university_slug: null, station_slug: "why-medicine", title: question,
     status: "in_progress", started_at: new Date(Date.now() - 180_000).toISOString(), completed_at: null, answer_submitted_at: null,
@@ -62,6 +62,7 @@ function harness({ overrides = {}, configured = false, user = "user-1", beforeUp
   const admin = {
     from: table => new Query(table),
     async rpc(name, args) {
+      if (name === "consume_interview_ai_usage") return { data: usageAllowed, error: null };
       if (name === "reserve_interview_attempt") {
         state.reservations.push(args.p_payload);
         return { data: { ...state.row, ...args.p_payload }, error: null };
@@ -106,6 +107,17 @@ test("finishing saves even an empty transcript and opens an ungraded review with
     assert.equal(api.state.gradingClaims, 0);
     assert.match(response.headers.get("cache-control"), /private, no-store/);
   }
+});
+
+test("an AI cooldown keeps saved answers and does not spend a grading retry or call the provider", async () => {
+  const api = harness({ usageAllowed: false, configured: true, overrides: {
+    status: "failed", last_error: "awaiting_feedback", completed_at: new Date().toISOString(),
+    answers: [{ question, answer: words }],
+  } });
+  assert.equal((await api.grade()).status, 429);
+  assert.equal(api.state.gradingClaims, 0);
+  assert.equal(api.state.providerCalls, 0);
+  assert.equal(api.state.row.answers[0].answer, words);
 });
 
 test("finish is idempotent, keeps its snapshot and rejects subsequent autosaves", async () => {

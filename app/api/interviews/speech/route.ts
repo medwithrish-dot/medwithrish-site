@@ -1,6 +1,7 @@
 import { databaseError, interviewContext, interviewFailure, InterviewError, validId } from "@/utils/interviews/server";
 import { synthesizeInterviewSpeech } from "@/utils/interviews/text-to-speech";
 import { requireHumanRequest } from "@/utils/security/human-check";
+import { requireAiUsage } from "@/utils/security/ai-usage";
 import { followUpClaimMask } from "@/utils/interviews/follow-up";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
 import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
@@ -36,6 +37,7 @@ export async function GET(request: Request) {
     if (!probableProbe) throw new InterviewError("Recorded audio is used for this question", 400);
 
     await requireHumanRequest();
+    await requireAiUsage(admin, user.id, "speech");
     const audio = await synthesizeInterviewSpeech(question, voice as "female" | "male");
     const body = Uint8Array.from(audio).buffer;
     return new Response(body, {
