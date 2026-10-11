@@ -4,7 +4,6 @@ import { createClient as createServerSupabaseClient } from "@/utils/supabase/ser
 import { createAdminClient } from "@/utils/supabase/admin";
 
 export const runtime = "nodejs";
-export const maxDuration = 45;
 
 const PREMIUM_AI_CREDIT_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const UCAT_SECTION_ORDER = ["VR", "DM", "QR", "SJT"];
@@ -373,22 +372,6 @@ function uniqueAttemptIds(body: DiagnosticFeedbackBody) {
   ).slice(0, 8);
 }
 
-// Always read the allowance from the authenticated account, never browser storage.
-export async function GET() {
-  try {
-    const supabase = await createServerSupabaseClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error || !user) return Response.json({ error: "Log in to view your AI feedback allowance." }, { status: 401 });
-    const admin = createAdminClient();
-    const { data: profile, error: profileError } = await admin.from("profiles")
-      .select("current_plan,diagnostic_credits,ai_diagnostic_last_used_at").eq("id", user.id).maybeSingle();
-    if (profileError || !profile) return Response.json({ error: "AI feedback allowance could not be loaded." }, { status: 503 });
-    return Response.json(getCreditSnapshot(profile as ProfileRow), { headers: { "Cache-Control": "private, no-store" } });
-  } catch {
-    return Response.json({ error: "AI feedback allowance could not be loaded." }, { status: 503 });
-  }
-}
-
 export async function POST(request: Request) {
   let body: DiagnosticFeedbackBody;
   try {
@@ -514,8 +497,8 @@ export async function POST(request: Request) {
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profileError || !profile) {
-    return Response.json({ error: profileError?.message ?? "AI feedback allowance could not be loaded." }, { status: 500 });
+  if (profileError) {
+    return Response.json({ error: profileError.message }, { status: 500 });
   }
 
   const profileRow: ProfileRow = {
@@ -557,6 +540,16 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return Response.json(
+      {
+        error:
+          "AI feedback is not configured yet. Set ANTHROPIC_API_KEY to enable generation.",
+      },
+      { status: 503 }
+    );
+  }
+
   const plan = profileRow.current_plan === "premium" ? "premium" : "free";
   const previousLastUsedAt = profileRow.ai_diagnostic_last_used_at;
   const requestedAt = new Date().toISOString();
@@ -568,21 +561,10 @@ export async function POST(request: Request) {
         error:
           plan === "premium"
             ? "Your daily AI diagnostic credit is not available yet."
-            : "You've used your free AI feedback report. Upgrade to Premium for more personalised feedback.",
+            : "No diagnostic AI feedback credit remaining.",
         ...currentSnapshot,
-        upgradeRequired: plan === "free",
       },
       { status: 429 }
-    );
-  }
-
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json(
-      {
-        error:
-          "AI feedback is not configured yet. Set ANTHROPIC_API_KEY to enable generation.",
-      },
-      { status: 503 }
     );
   }
 
@@ -606,7 +588,7 @@ export async function POST(request: Request) {
       reserveQuery.is("ai_diagnostic_last_used_at", null);
     }
   } else {
-    reserveQuery.eq("diagnostic_credits", profileRow.diagnostic_credits);
+    reserveQuery.eq("diagnostic_credits", currentSnapshot.credits);
   }
 
   const { data: reservedProfile, error: reserveError } = await reserveQuery
@@ -618,16 +600,14 @@ export async function POST(request: Request) {
   }
 
   if (!reservedProfile) {
-    const { data: latestProfile } = await admin.from("profiles")
-      .select("current_plan,diagnostic_credits,ai_diagnostic_last_used_at").eq("id", user.id).maybeSingle();
-    const nextSnapshot = getCreditSnapshot((latestProfile ?? { ...profileRow, diagnostic_credits: 0, ai_diagnostic_last_used_at: requestedAt }) as ProfileRow);
-    return Response.json({
-      error: nextSnapshot.plan === "free"
-        ? "You've used your free AI feedback report. Upgrade to Premium for more personalised feedback."
-        : "AI diagnostic credit was already used. Refresh and try again.",
-      ...nextSnapshot,
-      upgradeRequired: nextSnapshot.plan === "free" && nextSnapshot.credits <= 0,
-    }, { status: 429 });
+    const nextSnapshot = getCreditSnapshot(profileRow);
+    return Response.json(
+      {
+        error: "AI diagnostic credit was already used. Refresh and try again.",
+        ...nextSnapshot,
+      },
+      { status: 429 }
+    );
   }
 
   const reservedSnapshot = getCreditSnapshot(reservedProfile as ProfileRow);

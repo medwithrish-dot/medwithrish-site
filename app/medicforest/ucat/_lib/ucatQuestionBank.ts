@@ -1,4 +1,3 @@
-import { REVIEWED_UCAT_ADDITIONS } from "./ucatReviewedAdditions";
 import { CURATED_VR_QUESTIONS } from "./ucatVrCuratedInputs";
 import { CURATED_DM_QUESTIONS } from "./ucatDmCuratedInputs";
 import { CURATED_QR_QUESTIONS } from "./ucatQrCuratedInputs";
@@ -5360,12 +5359,7 @@ let qualityReviewCache: ReturnType<typeof reviewUCATQuestionBank> | null = null;
 export function getUCATQuestionQualityReview() {
   if (!qualityReviewCache) {
     qualityReviewCache = reviewUCATQuestionBank({
-      auditedBank: {
-        vr: [...LEGACY_UCAT_QUESTION_BANK.vr, ...REVIEWED_UCAT_ADDITIONS.vr],
-        dm: [...LEGACY_UCAT_QUESTION_BANK.dm, ...REVIEWED_UCAT_ADDITIONS.dm],
-        qr: [...LEGACY_UCAT_QUESTION_BANK.qr, ...REVIEWED_UCAT_ADDITIONS.qr],
-        sjt: [...LEGACY_UCAT_QUESTION_BANK.sjt, ...REVIEWED_UCAT_ADDITIONS.sjt],
-      },
+      auditedBank: LEGACY_UCAT_QUESTION_BANK,
       draftBank: DRAFT_9200_UCAT_QUESTION_BANK,
     });
   }

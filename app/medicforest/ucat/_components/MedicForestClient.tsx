@@ -16,7 +16,6 @@ import {
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
 import { ClientPremiumGate } from "./ClientPremiumGate";
-import { AiFeedbackUpgradeDialog, FREE_AI_FEEDBACK_USED_MESSAGE, useAiFeedbackAccess } from "./AiFeedbackAccess";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import { MedicForestLandingShell } from "./MedicForestLandingShell";
 import { MedicForestLogo as MedicForestBrandLogo } from "../../_components/MedicForestLogo";
@@ -4226,8 +4225,6 @@ function DashboardFeedbackPanel({
   const [selectedSection, setSelectedSection] = useState<UCATSectionCode | null>(
     () => latestDiagnostic?.section ?? null
   );
-  const feedbackRouter = useRouter();
-  const feedbackAccess = useAiFeedbackAccess(isPremium);
   const [generatedFullMockFeedback, setGeneratedFullMockFeedback] = useState<
     string | null
   >(null);
@@ -4317,7 +4314,7 @@ function DashboardFeedbackPanel({
     ? `/medicforest/ucat/report?attempt=${encodeURIComponent(activeDiagnostic.id)}`
     : "/medicforest/ucat/report";
   const requestFullMockAiFeedback = async () => {
-    if (!completedFullMockPrimaryDiagnostic || !feedbackAccess.checkAccess()) return;
+    if (!completedFullMockPrimaryDiagnostic) return;
 
     setFullMockFeedbackRequesting(true);
     setFullMockFeedbackNotice(null);
@@ -4337,12 +4334,8 @@ function DashboardFeedbackPanel({
       const payload = (await response.json()) as {
         feedback?: string;
         error?: string;
-        credits?: number;
-        plan?: "free" | "premium";
-        upgradeRequired?: boolean;
       };
 
-      feedbackAccess.receive(payload);
       if (!response.ok || !payload.feedback) {
         throw new Error(
           payload.error ?? "Full mock AI feedback could not be generated."
@@ -4366,8 +4359,6 @@ function DashboardFeedbackPanel({
 
   return (
     <section className={`rounded-xl border border-slate-200 bg-white p-6 shadow-sm ${className}`}>
-      <AiFeedbackUpgradeDialog open={feedbackAccess.upgradeOpen} onClose={feedbackAccess.closeUpgrade} onUpgrade={() => feedbackRouter.push("/medicforest/pricing")} />
-      {!isPremium && <p className="mb-4 text-xs font-semibold text-violet-700">{feedbackAccess.exhausted ? FREE_AI_FEEDBACK_USED_MESSAGE : "Free accounts include one AI feedback report, once per account."}</p>}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-black uppercase tracking-wider text-blue-600">
