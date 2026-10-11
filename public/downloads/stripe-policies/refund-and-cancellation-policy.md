@@ -12,7 +12,7 @@ Because digital content may be supplied immediately, you may lose a statutory ca
 
 ## Tutoring sessions
 
-Please request cancellation or rescheduling by email as soon as possible. A full refund is generally available when requested at least **[INSERT NOTICE PERIOD, e.g. 24 hours]** before a session. Late cancellations or missed sessions may be non-refundable unless the issue was caused by us or consumer law requires otherwise.
+Please request cancellation or rescheduling by email as soon as possible. A full refund is generally available when requested at least 24 hours before a session. Late cancellations or missed sessions may be non-refundable unless the issue was caused by us or consumer law requires otherwise.
 
 ## How to request a refund
 

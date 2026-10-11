@@ -42,11 +42,10 @@ We may update, withdraw or change parts of the service. We may terminate or susp
 
 ## Governing law
 
-These terms are governed by the laws of **[INSERT JURISDICTION, e.g. England and Wales]**, subject to any mandatory consumer protections that apply to you.
+These terms are governed by the laws of England and Wales, subject to any mandatory consumer protections that apply to you.
 
 ## Contact
 
 medwithrish@gmail.com  
-**[INSERT YOUR FULL LEGAL NAME OR COMPANY NAME]**  
-**[INSERT YOUR BUSINESS ADDRESS]**
+MedWithRish
 

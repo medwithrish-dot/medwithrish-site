@@ -1,8 +1,7 @@
 # Business and Contact Details
 
 **Trading name:** MedWithRish  
-**Legal name:** [INSERT YOUR FULL LEGAL NAME OR COMPANY NAME]  
-**Business address:** [INSERT YOUR BUSINESS ADDRESS]  
+**Legal name:** MedWithRish  
 **Customer support email:** medwithrish@gmail.com  
 **Website:** https://www.medwithrish.com
 

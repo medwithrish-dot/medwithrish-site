@@ -6,10 +6,9 @@ MedWithRish (“we”, “us”, “our”) provides medical and dental admissio
 
 ## Who we are
 
-The service is operated by **[INSERT YOUR FULL LEGAL NAME OR COMPANY NAME]**, trading as MedWithRish.
+The service is operated by MedWithRish.
 
 Contact: medwithrish@gmail.com  
-Address: **[INSERT YOUR BUSINESS ADDRESS]**
 
 ## Information we collect
 
