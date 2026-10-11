@@ -475,7 +475,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
                       </div>
                     )}
 
-                    <AuthCaptcha key={`${authTab}-${captchaVersion}`} onToken={setCaptchaToken} />
+                    <AuthCaptcha key={`${authTab}-${captchaVersion}`} onToken={setCaptchaToken} signup={authTab === "signup"} />
 
                     {authError && (
                       <div

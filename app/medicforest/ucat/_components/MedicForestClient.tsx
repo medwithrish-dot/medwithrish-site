@@ -4032,7 +4032,7 @@ function AuthPanel({
           </div>
         )}
 
-        <AuthCaptcha key={`${mode}-${captchaVersion}`} onToken={setCaptchaToken} />
+        <AuthCaptcha key={`${mode}-${captchaVersion}`} onToken={setCaptchaToken} signup={mode === "signup"} />
 
         {error && (
           <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
