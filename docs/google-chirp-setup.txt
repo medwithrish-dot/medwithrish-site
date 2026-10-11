@@ -122,7 +122,8 @@ HOW TO TEST IT
 5. Say "yes".
 6. If a probe is appropriate, an AI-generated follow-up should appear and be
    read aloud with Google Chirp.
-7. During the follow-up, say "wait" or select "Add to previous answer".
+7. During the follow-up, continue speaking for two or more words. This should
+   interrupt automatically; "wait" and "hold on" also interrupt immediately.
    The follow-up should disappear from the visible transcript while you add
    to the previous answer. Confirm you are done; the same saved follow-up
    should return without another follow-up generation request.

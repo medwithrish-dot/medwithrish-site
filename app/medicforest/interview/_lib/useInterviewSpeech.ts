@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { monitorSpeechActivity, createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
-import { ANSWER_SILENCE_MS, parsePreviousAnswerInterrupt } from "./station-flow";
+import { ANSWER_SILENCE_MS, DONE_PROMPT, automaticInterruption, isInterviewerEcho, parsePreviousAnswerInterrupt } from "./station-flow";
 export { getTranscriptHints } from "./speech-delivery";
 
 type RecognitionResult = { isFinal: boolean; 0: { transcript: string; confidence?: number } };
@@ -32,7 +32,7 @@ const recognitionAvailable = () => {
 };
 const voicePlaybackAvailable = () => "Audio" in window || "speechSynthesis" in window;
 
-export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = ANSWER_SILENCE_MS }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = ANSWER_SILENCE_MS, continuousListening = false }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number; continuousListening?: boolean }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, voicePlaybackAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
@@ -49,12 +49,11 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<Recognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const interruptionCleanupRef = useRef<(() => void) | null>(null);
-  const stopInterruptionListening = useCallback(() => {
-    const cleanup = interruptionCleanupRef.current;
-    interruptionCleanupRef.current = null;
-    cleanup?.();
-  }, []);
+  const playbackRef = useRef<{ text: string; onComplete?: () => void; onInterrupt?: (continuation: string) => void } | null>(null);
+  const recentPromptsRef = useRef<string[]>([]);
+  const echoUntilRef = useRef(0);
+  const flushTranscriptRef = useRef<(() => void) | null>(null);
+  const retargetRef = useRef<(() => void) | null>(null);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
   const stoppingRef = useRef<Promise<void> | null>(null);
@@ -72,7 +71,6 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
   const stop = useCallback((): Promise<void> => {
-    stopInterruptionListening();
     listeningWantedRef.current = false;
     clearSilence();
     if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
@@ -97,6 +95,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         if (mountedRef.current && deliveryKeyRef.current === answerKeyRef.current && interimRef.current) onTranscriptRef.current(interimRef.current);
         interimRef.current = "";
         if (recognitionRef.current === recognition) {
+          flushTranscriptRef.current = null;
+          retargetRef.current = null;
           activityStopRef.current?.();
           activityStopRef.current = null;
           recognitionRef.current = null;
@@ -116,15 +116,24 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     stoppingRef.current = pending;
     void pending.then(() => { if (stoppingRef.current === pending) stoppingRef.current = null; });
     return pending;
-  }, [clearSilence, stopInterruptionListening]);
+  }, [clearSilence]);
+
+  const flush = useCallback(async () => {
+    clearSilence();
+    flushTranscriptRef.current?.();
+  }, [clearSilence]);
 
   useEffect(() => {
     answerKeyRef.current = answerKey;
-    if (recognitionRef.current && deliveryKeyRef.current !== answerKey) void stop();
-  }, [answerKey, stop]);
+    if (recognitionRef.current && deliveryKeyRef.current !== answerKey) {
+      if (continuousListening) retargetRef.current?.();
+      else void stop();
+    }
+  }, [answerKey, continuousListening, stop]);
 
   const stopSpeaking = useCallback(() => {
-    stopInterruptionListening();
+    playbackRef.current = null;
+    echoUntilRef.current = Date.now() + 2_000;
     speechRequestRef.current += 1;
     const audio = audioRef.current;
     audioRef.current = null;
@@ -136,7 +145,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     }
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     if (mountedRef.current) setSpeaking(false);
-  }, [stopInterruptionListening]);
+  }, []);
 
   const start = useCallback(() => {
     if (!mountedRef.current || recognitionRef.current || stoppingRef.current) return;
@@ -146,7 +155,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       setError("Speech recognition is unavailable in this browser. Type your answer below.");
       return;
     }
-    stopSpeaking();
+    if (!continuousListening) stopSpeaking();
     setError("");
     setInterimTranscript("");
     interimRef.current = "";
@@ -173,13 +182,31 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     measuredActivityRef.current = null;
     let hasWords = false;
     let notifiedForGap = false;
-    const current = () => mountedRef.current && recognitionRef.current === recognition && answerKeyRef.current === answerKey;
+    const current = () => mountedRef.current && recognitionRef.current === recognition && (continuousListening || answerKeyRef.current === answerKey);
+    const seenResults = new Set<number>();
+    const retiredResults = new Set<number>();
+    const commandResults = new Set<number>();
+    const overlappingResults = new Map<number, (continuation: string) => void>();
+    let interimResultIndex: number | null = null;
+    let interruptedResultIndex: number | null = null;
+    const retarget = () => {
+      clearSilence();
+      for (const index of seenResults) {
+        if (index !== interruptedResultIndex) retiredResults.add(index);
+      }
+      deliveryKeyRef.current = answerKeyRef.current;
+      setDeliveryKey(answerKeyRef.current);
+      deliveryRef.current = { text: "", segments: [], confidence: [] };
+      boundaryRef.current.reset();
+      hasWords = Boolean(interimRef.current);
+      notifiedForGap = false;
+    };
     const scheduleSilence = () => {
       clearSilence();
-      if (!current() || !listeningWantedRef.current || finishRef.current || !hasWords || notifiedForGap || measuredActivityRef.current === true) return;
+      if (!current() || !listeningWantedRef.current || finishRef.current || playbackRef.current || !hasWords || notifiedForGap || measuredActivityRef.current === true) return;
       silenceTimerRef.current = window.setTimeout(() => {
         silenceTimerRef.current = null;
-        if (!current() || !listeningWantedRef.current || finishRef.current || measuredActivityRef.current === true) return;
+        if (!current() || !listeningWantedRef.current || finishRef.current || playbackRef.current || measuredActivityRef.current === true) return;
         notifiedForGap = true;
         onSilenceRef.current?.();
       }, silenceMs);
@@ -188,12 +215,21 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       const text = interimRef.current;
       interimRef.current = "";
       if (!current() || !text) return;
+      if (continuousListening && interimResultIndex !== null) retiredResults.add(interimResultIndex);
       onTranscriptRef.current(text);
       boundaryRef.current.commit();
       const delivery = deliveryRef.current;
       delivery.text += ` ${text}`;
       delivery.segments.push({ kind: "speech", text, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) });
     };
+    flushTranscriptRef.current = () => {
+      commitInterim();
+      setInterimTranscript("");
+      clearSilence();
+      hasWords = false;
+      notifiedForGap = false;
+    };
+    retargetRef.current = retarget;
     recognition.lang = "en-GB";
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -202,7 +238,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       clearSilence();
       notifiedForGap = false;
       const pause = boundaryRef.current.start(elapsed());
-      if (pause) {
+      if (pause && !playbackRef.current) {
         // Do not place a gap before words that are still awaiting recognition.
         if (interimRef.current) return;
         onTranscriptRef.current(pause.text);
@@ -221,18 +257,46 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       let receivedWords = false;
       for (let index = event.resultIndex; index < event.results.length; index += 1) {
         const result = event.results[index];
-        const text = normalizeSpeechTranscript(result[0].transcript.trim());
+        let text = normalizeSpeechTranscript(result[0].transcript.trim());
+        if (continuousListening) {
+          if (retiredResults.has(index)) continue;
+          seenResults.add(index);
+          if ((playbackRef.current || Date.now() < echoUntilRef.current) && isInterviewerEcho(text, recentPromptsRef.current)) continue;
+          const playback = playbackRef.current;
+          const interrupt = playback?.onInterrupt ?? overlappingResults.get(index);
+          if (interrupt) {
+            const continuation = automaticInterruption(text);
+            if (continuation === null) {
+              if (text) overlappingResults.set(index, interrupt);
+              continue;
+            }
+            overlappingResults.delete(index);
+            if (parsePreviousAnswerInterrupt(text) !== null) commandResults.add(index);
+            interruptedResultIndex = index;
+            stopSpeaking();
+            // The result remains live on this recognition session. Switch the
+            // answer first, then commit its complete text exactly once at final.
+            interrupt("");
+          } else if (playback && text) {
+            if (playback.text !== DONE_PROMPT && automaticInterruption(text) === null) continue;
+            stopSpeaking();
+            playback.onComplete?.();
+          }
+          if (commandResults.has(index)) text = parsePreviousAnswerInterrupt(text) ?? text;
+          if (!text) continue;
+        }
         if (text) receivedWords = true;
         if (result.isFinal && text) {
           boundaryRef.current.commit();
           onTranscriptRef.current(text);
+          if (continuousListening) retiredResults.add(index);
           interimRef.current = "";
           const delivery = deliveryRef.current;
           delivery.text += ` ${text}`;
           delivery.segments.push({ kind: "speech", text, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) });
           delivery.confidence.push({ words: getTranscriptHints(text).wordCount, confidence: result[0].confidence ?? 0 });
         }
-        else interim += `${text} `;
+        else { interim += `${text} `; interimResultIndex = index; }
       }
       interimRef.current = interim.trim();
       setInterimTranscript(interim.trim());
@@ -267,6 +331,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       if (finishRef.current) { finishRef.current(); return; }
       if (!current() || !listeningWantedRef.current) return;
       commitInterim();
+      seenResults.clear();
+      retiredResults.clear();
+      commandResults.clear();
+      overlappingResults.clear();
+      interimResultIndex = null;
+      interruptedResultIndex = null;
       setInterimTranscript("");
       if (silenceTimerRef.current === null) scheduleSilence();
       // Recognition services end on pauses and at their session limit, even
@@ -303,69 +373,24 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       try { recognition.abort(); } catch { /* The browser did not start recognition. */ }
       setError("The microphone could not start. Try again or type your answer.");
     }
-  }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
+  }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs, continuousListening]);
 
   const speak = useCallback(async (text: string, onComplete?: () => void, audioSrc?: string, onInterrupt?: (continuation: string) => void) => {
     const request = ++speechRequestRef.current;
-    await stop();
+    if (!continuousListening) await stop();
     if (!mountedRef.current || request !== speechRequestRef.current) return;
     const finish = () => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
-      stopInterruptionListening();
+      playbackRef.current = null;
+      echoUntilRef.current = Date.now() + 2_000;
       audioRef.current = null;
       setSpeaking(false);
       onComplete?.();
     };
-    // Recognition here listens only for an explicit interruption command. It
-    // never transcribes interviewer playback into the candidate's scored answer.
-    if (onInterrupt) {
-      const speechWindow = window as SpeechWindow;
-      const Constructor = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
-      if (Constructor) {
-        let recognition: Recognition | undefined;
-        let restartTimer: number | undefined;
-        const cleanup = () => {
-          if (restartTimer !== undefined) window.clearTimeout(restartTimer);
-          if (!recognition) return;
-          recognition.onresult = null;
-          recognition.onend = null;
-          recognition.onerror = null;
-          try { recognition.abort(); } catch { /* Already stopped. */ }
-        };
-        try {
-          recognition = new Constructor();
-          const listener = recognition;
-          listener.lang = "en-GB";
-          listener.continuous = true;
-          listener.interimResults = true;
-          const current = () => mountedRef.current && request === speechRequestRef.current && interruptionCleanupRef.current === cleanup;
-          listener.onresult = (event) => {
-            if (!current()) return;
-            for (let index = event.resultIndex; index < event.results.length; index++) {
-              const continuation = parsePreviousAnswerInterrupt(event.results[index][0].transcript);
-              if (continuation === null) continue;
-              stopSpeaking();
-              onInterrupt(continuation);
-              return;
-            }
-          };
-          listener.onend = () => {
-            if (!current()) return;
-            restartTimer = window.setTimeout(() => {
-              if (!current()) return;
-              try { listener.start(); } catch { stopInterruptionListening(); }
-            }, 200);
-          };
-          listener.onerror = () => { if (current()) stopInterruptionListening(); };
-          interruptionCleanupRef.current = cleanup;
-          listener.start();
-        } catch {
-          cleanup();
-          if (interruptionCleanupRef.current === cleanup) interruptionCleanupRef.current = null;
-          // The visible interruption control remains available.
-        }
-      }
-    }
+    clearSilence();
+    playbackRef.current = { text, onComplete, onInterrupt };
+    recentPromptsRef.current = [...recentPromptsRef.current.slice(-1), text];
+    echoUntilRef.current = Date.now() + 2_000;
     const speakWithBrowserVoice = () => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
       if (!("speechSynthesis" in window)) {
@@ -419,13 +444,13 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       return;
     }
     speakWithBrowserVoice();
-  }, [stop, rate, stopSpeaking, stopInterruptionListening]);
+  }, [stop, rate, continuousListening, clearSilence]);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      stopInterruptionListening();
+      playbackRef.current = null;
       listeningWantedRef.current = false;
       clearSilence();
       if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
@@ -453,10 +478,10 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       }
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
-  }, [clearSilence, stopInterruptionListening]);
+  }, [clearSilence]);
 
   return { supported, voiceSupported, listening, speaking, interimTranscript,
     deliveryHints: deliveryKey === answerKey ? deliveryHints : getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }),
     getDeliveryHints: () => deliveryHintsRef.current,
-    error, start, stop, speak, stopSpeaking };
+    error, start, stop, flush, speak, stopSpeaking };
 }

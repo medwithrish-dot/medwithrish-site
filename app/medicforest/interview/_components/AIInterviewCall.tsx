@@ -27,7 +27,7 @@ type Props = {
   wordCount: number; onSkipPreparation: () => void;
   followUpBusy: boolean; followUpNotice: string; awaitingDone: boolean; prompting: boolean; micWanted: boolean; onReadQuestion: () => void;
   onDone: () => void; onConfirmDone: () => void; onKeepAnswering: () => void;
-  canInterruptQuestion: boolean; resumingPrevious: boolean; onInterruptQuestion: () => void;
+  resumingPrevious: boolean;
 };
 
 function ParticipantWaves() {
@@ -155,7 +155,7 @@ export function AIInterviewCall(props: Props) {
         </div>
         <footer className={styles.callControls} aria-label="Med Interview controls">
           <div className={styles.deviceControls}>
-            <button type="button" disabled={!active || microphonePending || !speech.supported} aria-label={microphoneLabel} title={microphoneLabel} aria-pressed={speech.listening} className={speech.listening ? styles.controlActive : ""} onClick={props.onToggleMicrophone}>{microphonePending ? <Loader2 size={21} className="animate-spin" /> : speech.listening ? <Mic size={21} /> : <MicOff size={21} />}<span>{props.micWanted && !speech.error ? "Stop mic" : "Start mic"}</span></button>
+            <button type="button" disabled={(!active && !props.micWanted && !speech.listening) || microphonePending || !speech.supported} aria-label={microphoneLabel} title={microphoneLabel} aria-pressed={speech.listening} className={speech.listening ? styles.controlActive : ""} onClick={props.onToggleMicrophone}>{microphonePending ? <Loader2 size={21} className="animate-spin" /> : speech.listening ? <Mic size={21} /> : <MicOff size={21} />}<span>{props.micWanted && !speech.error ? "Stop mic" : "Start mic"}</span></button>
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
             <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Finish station" title="Finish station" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish</span></button>
           </div>
@@ -179,7 +179,6 @@ export function AIInterviewCall(props: Props) {
               {stimulus && <div className={styles.transcriptStimulus}><InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question} /></div>}
             </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
-            {props.canInterruptQuestion && <div className={styles.answerProgress}><span>{props.micWanted ? 'Say “wait” or “hold on” to add to your previous answer.' : "You can still add to your previous answer."}</span><button type="button" onClick={props.onInterruptQuestion}>Add to previous answer</button></div>}
             {props.resumingPrevious && <p role="status" className={styles.followUpNotice}>Continue your previous answer. The next question is paused.</p>}
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>
             <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>

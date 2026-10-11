@@ -14,11 +14,27 @@ export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(sl
 export const ANSWER_SILENCE_MS = 5_000;
 export const DONE_PROMPT = "Done? Say yes or no.";
 
-/** Explicit commands avoid treating interviewer audio as a candidate interruption. */
+/** Optional commands are removed from the candidate's answer. */
 export function parsePreviousAnswerInterrupt(text: string): string | null {
   const match = text.trim().match(/^(?:wait|hold on)(?:\b[,.!?]?\s*)/i);
   if (!match) return null;
   return text.trim().slice(match[0].length).replace(/^(?:please[,.!?]?\s*)?(?:i (?:want|would like) to|can i) add (?:something )?to (?:my |the )?previous answer[,.!?]?\s*/i, "").trim();
+}
+
+export function automaticInterruption(text: string): string | null {
+  const command = parsePreviousAnswerInterrupt(text);
+  if (command !== null) return command;
+  return (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? []).length >= 2 ? text.trim() : null;
+}
+
+/** Ignore recognized fragments of the interviewer's current/recent playback. */
+export function isInterviewerEcho(text: string, prompts: readonly string[]) {
+  const words = (value: string) => (value.toLowerCase().match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? []).join(" ");
+  const heard = words(text);
+  if (!heard) return false;
+  // Single-word yes/no must remain usable during the completion prompt.
+  if (["yes", "no", "yeah", "yep", "yup", "nope"].includes(heard)) return false;
+  return prompts.some((prompt) => ` ${words(prompt)} `.includes(` ${heard} `));
 }
 
 const QUESTION_TRANSITIONS = [

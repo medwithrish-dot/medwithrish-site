@@ -90,6 +90,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const confirmationPendingRef = useRef(false);
   const onSilenceRef = useRef<() => void>(() => {});
   const completeAnswerRef = useRef<() => void>(() => {});
+  const cancelPromptRef = useRef<() => void>(() => {});
   const interruptQuestionRef = useRef<(continuation?: string) => void>(() => {});
   const [resumeQuestion, setResumeQuestion] = useState<string | null>(null);
   const resumeQuestionRef = useRef<string | null>(null);
@@ -138,17 +139,18 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     persistLocal(nextAnswers);
   }, [persistLocal]);
 
-  const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, silenceMs: ANSWER_SILENCE_MS, onSilence: () => onSilenceRef.current(), onTranscript: (text) => {
+  const speech = useInterviewSpeech({ rate: voiceRate, continuousListening: true, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, silenceMs: ANSWER_SILENCE_MS, onSilence: () => onSilenceRef.current(), onTranscript: (text) => {
     const current = attemptRef.current;
-    // stopListening flushes the last recognition result while completion is locked.
+    // Flush the last recognition result without closing the microphone.
     if (!current || current.status !== "in_progress") return;
     // A late yes/no reply belongs to the confirmation, not to the scored answer.
-    if (completionLockRef.current && completingConfirmationRef.current) return;
+    if (completionLockRef.current && completingConfirmationRef.current && parseDoneReply(text).done) return;
     if (!awaitingDoneRef.current && questionIndexRef.current > 0 && !resumeQuestionRef.current && !answersRef.current[questionIndexRef.current]?.answer.trim()) {
       const continuation = parsePreviousAnswerInterrupt(text);
       if (continuation !== null) { interruptQuestionRef.current(continuation); return; }
     }
     if (awaitingDoneRef.current) {
+      cancelPromptRef.current();
       const reply = parseDoneReply(text);
       awaitingDoneRef.current = false;
       setAwaitingDone(false);
@@ -161,7 +163,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       ? { ...answer, answer: `${answer.answer}${answer.answer ? " " : ""}${text}`.slice(0, 6_000) }
       : answer));
   } });
-  const { start: startListening, stop: stopListening, stopSpeaking, speak, voiceSupported } = speech;
+  const { start: startListening, stop: stopListening, flush: flushListening, stopSpeaking, speak, voiceSupported } = speech;
   const rememberSpeechDelivery = useCallback(() => {
     const currentQuestion = attemptRef.current?.questions[questionIndexRef.current];
     const delivery = typeof speech.getDeliveryHints === "function" ? speech.getDeliveryHints() : speech.deliveryHints;
@@ -468,8 +470,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   }, [microphoneRoomId, requestMicrophone, cancelMicrophoneRequest]);
 
   const toggleMicrophone = async () => {
-    if (!active || actionLockRef.current || submitLockRef.current || !speech.supported) return;
     if ((micWanted && !speech.error) || speech.listening) { setMicWanted(false); await stopListening(); return; }
+    if (!active || actionLockRef.current || submitLockRef.current || !speech.supported) return;
     const current = attemptRef.current;
     const index = questionIndexRef.current;
     if (!current) return;
@@ -479,7 +481,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       || questionIndexRef.current !== index || actionLockRef.current || submitLockRef.current || document.hidden
       || Date.now() + clockOffsetRef.current >= deadline) return;
     setMicWanted(true);
-    if (!promptingRef.current && !speech.speaking && !confirmationPendingRef.current) speech.start();
+    speech.start();
   };
 
   useEffect(() => {
@@ -502,7 +504,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       promptingRef.current = false;
       setPrompting(false);
     };
-    const onInterrupt = canInterruptQuestion && micWanted ? (continuation: string) => interruptQuestionRef.current(continuation) : undefined;
+    const onInterrupt = canInterruptQuestion ? (continuation: string) => interruptQuestionRef.current(continuation) : undefined;
     if (transition) {
       void speak(transition, () => {
         if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc, onInterrupt);
@@ -513,7 +515,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice, canInterruptQuestion, micWanted]);
 
   useEffect(() => {
-    if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
+    if (!active || !micWanted || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
       || actionLockRef.current || submitLockRef.current || completionLockRef.current || spokenQuestionRef.current !== `${attempt?.id}:${questionIndex}`) return;
     startListening();
   }, [active, micWanted, prompting, speech.speaking, speech.listening, speech.error, startListening, questionIndex, attempt?.id, awaitingDone, entryReady]);
@@ -580,7 +582,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     actionLockRef.current = true;
     try {
       speech.stopSpeaking();
-      await speech.stop();
+      await flushListening();
       questionIndexRef.current = index;
       setQuestionIndex(index);
       setFollowUpNotice("");
@@ -609,7 +611,6 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     promptingRef.current = false;
     setPrompting(false);
     try {
-      await stopListening();
       if (!mountedRef.current || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress" || submitLockRef.current) return;
       setQuestionIndex(previousIndex);
       setResumeQuestion(resumeQuestionRef.current);
@@ -632,7 +633,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     try {
       cancelMicrophoneRequest();
       stopSpeaking();
-      await stopListening();
+      await flushListening();
       const answer = answersRef.current.find((item) => item.question === sourceQuestion)?.answer ?? "";
       if (getTranscriptHints(answer).wordCount < 20) return false;
       await saveDraft();
@@ -666,7 +667,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const index = questionIndexRef.current;
     confirmationPendingRef.current = true;
     try {
-      await stopListening(); // Flush the answer before interpreting any yes/no reply.
+      await flushListening(); // Keep listening while switching to yes/no confirmation.
       if (submitLockRef.current || attemptRef.current?.id !== currentId || attemptRef.current?.status !== "in_progress" || questionIndexRef.current !== index) return;
       if (!answersRef.current[index]?.answer.trim()) return;
       awaitingDoneRef.current = true;
@@ -691,7 +692,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     try {
       rememberSpeechDelivery();
       stopSpeaking();
-      await stopListening();
+      await flushListening();
       const pendingQuestion = resumeQuestionRef.current;
       if (pendingQuestion) {
         resumeQuestionRef.current = null;
@@ -717,10 +718,11 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (!micWanted) return;
       // Some browsers leave even a short yes/no reply as interim text.
       // Flush it after the pause so confirmation never needs a button click.
-      if (awaitingDoneRef.current) void stopListening();
+      if (awaitingDoneRef.current) void flushListening();
       else void requestDone();
     };
     completeAnswerRef.current = () => { void completeAnswer(); };
+    cancelPromptRef.current = () => { stopSpeaking(); promptingRef.current = false; setPrompting(false); };
     interruptQuestionRef.current = (continuation) => { void interruptQuestion(continuation); };
   });
 
@@ -821,8 +823,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
         followUpBusy={followUpBusy} followUpNotice={followUpNotice} awaitingDone={awaitingDone} prompting={prompting || speech.speaking} micWanted={micWanted}
-        canInterruptQuestion={canInterruptQuestion} resumingPrevious={Boolean(resumeQuestion)} onInterruptQuestion={() => void interruptQuestion()}
-        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc, canInterruptQuestion && micWanted ? (continuation) => interruptQuestionRef.current(continuation) : undefined); } }}
+        resumingPrevious={Boolean(resumeQuestion)}
+        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc, canInterruptQuestion ? (continuation) => interruptQuestionRef.current(continuation) : undefined); } }}
         onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
         onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
