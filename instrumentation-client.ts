@@ -5,6 +5,7 @@ initBotId({
     { path: "/api/interviews/session", method: "POST" },
     { path: "/api/interviews/follow-up", method: "POST" },
     { path: "/api/interviews/feedback", method: "POST" },
+    { path: "/api/interviews/question-feedback", method: "POST" },
     { path: "/api/interviews/speech", method: "GET" },
   ],
 });

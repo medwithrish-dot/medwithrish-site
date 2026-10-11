@@ -3,8 +3,12 @@ import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretat
 
 export type InterviewerVoice = "female" | "male";
 
-// questions.csv rows 1-561 are the Med interview bank in this exact order. The
-// remaining rows are authored station/guide prompts that do not have bank IDs.
+// Original bank recordings retain IDs 1-561. Supplemental prompts and visual
+// stations retain IDs 562-657. New bank recordings are appended after them;
+// growing the bank must never renumber an existing recording.
+const ORIGINAL_RECORDED_BANK_COUNT = 561;
+const originalQuestions = INTERVIEW_QUESTIONS.slice(0, ORIGINAL_RECORDED_BANK_COUNT);
+const addedQuestions = INTERVIEW_QUESTIONS.slice(ORIGINAL_RECORDED_BANK_COUNT);
 const SUPPLEMENTAL_AUDIO_QUESTIONS = [
   "Why do you want to study medicine and become a doctor?",
   "Which experience most challenged or strengthened your motivation, and what did you learn from it?",
@@ -104,18 +108,21 @@ export const INTERVIEWER_AUDIO_PROMPTS = [
   "Thanks. I have a follow-up question for you.",
 ] as const;
 
-const dataStationAudioStart = INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + INTERVIEWER_AUDIO_PROMPTS.length;
-export const INTERVIEW_AUDIO_QUESTION_COUNT = dataStationAudioStart + DATA_INTERPRETATION_STATION_QUESTIONS.length;
+const dataStationAudioStart = ORIGINAL_RECORDED_BANK_COUNT + SUPPLEMENTAL_AUDIO_QUESTIONS.length + INTERVIEWER_AUDIO_PROMPTS.length;
+const addedBankAudioStart = dataStationAudioStart + DATA_INTERPRETATION_STATION_QUESTIONS.length;
+export const INTERVIEW_AUDIO_QUESTION_COUNT = addedBankAudioStart + addedQuestions.length;
 
 const questionNumberById = new Map<string, number>([
-  ...INTERVIEW_QUESTIONS.map((question, index) => [question.id, index + 1] as const),
+  ...originalQuestions.map((question, index) => [question.id, index + 1] as const),
   ...DATA_INTERPRETATION_STATION_QUESTIONS.map((question, index) => [question.id, dataStationAudioStart + index + 1] as const),
+  ...addedQuestions.map((question, index) => [question.id, addedBankAudioStart + index + 1] as const),
 ]);
 const questionNumberByText = new Map<string, number>([
-  ...INTERVIEW_QUESTIONS.map((question, index) => [question.text, index + 1] as const),
-  ...SUPPLEMENTAL_AUDIO_QUESTIONS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + index + 1] as const),
-  ...INTERVIEWER_AUDIO_PROMPTS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + index + 1] as const),
+  ...originalQuestions.map((question, index) => [question.text, index + 1] as const),
+  ...SUPPLEMENTAL_AUDIO_QUESTIONS.map((question, index) => [question, ORIGINAL_RECORDED_BANK_COUNT + index + 1] as const),
+  ...INTERVIEWER_AUDIO_PROMPTS.map((question, index) => [question, ORIGINAL_RECORDED_BANK_COUNT + SUPPLEMENTAL_AUDIO_QUESTIONS.length + index + 1] as const),
   ...DATA_INTERPRETATION_STATION_QUESTIONS.map((question, index) => [question.text, dataStationAudioStart + index + 1] as const),
+  ...addedQuestions.map((question, index) => [question.text, addedBankAudioStart + index + 1] as const),
 ]);
 
 export function getInterviewQuestionAudioSrc(

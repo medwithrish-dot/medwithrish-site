@@ -9,6 +9,8 @@ import {
 } from "../_lib/question-bank-storage";
 
 import { getQuestionStimulus } from "../_data/interview-stimuli";
+import { QuestionFeedbackPanel } from "./QuestionFeedbackPanel";
+import { QuestionAudioPlayer } from "./QuestionAudioPlayer";
 import { InterviewStimulus } from "./InterviewStimulus";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -25,7 +27,6 @@ import {
   RefreshCw,
   RotateCcw,
   Send,
-  Sparkles,
 } from "lucide-react";
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import {
@@ -1244,6 +1245,8 @@ export function QuestionPracticeView({
               </div>
             </section>
 
+            <QuestionAudioPlayer questionId={question.id} text={question.text} />
+
             {stimulus && <div className="mt-5 max-w-5xl"><InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question.text} /></div>}
 
             {isReviewing ? (
@@ -1261,14 +1264,6 @@ export function QuestionPracticeView({
                         </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <button
-                          type="button"
-                          disabled
-                          className="inline-flex h-10 cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-[#d8e0e6] bg-white/70 px-4 text-sm font-black text-[#748791] shadow-sm"
-                        >
-                          <Sparkles className="h-4 w-4" aria-hidden="true" />
-                          AI Feedback
-                        </button>
                         <button
                           type="button"
                           onClick={resetAttempt}
@@ -1291,6 +1286,8 @@ export function QuestionPracticeView({
                       {normalizeSpeechTranscript(savedAnswer.trim()) || "No response was captured before the timer ended."}
                     </div>}
                   </section>
+
+                  <QuestionFeedbackPanel key={`${question.id}:${savedResponse?.completedAt ?? "current"}`} questionId={question.id} answer={savedAnswer} />
 
                   <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
                     <h2 className="text-base font-black text-[#071923]">

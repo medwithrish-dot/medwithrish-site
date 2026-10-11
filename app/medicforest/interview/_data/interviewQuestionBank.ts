@@ -9777,6 +9777,262 @@ export const INTERVIEW_QUESTIONS = [
       "core",
       "quick-fire-personal-questions"
     ]
+  },
+  {
+    "id": "iq-01-031-motivation-for-medicine",
+    "text": "How would you test whether your interest in medicine remains realistic when the work feels routine rather than exciting?",
+    "category": "Personal & Motivation",
+    "subcategory": "Motivation for Medicine",
+    "sourceSection": 1,
+    "sourceSectionTitle": "MOTIVATION FOR MEDICINE",
+    "sourceQuestionNumber": 31,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "personal-and-motivation",
+      "motivation-for-medicine",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-01-032-motivation-for-medicine",
+    "text": "What would you want to learn about a doctor's working day before deciding that medicine is the right career for you?",
+    "category": "Personal & Motivation",
+    "subcategory": "Motivation for Medicine",
+    "sourceSection": 1,
+    "sourceSectionTitle": "MOTIVATION FOR MEDICINE",
+    "sourceQuestionNumber": 32,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "personal-and-motivation",
+      "motivation-for-medicine",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-04-021-communication-and-empathy",
+    "text": "A teammate says they understand your explanation, but their next action suggests otherwise. How would you check understanding without embarrassing them?",
+    "category": "Communication & Teamwork",
+    "subcategory": "Communication & Empathy",
+    "sourceSection": 4,
+    "sourceSectionTitle": "COMMUNICATION SKILLS",
+    "sourceQuestionNumber": 21,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "communication-and-teamwork",
+      "communication-and-empathy",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-04-022-communication-and-empathy",
+    "text": "How would you repair a conversation after realising that you interrupted someone who was trying to explain a concern?",
+    "category": "Communication & Teamwork",
+    "subcategory": "Communication & Empathy",
+    "sourceSection": 4,
+    "sourceSectionTitle": "COMMUNICATION SKILLS",
+    "sourceQuestionNumber": 22,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "communication-and-teamwork",
+      "communication-and-empathy",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-07-031-core-medical-ethics",
+    "text": "How would you approach a situation where following a rule appears to disadvantage one person unfairly?",
+    "category": "Ethics & Professionalism",
+    "subcategory": "Core Medical Ethics",
+    "sourceSection": 7,
+    "sourceSectionTitle": "MEDICAL ETHICS",
+    "sourceQuestionNumber": 31,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "ethics-and-professionalism",
+      "core-medical-ethics",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-07-032-core-medical-ethics",
+    "text": "Why might a decision that has a good outcome still raise concerns about professionalism?",
+    "category": "Ethics & Professionalism",
+    "subcategory": "Core Medical Ethics",
+    "sourceSection": 7,
+    "sourceSectionTitle": "MEDICAL ETHICS",
+    "sourceQuestionNumber": 32,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "ethics-and-professionalism",
+      "core-medical-ethics",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-11-021-role-of-a-doctor",
+    "text": "Why does coordinating care between different professionals matter as much as making an individual clinical decision?",
+    "category": "NHS & Healthcare",
+    "subcategory": "Role of a Doctor",
+    "sourceSection": 11,
+    "sourceSectionTitle": "THE ROLE OF A DOCTOR",
+    "sourceQuestionNumber": 21,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "nhs-and-healthcare",
+      "role-of-a-doctor",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-11-022-role-of-a-doctor",
+    "text": "How could a doctor help a patient understand what will happen after they leave a consultation?",
+    "category": "NHS & Healthcare",
+    "subcategory": "Role of a Doctor",
+    "sourceSection": 11,
+    "sourceSectionTitle": "THE ROLE OF A DOCTOR",
+    "sourceQuestionNumber": 22,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "nhs-and-healthcare",
+      "role-of-a-doctor",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-13-019-technology,-ai-and-digital-health",
+    "text": "A hospital is considering an app that reminds patients about appointments. What questions should it ask before introducing it?",
+    "category": "Hot Topics & Current Affairs",
+    "subcategory": "Technology, AI & Digital Health",
+    "sourceSection": 13,
+    "sourceSectionTitle": "TECHNOLOGY AND DIGITAL HEALTH",
+    "sourceQuestionNumber": 19,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "hot-topics-and-current-affairs",
+      "technology,-ai-and-digital-health",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-13-020-technology,-ai-and-digital-health",
+    "text": "How should a healthcare organisation respond when an online health claim becomes popular before its evidence has been checked?",
+    "category": "Hot Topics & Current Affairs",
+    "subcategory": "Technology, AI & Digital Health",
+    "sourceSection": 13,
+    "sourceSectionTitle": "TECHNOLOGY AND DIGITAL HEALTH",
+    "sourceQuestionNumber": 20,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "hot-topics-and-current-affairs",
+      "technology,-ai-and-digital-health",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-10-041-critical-appraisal",
+    "text": "In a fictional study, 30% of participants leave one group but only 5% leave the other. Why should this make you cautious about comparing the final results?",
+    "category": "Data, Research & Critical Thinking",
+    "subcategory": "Critical Appraisal",
+    "sourceSection": 10,
+    "sourceSectionTitle": "CRITICAL THINKING",
+    "sourceQuestionNumber": 41,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "data,-research-and-critical-thinking",
+      "critical-appraisal",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-10-042-critical-appraisal",
+    "text": "A fictional service survey receives replies from 80 out of 1,000 invited users, and most replies are positive. What can and cannot be concluded?",
+    "category": "Data, Research & Critical Thinking",
+    "subcategory": "Critical Appraisal",
+    "sourceSection": 10,
+    "sourceSectionTitle": "CRITICAL THINKING",
+    "sourceQuestionNumber": 42,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "data,-research-and-critical-thinking",
+      "critical-appraisal",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-17-019-role-play",
+    "text": "Role play: a classmate says they feel left out of a revision group. Start a conversation to understand what has happened and agree a next step.",
+    "category": "Practical MMI & Role Play",
+    "subcategory": "Role Play",
+    "sourceSection": 17,
+    "sourceSectionTitle": "ROLE PLAY AND COMMUNICATION TASKS",
+    "sourceQuestionNumber": 19,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "practical-mmi-and-role-play",
+      "role-play",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-17-020-role-play",
+    "text": "Role play: you agreed to help organise an event but now cannot meet the deadline. Explain this to the organiser and discuss a practical way forward.",
+    "category": "Practical MMI & Role Play",
+    "subcategory": "Role Play",
+    "sourceSection": 17,
+    "sourceSectionTitle": "ROLE PLAY AND COMMUNICATION TASKS",
+    "sourceQuestionNumber": 20,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "practical-mmi-and-role-play",
+      "role-play",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-22-021-personal-quick-fire",
+    "text": "What is one small habit that has made you more dependable?",
+    "category": "Curveballs & Quick-Fire",
+    "subcategory": "Personal Quick-Fire",
+    "sourceSection": 22,
+    "sourceSectionTitle": "QUICK-FIRE PERSONAL QUESTIONS",
+    "sourceQuestionNumber": 21,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "curveballs-and-quick-fire",
+      "personal-quick-fire",
+      "applied"
+    ]
+  },
+  {
+    "id": "iq-22-022-personal-quick-fire",
+    "text": "If you had to explain your approach to learning in one sentence, what would you say and why?",
+    "category": "Curveballs & Quick-Fire",
+    "subcategory": "Personal Quick-Fire",
+    "sourceSection": 22,
+    "sourceSectionTitle": "QUICK-FIRE PERSONAL QUESTIONS",
+    "sourceQuestionNumber": 22,
+    "difficulty": "applied",
+    "status": "not-attempted",
+    "tags": [
+      "curveballs-and-quick-fire",
+      "personal-quick-fire",
+      "applied"
+    ]
   }
 ] as const satisfies readonly InterviewQuestion[];
 

@@ -111,6 +111,28 @@ try {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
   }
 
+  await check("the existing report constraint enforces one protected lifetime question-bank slot", async () => {
+    const account = randomUUID();
+    await db.query("insert into auth.users(id) values ($1)", [account]);
+    const insert = () => db.query(`insert into public.interview_attempts(
+      user_id, mode, station_slug, title, circuit_id, station_index, station_count,
+      preparation_seconds, station_seconds, break_seconds, questions, answers,
+      status, last_error, completed_at
+    ) values ($1,'reference','question-bank-feedback','Saved question',$1,0,1,0,60,0,
+      '[]'::jsonb,'[]'::jsonb,'failed','awaiting_feedback',now()) returning id`, [account]);
+    const results = await role("service_role", null, () => Promise.allSettled([insert(), insert()]));
+    assert.equal(results.filter(result => result.status === "fulfilled").length, 1);
+    assert.equal(results.find(result => result.status === "rejected").reason.code, "23505");
+    await role("authenticated", account, async () => {
+      await assert.rejects(db.query("delete from public.interview_attempts where user_id=$1", [account]), /permission denied/);
+      await assert.rejects(db.query("update public.interview_attempts set circuit_id=$1 where user_id=$1", [account]), /permission denied/);
+    });
+    const saved = (await db.query("select count(*)::int as count from public.interview_attempts where user_id=$1", [account])).rows[0];
+    assert.equal(saved.count, 1);
+    const trial = (await db.query("select count(*)::int as count from public.interview_attempts where user_id=$1 and mode='free'", [account])).rows[0];
+    assert.equal(trial.count, 0, "Bank feedback has a separate allowance from the free scored interview");
+  });
+
   const aiLimitsSql = await readFile(new URL("../supabase/medicforest_ai_abuse_limits.sql", import.meta.url), "utf8");
   await db.exec(aiLimitsSql); await db.exec(aiLimitsSql);
   const consume = async (user, kind = "generation") => role("service_role", null, async () =>

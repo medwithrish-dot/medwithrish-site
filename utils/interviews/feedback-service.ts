@@ -2,6 +2,7 @@ import "server-only";
 import { requireAiUsage } from "@/utils/security/ai-usage";
 import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
 import { randomUUID } from "node:crypto";
+import { FREE_QUESTION_FEEDBACK_USED, QUESTION_BANK_FEEDBACK_STATION } from "@/app/medicforest/interview/_lib/question-feedback";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { assessInterview, interviewAiConfigured } from "@/utils/interviews/openai";
 import { INTERVIEW_RUBRIC_VERSION } from "./scoring";
@@ -28,12 +29,16 @@ function feedbackFailureMessage(error: unknown) {
 }
 
 export async function generateInterviewFeedback(attemptId: unknown): Promise<InterviewAttempt> {
-  const { user, admin } = await interviewContext();
+  const { user, admin, isPremium } = await interviewContext();
   if (!validId(attemptId)) throw new InterviewError("Invalid Med interview ID");
   const { data: row, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
   if (error) databaseError(error);
   if (!row) throw new InterviewError("Med Interview not found", 404);
   if (row.status === "completed") return toInterviewAttempt(row);
+  if (row.station_slug === QUESTION_BANK_FEEDBACK_STATION && !isPremium
+    && (row.metrics as Record<string, unknown> | null)?.freeQuestionBankFeedback !== 1) {
+    throw new InterviewError(FREE_QUESTION_FEEDBACK_USED, 403);
+  }
   requireSubmittedAttempt(row);
   if (!interviewAiConfigured()) throw new InterviewError("Free AI feedback is not enabled yet. Your answers are saved.", 503);
 

@@ -64,9 +64,9 @@ const { assessmentGuidance } = load(resolve(root, "utils/interviews/assessment-g
 const { FOLLOW_UP_STATIONS, followUpsEnabled } = load(resolve(root, "app/medicforest/interview/_lib/station-flow.ts"));
 const { questionIdForText, selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection.ts"));
 
-test("all 561 questions have independently authored content, with no category or question-text substitution", () => {
-  assert.equal(INTERVIEW_QUESTIONS.length, 561);
-  assert.equal(Object.keys(questionMarkingPoints).length, 564);
+test("all 577 questions have independently authored content, with no category or question-text substitution", () => {
+  assert.equal(INTERVIEW_QUESTIONS.length, 577);
+  assert.equal(Object.keys(questionMarkingPoints).length, 580);
   const content = new Set();
   const middles = new Set();
   for (const question of INTERVIEW_QUESTIONS) {
@@ -79,8 +79,8 @@ test("all 561 questions have independently authored content, with no category or
     content.add(JSON.stringify(specific));
     middles.add(JSON.stringify(groups.find(group => group.title === "Middle").items));
   }
-  assert.equal(content.size, 561);
-  assert.equal(middles.size, 561, "Uniqueness must extend to substantive marking points");
+  assert.equal(content.size, 577);
+  assert.equal(middles.size, 577, "Uniqueness must extend to substantive marking points");
   assert.throws(() => getQuestionMarkScheme({ ...INTERVIEW_QUESTIONS[0], id: "iq-99-001-new" }), /Missing question markscheme/);
 });
 

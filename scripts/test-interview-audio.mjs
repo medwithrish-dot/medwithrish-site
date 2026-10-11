@@ -43,13 +43,13 @@ function readQuestionCsv() {
 
 test("questions.csv remains aligned with bank IDs and every recorded voice file", () => {
   const rows = readQuestionCsv();
-  assert.equal(rows.length, 657);
+  assert.equal(rows.length, 673);
   assert.equal(INTERVIEW_AUDIO_QUESTION_COUNT, rows.length);
-  assert.equal(INTERVIEW_QUESTIONS.length, 561);
+  assert.equal(INTERVIEW_QUESTIONS.length, 577);
 
   for (const [index, row] of rows.entries()) {
     assert.equal(row.id, index + 1, "CSV audio IDs must remain contiguous");
-    const bankQuestion = INTERVIEW_QUESTIONS[index];
+    const bankQuestion = row.id <= 561 ? INTERVIEW_QUESTIONS[index] : row.id >= 658 ? INTERVIEW_QUESTIONS[561 + row.id - 658] : null;
     if (bankQuestion) {
       assert.equal(row.question, bankQuestion.text, `CSV row ${row.id} no longer matches ${bankQuestion.id}`);
     }

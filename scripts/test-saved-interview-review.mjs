@@ -183,3 +183,11 @@ test("an unrelated active Med interview is offered for resume without replacing 
   assert.equal(page.review().attempt.id, original);
   assert.ok(find(page.tree(), node => node.props?.href?.endsWith("attempt=active-other")));
 });
+
+
+test("question-bank feedback reviews return to the original question instead of starting a station", async () => {
+  const page = await savedReview({ overrides: { stationSlug: "question-bank-feedback", questionIds: ["iq-01-031-motivation-for-medicine"] } });
+  page.review().onRetry(); await page.flush();
+  assert.equal(page.state.requests.length, 0);
+  assert.equal(page.state.routes[0], "/medicforest/interview/question-bank?question=iq-01-031-motivation-for-medicine");
+});

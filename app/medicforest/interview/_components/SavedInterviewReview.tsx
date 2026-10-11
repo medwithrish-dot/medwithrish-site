@@ -78,6 +78,12 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
 
   const runAction = useCallback(async (action: Action) => {
     if (actionLockRef.current) return;
+    if (action === "retry" && attemptRef.current.stationSlug === "question-bank-feedback") {
+      const questionId = attemptRef.current.questionIds?.[0];
+      const href = `/medicforest/interview/question-bank${questionId ? `?question=${encodeURIComponent(questionId)}` : ""}`;
+      router.push(medicForestPublicHref(window.location.pathname, href));
+      return;
+    }
     if (!requestFeatureAccess(action === "retry" ? attemptRef.current.mode === "free" ? "trial" : "premium" : "free", "Saved interview practice")) return;
     if (!requestFeatureAccess(action === "retry" && attemptRef.current.mode !== "free" ? "premium" : "free", "Saved interview practice")) return;
     actionLockRef.current = true;

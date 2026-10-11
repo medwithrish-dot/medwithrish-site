@@ -1,5 +1,5 @@
 MEDICFOREST INTERVIEW MARKSCHEMES
-561 question-specific markschemes
+577 question-specific markschemes
 
 Practice guidance, not official admissions criteria. Mark the general skill or reasoning. Details in brackets are illustrative examples, not facts or phrases that must be repeated: credit other accurate examples and equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.
 
@@ -12736,3 +12736,389 @@ END
 
 MISTAKES
 - Offering a claim of integrity without a real choice or action
+
+------------------------------------------------------------
+
+iq-01-031-motivation-for-medicine
+Personal & Motivation / Motivation for Medicine
+Question: How would you test whether your interest in medicine remains realistic when the work feels routine rather than exciting?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Acknowledges that medicine includes routine and repetitive work
+
+MIDDLE
+- Explains how observing everyday responsibilities could test their expectations
+- Identifies which values would sustain effort without constant novelty
+
+END
+- Names a practical way to explore less visible aspects of the role
+
+MISTAKES
+- Equating enjoyment of dramatic cases with commitment to daily patient care
+
+
+
+------------------------------------------------------------
+
+iq-01-032-motivation-for-medicine
+Personal & Motivation / Motivation for Medicine
+Question: What would you want to learn about a doctor's working day before deciding that medicine is the right career for you?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Identifies a specific uncertainty about the working day
+
+MIDDLE
+- Considers time spent documenting, coordinating and following up care
+- Explains how a conversation or observation could address that uncertainty
+
+END
+- Connects the finding with an informed personal career decision
+
+MISTAKES
+- Assuming all specialties or working environments have the same daily routine
+
+
+
+------------------------------------------------------------
+
+iq-04-021-communication-and-empathy
+Communication & Teamwork / Communication & Empathy
+Question: A teammate says they understand your explanation, but their next action suggests otherwise. How would you check understanding without embarrassing them?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Recognises that apparent agreement may not mean shared understanding
+
+MIDDLE
+- Invites the teammate to describe the next step in their own words
+- Rephrases the explanation privately and takes responsibility for clarity
+
+END
+- Checks the agreed action with a supportive tone
+
+MISTAKES
+- Testing or correcting the teammate publicly in a humiliating way
+
+
+
+------------------------------------------------------------
+
+iq-04-022-communication-and-empathy
+Communication & Teamwork / Communication & Empathy
+Question: How would you repair a conversation after realising that you interrupted someone who was trying to explain a concern?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Acknowledges the interruption without making excuses
+
+MIDDLE
+- Apologises briefly and invites the person to finish
+- Listens to and summarises the concern before responding
+
+END
+- Checks whether anything important remains unheard
+
+MISTAKES
+- Offering an apology and immediately continuing to dominate the conversation
+
+
+
+------------------------------------------------------------
+
+iq-07-031-core-medical-ethics
+Ethics & Professionalism / Core Medical Ethics
+Question: How would you approach a situation where following a rule appears to disadvantage one person unfairly?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Separates the purpose of the rule from its effect in this case
+
+MIDDLE
+- Clarifies the facts and perspectives before judging unfairness
+- Considers proportionate alternatives and seeks authorised advice
+
+END
+- Explains a fair and accountable decision without bypassing safeguards
+
+MISTAKES
+- Assuming that either rigid obedience or secretly ignoring the rule is always ethical
+
+
+
+------------------------------------------------------------
+
+iq-07-032-core-medical-ethics
+Ethics & Professionalism / Core Medical Ethics
+Question: Why might a decision that has a good outcome still raise concerns about professionalism?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Distinguishes an outcome from the way a decision was made
+
+MIDDLE
+- Considers honesty, consent, respect or working within competence
+- Explains why a fortunate result does not remove avoidable risks
+
+END
+- Links responsible processes with trust and learning from decisions
+
+MISTAKES
+- Treating success as proof that every action taken was acceptable
+
+
+
+------------------------------------------------------------
+
+iq-11-021-role-of-a-doctor
+NHS & Healthcare / Role of a Doctor
+Question: Why does coordinating care between different professionals matter as much as making an individual clinical decision?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Recognises that care depends on coordinated contributions
+
+MIDDLE
+- Explains how clear responsibilities and information transfer support continuity
+- Identifies how fragmented plans can create delays or misunderstandings
+
+END
+- Links coordination with a shared plan centred on the patient
+
+MISTAKES
+- Presenting a doctor as the only professional responsible for effective care
+
+
+
+------------------------------------------------------------
+
+iq-11-022-role-of-a-doctor
+NHS & Healthcare / Role of a Doctor
+Question: How could a doctor help a patient understand what will happen after they leave a consultation?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Identifies the need for a clear plan after the appointment
+
+MIDDLE
+- Explains next steps and whom to contact in accessible language
+- Checks understanding and considers practical barriers to following the plan
+
+END
+- Summarises a realistic follow-up arrangement without promising outcomes
+
+MISTAKES
+- Assuming that giving written instructions guarantees understanding or access
+
+
+
+------------------------------------------------------------
+
+iq-13-019-technology,-ai-and-digital-health
+Hot Topics & Current Affairs / Technology, AI & Digital Health
+Question: A hospital is considering an app that reminds patients about appointments. What questions should it ask before introducing it?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Clarifies the intended benefit of appointment reminders
+
+MIDDLE
+- Considers access, privacy and alternatives for people who cannot use an app
+- Asks how success and unintended effects will be measured
+
+END
+- Proposes a limited evaluation with patient feedback before wider adoption
+
+MISTAKES
+- Assuming that smartphone access or reduced missed appointments is guaranteed
+
+
+
+------------------------------------------------------------
+
+iq-13-020-technology,-ai-and-digital-health
+Hot Topics & Current Affairs / Technology, AI & Digital Health
+Question: How should a healthcare organisation respond when an online health claim becomes popular before its evidence has been checked?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Separates popularity from reliability of the claim
+
+MIDDLE
+- Explains how to review sources and communicate uncertainty promptly
+- Considers an accessible response that avoids amplifying misleading details
+
+END
+- States how advice should be updated as evidence improves
+
+MISTAKES
+- Repeating an unverified claim confidently or dismissing concerned people without explanation
+
+
+
+------------------------------------------------------------
+
+iq-10-041-critical-appraisal
+Data, Research & Critical Thinking / Critical Appraisal
+Question: In a fictional study, 30% of participants leave one group but only 5% leave the other. Why should this make you cautious about comparing the final results?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Identifies unequal loss to follow-up
+
+MIDDLE
+- Explains that remaining participants may differ systematically from those who left
+- Asks why people left and how missing outcomes were handled
+
+END
+- Gives a cautious interpretation rather than assuming the comparison is unbiased
+
+MISTAKES
+- Treating unequal dropout as proof of an effect or ignoring the missing participants
+
+
+
+------------------------------------------------------------
+
+iq-10-042-critical-appraisal
+Data, Research & Critical Thinking / Critical Appraisal
+Question: A fictional service survey receives replies from 80 out of 1,000 invited users, and most replies are positive. What can and cannot be concluded?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+
+START
+- Distinguishes the respondents from the full invited group
+
+MIDDLE
+- Notes the low response rate and possible non-response bias
+- Recognises that positive replies describe those who responded rather than every user
+
+END
+- Suggests ways to understand non-respondents before generalising
+
+MISTAKES
+- Claiming the survey proves that most of all 1,000 users are satisfied
+
+
+
+------------------------------------------------------------
+
+iq-17-019-role-play
+Practical MMI & Role Play / Role Play
+Question: Role play: a classmate says they feel left out of a revision group. Start a conversation to understand what has happened and agree a next step.
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+- Demonstrates the requested communication, using natural language and space for the other person to respond
+
+START
+- Opens with a welcoming acknowledgement of the concern
+
+MIDDLE
+- Uses an open question and allows the classmate to describe their experience
+- Reflects what they say without assuming the intentions of other students
+
+END
+- Agrees a manageable next step with their input
+
+MISTAKES
+- Promising to confront the whole group before hearing the classmate's account
+
+
+
+------------------------------------------------------------
+
+iq-17-020-role-play
+Practical MMI & Role Play / Role Play
+Question: Role play: you agreed to help organise an event but now cannot meet the deadline. Explain this to the organiser and discuss a practical way forward.
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+- Demonstrates the requested communication, using natural language and space for the other person to respond
+
+START
+- Raises the difficulty promptly and accepts responsibility for the commitment
+
+MIDDLE
+- Explains the relevant limitation without excessive excuses
+- Offers realistic alternatives and asks about the most urgent needs
+
+END
+- Confirms an achievable revised plan and how updates will be shared
+
+MISTAKES
+- Concealing the delay or offering another deadline they cannot meet
+
+
+
+------------------------------------------------------------
+
+iq-22-021-personal-quick-fire
+Curveballs & Quick-Fire / Personal Quick-Fire
+Question: What is one small habit that has made you more dependable?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+- Keeps the answer concise and personal; a long structured story is not required
+
+START
+- Names a specific everyday habit
+
+MIDDLE
+- Gives a brief example of using the habit consistently
+- Explains how it helps others rely on their contribution
+
+END
+- Keeps the response concise and proportionate
+
+MISTAKES
+- Claiming dependability without describing observable behaviour
+
+
+
+------------------------------------------------------------
+
+iq-22-022-personal-quick-fire
+Curveballs & Quick-Fire / Personal Quick-Fire
+Question: If you had to explain your approach to learning in one sentence, what would you say and why?
+GENERAL
+- Answers the specific task with clear, relevant reasoning
+- Supports claims with examples or evidence appropriate to this question
+- Keeps the answer concise and personal; a long structured story is not required
+
+START
+- Offers a clear one-sentence description of their learning approach
+
+MIDDLE
+- Explains one reason behind the approach
+- Uses a short example or acknowledges when it needs adapting
+
+END
+- Stops after a focused explanation rather than listing every study method
+
+MISTAKES
+- Using a slogan that does not describe how they actually learn
