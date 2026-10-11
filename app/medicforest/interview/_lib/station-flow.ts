@@ -1,10 +1,11 @@
 // Owner-controlled allowlist shared with the API: client requests cannot enable
-// arbitrary stations. Each original question is still limited to one probe and
+// arbitrary stations. Only Ethical dilemma stations qualify; Scenario station
+// is excluded even though its question-bank theme is Ethics.
+// Each original question is still limited to one probe and
 // the server caps an attempt at three probes.
 export const FOLLOW_UP_STATIONS: readonly string[] = [
   "disability-in-medicine",
   "equality-diversity-inclusion",
-  "ethics-confidentiality",
 ];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 

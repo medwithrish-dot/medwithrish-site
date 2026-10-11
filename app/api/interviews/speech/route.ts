@@ -3,6 +3,7 @@ import { synthesizeInterviewSpeech } from "@/utils/interviews/text-to-speech";
 import { requireHumanRequest } from "@/utils/security/human-check";
 import { followUpClaimMask } from "@/utils/interviews/follow-up";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
+import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
 
 export const runtime = "nodejs";
 export const maxDuration = 20;
@@ -18,10 +19,11 @@ export async function GET(request: Request) {
       throw new InterviewError("Invalid speech request");
     }
     const { user, admin } = await interviewContext();
-    const { data, error } = await admin.from("interview_attempts").select("questions,status,last_error").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
+    const { data, error } = await admin.from("interview_attempts").select("questions,status,last_error,station_slug").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
     if (error) databaseError(error);
     if (!data) throw new InterviewError("Med Interview not found", 404);
     if (data.status !== "in_progress") throw new InterviewError("This Med interview has ended", 409);
+    if (!followUpsEnabled(data.station_slug)) throw new InterviewError("Follow-ups are not enabled for this station.", 403);
     const questions = Array.isArray(data.questions) ? data.questions as string[] : [];
     const question = questions[index];
     if (!question || question.length > 500) throw new InterviewError("Med Interview question not found", 404);

@@ -7,6 +7,12 @@ This enables Google Cloud Chirp to read AI-generated Med interview follow-up
 questions aloud. Stored questions and prompts continue to use the MP3 files in
 public/audio.
 
+Only Ethical dilemma stations permit generated probes. Scenario stations do not.
+Dynamic audio uses a four-second provider timeout, with no automatic retry, then
+falls back to the browser voice. A bounded 15-minute cache shares generated audio
+and concurrent requests within each server process; browser caching also supports
+replays. Generation runs on Google Cloud rather than the candidate's computer.
+
 IMPORTANT
 ---------
 - Google Cloud requires a billing account for the Text-to-Speech API.

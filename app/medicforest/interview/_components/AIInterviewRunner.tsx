@@ -434,7 +434,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
     && (attempt?.questions.length ?? 0) - originalQuestions.length < 3
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
-  const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && !originalQuestions.includes(question)
+  const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && followUpsEnabled(attempt.stationSlug) && !originalQuestions.includes(question)
     ? `/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`
     : undefined);
   const microphoneRoomId = !loading && attempt?.status === "in_progress" && !reviewing ? attempt.id : null;

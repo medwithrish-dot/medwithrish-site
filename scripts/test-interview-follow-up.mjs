@@ -358,13 +358,83 @@ test("a caller cannot enable an unknown station before any provider call or clai
 });
 
 test("non-ethics stations reject probing before saving a claim or calling AI", async () => {
-  for (const station_slug of ["why-medicine", "work-experience", "ozempic", "nhs-waiting-lists", "teamwork-group-discussion", "data-analysis"]) {
+  for (const station_slug of ["why-medicine", "work-experience", "ozempic", "ethics-confidentiality", "nhs-waiting-lists", "teamwork-group-discussion", "data-analysis"]) {
     const { post, state } = harness({ enabled: false, overrides: { station_slug } });
     const response = await post(originals[0], { followUpsEnabled: true });
     assert.equal(response.status, 403);
     assert.equal(state.providerCalls, 0);
     assert.equal(state.row.last_error, null);
   }
+});
+
+test("only Ethical dilemma station types allow probing, regardless of their bank theme", () => {
+  const { followUpsEnabled } = load("app/medicforest/interview/_lib/station-flow.ts");
+  const { interviewStations } = load("app/medicforest/interview/_data/interview-stations.ts");
+  for (const station of interviewStations) {
+    assert.equal(followUpsEnabled(station.slug), station.lobbyTitle === "Ethical dilemma", station.slug);
+  }
+});
+
+test("scenario follow-up audio is rejected before any Google request", async () => {
+  let calls = 0;
+  const { GET } = load("app/api/interviews/speech/route.ts", {
+    "@/utils/interviews/server": {
+      validId: () => true,
+      interviewContext: async () => ({ user: { id: "user-1" }, admin: { from: () => ({
+        select() { return this; }, eq() { return this; },
+        maybeSingle: async () => ({ data: { station_slug: "ethics-confidentiality", status: "in_progress", questions: [originals[0], probe], last_error: "ai_followup:1" } }),
+      }) } }),
+      InterviewError: class extends Error { constructor(message, status) { super(message); this.status = status; } },
+      interviewFailure: error => Response.json({ error: error.message }, { status: error.status ?? 503 }),
+    },
+    "@/utils/interviews/text-to-speech": { synthesizeInterviewSpeech: async () => { calls++; return Buffer.from("audio"); } },
+  });
+  const response = await GET(new Request(`https://example.test/api/interviews/speech?attempt=${attemptId}&question=1&voice=female`));
+  assert.equal(response.status, 403);
+  assert.equal(calls, 0);
+});
+
+test("Google Chirp audio shares concurrent calls and replays, keeping voices separate", async () => {
+  await withEnv({ INTERVIEW_GOOGLE_TTS_ENABLED: "true", GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON: undefined }, async () => {
+    const calls = [];
+    const { synthesizeInterviewSpeech } = load("utils/interviews/text-to-speech.ts", {
+      "@google-cloud/text-to-speech": { TextToSpeechClient: class {
+        async synthesizeSpeech(request, options) {
+          calls.push({ request, options });
+          return [{ audioContent: Buffer.from("audio") }];
+        }
+      } },
+    });
+    const results = await Promise.all([synthesizeInterviewSpeech(probe, "female"), synthesizeInterviewSpeech(probe, "female")]);
+    assert.equal(results[0], results[1]);
+    assert.equal(await synthesizeInterviewSpeech(probe, "female"), results[0]);
+    assert.equal(calls.length, 1);
+    await synthesizeInterviewSpeech(probe, "male");
+    assert.equal(calls.length, 2);
+    assert.equal(calls[0].request.voice.name, "en-GB-Chirp3-HD-Aoede");
+    assert.equal(calls[1].request.voice.name, "en-GB-Chirp3-HD-Charon");
+    assert.deepEqual(calls[0].options, { timeout: 4000, retry: null });
+  });
+});
+
+test("failed Google audio is not cached and disabled Google audio never calls the provider", async () => {
+  await withEnv({ INTERVIEW_GOOGLE_TTS_ENABLED: "true", GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON: undefined }, async () => {
+    let calls = 0;
+    const { synthesizeInterviewSpeech } = load("utils/interviews/text-to-speech.ts", {
+      "@google-cloud/text-to-speech": { TextToSpeechClient: class {
+        async synthesizeSpeech() {
+          if (++calls === 1) throw new Error("Timed out");
+          return [{ audioContent: Buffer.from("audio") }];
+        }
+      } },
+    });
+    await assert.rejects(synthesizeInterviewSpeech(probe, "female"), /Timed out/);
+    await synthesizeInterviewSpeech(probe, "female");
+    assert.equal(calls, 2);
+    process.env.INTERVIEW_GOOGLE_TTS_ENABLED = "false";
+    await assert.rejects(synthesizeInterviewSpeech(probe, "female"), /not enabled/);
+    assert.equal(calls, 2);
+  });
 });
 
 test("the assessment request includes authored image facts and question criteria while keeping answers untrusted", async () => {
