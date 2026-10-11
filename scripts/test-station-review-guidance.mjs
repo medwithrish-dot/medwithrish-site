@@ -207,8 +207,9 @@ test("a data Med interview asks three staged questions about one visual", () => 
   }
 });
 
-test("probing is enabled only for ethics stations, including retired ethics links", () => {
-  assert.deepEqual(FOLLOW_UP_STATIONS, interviewStations.filter(station => station.theme === "Ethics").map(station => station.slug));
-  for (const slug of interviewStations.map(station => station.slug)) assert.equal(followUpsEnabled(slug), interviewStations.find(station => station.slug === slug).theme === "Ethics");
+test("probing is enabled only for Ethical dilemma stations, including retired ethics links", () => {
+  assert.deepEqual(FOLLOW_UP_STATIONS, interviewStations.filter(station => station.lobbyTitle === "Ethical dilemma").map(station => station.slug));
+  for (const station of interviewStations) assert.equal(followUpsEnabled(station.slug), station.lobbyTitle === "Ethical dilemma", station.slug);
+  assert.equal(followUpsEnabled("ethics-confidentiality"), false, "The Scenario station must not probe despite its Ethics bank theme");
   for (const slug of ["unknown", "constructor"]) assert.equal(followUpsEnabled(slug), false);
 });
