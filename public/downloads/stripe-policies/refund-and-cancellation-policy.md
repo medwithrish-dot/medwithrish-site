@@ -12,7 +12,13 @@ Because digital content may be supplied immediately, you may lose a statutory ca
 
 ## Tutoring sessions
 
-Please request cancellation or rescheduling by email as soon as possible. A full refund is generally available when requested at least 24 hours before a session. Late cancellations or missed sessions may be non-refundable unless the issue was caused by us or consumer law requires otherwise.
+Please request cancellation or rescheduling by email as soon as possible. We aim to be reasonable and review requests individually rather than applying a rigid deadline. Where a tutoring session has not taken place, we will normally try to offer a refund or reschedule when you contact us promptly. Late cancellations and missed sessions may be treated differently where time has been reserved or preparation has already been completed.
+
+## Premium subscription refunds
+
+If you request a refund shortly after a subscription payment, we will consider whether the Premium features have been used during the relevant billing period. A refund is more likely where Premium access has not been used, or where there was a genuine technical or other issue that prevented you from using the service. If Premium features have been substantially used, the payment may be non-refundable, although we may still offer a partial refund or another fair solution depending on the circumstances.
+
+This is a discretionary fairness policy and does not remove any mandatory consumer rights. Subscription cancellation prevents future renewals but does not automatically refund a billing period that has already started.
 
 ## How to request a refund
 
