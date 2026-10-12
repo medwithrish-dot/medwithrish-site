@@ -129,6 +129,9 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
           {feedback ? <a className={styles.feedbackLink} href="#station-feedback">Read your feedback <ArrowRight size={16} /></a> : <>
             {busy && <p className={styles.feedbackStatus} role="status"><Loader2 size={16} className="animate-spin" /> Preparing your feedback. It will appear here when ready.</p>}
             {!configured && !preview ? <p className={styles.availability}>AI feedback is currently unavailable. Your transcript and study guide are ready to use.</p> : wordCount < 20 && !preview ? <p className={styles.availability}>AI feedback needs at least 20 words. You can still review this attempt or retry the station.</p> : <p className={styles.availability}>Feedback is optional. You can retry or move on without generating it.</p>}
+            <div className={styles.feedbackCardAction}>{feedbackAction}
+              {!preview && attempt.mode === "free" && <span>For free accounts, this uses the one free AI feedback credit.</span>}
+            </div>
           </>}
         </section>
       </aside>

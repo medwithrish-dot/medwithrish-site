@@ -105,6 +105,32 @@ test("simultaneous free requests for different answers cannot both generate feed
   assert.equal(h.state.providerCalls, 1); assert.equal(h.state.rows.length, 1);
 });
 
+test("Why Medicine and question-bank feedback share one free account credit", async () => {
+  const h = harness();
+  const now = new Date(Date.now() - 60_000).toISOString();
+  const whyAttempt = {
+    id: randomUUID(), user_id: h.state.userId, mode: "free", university_slug: null,
+    station_slug: "why-medicine", title: "Why medicine?", status: "failed",
+    circuit_id: randomUUID(), station_index: 0, station_count: 1,
+    preparation_seconds: 0, station_seconds: 180, break_seconds: 0,
+    questions: ["Why medicine?"], question_ids: [question],
+    answers: [{ question: "Why medicine?", answer }], metrics: {}, feedback: null,
+    grading_tries: 0, started_at: now, completed_at: now, last_error: "awaiting_feedback",
+  };
+  h.state.rows.push(whyAttempt);
+  await h.generateSavedFeedback(whyAttempt.id);
+  assert.equal(whyAttempt.circuit_id, h.state.userId, "Why Medicine should atomically claim the shared free slot");
+  assert.equal((await h.readQuestionFeedbackAccess(question)).freeUsed, true);
+  await assert.rejects(h.generateQuestionFeedback(question, answer), h.QuestionFeedbackUpgradeRequired);
+
+  const other = harness();
+  await other.generateQuestionFeedback(question, answer);
+  const blockedWhy = { ...structuredClone(whyAttempt), id: randomUUID(), user_id: other.state.userId, circuit_id: randomUUID(), feedback: null, status: "failed", grading_tries: 0, last_error: "awaiting_feedback" };
+  other.state.rows.push(blockedWhy);
+  await assert.rejects(other.generateSavedFeedback(blockedWhy.id), error => error.status === 403 && /free AI feedback report/i.test(error.message));
+  assert.equal(other.state.providerCalls, 1);
+});
+
 test("a failed provider request can retry the same reserved answer without another allowance", async () => {
   const h = harness({ fail: true });
   await assert.rejects(h.generateQuestionFeedback(question, answer), /could not be generated/);

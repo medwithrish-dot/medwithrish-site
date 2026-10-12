@@ -7,6 +7,7 @@ import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/intervie
 import { assessInterview, interviewAiConfigured } from "@/utils/interviews/openai";
 import { INTERVIEW_RUBRIC_VERSION } from "./scoring";
 import { databaseError, InterviewError, interviewContext, toInterviewAttempt, validId } from "@/utils/interviews/server";
+import { claimWhyMedicineFeedbackCredit } from "./free-feedback-credit";
 
 type FeedbackClaim = {
   status: unknown;
@@ -48,6 +49,10 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
   }
   if (Date.now() < Date.parse(attempt.startedAt) + attempt.preparationSeconds * 1000) {
     throw new InterviewError("Preparation is still running.", 409);
+  }
+
+  if (!isPremium && attempt.mode === "free" && attempt.stationSlug === "why-medicine") {
+    await claimWhyMedicineFeedbackCredit(admin, user.id, attempt.id);
   }
 
   // Reject a known cooldown before requesting another grading claim.

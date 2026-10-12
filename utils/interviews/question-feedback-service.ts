@@ -7,6 +7,7 @@ import { FREE_QUESTION_FEEDBACK_USED, QUESTION_BANK_FEEDBACK_STATION } from "@/a
 import { generateInterviewFeedback } from "./feedback-service";
 import { interviewAiConfigured } from "./openai";
 import { databaseError, InterviewError, interviewContext, toInterviewAttempt } from "./server";
+import { readFreeInterviewFeedbackCredit } from "./free-feedback-credit";
 
 function findQuestion(id: unknown) {
   const question = INTERVIEW_QUESTIONS.find((item) => item.id === id);
@@ -29,16 +30,14 @@ function paidCircuitId(userId: string, questionId: string, answer: string) {
 export async function readQuestionFeedbackAccess(questionId: unknown) {
   const question = findQuestion(questionId);
   const { user, admin, isPremium } = await interviewContext();
-  const [free, latest] = await Promise.all([
-    admin.from("interview_attempts").select("id").eq("user_id", user.id)
-      .eq("circuit_id", user.id).eq("station_index", 0).eq("station_slug", QUESTION_BANK_FEEDBACK_STATION).maybeSingle(),
+  const [credit, latest] = await Promise.all([
+    readFreeInterviewFeedbackCredit(admin, user.id),
     admin.from("interview_attempts").select("*").eq("user_id", user.id)
       .eq("station_slug", QUESTION_BANK_FEEDBACK_STATION).contains("questions", [question.text])
       .order("started_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
-  if (free.error) databaseError(free.error);
   if (latest.error) databaseError(latest.error);
-  return { isPremium, freeUsed: Boolean(free.data), attempt: latest.data ? toInterviewAttempt(latest.data) : null };
+  return { isPremium, freeUsed: credit.freeUsed, attempt: latest.data ? toInterviewAttempt(latest.data) : null };
 }
 
 export async function generateQuestionFeedback(questionId: unknown, rawAnswer: unknown) {
@@ -55,6 +54,9 @@ export async function generateQuestionFeedback(questionId: unknown, rawAnswer: u
   let row = initialRow;
   if (!row) {
     if (!interviewAiConfigured()) throw new InterviewError("AI feedback is currently unavailable. Your saved answer is safe; please try again later.", 503);
+    if (!isPremium && (await readFreeInterviewFeedbackCredit(admin, user.id)).freeUsed) {
+      throw new QuestionFeedbackUpgradeRequired();
+    }
     const now = new Date().toISOString();
     const inserted = await admin.from("interview_attempts").insert({
       user_id: user.id, mode: "reference", station_slug: QUESTION_BANK_FEEDBACK_STATION,

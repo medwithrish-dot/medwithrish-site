@@ -32,7 +32,7 @@ One strict structured response includes the score, concise student-friendly feed
 
 Rewrites preserve useful wording and add reasoning where possible. Missing personal evidence uses explicit placeholders, never invented experiences. "Show rewritten version" opens by default with a thicker green border and compares the original and rewritten words locally: preserved words are black, added/replaced words are green and underlined. Opening it makes no request. Old reports without rewrites still work and are not automatically regenerated.
 
-New AI reports also store covered mark scheme point IDs, validated against server-owned question guidance. Question bank review automatically selects these points when feedback completes or the saved report reopens; manual changes remain possible. Mistakes are excluded from coverage. The AI feedback shortcut beside Retry uses the same generation and account allowance checks and scrolls to the completed report. Coaching tone follows the practice score: excellent at 80%+, good at 70%+, okay at 60%+, and supportive improvement advice below 60%. These bands guide wording without adding labels or changing marks. Older reports without coverage leave manual ticks unchanged.
+New AI reports also store covered mark scheme point IDs, validated against server-owned question guidance. Question bank review automatically selects these points when feedback completes or the saved report reopens; manual changes remain possible. Mistakes are excluded from coverage. The AI feedback shortcut beside Retry uses the same generation and account allowance checks and scrolls to the completed report. Free accounts have one shared interview AI feedback credit: generating either a question-bank report or the Why Medicine report claims it atomically, while reopening the same saved report makes no new request. Coaching tone follows the practice score: excellent at 80%+, good at 70%+, okay at 60%+, and supportive improvement advice below 60%. These bands guide wording without adding labels or changing marks. Older reports without coverage leave manual ticks unchanged.
 
 The dedicated `?station=why-medicine` challenge lobby is fixed to one Background to medicine station, the exact prompt "Why medicine?", and 180 seconds. The free-mode session route enforces this format, including Premium retries that consume paid practice rather than another free trial. Preview uses the same prompt; university and custom circuits retain their normal question selection and timings. The short prompt maps to the authored motivation mark scheme. Its dedicated `public/audio/{female,male}/why-medicine.mp3` files were generated with Google Chirp 3 HD Aoede and Charon and take precedence over the marking ID's longer bank recording.
 
@@ -55,6 +55,8 @@ Fixed questions, transitions and the “Done? Say yes or no.” confirmation are
 ```powershell
 python scripts/generate_all.py --ids 643 644 645 646 647 648 649 650 651 652 653 654
 ```
+
+Use `--force --ids 643 --why-medicine` to replace both voices for the confirmation and dedicated Why Medicine prompt. The generated confirmation speaks “Done? Please say yes or no.” for more natural pacing while the shorter UI wording remains unchanged.
 
 The script skips existing files, validates contiguous CSV IDs, retries transient synthesis failures and supports `--dry-run`, `--force`, `--limit` and `--ids`. Local generation uses Google Application Default Credentials (ADC).
 

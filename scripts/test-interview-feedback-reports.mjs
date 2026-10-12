@@ -19,7 +19,7 @@ test("the practice rubric uses five stable Med interview criteria", () => {
   ]);
 });
 
-function renderReview(feedback = null, preview = false) {
+function renderReview(feedback = null, preview = false, configured = false) {
   const source = readFileSync(new URL("../app/medicforest/interview/_components/AIInterviewReview.tsx", import.meta.url), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true,
@@ -53,7 +53,7 @@ function renderReview(feedback = null, preview = false) {
     metrics: {}, feedback,
   };
   const html = renderToStaticMarkup(React.createElement(loaded.exports.AIInterviewReview, {
-    attempt, preview, configured: false, onGenerate() {}, onRetry() {},
+    attempt, preview, configured, onGenerate() {}, onRetry() {},
   }));
   return html;
 }
@@ -63,6 +63,12 @@ test("unconfigured AI shows availability instead of a paid upgrade claim", () =>
   assert.match(html, /AI feedback is unavailable/);
   assert.doesNotMatch(html, /Upgrade to unlock|official UK medical school/);
   assert.match(html.match(/<button[^>]*aria-controls="ai-feedback"[^>]*>/)?.[0] ?? "", /disabled/);
+});
+
+test("Why Medicine review puts a clear AI feedback button inside the feedback card", () => {
+  const html = renderReview(null, false, true);
+  assert.equal((html.match(/Generate AI feedback/g) ?? []).length, 2);
+  assert.match(html, /For free accounts, this uses the one free AI feedback credit/);
 });
 
 test("students see pass/fail blockers and borderline guidance, while old reports and previews remain honest", () => {

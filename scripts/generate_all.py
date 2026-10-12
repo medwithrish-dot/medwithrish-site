@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument("--force", action="store_true", help="Replace audio files that already exist.")
     parser.add_argument("--dry-run", action="store_true", help="List work without calling Google Cloud.")
     parser.add_argument("--ids", nargs="*", type=int, help="Generate only these numeric CSV IDs.")
+    parser.add_argument("--why-medicine", action="store_true", help="Also replace the dedicated Why Medicine prompt files.")
     parser.add_argument("--limit", type=int, help="Stop after this many CSV rows (useful for a voice test).")
     return parser.parse_args()
 
@@ -53,7 +54,10 @@ def generate_audio(client, question_id, question, voice_type, voice_name, *, for
         print(f"Would create {voice_type}: {filename.name} - {question}")
         return
 
-    synthesis_input = texttospeech.SynthesisInput(text=question)
+    # The short confirmation sounds abrupt with the literal UI punctuation.
+    # Keep the on-screen prompt stable while giving the recording a natural cue.
+    spoken_question = "Done? Please say yes or no." if int(question_id) == 643 else question
+    synthesis_input = texttospeech.SynthesisInput(text=spoken_question)
 
     voice = texttospeech.VoiceSelectionParams(
         language_code=LANGUAGE,
@@ -93,6 +97,22 @@ def main():
     if unknown_ids:
         raise ValueError(f"Unknown CSV IDs: {sorted(unknown_ids)}")
     client = None if args.dry_run else texttospeech.TextToSpeechClient()
+
+    if args.why_medicine:
+        for voice_type, voice_name in VOICES.items():
+            filename = AUDIO_FOLDER / voice_type / "why-medicine.mp3"
+            if args.dry_run:
+                print(f"Would create {voice_type}: {filename.name} - Why medicine?")
+            else:
+                response = client.synthesize_speech(
+                    input=texttospeech.SynthesisInput(text="Why medicine?"),
+                    voice=texttospeech.VoiceSelectionParams(language_code=LANGUAGE, name=voice_name),
+                    audio_config=texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3),
+                )
+                filename.parent.mkdir(parents=True, exist_ok=True)
+                filename.write_bytes(response.audio_content)
+                print(f"Created {voice_type}: {filename.name}")
+                time.sleep(0.4)
 
     for index, row in enumerate(rows, start=1):
         if args.limit is not None and index > args.limit:
