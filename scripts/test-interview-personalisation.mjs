@@ -23,7 +23,7 @@ const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-
 const { getQuestionStimulus } = load(resolve(root, "app/medicforest/interview/_data/interview-stimuli"));
 const { interviewerSpeech, answerConversation } = load(resolve(root, "app/medicforest/interview/_lib/interviewer-transcript"));
 const { questionTransition, DONE_PROMPT } = load(resolve(root, "app/medicforest/interview/_lib/station-flow"));
-const { standardInterviewUniversities, universityStationPresets, universityStationSlugs } = load(resolve(root, "app/medicforest/interview/_data/university-stations"));
+const { standardInterviewUniversities, universityStationPresets, universityStationSlugs, universityUsesPanelFlow } = load(resolve(root, "app/medicforest/interview/_data/university-stations"));
 const { interviewSetupStations, interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations"));
 
 test("unknown and negative applicant facts exclude personal-history questions", () => {
@@ -82,7 +82,7 @@ test("university defaults only contain supported topics and academic interviews 
   assert.deepEqual(universityStationSlugs("unknown"), []);
   const setupSlugs = new Set(interviewSetupStations.map((station) => station.slug));
   for (const university of standardInterviewUniversities) {
-    assert.ok(universityStationSlugs(university.slug).every((slug) => university.format === "Panel" ? slug === "panel-interview" : setupSlugs.has(slug)));
+    assert.ok(universityStationSlugs(university.slug).every((slug) => universityUsesPanelFlow(university.slug) ? slug === "panel-interview" : setupSlugs.has(slug)));
   }
 });
 
@@ -112,4 +112,50 @@ test("panel discussions mix linked topic groups without image tasks or probes", 
     assert.equal(selectStationQuestions("panel-interview", 1200, String(seed), emptyApplicant).length, 8);
   }
   assert.ok(starts.size >= 3, "Panel order must vary");
+});
+
+
+test("extended mixed discussions use full-length varied question flows", () => {
+  for (const [slug, seconds, count] of [["dundee", 1800, 12], ["southampton", 1200, 8]]) {
+    assert.ok(universityStationSlugs(slug).every(station => station === "panel-interview"));
+    for (let seed = 0; seed < 40; seed++) {
+      const selected = selectStationQuestions("panel-interview", seconds, String(seed), emptyApplicant);
+      assert.equal(selected.length, count);
+      assert.equal(new Set(selected.map(question => question.id)).size, count);
+      assert.ok(new Set(selected.map(question => question.subcategory)).size >= 5);
+      assert.ok(selected.every(question => questionEligible(question.text, emptyApplicant) && !getQuestionStimulus(question.id)));
+    }
+  }
+  for (const slug of ["sheffield", "edinburgh", "hull-york", "kent-medway", "swansea"]) {
+    assert.equal(universityUsesPanelFlow(slug), false);
+    assert.ok(universityStationSlugs(slug).every(station => station !== "panel-interview"));
+  }
+});
+
+
+test("Dundee lobby replaces station building and stale choices with mixed discussions", () => {
+  const filename = resolve(root, "app/medicforest/interview/_components/AIInterviewSetup.tsx");
+  const output = ts.transpileModule(readFileSync(filename, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+  const compiled = { exports: {} };
+  const jsx = (type, props) => ({ type, props });
+  const require = name => {
+    if (name === "react") return { useState: value => [value, () => {}] };
+    if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
+    if (name.startsWith("../_data/")) return load(resolve(dirname(filename), name));
+    if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS: 180 };
+    if (name.endsWith(".module.css")) return { default: {} };
+    return {};
+  };
+  new Function("require", "module", "exports", output)(require, compiled, compiled.exports);
+  const starts = [];
+  const tree = compiled.exports.AIInterviewSetup({ initialUniversitySlug: "dundee", initialPlan: { mode: "university", universitySlug: "dundee", stationSlugs: ["ethics-confidentiality"] }, devices: {}, onStart: (plan, preview) => starts.push({ plan, preview }) });
+  const nodes = node => Array.isArray(node) ? node.flatMap(nodes) : node && typeof node === "object" ? [node, ...nodes(node.props?.children)] : [];
+  const text = node => Array.isArray(node) ? node.map(text).join(" ") : node && typeof node === "object" ? text(node.props?.children) : typeof node === "string" || typeof node === "number" ? String(node) : "";
+  assert.match(text(tree), /Your panel interview/);
+  assert.match(text(tree).replace(/\s+/g, " "), /24 questions across 2 discussions/);
+  assert.match(text(tree).replace(/\s+/g, " "), /12 mixed questions/);
+  assert.doesNotMatch(text(tree), /Build your Med interview|Select all|Keep what you need|Qty/);
+  for (const label of ["Preview room", "Join Med interview"]) nodes(tree).find(node => node.type === "button" && text(node).includes(label)).props.onClick();
+  assert.ok(starts.every(({ plan }) => plan.stationSeconds === 1800 && plan.stationSlugs.length === 2 && plan.stationSlugs.every(slug => slug === "panel-interview")));
+  assert.deepEqual(starts.map(({ preview }) => preview), [true, false]);
 });

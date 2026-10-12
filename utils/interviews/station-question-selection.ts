@@ -1,5 +1,5 @@
 import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion } from "@/app/medicforest/interview/_data/interviewQuestionBank";
-import { stationQuestionCount } from "@/app/medicforest/interview/_data/interview-stations";
+import { panelQuestionCount, stationQuestionCount } from "@/app/medicforest/interview/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 import { getQuestionStimulus } from "@/app/medicforest/interview/_data/interview-stimuli";
 import { DATA_INTERPRETATION_STATION_QUESTIONS } from "@/app/medicforest/interview/_data/data-interpretation-station";
@@ -51,10 +51,10 @@ const PANEL_ROUTES: readonly (readonly (readonly InterviewQuestion["subcategory"
 ];
 
 export function selectPanelQuestions(stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
-  const count = stationQuestionCount(stationSeconds);
+  const count = panelQuestionCount(stationSeconds);
   // For a 15-minute panel: six prompts including a closing reflection.
   const route = PANEL_ROUTES[seedNumber(`${seed}:route`) % PANEL_ROUTES.length];
-  const topics = [...route.slice(0, Math.max(0, count - 1)), route.at(-1)!];
+  const topics = [...Array.from({ length: count - 1 }, (_, index) => route[index % (route.length - 1)]), route.at(-1)!];
   const used = new Set<string>();
   return topics.flatMap((subcategories, index) => {
     const pool = questions.filter(question => subcategories.includes(question.subcategory)

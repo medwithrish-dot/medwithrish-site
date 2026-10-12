@@ -7,6 +7,13 @@ type Preset = { stations: StationSlug[]; source: string };
 export const isAcademicInterview = (slug: string | null | undefined) => slug === "oxford" || slug === "cambridge";
 export const standardInterviewUniversities = interviewUniversities.filter((university) => !isAcademicInterview(university.slug));
 
+// These mixed assessment days contain extended discussions. Solo practice uses
+// a mixed question flow; their group exercises still need collaborative practice.
+export function universityUsesPanelFlow(slug: string | undefined) {
+  const university = findInterviewUniversity(slug);
+  return Boolean(university && (university.format === "Panel" || ["dundee", "southampton"].includes(university.slug)));
+}
+
 // Mappings are our practice-topic interpretation of published criteria, not a
 // claim to reproduce confidential stations. No evidence means no automatic ticks.
 // Checked 2026-09-16; retain the exact source with each mapping.
@@ -60,7 +67,7 @@ function fillUniversityCircuit(universitySlug: string, startingStations: readonl
 export function universityStationSlugs(slug: string | undefined): string[] {
   const university = findInterviewUniversity(slug);
   if (!university || isAcademicInterview(university.slug)) return [];
-  if (university.format === "Panel") return Array.from({ length: university.stationCount }, () => "panel-interview");
+  if (universityUsesPanelFlow(university.slug)) return Array.from({ length: university.stationCount }, () => "panel-interview");
   return fillUniversityCircuit(university.slug, universityStationPresets[university.slug]?.stations ?? [], university.stationCount);
 }
 

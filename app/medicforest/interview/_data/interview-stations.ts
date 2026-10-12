@@ -72,6 +72,12 @@ export function stationQuestionCount(stationSeconds: number) {
   return Math.max(1, Math.min(8, Math.round(stationSeconds / 150)));
 }
 
+/** Extended discussions keep the same pace beyond the eight-question MMI cap. */
+export function panelQuestionCount(seconds: number) {
+  if (!Number.isFinite(seconds)) return 1;
+  return Math.max(1, Math.round(seconds / 150));
+}
+
 export function findInterviewStation(slug: string) {
   const aliases: Record<string, string> = { "motivation-question": "why-medicine", "ethics-ai-station": "disability-in-medicine" };
   return interviewStations.find((station) => station.slug === (aliases[slug] ?? slug));

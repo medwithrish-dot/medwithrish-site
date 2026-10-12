@@ -133,7 +133,7 @@ test("the challenge lobby locks its station and preview/start plans despite a pr
   new Function("require", "module", "exports", output)(name => {
     if (name === "react") return { useState: value => [value, () => {}] };
     if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
-    if (name.endsWith("university-stations")) return { standardInterviewUniversities: [{ slug: "test", format: "MMI" }], REPEATABLE_STATION_SLUGS: [], universityStationSlugs: () => [] };
+    if (name.endsWith("university-stations")) return { standardInterviewUniversities: [{ slug: "test", format: "MMI" }], REPEATABLE_STATION_SLUGS: [], universityStationSlugs: () => [], universityUsesPanelFlow: () => false };
     if (name.endsWith("interview-stations")) return { findInterviewStation: slug => ({ slug }), stationQuestionCount };
     if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS };
     if (name.endsWith(".module.css")) return { default: {} };
@@ -1152,6 +1152,23 @@ test("the server reserves a mixed panel even when the client requests a single-t
     assert.equal(payload.station_slug, "panel-interview");
     assert.equal(payload.station_seconds, 900);
     assert.equal(payload.questions.length, 6);
+    const selected = payload.questions.map(text => INTERVIEW_QUESTIONS.find(question => question.text === text));
+    assert.ok(selected.every(Boolean));
+    assert.ok(new Set(selected.map(question => question.subcategory)).size >= 5);
+  }
+});
+
+
+test("Dundee reserves twelve mixed questions even with stale station choices", async () => {
+  for (const stationSlug of [undefined, "data-analysis", "ethics-confidentiality"]) {
+    const api = sessionRoute();
+    const response = await api.post({ mode: "university", universitySlug: "dundee", stationSlug, circuitId });
+    assert.equal(response.status, 200);
+    const payload = api.reservations[0].p_payload;
+    assert.equal(payload.station_slug, "panel-interview");
+    assert.equal(payload.station_seconds, 1800);
+    assert.equal(payload.questions.length, 12);
+    assert.equal(new Set(payload.questions).size, 12);
     const selected = payload.questions.map(text => INTERVIEW_QUESTIONS.find(question => question.text === text));
     assert.ok(selected.every(Boolean));
     assert.ok(new Set(selected.map(question => question.subcategory)).size >= 5);

@@ -7,7 +7,7 @@ import { databaseError, InterviewError, interviewContext, interviewFailure, inte
 import { selectStationQuestions } from "@/utils/interviews/station-question-selection";
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
 import { interviewerSpeech } from "@/app/medicforest/interview/_lib/interviewer-transcript";
-import { isAcademicInterview, universityStationSlugs } from "@/app/medicforest/interview/_data/university-stations";
+import { isAcademicInterview, universityStationSlugs, universityUsesPanelFlow } from "@/app/medicforest/interview/_data/university-stations";
 import { INTERVIEW_QUESTIONS } from "@/app/medicforest/interview/_data/interviewQuestionBank";
 import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS } from "@/app/medicforest/interview/_lib/why-medicine-challenge";
 
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
-    const panel = mode === "university" && university?.format === "Panel";
+    const panel = mode === "university" && universityUsesPanelFlow(university?.slug);
     const station = panel ? findInterviewStation("panel-interview") : requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const stationSeconds = requestedFree ? WHY_MEDICINE_SECONDS : mode === "university" ? university!.stationSeconds : 480;
