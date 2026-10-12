@@ -215,7 +215,7 @@ test("verification waits for browser auth initialization without exchanging the 
   cleanup();
 });
 
-test("platform pages use native document scrolling for wheel and touchpad gestures", () => {
+test("platform pages preserve native scrolling, horizontal swipes and pinch zoom", () => {
   const interviewShell = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewShell.tsx"), "utf8");
   const landingShell = readFileSync(resolve(root, "app/medicforest/ucat/_components/MedicForestLandingShell.tsx"), "utf8");
   const sidebar = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewSidebar.tsx"), "utf8");
@@ -227,6 +227,6 @@ test("platform pages use native document scrolling for wheel and touchpad gestur
   assert.match(sidebar, /lg:min-h-\[100dvh\] lg:self-stretch/);
   assert.doesNotMatch(sidebar, /lg:sticky|lg:h-\[100dvh\]|lg:overflow-y-auto/);
   assert.doesNotMatch(globals, /html,\s*\nbody\s*\{[^}]*overflow-x:\s*hidden/s);
-  assert.match(globals, /\[data-interview-shell-main\]\s*\{\s*touch-action:\s*pan-y/);
+  assert.match(globals, /\[data-interview-shell-main\]\s*\{\s*touch-action:\s*auto\s*;/);
   assert.match(globals, /html:has\(\[data-interview-shell\]\),\s*\nbody:has\(\[data-interview-shell\]\)\s*\{[^}]*overflow-x:\s*hidden\s*!important;[^}]*overflow-y:\s*visible\s*!important;/s);
 });
