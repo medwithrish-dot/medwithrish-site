@@ -15,6 +15,7 @@ import { MedicForestLandingShell } from "@/app/medicforest/ucat/_components/Medi
 import { MEDICFOREST_PREMIUM_MONTHLY_PRICE } from "@/utils/medicforest/premium-price";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
+import styles from "./MedicForestPricingClient.module.css";
 
 const INTERVIEW_FREE_FEATURES = [
   "Unlimited Med interview question bank practice",
@@ -193,8 +194,8 @@ export function MedicForestPricingPage() {
 
   return (
     <MedicForestLandingShell>
-      <div className="min-h-screen text-slate-900 pb-16">
-        <main className="mx-auto max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10">
+      <div className={`${styles.pricing} min-h-screen text-slate-900 pb-16`}>
+        <div className="mx-auto w-full min-w-0 max-w-6xl px-5 pt-8 sm:px-8 sm:pt-10">
           {/* Back Navigation Link */}
           <div>
             <Link
@@ -355,14 +356,14 @@ export function MedicForestPricingPage() {
 
             {/* MedicForest Premium Card */}
             <div className="relative flex flex-col justify-between rounded-2xl border-2 border-teal-500 bg-white p-6 shadow-sm ring-4 ring-teal-500/10 sm:p-8">
-              <div className="absolute right-6 top-6 sm:right-8 sm:top-8">
+              <div className="mb-3 self-start sm:absolute sm:right-8 sm:top-8 sm:mb-0">
                 <span className="inline-flex items-center gap-1 rounded-full bg-teal-100/90 px-3 py-1 text-xs font-bold text-teal-800">
                   ★ Most Popular
                 </span>
               </div>
 
               <div>
-                <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+                <h2 className="text-lg font-bold text-slate-900 sm:pr-32 sm:text-xl">
                   MedicForest Premium
                 </h2>
 
@@ -501,7 +502,7 @@ export function MedicForestPricingPage() {
             </Link>
             .
           </div>
-        </main>
+        </div>
       </div>
     </MedicForestLandingShell>
   );

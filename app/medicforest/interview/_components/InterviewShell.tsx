@@ -28,7 +28,7 @@ export async function InterviewShell({
   return (
     <main data-interview-shell className="soft-wave-bg medicforest-dashboard-compact min-h-[100dvh] flex-1 text-[#071923]">
       <a href="#interview-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-bold text-[#08787b] focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to page content</a>
-      <div data-interview-shell-grid className="grid min-h-[100dvh] lg:grid-cols-[200px_1fr]">
+      <div data-interview-shell-grid className="grid min-h-[100dvh] min-w-0 grid-cols-[minmax(0,1fr)] lg:grid-cols-[200px_minmax(0,1fr)]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />
         <div data-interview-shell-main className="min-w-0 overflow-x-clip">
           <InterviewMobileNav activeLabel={activeLabel} />

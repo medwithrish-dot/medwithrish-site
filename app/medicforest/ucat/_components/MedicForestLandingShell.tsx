@@ -18,7 +18,7 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
 
       <div
         data-interview-shell-grid
-        className="grid min-h-[100dvh] w-full min-w-0 max-w-full grid-cols-1 lg:grid-cols-[200px_minmax(0,1fr)]"
+        className="grid min-h-[100dvh] w-full min-w-0 max-w-full grid-cols-[minmax(0,1fr)] lg:grid-cols-[200px_minmax(0,1fr)]"
       >
         <InterviewSidebar activeLabel="" showPremiumCard mode="landing" />
 

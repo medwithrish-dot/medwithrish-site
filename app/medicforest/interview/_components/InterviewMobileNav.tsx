@@ -5,6 +5,9 @@ import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePath
 import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
 import { getLandingActiveLabel } from "./InterviewSidebar";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
+import { MedicForestLogo } from "@/app/medicforest/_components/MedicForestLogo";
+import { Menu } from "lucide-react";
+import styles from "./InterviewMobileNav.module.css";
 
 const interviewLinks = [
   ["Dashboard", "/medicforest/interview/dashboard"],
@@ -44,27 +47,39 @@ export function InterviewMobileNav({
 
   return (
     <>
-      <InterviewDeviceBanner />
+      {mode === "interview" && <InterviewDeviceBanner />}
       <nav
         aria-label={
           mode === "landing" ? "MedicForest navigation" : "Med Interview navigation"
         }
-        className="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden"
+        className={styles.navigation}
       >
-        {links.map(([label, href]) => (
-          <Link
-            key={href}
-            href={mode === "landing" ? medicForestPublicHref(pathname, href) : href}
-            aria-current={currentActive === label ? "page" : undefined}
-            className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
-              currentActive === label
-                ? "bg-[#159a9d] text-white"
-                : "text-[#cde1df] hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            {label}
-          </Link>
-        ))}
+        <Link href="/medicforest" className={styles.brand} aria-label="MedicForest home">
+          <MedicForestLogo onDark width={144} height={34} />
+        </Link>
+        <details key={pathname} className={styles.menu}>
+          <summary className={styles.toggle}>
+            <Menu size={20} aria-hidden="true" />
+            <span>Menu</span>
+          </summary>
+          <div className={styles.links}>
+            {links.map(([label, href]) => (
+              <Link
+                key={href}
+                href={mode === "landing" ? medicForestPublicHref(pathname, href) : href}
+                aria-current={currentActive === label ? "page" : undefined}
+                onClick={(event) => event.currentTarget.closest("details")?.removeAttribute("open")}
+                className={`${styles.link} ${
+                  currentActive === label
+                    ? "bg-[#159a9d] text-white"
+                    : "text-[#cde1df] hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </details>
       </nav>
     </>
   );
