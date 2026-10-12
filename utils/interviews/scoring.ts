@@ -28,9 +28,24 @@ export function practiceResult(rubric: readonly { score: number }[]) {
   };
 }
 
-export function validateFeedback(value: unknown, expectedAnswers?: number) {
+export function validateFeedback(value: unknown, expectedAnswers?: number, guidance?: readonly { questionId: string; checklistPoints: readonly { id: string }[] }[]) {
   if (!value || typeof value !== "object") throw new Error("Feedback was incomplete. Please retry.");
   const data = value as Record<string, unknown>;
+  let coveredMarkScheme: { questionId: string; pointIds: string[] }[] | undefined;
+  if (data.coveredMarkScheme !== undefined || guidance !== undefined) {
+    if (!Array.isArray(data.coveredMarkScheme) || data.coveredMarkScheme.length > 16) throw new Error("Invalid mark scheme coverage");
+    const seen = new Set<string>();
+    coveredMarkScheme = data.coveredMarkScheme.map((entry: unknown) => {
+      if (!entry || typeof entry !== "object") throw new Error("Invalid mark scheme coverage");
+      const row = entry as Record<string, unknown>;
+      if (typeof row.questionId !== "string" || !row.questionId || seen.has(row.questionId) || !Array.isArray(row.pointIds) || row.pointIds.length > 100 || row.pointIds.some(id => typeof id !== "string" || !id || id.length > 2000)) throw new Error("Invalid mark scheme coverage");
+      seen.add(row.questionId);
+      const trusted = guidance?.find(question => question.questionId === row.questionId);
+      if (guidance && (!trusted || row.pointIds.some(id => !trusted.checklistPoints.some(point => point.id === id)))) throw new Error("Unknown mark scheme point");
+      return { questionId: row.questionId, pointIds: [...new Set(row.pointIds as string[])] };
+    });
+    if (guidance?.some(question => !seen.has(question.questionId))) throw new Error("Missing mark scheme coverage");
+  }
   const list = (v: unknown): v is string[] => Array.isArray(v) && v.length > 0 && v.length <= 5 && v.every((s) => typeof s === "string" && s.trim().length > 0 && s.length <= 1200);
   const structured = data.weaknesses !== undefined || data.fixes !== undefined;
   const fixes = structured ? data.fixes : data.improvements;
@@ -57,5 +72,5 @@ export function validateFeedback(value: unknown, expectedAnswers?: number) {
     if (typeof row.score !== "number" || !Number.isFinite(row.score) || row.score < 0 || row.score > 100 || typeof row.reason !== "string" || !row.reason.trim() || row.reason.length > 1200) throw new Error("Invalid feedback rubric");
     return { criterion: RUBRIC_CRITERIA[index], score: row.score, reason: row.reason };
   });
-  return { summary: data.summary, strengths: data.strengths, improvements: fixes as string[], ...(structured ? { weaknesses: data.weaknesses as string[], fixes: fixes as string[] } : {}), ...(enhanced ? { transcriptionWarning: data.transcriptionWarning as boolean, rewrittenAnswers } : {}), rubric, score: interviewPercentage(rubric.reduce((sum, r) => sum + r.score, 0) / rubric.length), practiceResult: practiceResult(rubric) };
+  return { ...(coveredMarkScheme ? { coveredMarkScheme } : {}), summary: data.summary, strengths: data.strengths, improvements: fixes as string[], ...(structured ? { weaknesses: data.weaknesses as string[], fixes: fixes as string[] } : {}), ...(enhanced ? { transcriptionWarning: data.transcriptionWarning as boolean, rewrittenAnswers } : {}), rubric, score: interviewPercentage(rubric.reduce((sum, r) => sum + r.score, 0) / rubric.length), practiceResult: practiceResult(rubric) };
 }

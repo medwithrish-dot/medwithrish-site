@@ -24,6 +24,17 @@ test("strict scores do not inflate weak or adequate evidence", () => {
 
 const valid = () => ({ summary: "A clear and reflective answer.", strengths: ["Uses a specific example."], improvements: ["Explain what changed in your understanding."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence with room for deeper reflection." })) });
 
+test("AI coverage preserves only valid trusted points and supports older reports", () => {
+  const guidance = [{ questionId: "q1", checklistPoints: [{ id: "General-Reasons clearly" }] }];
+  const coveredMarkScheme = [{ questionId: "q1", pointIds: ["General-Reasons clearly", "General-Reasons clearly"] }];
+  assert.deepEqual(validateFeedback({ ...valid(), coveredMarkScheme }, undefined, guidance).coveredMarkScheme, [{ questionId: "q1", pointIds: ["General-Reasons clearly"] }]);
+  assert.equal(validateFeedback(valid()).coveredMarkScheme, undefined);
+  for (const rows of [[], [{ questionId: "q2", pointIds: [] }], [{ questionId: "q1", pointIds: ["Mistakes-Unsafe suggestion"] }], [{ questionId: "q1", pointIds: [123] }], [...coveredMarkScheme, ...coveredMarkScheme]]) {
+    assert.throws(() => validateFeedback({ ...valid(), coveredMarkScheme: rows }, undefined, guidance));
+  }
+  assert.deepEqual(validateFeedback({ ...valid(), coveredMarkScheme: [{ questionId: "q1", pointIds: [] }] }, undefined, guidance).coveredMarkScheme[0].pointIds, []);
+});
+
 test("practice pass requires the overall standard and independent criterion minimums", () => {
   const result = scores => practiceResult(scores.map(score => ({ score })));
   assert.equal(result([75, 75, 75, 75, 75]).outcome, "pass");

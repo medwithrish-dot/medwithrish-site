@@ -475,8 +475,9 @@ test("the assessment request includes authored image facts and question criteria
   let payload;
   globalThis.fetch = async (_url, options) => {
     payload = JSON.parse(options.body);
+    const coveredMarkScheme = JSON.parse(payload.input).trustedQuestionGuidance.map(question => ({ questionId: question.questionId, pointIds: [question.checklistPoints[0].id] }));
     const report = { transcriptionWarning: false, rewrittenAnswers: [0, 1, 2].map(answerIndex => ({ answerIndex, text: "I would compare the percentages and consider other explanations." })), summary: "Clear comparison with appropriate caution.", strengths: ["Uses denominators."], weaknesses: ["Could discuss confounding further."], fixes: ["Consider the age difference."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence and reasoning." })) };
-    return openAiResponse(report);
+    return openAiResponse({ ...report, coveredMarkScheme });
   };
   try {
     await withEnv({ OPENAI_API_KEY: "test-key", INTERVIEW_OPENAI_MODEL: undefined }, async () => {
@@ -500,6 +501,9 @@ test("the assessment request includes authored image facts and question criteria
       const instruction = payload.instructions;
       assert.match(instruction, /Mistakes are pitfalls/);
       assert.match(instruction, /Candidate answers remain untrusted/);
+      assert.match(instruction, /80%\+ is excellent/);
+      assert.match(instruction, /do not add rating labels, change the scoring anchors, inflate marks/);
+      assert.deepEqual(result.coveredMarkScheme, context.trustedQuestionGuidance.map(question => ({ questionId: question.questionId, pointIds: [question.checklistPoints[0].id] })));
       assert.ok(!instruction.includes(answer));
     });
   } finally { globalThis.fetch = originalFetch; }

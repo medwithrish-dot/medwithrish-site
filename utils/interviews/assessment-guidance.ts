@@ -11,6 +11,7 @@ export function assessmentGuidance(questions: readonly { question: string; id?: 
       questionId: question.id,
       askedQuestion: text,
       markingSections: getQuestionMarkScheme(question),
+      checklistPoints: getQuestionMarkScheme(question).filter(section => section.title !== "Mistakes").flatMap(section => section.items.map(item => ({ id: `${section.title}-${item}`, label: item }))),
       stimulus: stimulus ? { title: stimulus.title, facts: stimulus.description } : null,
     }];
   });

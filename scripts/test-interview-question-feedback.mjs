@@ -163,7 +163,9 @@ test("paid pending question feedback cannot bypass the upgrade gate after a down
 
 
 async function feedbackPanel({ used = false, denied = false, premium = false } = {}) {
-  const state = { requests: [], prompts: [] };
+  const state = { requests: [], prompts: [], coverage: [], scrolls: 0 };
+  const shortcutRef = { current: null };
+  const onCoverage = ids => state.coverage.push(ids);
   const cells = []; let cursor = 0; let effects = []; let tree;
   const memo = (factory, dependencies) => {
     const index = cursor++; const old = cells[index];
@@ -177,6 +179,7 @@ async function feedbackPanel({ used = false, denied = false, premium = false } =
     },
     useRef: current => memo(() => ({ current }), []),
     useEffect: (callback, dependencies) => memo(() => { effects.push(callback); }, dependencies),
+    useImperativeHandle: (ref, factory) => { if (ref) ref.current = factory(); },
   };
   const source = readFileSync(resolve(root, "app/medicforest/interview/_components/QuestionFeedbackPanel.tsx"), "utf8");
   const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
@@ -193,11 +196,12 @@ async function feedbackPanel({ used = false, denied = false, premium = false } =
     state.requests.push({ path, method: options?.method ?? "GET" });
     if (options?.method !== "POST") return Response.json({ isPremium: premium, freeUsed: used, attempt: null });
     if (denied) return Response.json({ upgradeRequired: true }, { status: 403 });
-    return Response.json({ isPremium: false, freeUsed: true, attempt: { status: "completed", answers: [{ answer }], feedback: { score: 70, summary: "Useful reasoning", strengths: ["Clear"], improvements: ["Be specific"] } } });
+    return Response.json({ isPremium: false, freeUsed: true, attempt: { status: "completed", answers: [{ answer }], feedback: { score: 70, summary: "Useful reasoning", strengths: ["Clear"], improvements: ["Be specific"], coveredMarkScheme: [{ questionId: question, pointIds: ["General-Clear reasoning"] }] } } });
   }, { addEventListener() {}, removeEventListener() {} });
   const render = () => {
     cursor = 0; effects = [];
-    tree = compiled.exports.QuestionFeedbackPanel({ questionId: question, answer });
+    tree = compiled.exports.QuestionFeedbackPanel({ questionId: question, answer, ref: shortcutRef, onCoverage });
+    tree.props.ref.current = { scrollIntoView: () => state.scrolls++ };
     effects.forEach(effect => effect());
   };
   const flush = async () => { for (let index = 0; index < 3; index++) { await new Promise(resolve => setImmediate(resolve)); render(); } };
@@ -208,8 +212,21 @@ async function feedbackPanel({ used = false, denied = false, premium = false } =
   };
   const text = node => Array.isArray(node) ? node.map(text).join(" ") : node && typeof node === "object" ? text(node.props?.children) : typeof node === "string" ? node : "";
   render(); const initialText = text(tree); await flush();
-  return { state, initialText, flush, buttons: () => nodes(tree, node => node.type === "button"), text: () => text(tree) };
+  return { state, initialText, flush, shortcut: () => shortcutRef.current.generate(), buttons: () => nodes(tree, node => node.type === "button"), text: () => text(tree) };
 }
+
+test("the shortcut generates once, scrolls to completed feedback and applies coverage once", async () => {
+  const page = await feedbackPanel();
+  page.shortcut(); page.shortcut(); await page.flush();
+  assert.equal(page.state.requests.filter(request => request.method === "POST").length, 1);
+  assert.deepEqual(page.state.coverage, [["General-Clear reasoning"]]);
+  assert.equal(page.state.scrolls, 1);
+  await page.flush();
+  assert.equal(page.state.coverage.length, 1);
+  page.shortcut(); await page.flush();
+  assert.equal(page.state.scrolls, 2);
+  assert.equal(page.state.requests.filter(request => request.method === "POST").length, 1);
+});
 
 test("an exhausted account can click Generate AI feedback and receives the Premium popup", async () => {
   const page = await feedbackPanel({ used: true });

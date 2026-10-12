@@ -4,7 +4,7 @@ import { stripSpeechPauseMarkers } from "../_lib/speech-delivery";
 
 export function RewrittenAnswers({ feedback, answers }: { feedback: InterviewFeedback; answers: InterviewAnswer[] }) {
   if (!feedback.rewrittenAnswers?.length) return null;
-  return <details className="mt-5 rounded-xl border border-[#d9e6e1] bg-white p-5">
+  return <details open className="mt-5 rounded-xl border-[3px] border-[#15803d] bg-white p-5">
     <summary className="cursor-pointer text-sm font-bold text-[#042724]">Show rewritten version</summary>
     <p className="mt-3 text-sm leading-6 text-[#526b72]">Your preserved wording is black. Added or changed wording is green and underlined. Use this as a practice example, and fill in any brackets with your own experience.</p>
     {feedback.rewrittenAnswers.map(({ answerIndex, text }) => {

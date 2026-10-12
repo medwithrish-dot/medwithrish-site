@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { FREE_QUESTION_FEEDBACK_USED, type QuestionFeedbackAccess } from "../_lib/question-feedback";
@@ -9,17 +9,36 @@ import { getWordCount } from "../_lib/question-bank-storage";
 import { RewrittenAnswers } from "./RewrittenAnswers";
 import { TRANSCRIPTION_WARNING } from "../_lib/answer-rewrite";
 
-export function QuestionFeedbackPanel({ questionId, answer }: { questionId: string; answer: string }) {
+export type QuestionFeedbackHandle = { generate: () => void };
+
+export function QuestionFeedbackPanel({ questionId, answer, ref, onCoverage, onBusyChange }: { questionId: string; answer: string; ref?: Ref<QuestionFeedbackHandle>; onCoverage?: (pointIds: string[]) => void; onBusyChange?: (busy: boolean) => void }) {
   const [access, setAccess] = useState<QuestionFeedbackAccess | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const requestRunning = useRef(false);
   const feedbackSection = useRef<HTMLElement>(null);
+  const scrollAfterGeneration = useRef(false);
+  const appliedCoverage = useRef("");
   const cleanAnswer = stripSpeechPauseMarkers(answer).trim();
   const sameAnswer = access?.attempt?.answers[0]?.answer === cleanAnswer;
   const feedback = sameAnswer ? access?.attempt?.feedback : null;
   const retrying = sameAnswer && access?.attempt?.status !== "completed";
   const exhausted = Boolean(access && !access.isPremium && access.freeUsed);
+
+  useEffect(() => {
+    const coverage = feedback?.coveredMarkScheme?.find(row => row.questionId === questionId);
+    const signature = coverage ? JSON.stringify(coverage) : "";
+    if (coverage && signature !== appliedCoverage.current) {
+      appliedCoverage.current = signature;
+      onCoverage?.(coverage.pointIds);
+    }
+    if (feedback && scrollAfterGeneration.current) {
+      scrollAfterGeneration.current = false;
+      feedbackSection.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [feedback, questionId, onCoverage]);
+
+  useEffect(() => { onBusyChange?.(busy); }, [busy, onBusyChange]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -53,13 +72,16 @@ export function QuestionFeedbackPanel({ questionId, answer }: { questionId: stri
       }
       if (response.status === 401) { requestFeatureAccess("free", "AI feedback", true); return; }
       if (!response.ok) throw new Error(payload.error ?? "AI feedback could not be generated. Please retry.");
+      scrollAfterGeneration.current = true;
       setAccess(payload);
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "AI feedback could not be generated. Please retry.");
     } finally { requestRunning.current = false; setBusy(false); }
   };
 
-  return <section ref={feedbackSection} className="rounded-xl border border-[#b9dcda] bg-white p-5 shadow-sm" aria-label="AI feedback">
+  useImperativeHandle(ref, () => ({ generate: () => { void generate(); } }));
+
+  return <section ref={feedbackSection} className="scroll-mt-6 rounded-xl border-[3px] border-[#15803d] bg-white p-5 shadow-sm" aria-label="AI feedback">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h2 className="text-base font-black text-[#071923]">AI feedback</h2>
       <button type="button" onClick={() => void generate()} disabled={busy || (!exhausted && !feedback && getWordCount(cleanAnswer) < 20)}
