@@ -1,5 +1,6 @@
 "use client";
 import { AuthCaptcha, authCaptchaSiteKey } from "@/app/medicforest/_components/AuthCaptcha";
+import { authErrorMessage } from "@/utils/supabase/auth-error";
 
 import {
   useState,
@@ -5403,9 +5404,7 @@ function UCATDashboard({
         setAuthMessage("Logged in.");
       }
     } catch (error) {
-      setAuthError(
-        error instanceof Error ? error.message : "Something went wrong."
-      );
+      setAuthError(authErrorMessage(error, "Something went wrong."));
     } finally {
       setCaptchaToken("");
       setCaptchaVersion(version => version + 1);

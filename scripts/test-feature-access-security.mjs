@@ -5,6 +5,7 @@ import { createRequire } from "node:module";
 import ts from "typescript";
 import { featureAccessDecision, safeInterviewReturnPath, requestFeatureAccess, FEATURE_ACCESS_EVENT } from "../utils/medicforest/feature-access.ts";
 import { createApiRateLimiter, guardApiRequest } from "../utils/security/api-guard.ts";
+import { authErrorMessage } from "../utils/supabase/auth-error.ts";
 
 const require = createRequire(import.meta.url);
 const compiled = { exports: {} };
@@ -93,6 +94,16 @@ test("shared-network interview autosaves are allowed without classifying users a
   }
 });
 
+test("email delivery limits are distinguished from visitor request limits", () => {
+  for (const error of [{ code: "over_email_send_rate_limit", message: "provider limit" }, new Error("email rate limit exceeded")]) {
+    assert.match(authErrorMessage(error), /cannot send verification emails/);
+    assert.doesNotMatch(authErrorMessage(error), /Too many authentication requests/);
+  }
+  assert.match(authErrorMessage({ code: "over_request_rate_limit" }), /wait a few minutes/);
+  assert.equal(authErrorMessage(new Error("Invalid login credentials")), "Invalid login credentials");
+  assert.equal(authErrorMessage(null, "Try again."), "Try again.");
+});
+
 test("both account forms send CAPTCHA to Supabase for signup and login, and renew tokens after failures", async () => {
   for (const path of ["../app/medicforest/account/_client.tsx", "../app/medicforest/ucat/_components/MedicForestClient.tsx"]) {
     const source = ts.createSourceFile(path, readFileSync(new URL(path, import.meta.url), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
@@ -108,6 +119,7 @@ test("both account forms send CAPTCHA to Supabase for signup and login, and rene
       const calls = [];
       const state = {};
       const context = {
+        authErrorMessage,
         supabase: { auth: {
           signUp: async args => { calls.push(args); throw new Error("Retryable auth error"); },
           signInWithPassword: async args => { calls.push(args); throw new Error("Retryable auth error"); },

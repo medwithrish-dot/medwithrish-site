@@ -22,6 +22,7 @@ import {
 } from "@/utils/supabase/client";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import { AuthCaptcha, authCaptchaSiteKey } from "../_components/AuthCaptcha";
+import { authErrorMessage } from "@/utils/supabase/auth-error";
 
 type AuthTab = "login" | "signup";
 
@@ -224,9 +225,7 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
         setAuthMessage("Logged in successfully.");
       }
     } catch (err) {
-      setAuthError(
-        err instanceof Error ? err.message : "Authentication failed."
-      );
+      setAuthError(authErrorMessage(err));
     } finally {
       setCaptchaToken("");
       setCaptchaVersion(version => version + 1);
