@@ -44,11 +44,20 @@ export const interviewStations = [
     "What could explain this pattern? What hypothesis could you make?",
     "What would you research or investigate to see if there is evidence for your hypothesis?",
   ] },
+  { slug: "panel-interview", title: "Panel interview", lobbyTitle: "Panel interview", theme: "Mixed topics", questions: [
+    "Why do you want to study medicine and become a doctor?",
+    "What have you learned about the responsibilities of a doctor?",
+    "How would you build trust when communicating with a worried patient?",
+    "How can a healthcare team work together when its members disagree?",
+    "How should a health service balance fairness with limited resources?",
+    "How would you look after your wellbeing while training to become a doctor?",
+  ] },
 ] as const;
 
 const interviewSetupExcludedSlugs = new Set([
   "disability-in-medicine",
   "teamwork-group-discussion",
+  "panel-interview",
 ]);
 
 // Keep retired lobby choices available for existing links, reports and review

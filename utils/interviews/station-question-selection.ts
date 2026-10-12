@@ -40,11 +40,39 @@ function matchingQuestions(stationSlug: string) {
     || (rule.subcategories?.includes(question.subcategory) ?? false));
 }
 
+// Authored topic routes vary the order while keeping neighbouring topics related.
+// Every question comes from the bank; panel planning needs no provider request.
+const PANEL_ROUTES: readonly (readonly (readonly InterviewQuestion["subcategory"][])[])[] = [
+  [["Motivation for Medicine"], ["Role of a Doctor"], ["Communication & Empathy"], ["Consent, Capacity & Confidentiality"], ["Ethical & Professional Scenarios"], ["Working in Healthcare Teams"], ["Healthcare Resources & Priorities"], ["Strengths, Weaknesses & Resilience"]],
+  [["NHS Structure & Challenges"], ["Health Inequalities"], ["Organ Donation & Resource Allocation"], ["Ethical & Professional Scenarios"], ["Communication & Empathy"], ["Working in Healthcare Teams"], ["Role of a Doctor"], ["Personal Insight"]],
+  [["Teamwork"], ["Communication & Empathy"], ["Professionalism & Professional Boundaries"], ["Safeguarding & Duty of Candour"], ["Role of a Doctor"], ["Motivation for Medicine"], ["Technology, AI & Digital Health"], ["Strengths, Weaknesses & Resilience"]],
+  [["Motivation for Medicine"], ["Work Experience & Reflection", "Personal Insight"], ["Working in Healthcare Teams"], ["Ethical & Professional Scenarios"], ["Consent, Capacity & Confidentiality"], ["Communication & Empathy"], ["Health Inequalities"], ["Personal Insight"]],
+];
+
+export function selectPanelQuestions(stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
+  const count = stationQuestionCount(stationSeconds);
+  // For a 15-minute panel: six prompts including a closing reflection.
+  const route = PANEL_ROUTES[seedNumber(`${seed}:route`) % PANEL_ROUTES.length];
+  const topics = [...route.slice(0, Math.max(0, count - 1)), route.at(-1)!];
+  const used = new Set<string>();
+  return topics.flatMap((subcategories, index) => {
+    const pool = questions.filter(question => subcategories.includes(question.subcategory)
+      && !used.has(question.id) && !getQuestionStimulus(question.id)
+      && !/\b(?:graph|chart|image|photograph|diagram|table|article|role.?play|provided|shown|above|below)\b/i.test(question.text)
+      && questionEligible(question.text, applicant));
+    if (!pool.length) return [];
+    const picked = pool[seedNumber(`${seed}:panel:${index}`) % pool.length];
+    used.add(picked.id);
+    return [picked];
+  });
+}
+
 /**
  * Selects a coherent cluster from the question bank. Questions with a source
  * topic stay within that topic; older questions fall back to their subcategory.
  */
 export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
+  if (stationSlug === "panel-interview") return selectPanelQuestions(stationSeconds, seed, applicant);
   // A data station is one visual explored in three stages, not three unrelated
   // visual questions sampled from the wider question bank.
   if (stationSlug === "data-analysis") return [...DATA_INTERPRETATION_STATION_QUESTIONS];

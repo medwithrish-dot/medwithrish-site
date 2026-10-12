@@ -99,7 +99,8 @@ export async function POST(request: Request) {
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
-    const station = requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
+    const panel = mode === "university" && university?.format === "Panel";
+    const station = panel ? findInterviewStation("panel-interview") : requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const stationSeconds = mode === "university" ? university!.stationSeconds : 480;
     const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();

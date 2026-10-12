@@ -12,6 +12,8 @@ export type InterviewFeedback = {
   improvements: string[];
   weaknesses?: string[];
   fixes?: string[];
+  transcriptionWarning?: boolean;
+  rewrittenAnswers?: { answerIndex: number; text: string }[];
   practiceResult?: {
     version: "practice-pass-v1" | "practice-pass-v2";
     outcome: "pass" | "fail";

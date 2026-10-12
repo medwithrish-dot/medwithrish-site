@@ -26,7 +26,7 @@ const { getStationReviewGuidance } = load(resolve(root, "app/medicforest/intervi
 const { categoryRubric, findReviewQuestion, getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
 
 test("every station has a specific framework and the shared question-bank rubric", () => {
-  assert.equal(interviewStations.length, 9);
+  assert.equal(interviewStations.length, 10);
   const frameworks = new Set();
   for (const station of interviewStations) {
     const guidance = getStationReviewGuidance(station.slug);
@@ -41,7 +41,7 @@ test("every station has a specific framework and the shared question-bank rubric
     assert.match(guidance.sourceLabel, /MedicForest practice/);
     frameworks.add(JSON.stringify(guidance.framework));
   }
-  assert.equal(frameworks.size, 9, "Stations should not fall back to one generic model framework");
+  assert.equal(frameworks.size, interviewStations.length, "Stations should not fall back to one generic model framework");
 });
 
 test("the Med interview builder shows one ethical dilemma and no group station", () => {

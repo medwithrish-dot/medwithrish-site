@@ -82,7 +82,7 @@ test("university defaults only contain supported topics and academic interviews 
   assert.deepEqual(universityStationSlugs("unknown"), []);
   const setupSlugs = new Set(interviewSetupStations.map((station) => station.slug));
   for (const university of standardInterviewUniversities) {
-    assert.ok(universityStationSlugs(university.slug).every((slug) => setupSlugs.has(slug)));
+    assert.ok(universityStationSlugs(university.slug).every((slug) => university.format === "Panel" ? slug === "panel-interview" : setupSlugs.has(slug)));
   }
 });
 
@@ -92,4 +92,24 @@ test("transcripts retain actual interviewer prompts without fabricating older co
   assert.deepEqual(answerConversation(answer).map((turn) => turn.speaker), ["You", "Interviewer", "You"]);
   assert.deepEqual(interviewerSpeech({ interviewerIntro: "invented", interviewerPrompts: [{ text: "invented", answerOffset: 0 }] }), { interviewerPrompts: [] });
   assert.deepEqual(answerConversation({ question: "Old question?", answer: "Old answer." }), [{ speaker: "You", text: "Old answer." }]);
+});
+
+
+test("panel discussions mix linked topic groups without image tasks or probes", () => {
+  const { followUpsEnabled } = load(resolve(root, "app/medicforest/interview/_lib/station-flow"));
+  assert.equal(followUpsEnabled("panel-interview"), false);
+  const starts = new Set();
+  for (let seed = 0; seed < 50; seed++) {
+    const selected = selectStationQuestions("panel-interview", 900, String(seed), emptyApplicant);
+    assert.equal(selected.length, 6);
+    assert.equal(new Set(selected.map(question => question.id)).size, 6);
+    starts.add(selected[0].subcategory);
+    assert.ok(new Set(selected.map(question => question.subcategory)).size >= 5);
+    assert.ok(selected.some(question => question.category === "Ethics & Professionalism"));
+    assert.ok(["Strengths, Weaknesses & Resilience", "Personal Insight"].includes(selected.at(-1).subcategory));
+    assert.ok(selected.every(question => !getQuestionStimulus(question.id) && questionEligible(question.text, emptyApplicant)));
+    assert.ok(selected.every(question => !/graph|chart|image|table|provided|shown/i.test(question.text)));
+    assert.equal(selectStationQuestions("panel-interview", 1200, String(seed), emptyApplicant).length, 8);
+  }
+  assert.ok(starts.size >= 3, "Panel order must vary");
 });

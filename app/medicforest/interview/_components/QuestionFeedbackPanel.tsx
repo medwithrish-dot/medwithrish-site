@@ -6,6 +6,8 @@ import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { FREE_QUESTION_FEEDBACK_USED, type QuestionFeedbackAccess } from "../_lib/question-feedback";
 import { stripSpeechPauseMarkers } from "../_lib/speech-delivery";
 import { getWordCount } from "../_lib/question-bank-storage";
+import { RewrittenAnswers } from "./RewrittenAnswers";
+import { TRANSCRIPTION_WARNING } from "../_lib/answer-rewrite";
 
 export function QuestionFeedbackPanel({ questionId, answer }: { questionId: string; answer: string }) {
   const [access, setAccess] = useState<QuestionFeedbackAccess | null>(null);
@@ -66,7 +68,7 @@ export function QuestionFeedbackPanel({ questionId, answer }: { questionId: stri
         {busy ? "Generating feedback..." : feedback ? "View AI feedback" : "Generate AI feedback"}
       </button>
     </div>
-    {access?.isPremium ? <p className="mt-3 text-sm text-[#4a6370]">Generate personalised feedback on your saved interview answers.</p>
+    {!access || access.isPremium ? <p className="mt-3 text-sm text-[#4a6370]">Generate personalised feedback on your saved interview answers.</p>
       : <p className="mt-3 text-sm font-medium text-[#4a6370]">{exhausted ? FREE_QUESTION_FEEDBACK_USED : "Your free account includes one AI feedback report, once per account."}
         {exhausted && <button type="button" onClick={() => requestFeatureAccess("premium", "More personalised AI feedback", true)} className="ml-2 font-bold text-[#08787b] underline">Upgrade to Premium</button>}
       </p>}
@@ -74,9 +76,11 @@ export function QuestionFeedbackPanel({ questionId, answer }: { questionId: stri
     {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
     {feedback && <div className="mt-4 space-y-4 text-sm leading-6 text-[#4a6370]">
       <p className="font-bold text-[#071923]">Practice score: {feedback.score}%</p><p>{feedback.summary}</p>
-      {[{ title: "Strengths", items: feedback.strengths }, { title: "Areas to improve", items: feedback.weaknesses ?? [] }, { title: "Next steps", items: feedback.fixes ?? feedback.improvements }].filter((group) => group.items.length).map((group) => <div key={group.title}>
+      {feedback.transcriptionWarning && <p role="status" className="rounded-lg bg-amber-50 p-3 text-amber-900">{TRANSCRIPTION_WARNING}</p>}
+      {[{ title: "What you did well", items: feedback.strengths }, { title: "What to improve", items: feedback.weaknesses ?? [] }, { title: "Try this next time", items: feedback.fixes ?? feedback.improvements }].filter((group) => group.items.length).map((group) => <div key={group.title}>
         <h3 className="font-bold text-[#071923]">{group.title}</h3><ul className="mt-2 list-disc space-y-1 pl-5">{group.items.map((item, index) => <li key={index}>{item}</li>)}</ul>
       </div>)}
+      <RewrittenAnswers feedback={feedback} answers={access?.attempt?.answers ?? []} />
       <p className="text-xs text-[#5d707a]">Practice feedback follows this question&apos;s mark scheme. It is not an admissions prediction.</p>
     </div>}
   </section>;

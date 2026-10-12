@@ -60,6 +60,7 @@ function fillUniversityCircuit(universitySlug: string, startingStations: readonl
 export function universityStationSlugs(slug: string | undefined): string[] {
   const university = findInterviewUniversity(slug);
   if (!university || isAcademicInterview(university.slug)) return [];
+  if (university.format === "Panel") return Array.from({ length: university.stationCount }, () => "panel-interview");
   return fillUniversityCircuit(university.slug, universityStationPresets[university.slug]?.stations ?? [], university.stationCount);
 }
 

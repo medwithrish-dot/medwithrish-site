@@ -1098,3 +1098,19 @@ test("session eligibility uses saved applicant facts, never caller-supplied conf
   assert.equal((await confirmed.post(body)).status, 200);
   assert.ok(confirmed.reservations[0].p_payload.questions.some((question) => /gap year/i.test(question)));
 });
+
+
+test("the server reserves a mixed panel even when the client requests a single-topic or image station", async () => {
+  for (const stationSlug of [undefined, "data-analysis", "equality-diversity-inclusion"]) {
+    const api = sessionRoute();
+    const response = await api.post({ mode: "university", universitySlug: "keele", stationSlug, circuitId });
+    assert.equal(response.status, 200);
+    const payload = api.reservations[0].p_payload;
+    assert.equal(payload.station_slug, "panel-interview");
+    assert.equal(payload.station_seconds, 900);
+    assert.equal(payload.questions.length, 6);
+    const selected = payload.questions.map(text => INTERVIEW_QUESTIONS.find(question => question.text === text));
+    assert.ok(selected.every(Boolean));
+    assert.ok(new Set(selected.map(question => question.subcategory)).size >= 5);
+  }
+});

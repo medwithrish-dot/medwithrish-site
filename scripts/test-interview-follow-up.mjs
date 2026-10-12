@@ -475,7 +475,7 @@ test("the assessment request includes authored image facts and question criteria
   let payload;
   globalThis.fetch = async (_url, options) => {
     payload = JSON.parse(options.body);
-    const report = { summary: "Clear comparison with appropriate caution.", strengths: ["Uses denominators."], weaknesses: ["Could discuss confounding further."], fixes: ["Consider the age difference."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence and reasoning." })) };
+    const report = { transcriptionWarning: false, rewrittenAnswers: [0, 1, 2].map(answerIndex => ({ answerIndex, text: "I would compare the percentages and consider other explanations." })), summary: "Clear comparison with appropriate caution.", strengths: ["Uses denominators."], weaknesses: ["Could discuss confounding further."], fixes: ["Consider the age difference."], rubric: Array.from({ length: 5 }, () => ({ score: 60, reason: "Relevant evidence and reasoning." })) };
     return openAiResponse(report);
   };
   try {

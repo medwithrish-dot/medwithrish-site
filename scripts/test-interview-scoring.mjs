@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { highlightAnswerChanges } from "../app/medicforest/interview/_lib/answer-rewrite.ts";
 import { interviewPercentage, practiceResult, validateFeedback } from "../utils/interviews/scoring.ts";
 
 test("scores are bounded, finite, monotonic and reach exactly 99", () => {
@@ -72,4 +73,28 @@ test("new feedback preserves distinct strengths, weaknesses and fixes alongside 
   for (const fields of [{ weaknesses: ["A gap"] }, { fixes: ["An action"] }, { weaknesses: [], fixes: ["An action"] }, { weaknesses: ["A gap"], fixes: [12] }]) {
     assert.throws(() => validateFeedback({ ...base, ...fields }));
   }
+});
+
+
+test("answer diffs preserve the exact rewrite and distinguish additions and replacements", () => {
+  const before = "I would listen to the patient.";
+  for (const after of [before, "I would listen carefully to the patient and ask what matters to them.", "I would ask the patient what matters to them.", "I would listen to the patient.\nThen I would ask for help.", "<script>example</script>"]) {
+    const parts = highlightAnswerChanges(before, after);
+    assert.equal(parts.map(part => part.text).join(""), after);
+  }
+  assert.ok(highlightAnswerChanges(before, before).every(part => !part.added));
+  const parts = highlightAnswerChanges(before, "I would listen carefully to the patient.");
+  assert.ok(parts.some(part => part.added && part.text.includes("carefully")));
+  assert.ok(parts.some(part => !part.added && part.text.includes("I would listen")));
+  assert.ok(highlightAnswerChanges("", "New answer").every(part => part.added));
+});
+
+test("new feedback validates answer indexes and never changes marks for transcript warnings or rewrites", () => {
+  const enhanced = { ...valid(), transcriptionWarning: true, rewrittenAnswers: [{ answerIndex: 0, text: "A stronger answer." }] };
+  assert.equal(validateFeedback(enhanced, 1).score, validateFeedback(valid()).score);
+  for (const rewrittenAnswers of [[], [{ answerIndex: 1, text: "Wrong index" }], [{ answerIndex: 0, text: "" }], [{ answerIndex: 0, text: "Valid" }, { answerIndex: 0, text: "Duplicate" }]]) {
+    assert.throws(() => validateFeedback({ ...enhanced, rewrittenAnswers }, 1));
+  }
+  assert.throws(() => validateFeedback({ ...enhanced, transcriptionWarning: "yes" }, 1));
+  assert.throws(() => validateFeedback(valid(), 1));
 });

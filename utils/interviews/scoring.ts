@@ -28,7 +28,7 @@ export function practiceResult(rubric: readonly { score: number }[]) {
   };
 }
 
-export function validateFeedback(value: unknown) {
+export function validateFeedback(value: unknown, expectedAnswers?: number) {
   if (!value || typeof value !== "object") throw new Error("Feedback was incomplete. Please retry.");
   const data = value as Record<string, unknown>;
   const list = (v: unknown): v is string[] => Array.isArray(v) && v.length > 0 && v.length <= 5 && v.every((s) => typeof s === "string" && s.trim().length > 0 && s.length <= 1200);
@@ -36,11 +36,26 @@ export function validateFeedback(value: unknown) {
   const fixes = structured ? data.fixes : data.improvements;
   if (structured && (!list(data.weaknesses) || !list(data.fixes))) throw new Error("Feedback was incomplete. Please retry.");
   if (typeof data.summary !== "string" || !data.summary.trim() || data.summary.length > 2000 || !list(data.strengths) || !list(fixes) || !Array.isArray(data.rubric) || data.rubric.length !== RUBRIC_CRITERIA.length) throw new Error("Feedback was incomplete. Please retry.");
+  const enhanced = data.rewrittenAnswers !== undefined || data.transcriptionWarning !== undefined || expectedAnswers !== undefined;
+  let rewrittenAnswers: { answerIndex: number; text: string }[] | undefined;
+  if (enhanced) {
+    if (typeof data.transcriptionWarning !== "boolean" || !Array.isArray(data.rewrittenAnswers) || data.rewrittenAnswers.length > 16) throw new Error("Invalid answer rewrite");
+    const seen = new Set<number>();
+    rewrittenAnswers = data.rewrittenAnswers.map((entry: unknown) => {
+      if (!entry || typeof entry !== "object") throw new Error("Invalid answer rewrite");
+      const row = entry as Record<string, unknown>;
+      if (typeof row.answerIndex !== "number" || !Number.isInteger(row.answerIndex) || row.answerIndex < 0 || row.answerIndex >= (expectedAnswers ?? 16) || seen.has(row.answerIndex)
+        || typeof row.text !== "string" || !row.text.trim() || row.text.length > 6000) throw new Error("Invalid answer rewrite");
+      seen.add(row.answerIndex);
+      return { answerIndex: row.answerIndex, text: row.text.trim() };
+    });
+    if (expectedAnswers !== undefined && rewrittenAnswers.length !== expectedAnswers) throw new Error("Missing answer rewrite");
+  }
   const rubric = data.rubric.map((entry: unknown, index: number) => {
     if (!entry || typeof entry !== "object") throw new Error("Invalid feedback rubric");
     const row = entry as Record<string, unknown>;
     if (typeof row.score !== "number" || !Number.isFinite(row.score) || row.score < 0 || row.score > 100 || typeof row.reason !== "string" || !row.reason.trim() || row.reason.length > 1200) throw new Error("Invalid feedback rubric");
     return { criterion: RUBRIC_CRITERIA[index], score: row.score, reason: row.reason };
   });
-  return { summary: data.summary, strengths: data.strengths, improvements: fixes as string[], ...(structured ? { weaknesses: data.weaknesses as string[], fixes: fixes as string[] } : {}), rubric, score: interviewPercentage(rubric.reduce((sum, r) => sum + r.score, 0) / rubric.length), practiceResult: practiceResult(rubric) };
+  return { summary: data.summary, strengths: data.strengths, improvements: fixes as string[], ...(structured ? { weaknesses: data.weaknesses as string[], fixes: fixes as string[] } : {}), ...(enhanced ? { transcriptionWarning: data.transcriptionWarning as boolean, rewrittenAnswers } : {}), rubric, score: interviewPercentage(rubric.reduce((sum, r) => sum + r.score, 0) / rubric.length), practiceResult: practiceResult(rubric) };
 }

@@ -11,12 +11,13 @@ import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/i
 import { getInterviewQuestionAudioSrc, type InterviewerVoice } from "../_lib/interview-question-audio";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import type { SpeechDelivery } from "../_lib/speech-delivery";
-import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, parsePreviousAnswerInterrupt, questionTransition } from "../_lib/station-flow";
+import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, parsePreviousAnswerInterrupt, questionTransition, panelQuestionTransition } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
 import { AIInterviewCall } from "./AIInterviewCall";
 import { AIInterviewReview } from "./AIInterviewReview";
 import styles from "./AIInterviewRoom.module.css";
+import { selectPanelQuestions } from "@/utils/interviews/station-question-selection";
 
 type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; usedSavedAnswers?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
 type StartOptions = { mode: InterviewMode; universitySlug?: string; stationSlug?: string; circuitId?: string; stationIndex?: number; stationCount?: number };
@@ -495,7 +496,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const key = `${attempt.id}:${questionIndex}`;
     if (spokenQuestionRef.current === key) return;
     spokenQuestionRef.current = key;
-    const transition = questionTransition(questionIndex, !originalQuestions.includes(question));
+    const transition = attempt.stationSlug === "panel-interview" ? panelQuestionTransition(questionIndex, attempt.questions.length, attempt.questionIds?.[questionIndex] ?? "") : questionTransition(questionIndex, !originalQuestions.includes(question));
     if (transition) replaceAnswers(answersRef.current.map((answer) => answer.question === question ? { ...answer, interviewerIntro: transition } : answer));
     if (!readAloud || !voiceSupported) return;
     promptingRef.current = true;
@@ -545,12 +546,15 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         setRoomPlan(plan);
         clockOffsetRef.current = 0;
         const station = findInterviewStation(options.stationSlug ?? plan.stationSlugs[0])!;
+        const panelQuestions = station.slug === "panel-interview" ? selectPanelQuestions(plan.stationSeconds, crypto.randomUUID()) : [];
         applyResponse({ attempt: {
           id: `preview-${crypto.randomUUID()}`, mode: plan.mode, universitySlug: plan.universitySlug ?? null,
           stationSlug: station.slug, title: station.lobbyTitle, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
           preparationSeconds: 0, stationSeconds: plan.stationSeconds, breakSeconds: 0,
           stationIndex: options.stationIndex ?? 0, stationCount: plan.stationSlugs.length,
-          questions: [...station.questions], answers: [], feedback: null, metrics: {}, nextAvailableAt: null,
+          questions: panelQuestions.length ? panelQuestions.map(question => question.text) : [...station.questions],
+          questionIds: panelQuestions.length ? panelQuestions.map(question => question.id) : undefined,
+          answers: [], feedback: null, metrics: {}, nextAvailableAt: null,
           circuitId: options.circuitId ?? `preview-${crypto.randomUUID()}`,
         } }, true);
         setReviewRequested(false);

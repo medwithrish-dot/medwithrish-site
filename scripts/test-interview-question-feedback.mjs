@@ -162,7 +162,7 @@ test("paid pending question feedback cannot bypass the upgrade gate after a down
 });
 
 
-async function feedbackPanel({ used = false, denied = false } = {}) {
+async function feedbackPanel({ used = false, denied = false, premium = false } = {}) {
   const state = { requests: [], prompts: [] };
   const cells = []; let cursor = 0; let effects = []; let tree;
   const memo = (factory, dependencies) => {
@@ -191,7 +191,7 @@ async function feedbackPanel({ used = false, denied = false } = {}) {
     return {};
   }, compiled, compiled.exports, async (path, options) => {
     state.requests.push({ path, method: options?.method ?? "GET" });
-    if (options?.method !== "POST") return Response.json({ isPremium: false, freeUsed: used, attempt: null });
+    if (options?.method !== "POST") return Response.json({ isPremium: premium, freeUsed: used, attempt: null });
     if (denied) return Response.json({ upgradeRequired: true }, { status: 403 });
     return Response.json({ isPremium: false, freeUsed: true, attempt: { status: "completed", answers: [{ answer }], feedback: { score: 70, summary: "Useful reasoning", strengths: ["Clear"], improvements: ["Be specific"] } } });
   }, { addEventListener() {}, removeEventListener() {} });
@@ -207,8 +207,8 @@ async function feedbackPanel({ used = false, denied = false } = {}) {
     return [...(predicate(node) ? [node] : []), ...nodes(node.props?.children, predicate)];
   };
   const text = node => Array.isArray(node) ? node.map(text).join(" ") : node && typeof node === "object" ? text(node.props?.children) : typeof node === "string" ? node : "";
-  render(); await flush();
-  return { state, flush, buttons: () => nodes(tree, node => node.type === "button"), text: () => text(tree) };
+  render(); const initialText = text(tree); await flush();
+  return { state, initialText, flush, buttons: () => nodes(tree, node => node.type === "button"), text: () => text(tree) };
 }
 
 test("an exhausted account can click Generate AI feedback and receives the Premium popup", async () => {
@@ -236,4 +236,12 @@ test("a server-side exhaustion response opens the popup even when the browser al
   page.buttons()[0].props.onClick(); await page.flush();
   assert.equal(page.state.prompts[0][0], "premium");
   assert.match(page.text(), /used your free AI feedback report/);
+});
+
+
+test("premium users and loading account status never see free-account credit wording", async () => {
+  const page = await feedbackPanel({ premium: true, used: true });
+  assert.doesNotMatch(page.initialText, /free account|free AI feedback|Upgrade to Premium/);
+  assert.doesNotMatch(page.text(), /free account|free AI feedback|Upgrade to Premium/);
+  assert.match(page.text(), /Generate personalised feedback/);
 });

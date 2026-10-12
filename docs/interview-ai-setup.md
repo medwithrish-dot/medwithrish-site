@@ -1,6 +1,6 @@
 # Interview AI setup
 
-Updated 8 October 2026. The application now uses OpenAI for both feedback and generated probes. The previous Gemini free-tier configuration is obsolete and is not read by either generation path.
+Updated 12 October 2026. The application now uses OpenAI for both feedback and generated probes. The previous Gemini free-tier configuration is obsolete and is not read by either generation path.
 
 ## Server configuration
 
@@ -14,17 +14,29 @@ The API key and model are configured locally. Hosting needs its own environment 
 
 ## Automatic probing
 
-Probing defaults to on, including confidentiality, equality/diversity and disability ethics stations. The checkbox in setup and the interview remembers the choice on this device. After the candidate confirms an answer is complete, the interviewer asks one brief answer-aware probe and waits for the answer. It then continues to the next main question. A probe is never recursively probed. There are at most three probes per station, at least 20 words are required, and new probes stop in the final 45 seconds. The server enforces the cap independently of the browser, including for circuits with up to eight main questions.
+Probing defaults to on only for the Ethical dilemma stations (equality/diversity and disability). The confidentiality Scenario station and all panel discussions have probing disabled, even when a panel includes ethics questions. The checkbox in setup and the interview remembers the choice on this device. After the candidate confirms an answer is complete, the interviewer asks one brief answer-aware probe and waits for the answer. It then continues to the next main question. A probe is never recursively probed. There are at most three probes per station, at least 20 words are required, and new probes stop in the final 45 seconds. The server enforces the cap independently of the browser, including for circuits with up to eight main questions.
 
 Each original answer reserves a durable bit before generation. Saved probes are reused. Concurrent requests and retries cannot generate additional probes for that answer. Generation is limited to 384 output tokens and a 12-second provider deadline. A provider outage uses a labelled local practice prompt without a second model request.
 
 ## Scoring v2
 
-The former logarithmic conversion inflated an average raw score of 60 to around 80%. New reports display the equally weighted rubric average directly, capped at 99. Question-specific authored marking guidance, stimulus facts and valid alternative reasoning remain in the GPT context. The prompt now uses demanding evidence anchors and explicitly checks unsafe decisions, unsupported claims, ethics trade-offs and contradictory score reasons. Typed and spoken answers use the same criteria; accent, disability and filler words are not scoring inputs.
+The former logarithmic conversion inflated an average raw score of 60 to around 80%. New reports display the equally weighted rubric average directly, capped at 99. Question-specific authored marking guidance, stimulus facts and valid alternative reasoning remain in the GPT context. The prompt uses fair evidence anchors: a good, specific answer can earn 75-84 despite minor omissions, while generic answers and unsupported or unsafe reasoning remain low. It does not apply a blanket score boost and explicitly checks unsafe decisions, unsupported claims, ethics trade-offs and contradictory score reasons. Typed and spoken answers use the same criteria; accent, disability and filler words are not scoring inputs.
 
 Run `supabase/medicforest_interview_scoring_v2.sql` on existing installations before deploying this version. It updates installed leaderboard, dashboard and group readers without deleting reports or weakening name moderation/permissions. Old reports retain their saved score and rubric version. V1 and v2 are not ranked together. Fresh install scripts already use v2.
 
-This is prompt calibration, not fine-tuning or an admissions prediction. New reports include a server-calculated practice pass/fail decision; see [the practice standard and validation results](interview-practice-pass-fail.md). Run `node scripts/evaluate-interview-feedback.mjs --live` deliberately to repeat the 11 synthetic checks; add `--repeat=2` for a bounded 22-call consistency check. These are paid GPT requests. Add human-reviewed examples for other station types before treating the scoring as validated.
+This is prompt calibration, not fine-tuning or an admissions prediction. New reports include a server-calculated practice pass/fail decision; see [the practice standard and validation results](interview-practice-pass-fail.md). Run `node scripts/evaluate-interview-feedback.mjs --live --cases=generic,unsafe,motivation-good,motivation-strong` for a four-request calibration check. Omit `--cases` for the full synthetic set; `--repeat=2` repeats the chosen cases twice. These are paid GPT requests. Add human-reviewed examples for other station types before treating the scoring as validated.
+
+## Transcript interpretation, feedback and rewrites
+
+One strict structured response includes the score, concise student-friendly feedback, a transcription-warning flag and one plain-text rewrite per submitted answer. Obvious speech-recognition errors are interpreted before marking, without inventing missing evidence or changing the student's position. Substantial repairs or unclear passages trigger a separate warning; transcript quality does not itself reduce the mark. Original saved transcripts remain available.
+
+Rewrites preserve useful wording and add reasoning where possible. Missing personal evidence uses explicit placeholders, never invented experiences. The UI's collapsed "Show rewritten version" compares the original and rewritten words locally: preserved words are black, added/replaced words are green and underlined. Opening it makes no request. Old reports without rewrites still work and are not automatically regenerated.
+
+Output is limited to 180 words per answer and 900 rewrite words across a station, with brief feedback and rubric reasons. The token ceiling scales with the number of answers (2,340 for one answer, at most 4,500 for a station); the provider deadline is 35 seconds. The existing model, no-retry policy and saved-report reuse remain in place. Rewrites necessarily add output tokens but require no separate correction, rewriting or highlighting call. Strict response formatting follows [official OpenAI guidance](https://developers.openai.com/api/docs/guides/structured-outputs).
+
+Panel university sessions select seeded, varied routes through related motivation, communication, teamwork, healthcare and ethical/scenario questions. A 15-minute discussion has six main questions; 20 minutes has eight. Images and stimulus tasks are excluded. Both the server and client prohibit automatic panel probes; local topic transitions provide flow without an AI planning request.
+
+The four-case live check on 12 October returned 77.6 for the good motivation example, 81.8 for the stronger example, 32 for a generic answer and 26 for an unsafe answer. This is a small synthetic check, not a guarantee about all questions or applicants.
 
 ## Abuse and cost controls
 

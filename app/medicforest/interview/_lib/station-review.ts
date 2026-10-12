@@ -19,6 +19,14 @@ type StationFramework = Pick<StationReviewGuidance, "category" | "framework">;
 // public/medicforest/interview-question-markscheme-rubrics.txt, and interviewGuides.ts.
 // These are practice frameworks, not university-specific marking criteria.
 const stationFrameworks = {
+  "panel-interview": {
+    category: "Personal & Motivation",
+    framework: [
+      { title: "Answer the question in front of you", items: ["Start with your main point, then explain it with a relevant example or reason.", "Use your own experience when asked; for a hypothetical question, explain what you would do and why."] },
+      { title: "Connect your ideas", items: ["Link motivation to the realities of patient care, communication and teamwork.", "Consider another perspective and the key limits of your answer before giving a sensible next step."] },
+      { title: "Finish with what you learned", items: ["Show how your learning would help you develop as a medical student.", "Review the separate question markschemes below for the skills each topic tests."] },
+    ],
+  },
   "why-medicine": {
     category: "Personal & Motivation",
     framework: [

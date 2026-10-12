@@ -10,6 +10,8 @@ import { AttemptMarkSchemes } from "./AttemptMarkSchemes";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
 import { answerConversation } from "../_lib/interviewer-transcript";
 import styles from "./AIInterviewReview.module.css";
+import { RewrittenAnswers } from "./RewrittenAnswers";
+import { TRANSCRIPTION_WARNING } from "../_lib/answer-rewrite";
 
 type Props = {
   attempt: InterviewAttempt;
@@ -55,7 +57,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       revealFeedback(assessmentRef.current);
     }
   }, [feedback]);
-  const feedbackSections = feedback ? [{ title: "Strengths", items: feedback.strengths }, { title: "Weaknesses", items: feedback.weaknesses ?? [] }, { title: "Fixes", items: feedback.fixes ?? feedback.improvements }] : [];
+  const feedbackSections = feedback ? [{ title: "What you did well", items: feedback.strengths }, { title: "What to improve", items: feedback.weaknesses ?? [] }, { title: "Try this next time", items: feedback.fixes ?? feedback.improvements }] : [];
   const needsSaving = attempt.status === "in_progress";
   const feedbackUnavailable = !feedback && !preview ? (!configured ? "unavailable" : wordCount < 20 ? "word-count" : null) : null;
   const feedbackAction = <div className={styles.feedbackActionGroup}><button type="button" className={styles.primary}
@@ -75,7 +77,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
       ...transcript.map((item) => `Interviewer: ${[item.interviewerIntro, item.question].filter(Boolean).join(" ")}\n${answerConversation(item).map((turn) => `${turn.speaker}: ${turn.text || "No answer saved."}`).join("\n")}`),
       ...(speechSideNote ? ["", "SPEECH DELIVERY SIDE NOTE", speechSideNote] : []),
-      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, ...(decision && !preview ? [`Practice result: ${decision.outcome}`, ...decision.reasons, ...(decision.borderline ? ["Close to a practice cutoff; review the marking reasons."] : []), `Practice standard: average ${PRACTICE_PASS_AVERAGE}; reasoning and professionalism 50 each; other criteria 40 each. Not a university admissions cutoff.`] : []), feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 - ${item.reason}`)] : []),
+      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, ...(decision && !preview ? [`Practice result: ${decision.outcome}`, ...decision.reasons, ...(decision.borderline ? ["Close to a practice cutoff; review the marking reasons."] : []), `Practice standard: average ${PRACTICE_PASS_AVERAGE}; reasoning and professionalism 50 each; other criteria 40 each. Not a university admissions cutoff.`] : []), feedback.summary, ...(feedback.transcriptionWarning ? [TRANSCRIPTION_WARNING] : []), ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 - ${item.reason}`), ...(feedback.rewrittenAnswers ?? []).flatMap(({ answerIndex, text }) => ["REWRITTEN PRACTICE EXAMPLE", attempt.answers[answerIndex]?.question ?? "", text])] : []),
     ].join("\n\n");
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
@@ -141,7 +143,9 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
         <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least {PRACTICE_PASS_AVERAGE}/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; medical schools set their own admissions criteria.</p>
       </section>}
       {!preview && !decision && <p className={styles.sourceNote}>This older report was not assessed under the current practice pass/fail standard.</p>}
+      {feedback.transcriptionWarning && <p role="status" className="my-4 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900">{TRANSCRIPTION_WARNING}</p>}
       <div className={styles.takeaways}>{feedbackSections.map((group) => <section key={group.title}><h3>{group.title}</h3>{group.items.length ? <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className={styles.sourceNote}>This older report did not include a separate weaknesses section.</p>}</section>)}</div>
+      <RewrittenAnswers feedback={feedback} answers={attempt.answers} />
       <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each criterion is marked out of 100; the calibrated overall score is capped at 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}

@@ -35,6 +35,13 @@ function renderReview(feedback = null, preview = false) {
     if (name === "./AttemptMarkSchemes") return { AttemptMarkSchemes: ({ headerAction }) => React.createElement(React.Fragment, null, headerAction) };
     if (name.endsWith("/speech-delivery")) return { getTranscriptHints: text => ({ wordCount: text.trim().split(/\s+/).filter(Boolean).length }), normalizeSpeechTranscript: text => text };
     if (name.endsWith("/interviewer-transcript")) return { answerConversation: answer => [{ speaker: "You", text: answer.answer }] };
+    if (name === "./RewrittenAnswers") {
+      const child = { exports: {} };
+      const childCode = ts.transpileModule(readFileSync(new URL("../app/medicforest/interview/_components/RewrittenAnswers.tsx", import.meta.url), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+      new Function("require", "module", "exports", childCode)(dep => dep.endsWith("/answer-rewrite") ? require("../app/medicforest/interview/_lib/answer-rewrite.ts") : dep.endsWith("/speech-delivery") ? { stripSpeechPauseMarkers: text => text } : require(dep), child, child.exports);
+      return child.exports;
+    }
+    if (name.endsWith("/answer-rewrite")) return require("../app/medicforest/interview/_lib/answer-rewrite.ts");
     if (name.endsWith(".module.css")) return { __esModule: true, default: {} };
     throw new Error(`Unexpected review dependency: ${name}`);
   }, loaded, loaded.exports);
@@ -155,4 +162,17 @@ test("interviewPercentage formula guarantees sub-100 ceiling and strictly monoto
     const next = interviewPercentage(score + 5);
     assert.ok(next >= current, `Score at ${score + 5} should be >= ${score}`);
   }
+});
+
+
+test("rewrites render collapsed with preserved words black and changes green", () => {
+  const report = validateFeedback({ summary: "Good reasoning.", strengths: ["Explains motivation."], weaknesses: ["Add a next step."], fixes: ["Explain how you will build on this."], rubric: Array.from({ length: 5 }, () => ({ score: 77, reason: "Specific evidence with a minor gap." })), transcriptionWarning: true, rewrittenAnswers: [{ answerIndex: 0, text: "I want to study medicine because I value scientific reasoning and careful conversations with patients. I would keep reflecting on what I learn." }] }, 1);
+  const html = renderReview(report);
+  assert.match(html, /Show rewritten version/);
+  assert.match(html, /<details[^>]*>.*?Show rewritten version/s);
+  assert.doesNotMatch(html, /<details[^>]*open/);
+  assert.match(html, /text-black/);
+  assert.match(html, /<ins[^>]*text-\[#15803d\]/);
+  assert.match(html, /substantial transcription corrections/);
+  assert.match(html, /Practice score/);
 });
