@@ -161,7 +161,7 @@ export function AIInterviewCall(props: Props) {
           </div>
           {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
           {devices.cameraError && <p role="status" className={styles.callNotice}>{devices.cameraError}</p>}
-          {!speech.supported && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
+          {!speech.supported && !devices.microphoneError && !speech.error && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
         </footer>
       </div>
       <aside className={styles.transcriptPanel} aria-label="Med Interview transcript and notes">

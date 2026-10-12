@@ -1,0 +1,29 @@
+/* Keep the compact desktop workspace, but use readable text and touch targets
+   on phones. These rules also cover the standalone question-bank workspace. */
+@media (max-width: 767px), (max-width: 1023px) and (pointer: coarse) {
+  .medicforest-dashboard-compact .text-xs { font-size: 12px; line-height: 1.5; }
+  .medicforest-dashboard-compact .text-sm { font-size: 14px; line-height: 1.5; }
+  .medicforest-dashboard-compact .text-base { font-size: 16px; line-height: 1.6; }
+  .medicforest-dashboard-compact .leading-5 { line-height: 1.5; }
+  .medicforest-dashboard-compact .leading-6,
+  .medicforest-dashboard-compact .leading-7 { line-height: 1.6; }
+
+  .medicforest-dashboard-compact :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+    select, textarea
+  ) { min-height: 44px; max-width: 100%; font-size: 16px; line-height: 1.5; }
+
+  .medicforest-dashboard-compact :is(button, summary, [role="button"]) { min-width: 44px; min-height: 44px; }
+  .medicforest-dashboard-compact button:has(> svg:only-child),
+  .medicforest-dashboard-compact a:has(> svg:only-child) { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+  .medicforest-dashboard-compact a:is(.flex, .inline-flex) { min-height: 44px; }
+  .medicforest-dashboard-compact :is(button, a).h-11 { height: auto; min-height: 44px; }
+  .medicforest-dashboard-compact :is(button, a).h-12 { height: auto; min-height: 48px; }
+  .medicforest-dashboard-compact textarea { scroll-margin-block: 20px; }
+
+  [data-medicforest-access-dialog] { max-height: calc(100dvh - 32px); overflow-y: auto; }
+  [data-medicforest-access-dialog] button,
+  [data-medicforest-access-dialog] a { display: flex; align-items: center; justify-content: center; min-height: 44px; }
+  [data-medicforest-access-dialog] button[aria-label="Close popup"] { min-width: 44px; }
+  [data-medicforest-account-menu] { position: fixed; inset: auto 16px 16px; width: auto; max-width: none; max-height: 70dvh; margin-top: 0; }
+}

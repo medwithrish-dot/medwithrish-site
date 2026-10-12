@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import {
@@ -41,11 +41,32 @@ export function InterviewAccountControls() {
   } | null>(null);
   const [signOutError, setSignOutError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
     [supabaseReady]
   );
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !controlsRef.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -123,7 +144,7 @@ export function InterviewAccountControls() {
   if (!user) return <Link href="/medicforest/account" className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[#cfe0df] bg-white px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#edf7f6]">Sign in / create account</Link>;
 
   return (
-    <div className="flex min-w-0 items-center gap-4">
+    <div ref={controlsRef} className="relative flex min-w-0 items-center gap-4">
       <Link
         href="/medicforest/interview/notifications"
         aria-label="Notifications"
@@ -132,13 +153,15 @@ export function InterviewAccountControls() {
         <Bell className="h-5 w-5" aria-hidden="true" />
       </Link>
       <div className="hidden h-8 w-px bg-slate-200 sm:block" />
-      <div className="relative">
+      <div className="sm:relative">
         <button
+          ref={menuButtonRef}
           type="button"
           onClick={() => setMenuOpen((current) => !current)}
           className="flex items-center gap-3 rounded-xl border border-transparent px-2 py-1 transition-colors hover:border-[#cfe0df] hover:bg-white"
           aria-expanded={menuOpen}
           aria-haspopup="menu"
+          aria-label={menuOpen ? "Close account menu" : "Open account menu"}
         >
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d6eeee] text-sm font-bold text-[#08787b]">
             {initial}
@@ -159,7 +182,8 @@ export function InterviewAccountControls() {
         {menuOpen && (
           <div
             role="menu"
-            className="absolute -left-12 z-20 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-xl sm:left-auto sm:right-0"
+            data-medicforest-account-menu
+            className="fixed inset-x-4 bottom-4 z-30 max-h-[70dvh] overflow-y-auto rounded-xl border border-[#d8e0e6] bg-white shadow-xl sm:absolute sm:inset-x-auto sm:bottom-auto sm:right-0 sm:mt-3 sm:w-80 sm:max-w-[calc(100vw-2rem)]"
           >
             <div className="bg-[#042724] p-4 text-white">
               <div className="flex items-start gap-3">

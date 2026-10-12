@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getProductSiteUrl } from "@/utils/site-url";
 import { getMedicForestEntitlements } from "@/utils/medicforest/premium-access";
 import { FeatureAccessProvider } from "./_components/FeatureAccessProvider";
+import "./mobile.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getProductSiteUrl()),

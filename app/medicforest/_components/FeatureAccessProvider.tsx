@@ -52,7 +52,7 @@ export function FeatureAccessProvider({ entitlements, children }: { entitlements
 
   const accountHref = `/medicforest/account?mode=signup&next=${encodeURIComponent(prompt?.next ?? "/medicforest/interview/dashboard")}`;
   return <>{children}
-    {prompt && <dialog ref={dialog} onCancel={() => setPrompt(null)} onClick={(event) => { if (event.target === event.currentTarget) setPrompt(null); }} aria-labelledby="feature-access-title" aria-describedby="feature-access-description" className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-2xl border border-[#d5e2e3] bg-white p-6 text-[#071923] shadow-xl backdrop:bg-slate-950/50">
+    {prompt && <dialog data-medicforest-access-dialog ref={dialog} onCancel={() => setPrompt(null)} onClick={(event) => { if (event.target === event.currentTarget) setPrompt(null); }} aria-labelledby="feature-access-title" aria-describedby="feature-access-description" className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-2xl border border-[#d5e2e3] bg-white p-6 text-[#071923] shadow-xl backdrop:bg-slate-950/50">
       <button type="button" autoFocus onClick={() => setPrompt(null)} aria-label="Close popup" className="absolute right-3 top-3 rounded-lg p-2 hover:bg-slate-100"><X size={18} /></button>
       <LockKeyhole size={24} className="text-[#08787b]" aria-hidden="true" />
       <h2 id="feature-access-title" className="mt-4 text-xl font-semibold">{prompt.kind === "premium" ? "Upgrade to Premium to continue" : "Sign up for free to continue"}</h2>

@@ -234,7 +234,7 @@ function StudentOutcomesCard({
             </p>
           </div>
 
-          <div className="mt-4 flex items-center justify-between pt-2">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-2">
             <div className="flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white shadow-xs">
                 {active.authorInitial}
@@ -250,19 +250,23 @@ function StudentOutcomesCard({
             </div>
 
             {/* Pagination dots */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center">
               {outcomeStories.map((_, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => setCurrent(i)}
                   aria-label={`Go to outcome slide ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                  aria-current={i === current ? "true" : undefined}
+                  className="flex h-[44px] w-[44px] items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-teal-600 sm:h-auto sm:w-auto sm:p-1.5"
+                >
+                  <span aria-hidden="true" className={`block h-1.5 rounded-full transition-all duration-300 ${
                     i === current
                       ? "w-4 bg-teal-600"
                       : "w-1.5 bg-slate-300 hover:bg-slate-400"
                   }`}
-                />
+                  />
+                </button>
               ))}
             </div>
           </div>

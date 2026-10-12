@@ -1186,13 +1186,15 @@ export function InterviewQuestionBankDashboard({
   }
 
   if (selectedCategory && selectedSubcategory && activeQuestion && progressOwnerKey === "guest") {
-    return <main className="min-h-screen bg-[#eef1f3] px-6 py-12 text-[#071923]">
+    return <main className="medicforest-dashboard-compact min-h-screen bg-[#eef1f3] pb-12 text-[#071923]">
       <InterviewMobileNav activeLabel="Question Bank" />
-      <section className="mx-auto mt-8 max-w-xl rounded-xl bg-white p-6">
+      <section className="mx-auto mt-8 w-[calc(100%-2rem)] max-w-xl rounded-xl bg-white p-5 sm:p-6">
         <h1 className="text-2xl font-semibold">{activeQuestion.text}</h1>
         <p className="mt-3 text-sm leading-6 text-slate-600">Create a free account to practise this question and save your answer. You can keep exploring the question bank.</p>
-        <button type="button" onClick={() => requestFeatureAccess("free", "Question bank practice")} className="mt-5 rounded-lg bg-[#08787b] px-5 py-3 text-sm font-semibold text-white">Sign up for free / log in</button>
-        <button type="button" onClick={backToQuestionList} className="ml-4 text-sm font-semibold text-[#08787b]">Back to questions</button>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button type="button" onClick={() => requestFeatureAccess("free", "Question bank practice")} className="rounded-lg bg-[#08787b] px-5 py-3 text-sm font-semibold text-white">Sign up for free / log in</button>
+          <button type="button" onClick={backToQuestionList} className="px-3 text-sm font-semibold text-[#08787b]">Back to questions</button>
+        </div>
       </section>
     </main>;
   }

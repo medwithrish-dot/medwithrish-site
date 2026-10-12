@@ -107,11 +107,10 @@ body {
   cursor: not-allowed;
 }
 
-/* Platform pages use the browser's document scroller so wheel and precision
-   touchpad gestures work anywhere over the content. Active interview rooms
-   opt back into their dedicated fixed-height layout in the room stylesheet. */
+/* Allow native document scrolling, horizontal swipe areas and pinch zoom.
+   Active interview rooms use their dedicated layout in the room stylesheet. */
 [data-interview-shell-main] {
-  touch-action: pan-y;
+  touch-action: auto;
 }
 
 /* Keep MedicForest pages locked to the viewport width on narrow screens while

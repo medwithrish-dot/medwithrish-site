@@ -196,21 +196,25 @@ export function RealStudentSuccessStories() {
   return (
     <div className="mt-8 border-t border-[#E3E8E5] pt-6">
       {/* Flip controls */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         {/* Flip Dots */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center">
           {Array.from({ length: totalPages }).map((_, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => setPage(idx)}
               aria-label={`Go to flip page ${idx + 1}`}
-              className={`h-2 rounded-full transition-all ${
+              aria-current={page === idx ? "true" : undefined}
+              className="flex h-[44px] w-[44px] items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-teal-600 sm:h-auto sm:w-auto sm:p-1.5"
+            >
+              <span aria-hidden="true" className={`block h-2 rounded-full transition-all ${
                 page === idx
                   ? "w-6 bg-[#0c6b5e]"
                   : "w-2 bg-slate-200 hover:bg-slate-300"
               }`}
-            />
+              />
+            </button>
           ))}
         </div>
 
@@ -312,8 +316,8 @@ export function RealStudentSuccessStories() {
                     />
                   )}
                   {/* Hover overlay hint */}
-                  <div className="absolute inset-0 bg-slate-950/0 transition group-hover:bg-slate-950/20 flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
+                  <div className="absolute inset-0 flex items-end justify-end bg-slate-950/0 p-2 transition group-hover:bg-slate-950/20 sm:items-center sm:justify-center">
+                    <span className="opacity-100 sm:opacity-0 group-hover:opacity-100 transition rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-slate-800 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
                       <Maximize2 className="h-3 w-3 text-teal-700" />
                       <span>View full receipt</span>
                     </span>
@@ -352,17 +356,18 @@ export function RealStudentSuccessStories() {
         <div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="student-receipt-title"
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-xs"
           onClick={() => setSelectedStory(null)}
         >
           <div
-            className="relative max-h-[92vh] w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-5 sm:p-6 shadow-2xl"
+            className="relative max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 sm:p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-base font-bold text-slate-950">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h4 id="student-receipt-title" className="text-base font-bold text-slate-950">
                     {selectedStory.title}
                   </h4>
                   <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-full">
@@ -377,14 +382,14 @@ export function RealStudentSuccessStories() {
                 type="button"
                 onClick={() => setSelectedStory(null)}
                 aria-label="Close modal"
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="mt-4 flex max-h-[68vh] items-center justify-center overflow-auto rounded-xl bg-slate-950 p-2 sm:p-4">
-              <div className="relative h-[480px] w-full">
+              <div className="relative h-[min(480px,55dvh)] w-full shrink-0">
                 <Image
                   src={selectedStory.imageSrc}
                   alt={selectedStory.title}
@@ -395,7 +400,7 @@ export function RealStudentSuccessStories() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
               <span>Authentic student verification receipt</span>
               <button
                 type="button"
