@@ -224,7 +224,8 @@ test("platform pages use native document scrolling for wheel and touchpad gestur
     assert.doesNotMatch(shell, /lg:fixed lg:inset-0/);
     assert.doesNotMatch(shell, /data-interview-shell-main[^>]+lg:overflow-y-auto/);
   }
-  assert.match(sidebar, /lg:sticky lg:top-0/);
+  assert.match(sidebar, /lg:min-h-\[100dvh\] lg:self-stretch/);
+  assert.doesNotMatch(sidebar, /lg:sticky|lg:h-\[100dvh\]|lg:overflow-y-auto/);
   assert.doesNotMatch(globals, /html,\s*\nbody\s*\{[^}]*overflow-x:\s*hidden/s);
   assert.match(globals, /\[data-interview-shell-main\]\s*\{\s*touch-action:\s*pan-y/);
   assert.match(globals, /html:has\(\[data-interview-shell\]\),\s*\nbody:has\(\[data-interview-shell\]\)\s*\{[^}]*overflow-x:\s*hidden\s*!important;[^}]*overflow-y:\s*visible\s*!important;/s);
