@@ -6,7 +6,7 @@ import { MedicForestLogo } from "../_components/MedicForestLogo";
 import {
   Brain,
   ChevronDown,
-  MessageSquare,
+  Stethoscope,
 } from "lucide-react";
 
 const interviewSwitchItems = [
@@ -22,7 +22,7 @@ const interviewSwitchItems = [
     label: "Med Interviews",
     eyebrow: "Current workspace",
     href: "/medicforest/interview/dashboard",
-    icon: MessageSquare,
+    icon: Stethoscope,
   },
 ] as const;
 

@@ -12,6 +12,8 @@ import {
   Home,
   Mic,
   MessageSquare,
+  Star,
+  Stethoscope,
   Trophy,
   UserRound,
   UserRoundCheck,
@@ -94,7 +96,7 @@ const landingSections = [
       { label: "UCAT", icon: Brain, href: "/ucat" },
       {
         label: "Med Interviews",
-        icon: MessageSquare,
+        icon: Stethoscope,
         href: "/interviews",
       },
       {
@@ -155,7 +157,10 @@ function SidebarLink({
       }`}
     >
       <Icon className="h-4.5 w-4.5 shrink-0" aria-hidden="true" />
-      <span className="truncate">{label}</span>
+      <span className="inline-flex min-w-0 items-center gap-1.5 truncate">
+        <span className="truncate">{label}</span>
+        {label === "Med Interviews" && <Star className="h-3.5 w-3.5 shrink-0 fill-current" aria-hidden="true" />}
+      </span>
     </Link>
   );
 }
