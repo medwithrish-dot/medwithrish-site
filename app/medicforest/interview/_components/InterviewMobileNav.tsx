@@ -49,7 +49,7 @@ export function InterviewMobileNav({
         aria-label={
           mode === "landing" ? "MedicForest navigation" : "Med Interview navigation"
         }
-        className="flex gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden"
+        className="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden"
       >
         {links.map(([label, href]) => (
           <Link

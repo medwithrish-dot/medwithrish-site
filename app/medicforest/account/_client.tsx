@@ -356,8 +356,8 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
 
   return (
     <MedicForestLandingShell>
-      <div className="min-h-screen px-5 py-10 sm:px-8 sm:py-12">
-        <main className="mx-auto max-w-4xl space-y-8">
+      <div className="w-full min-w-0 max-w-full min-h-screen px-5 py-10 sm:px-8 sm:py-12">
+        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-8">
           {/* Header */}
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200/80 bg-white px-3 py-1 text-xs font-bold text-teal-800 shadow-2xs">

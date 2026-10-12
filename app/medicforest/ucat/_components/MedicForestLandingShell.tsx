@@ -18,16 +18,16 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
 
       <div
         data-interview-shell-grid
-        className="grid min-h-[100dvh] lg:grid-cols-[200px_1fr]"
+        className="grid min-h-[100dvh] w-full min-w-0 max-w-full grid-cols-1 lg:grid-cols-[200px_minmax(0,1fr)]"
       >
         <InterviewSidebar activeLabel="" showPremiumCard mode="landing" />
 
         <div
           data-interview-shell-main
-          className="min-w-0 max-w-full overflow-x-hidden"
+          className="w-full min-w-0 max-w-full overflow-x-hidden"
         >
           <InterviewMobileNav activeLabel="" mode="landing" />
-          <main id="medicforest-content" className="min-w-0 max-w-full">
+          <main id="medicforest-content" className="w-full min-w-0 max-w-full">
             {children}
           </main>
         </div>
