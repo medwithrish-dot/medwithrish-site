@@ -13,6 +13,29 @@ import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS, WHY_MEDICINE_QUESTION_ID } f
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
+
+test("challenge landing offers answer review after submission, grading, failure or a scored retry", async () => {
+  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/AIInterviewLanding.tsx"), "utf8");
+  const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+  for (const [status, mode, stationSeconds, review] of [
+    ["submitted", "free", 180, true], ["grading", "free", 180, true],
+    ["failed", "free", 180, true], ["completed", "station", 180, true],
+    ["in_progress", "free", 180, false], ["completed", "station", 480, false],
+  ]) {
+    const compiled = { exports: {} };
+    const jsx = (type, props) => ({ type, props });
+    new Function("require", "module", "exports", output)(name => {
+      if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
+      if (name.endsWith("history")) return { interviewHistory: async () => ({ attempts: [{ id: "saved-answer", status, mode, stationSeconds, stationSlug: "why-medicine", completedAt: status === "in_progress" ? null : "2026-10-12", answerSubmittedAt: "2026-10-12" }] }) };
+      if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS };
+      if (name.endsWith(".module.css")) return { default: {} };
+      return {};
+    }, compiled, compiled.exports);
+    const tree = await compiled.exports.AIInterviewLanding();
+    const nodes = node => Array.isArray(node) ? node.flatMap(nodes) : node && typeof node === "object" ? [node, ...nodes(node.props?.children)] : [];
+    assert.equal(nodes(tree).some(node => node.props?.href === "/medicforest/interview/reports/saved-answer"), review, `${status}/${mode}/${stationSeconds}`);
+  }
+});
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const circuitId = "12345678-1234-4234-8234-123456789012";
 
@@ -128,7 +151,7 @@ test("the Why medicine challenge reserves exactly one fixed prompt and three min
 test("the challenge lobby locks its station and preview/start plans despite a previous circuit plan", () => {
   const source = readFileSync(resolve(root, "app/medicforest/interview/_components/AIInterviewSetup.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-  const module = { exports: {} };
+  const compiledModule = { exports: {} };
   const jsx = (type, props) => ({ type, props });
   new Function("require", "module", "exports", output)(name => {
     if (name === "react") return { useState: value => [value, () => {}] };
@@ -138,9 +161,9 @@ test("the challenge lobby locks its station and preview/start plans despite a pr
     if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS };
     if (name.endsWith(".module.css")) return { default: {} };
     return {};
-  }, module, module.exports);
+  }, compiledModule, compiledModule.exports);
   const starts = [];
-  const tree = module.exports.AIInterviewSetup({ initialStationSlug: "why-medicine", initialPlan: { mode: "university", stationSlugs: ["work-experience", "data-analysis"], stationSeconds: 480 }, devices: {}, onStart: (plan, preview) => starts.push({ plan, preview }) });
+  const tree = compiledModule.exports.AIInterviewSetup({ initialStationSlug: "why-medicine", initialPlan: { mode: "university", stationSlugs: ["work-experience", "data-analysis"], stationSeconds: 480 }, devices: {}, onStart: (plan, preview) => starts.push({ plan, preview }) });
   const nodes = node => Array.isArray(node) ? node.flatMap(nodes) : node && typeof node === "object" ? [node, ...nodes(node.props?.children)] : [];
   const text = node => Array.isArray(node) ? node.map(text).join(" ") : node && typeof node === "object" ? text(node.props?.children) : typeof node === "string" ? node : "";
   assert.match(text(tree), /Background to medicine/);

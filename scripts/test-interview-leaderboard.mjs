@@ -42,6 +42,7 @@ function harness({ signedIn = false } = {}) {
     state.reads.push(table);
     const chain = {
       select: () => chain, eq: () => chain, order: () => chain, limit: () => chain,
+      or: filter => { assert.equal(filter, "mode.eq.free,and(mode.eq.station,station_seconds.eq.180)"); return chain; },
       not: (column, operator, value) => { state.scoreFilter = [column, operator, value]; return chain; },
       maybeSingle: async () => ({ data: table === "interview_preferences"
         ? { display_name: "Rish", leaderboard_opt_in: true } : { score: 88.5 }, error: state.readError && { code: "XX000", message: state.readError } }),
@@ -65,6 +66,7 @@ function harness({ signedIn = false } = {}) {
         select: fields => { state.adminReads.push([table, fields]); return chain; },
         eq: (field, value) => { if (field === "rubric_version") assert.equal(value, "why-medicine-v2"); if (field === "leaderboard_opt_in") assert.equal(value, true); return chain; },
         not: () => chain, order: () => chain,
+        or: filter => { assert.equal(filter, "mode.eq.free,and(mode.eq.station,station_seconds.eq.180)"); return chain; },
         range: async start => ({ data: state.attemptPages[start / 200] ?? [], error: state.fallbackError }),
         in: async (_field, users) => ({ data: state.publicPreferences.filter(row => row.leaderboard_opt_in && users.includes(row.user_id)), error: state.fallbackError }),
         upsert: async value => { state.writes.push(value); return { error: state.writeError && { code: "XX000", message: state.writeError } }; },
@@ -110,7 +112,7 @@ test("guests see only opted-in public scores and cannot save preferences", async
   assert.equal(api.state.anonymousCalls, 2);
 });
 
-test("missing v2 RPC uses current scores only, honours opt-in and strips private identifiers", async () => {
+test("missing retry-aware RPC includes challenge retries, uses current scores only, honours opt-in and strips private identifiers", async () => {
   const api = harness({ signedIn: true });
   api.state.rpcErrorCode = "PGRST202";
   const completed_at = "2026-10-08T09:00:00Z";

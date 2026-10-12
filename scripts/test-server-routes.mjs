@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
@@ -8,6 +9,8 @@ import ts from "typescript";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
+// Next's server runtime normally installs this before loading route modules.
+globalThis.AsyncLocalStorage ??= AsyncLocalStorage;
 
 // Execute the real handlers with isolated provider adapters; no network or keys.
 function load(file, mocks = {}, cache = new Map()) {
@@ -487,7 +490,7 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
   let signedIn = true;
   const writes = [];
   const query = (table) => ({
-    select() { return this; }, eq() { return this; }, not() { return this; }, order() { return this; }, limit() { return this; },
+    select() { return this; }, eq() { return this; }, or() { return this; }, not() { return this; }, order() { return this; }, limit() { return this; },
     maybeSingle: async () => ({ error: null, data: table === "profiles" ? { current_plan: "free" }
       : table === "interview_preferences" ? { display_name: "f.u.c.k", leaderboard_opt_in: true } : { score: 88.5 } }),
     upsert: async (value) => { writes.push(value); return { error: null }; },

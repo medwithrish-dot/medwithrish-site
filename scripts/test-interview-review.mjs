@@ -42,12 +42,17 @@ function harness({ usageAllowed = true, overrides = {}, configured = false, user
     preparation_seconds: 60, station_seconds: 480, break_seconds: 120, station_index: 0, station_count: 3, circuit_id: circuitId,
     questions: [question], answers: [{ question, answer: "Previously saved answer" }], metrics: { wordCount: 3 },
     feedback: null, score: null, grading_tries: 0, last_error: null, ...overrides,
-  }, providerCalls: 0, gradingClaims: 0, reservations: [], writes: 0 };
+  }, providerCalls: 0, gradingClaims: 0, reservations: [], writes: 0, progress: [] };
   class Query {
     constructor(table) { this.table = table; this.filters = []; }
     select() { return this; }
     eq(key, value) { this.filters.push([key, value]); return this; }
     update(value) { this.mutation = value; return this; }
+    async upsert(rows) {
+      assert.equal(this.table, "interview_question_progress");
+      state.progress = structuredClone(rows);
+      return { error: null };
+    }
     async maybeSingle() {
       if (this.table === "profiles") return { data: { current_plan: "premium" }, error: null };
       if (this.mutation?.status === "completed" && saveError) return { data: null, error: { code: "XX000", message: saveError } };

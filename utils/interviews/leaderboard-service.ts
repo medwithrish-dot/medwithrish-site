@@ -14,7 +14,11 @@ function publicEntries(rows: BoardRow[]) {
   return rows.map((entry) => ({ rank: entry.rank, display_name: safePublicName(entry.display_name), score: entry.score, completed_at: entry.completed_at, is_you: entry.is_you === true }));
 }
 
-/** Compatibility for installations without the versioned RPC. Never use the v1 board. */
+// Include Premium retries of the same three-minute challenge, but exclude
+// ordinary eight-minute motivation stations and university circuits.
+const challengeFilter = "mode.eq.free,and(mode.eq.station,station_seconds.eq.180)";
+
+/** Compatibility for installations without the retry-aware RPC. Never use the v1 board. */
 async function readCompatibleLeaderboard(userId: string | null) {
   const admin = createAdminClient();
   const entries: BoardRow[] = [];
@@ -24,7 +28,7 @@ async function readCompatibleLeaderboard(userId: string | null) {
   // apply the scoring migration rather than silently publish an incomplete board.
   for (let page = 0; page < 10; page += 1) {
     const { data: attempts, error } = await admin.from("interview_attempts")
-      .select("user_id,score,completed_at").eq("mode", "free").eq("station_slug", "why-medicine")
+      .select("user_id,score,completed_at").or(challengeFilter).eq("station_slug", "why-medicine")
       .eq("status", "completed").eq("rubric_version", INTERVIEW_RUBRIC_VERSION)
       .not("score", "is", null).order("score", { ascending: false })
       .order("completed_at", { ascending: true }).order("id", { ascending: true })
@@ -48,7 +52,7 @@ async function readCompatibleLeaderboard(userId: string | null) {
 }
 
 async function readLeaderboard(client: Pick<Awaited<ReturnType<typeof createClient>>, "rpc">, userId: string | null) {
-  const board = await client.rpc("interview_leaderboard_v2");
+  const board = await client.rpc("interview_leaderboard_v3");
   if (board.error?.code === "PGRST202" || board.error?.code === "42883") return readCompatibleLeaderboard(userId);
   if (board.error) readError();
   return (board.data ?? []) as BoardRow[];
@@ -89,7 +93,7 @@ export async function getInterviewLeaderboard() {
   const [board, preference, best] = await Promise.all([
     boardRequest,
     supabase.from("interview_preferences").select("display_name,leaderboard_opt_in").eq("user_id", userId).maybeSingle(),
-    supabase.from("interview_attempts").select("score").eq("user_id", userId).eq("mode", "free").eq("station_slug", "why-medicine").eq("status", "completed").eq("rubric_version", INTERVIEW_RUBRIC_VERSION).not("score", "is", null).order("score", { ascending: false }).limit(1).maybeSingle(),
+    supabase.from("interview_attempts").select("score").eq("user_id", userId).or(challengeFilter).eq("station_slug", "why-medicine").eq("status", "completed").eq("rubric_version", INTERVIEW_RUBRIC_VERSION).not("score", "is", null).order("score", { ascending: false }).limit(1).maybeSingle(),
   ]);
   if (preference.error || best.error) readError();
   const savedPreference = (preference.data as Preference | null) ?? { display_name: `Candidate ${userId.slice(0, 6)}`, leaderboard_opt_in: false };

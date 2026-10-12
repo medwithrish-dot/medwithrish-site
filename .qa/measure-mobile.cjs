@@ -1,3 +1,5 @@
+// This standalone CommonJS browser probe runs outside the Next application.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const WebSocket = require("ws");
 
 const ws = new WebSocket(process.argv[2]);

@@ -339,6 +339,17 @@ try {
     assert.equal(rows.some((row) => row.display_name === "Public third"), false);
   });
 
+  await check("challenge leaderboard ranks scored three-minute retries and preserves sharing preferences", async () => {
+    const sql = await readFile(new URL("../supabase/medicforest_interview_challenge_leaderboard.sql", import.meta.url), "utf8");
+    await db.exec(sql); await db.exec(sql);
+    const retry = await attempt(ids.friend, { mode: "station", score: 95 });
+    await db.query("update public.interview_attempts set station_seconds=180 where id=$1", [retry]);
+    const { rows } = await role("anon", null, () => db.query("select * from public.interview_leaderboard_v3()"));
+    assert.deepEqual(rows.map(row => [row.display_name, Number(row.score)]), [["Public friend", 95], ["Public ties", 91], ["Public owner", 91]]);
+    assert.ok(rows.every(row => !row.is_you));
+    await db.query("delete from public.interview_attempts where id=$1", [retry]);
+  });
+
   let created;
   await check("groups create atomically with hashed invites and private membership", async () => {
     assert.deepEqual((await group(ids.outsider, "list")).groups, []);
