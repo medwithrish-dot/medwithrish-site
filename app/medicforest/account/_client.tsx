@@ -51,6 +51,8 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
   const [authSubmitting, setAuthSubmitting] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [resendSubmitting, setResendSubmitting] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaVersion, setCaptchaVersion] = useState(0);
 
@@ -243,6 +245,39 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
       router.refresh();
     } catch {
       // ignore
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!supabase || !email.trim() || resendSubmitting || resendCooldown > 0) return;
+
+    setResendSubmitting(true);
+    setAuthError(null);
+    setAuthMessage(null);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email.trim().toLowerCase(),
+        options: { captchaToken: captchaToken || undefined },
+      });
+      if (error) throw error;
+      setAuthMessage("Confirmation email sent. Check your inbox and spam folder.");
+      setResendCooldown(60);
+      const timer = window.setInterval(() => {
+        setResendCooldown((seconds) => {
+          if (seconds <= 1) {
+            window.clearInterval(timer);
+            return 0;
+          }
+          return seconds - 1;
+        });
+      }, 1000);
+    } catch (err) {
+      setAuthError(authErrorMessage(err));
+    } finally {
+      setCaptchaToken("");
+      setCaptchaVersion((version) => version + 1);
+      setResendSubmitting(false);
     }
   };
 
@@ -489,6 +524,21 @@ export function ManageAccountClient({ initialAuthTab = "login", returnTo = null 
                       <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-xs font-semibold text-teal-800">
                         {authMessage}
                       </div>
+                    )}
+
+                    {authTab === "signup" && authMessage?.toLowerCase().includes("confirmation") && (
+                      <button
+                        type="button"
+                        onClick={handleResendConfirmation}
+                        disabled={resendSubmitting || resendCooldown > 0 || !email.trim()}
+                        className="w-full rounded-xl border border-teal-200 bg-teal-50 px-3 py-2.5 text-xs font-bold text-teal-800 transition hover:bg-teal-100 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {resendSubmitting
+                          ? "Sending confirmation email…"
+                          : resendCooldown > 0
+                            ? `Resend available in ${resendCooldown}s`
+                            : "Resend confirmation email"}
+                      </button>
                     )}
 
                     <button

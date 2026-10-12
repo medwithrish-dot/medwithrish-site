@@ -7,7 +7,7 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
   return (
     <div
       data-interview-shell
-      className="soft-wave-bg medicforest-dashboard-compact min-h-[100dvh] text-[#071923]"
+      className="soft-wave-bg medicforest-dashboard-compact min-h-[100dvh] w-full max-w-full overflow-x-hidden text-[#071923]"
     >
       <a
         href="#medicforest-content"
@@ -24,10 +24,10 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
 
         <div
           data-interview-shell-main
-          className="min-w-0"
+          className="min-w-0 max-w-full overflow-x-hidden"
         >
           <InterviewMobileNav activeLabel="" mode="landing" />
-          <main id="medicforest-content" className="min-w-0">
+          <main id="medicforest-content" className="min-w-0 max-w-full">
             {children}
           </main>
         </div>
