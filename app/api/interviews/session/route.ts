@@ -9,6 +9,7 @@ import { questionEligible, readApplicant } from "@/utils/interviews/applicant-pr
 import { interviewerSpeech } from "@/app/medicforest/interview/_lib/interviewer-transcript";
 import { isAcademicInterview, universityStationSlugs } from "@/app/medicforest/interview/_data/university-stations";
 import { INTERVIEW_QUESTIONS } from "@/app/medicforest/interview/_data/interviewQuestionBank";
+import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS } from "@/app/medicforest/interview/_lib/why-medicine-challenge";
 
 const interviewQuestionIds = new Set<string>(INTERVIEW_QUESTIONS.map((question) => question.id));
 
@@ -102,17 +103,17 @@ export async function POST(request: Request) {
     const panel = mode === "university" && university?.format === "Panel";
     const station = panel ? findInterviewStation("panel-interview") : requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
-    const stationSeconds = mode === "university" ? university!.stationSeconds : 480;
+    const stationSeconds = requestedFree ? WHY_MEDICINE_SECONDS : mode === "university" ? university!.stationSeconds : 480;
     const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
     const applicant = readApplicant(preparation?.applicant);
-    const selectedQuestions = selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`, applicant);
+    const selectedQuestions = requestedFree ? [] : selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`, applicant);
     const payload = {
       mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
       title: station.lobbyTitle, circuit_id: circuitId, station_index: index, station_count: count,
       preparation_seconds: 0,
       station_seconds: stationSeconds,
       break_seconds: circuitMode ? (mode === "university" ? university!.breakSeconds : 120) : 0,
-      questions: selectedQuestions.length ? selectedQuestions.map((question) => question.text) : station.questions.filter((question) => questionEligible(question, applicant)),
+      questions: requestedFree ? [WHY_MEDICINE_PROMPT] : selectedQuestions.length ? selectedQuestions.map((question) => question.text) : station.questions.filter((question) => questionEligible(question, applicant)),
     };
     const { data, error } = await admin.rpc("reserve_interview_attempt", {
       p_user: user.id, p_payload: payload,

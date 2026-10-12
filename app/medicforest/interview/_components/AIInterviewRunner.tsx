@@ -18,6 +18,7 @@ import { AIInterviewCall } from "./AIInterviewCall";
 import { AIInterviewReview } from "./AIInterviewReview";
 import styles from "./AIInterviewRoom.module.css";
 import { selectPanelQuestions } from "@/utils/interviews/station-question-selection";
+import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_QUESTION_ID, WHY_MEDICINE_SECONDS } from "../_lib/why-medicine-challenge";
 
 type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; usedSavedAnswers?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
 type StartOptions = { mode: InterviewMode; universitySlug?: string; stationSlug?: string; circuitId?: string; stationIndex?: number; stationCount?: number };
@@ -552,8 +553,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
           stationSlug: station.slug, title: station.lobbyTitle, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
           preparationSeconds: 0, stationSeconds: plan.stationSeconds, breakSeconds: 0,
           stationIndex: options.stationIndex ?? 0, stationCount: plan.stationSlugs.length,
-          questions: panelQuestions.length ? panelQuestions.map(question => question.text) : [...station.questions],
-          questionIds: panelQuestions.length ? panelQuestions.map(question => question.id) : undefined,
+          questions: plan.mode === "free" ? [WHY_MEDICINE_PROMPT] : panelQuestions.length ? panelQuestions.map(question => question.text) : [...station.questions],
+          questionIds: plan.mode === "free" ? [WHY_MEDICINE_QUESTION_ID] : panelQuestions.length ? panelQuestions.map(question => question.id) : undefined,
           answers: [], feedback: null, metrics: {}, nextAvailableAt: null,
           circuitId: options.circuitId ?? `preview-${crypto.randomUUID()}`,
         } }, true);
@@ -780,10 +781,11 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   };
   const retryStation = () => {
     if (!attempt || attempt.status === "in_progress" || actionLockRef.current || submitLockRef.current) return;
+    const challenge = attempt.stationSlug === "why-medicine" && (attempt.mode === "free" || (attempt.questions.length === 1 && attempt.questions[0] === WHY_MEDICINE_PROMPT));
     const plan: InterviewRoomPlan = {
-      mode: attempt.mode, universitySlug: attempt.universitySlug ?? undefined,
+      mode: challenge ? "free" : attempt.mode, universitySlug: attempt.universitySlug ?? undefined,
       stationSlugs: [attempt.stationSlug], preparationSeconds: attempt.preparationSeconds,
-      stationSeconds: attempt.stationSeconds, breakSeconds: attempt.breakSeconds,
+      stationSeconds: challenge ? WHY_MEDICINE_SECONDS : attempt.stationSeconds, breakSeconds: attempt.breakSeconds,
     };
     // Keep the current circuit plan intact if opening the retry fails.
     void startAttempt({ mode: plan.mode, universitySlug: plan.universitySlug, stationSlug: attempt.stationSlug, stationCount: 1, circuitId: crypto.randomUUID() }, previewRef.current, plan);

@@ -3,6 +3,7 @@ import { stationQuestionCount } from "@/app/medicforest/interview/_data/intervie
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 import { getQuestionStimulus } from "@/app/medicforest/interview/_data/interview-stimuli";
 import { DATA_INTERPRETATION_STATION_QUESTIONS } from "@/app/medicforest/interview/_data/data-interpretation-station";
+import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_QUESTION_ID } from "@/app/medicforest/interview/_lib/why-medicine-challenge";
 
 type StationQuestionRule = {
   sourceTopics?: readonly string[];
@@ -103,5 +104,6 @@ export function selectStationQuestions(stationSlug: string, stationSeconds: numb
 }
 
 export function questionIdForText(text: string) {
+  if (text === WHY_MEDICINE_PROMPT) return WHY_MEDICINE_QUESTION_ID;
   return questionByText.get(text)?.id ?? LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text) ?? null;
 }

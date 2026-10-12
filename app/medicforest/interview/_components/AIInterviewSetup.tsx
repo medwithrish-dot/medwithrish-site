@@ -12,6 +12,7 @@ import { InterviewDevicePreview } from "./InterviewDevicePreview";
 import { AnimatedDisclosure } from "./AnimatedDisclosure";
 import { INTERVIEW_PATHWAY } from "@/utils/interviews/pathway";
 import styles from "./AIInterviewRoom.module.css";
+import { WHY_MEDICINE_SECONDS } from "../_lib/why-medicine-challenge";
 
 export type InterviewRoomPlan = {
   mode: InterviewMode;
@@ -45,20 +46,21 @@ type Props = {
 };
 
 export function AIInterviewSetup(props: Props) {
+  const challenge = props.initialStationSlug === "why-medicine" && !props.initialUniversitySlug && !props.initialMockCircuit;
   const initialStation = findInterviewStation(props.initialStationSlug ?? "why-medicine");
   const [preset, setPreset] = useState<"custom" | "university">(props.initialPlan?.mode === "university" || (!props.initialPlan && props.initialUniversitySlug) ? "university" : "custom");
   const [universitySlug, setUniversitySlug] = useState(props.initialPlan?.universitySlug ?? props.initialUniversitySlug ?? interviewUniversities[0].slug);
   const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialMockCircuit ? INTERVIEW_PATHWAY.map((station) => station.mockStation) : props.initialUniversitySlug ? universityStationSlugs(props.initialUniversitySlug) : [initialStation?.slug ?? "why-medicine"]));
   const university = interviewUniversities.find((item) => item.slug === universitySlug) ?? interviewUniversities[0];
-  const isPanel = preset === "university" && university.format === "Panel";
-  const stationSlugs = isPanel ? universityStationSlugs(university.slug) : selected.filter((slug) => findInterviewStation(slug));
+  const isPanel = !challenge && preset === "university" && university.format === "Panel";
+  const stationSlugs = challenge ? ["why-medicine"] : isPanel ? universityStationSlugs(university.slug) : selected.filter((slug) => findInterviewStation(slug));
   const plan: InterviewRoomPlan = {
-    mode: preset === "university" ? "university" : stationSlugs.length === 1 ? (stationSlugs[0] === "why-medicine" ? "free" : "station") : "reference",
-    universitySlug: preset === "university" ? universitySlug : undefined,
+    mode: challenge ? "free" : preset === "university" ? "university" : stationSlugs.length === 1 ? (stationSlugs[0] === "why-medicine" ? "free" : "station") : "reference",
+    universitySlug: !challenge && preset === "university" ? universitySlug : undefined,
     stationSlugs,
     preparationSeconds: 0,
-    stationSeconds: preset === "university" ? university.stationSeconds : 480,
-    breakSeconds: preset === "university" ? university.breakSeconds : stationSlugs.length > 1 ? 120 : 0,
+    stationSeconds: challenge || (preset === "custom" && stationSlugs.length === 1 && stationSlugs[0] === "why-medicine") ? WHY_MEDICINE_SECONDS : preset === "university" ? university.stationSeconds : 480,
+    breakSeconds: challenge ? 0 : preset === "university" ? university.breakSeconds : stationSlugs.length > 1 ? 120 : 0,
   };
   const duration = Math.ceil((stationSlugs.length * (plan.preparationSeconds + plan.stationSeconds) + Math.max(0, stationSlugs.length - 1) * plan.breakSeconds) / 60);
   const changePreset = (value: typeof preset) => {
@@ -75,13 +77,20 @@ export function AIInterviewSetup(props: Props) {
   const device = props.devices;
 
   return <div className={styles.setup}>
-    <div className={styles.setupHeading}><div><p className={styles.eyebrow}><span className={styles.greenDot} /> YOUR INTERVIEW LOBBY</p><h1>Make this practice yours.</h1><p>Choose your stations, find your voice, and settle in. We’ll take it one question at a time.</p></div><span className={styles.softBadge}><ShieldCheck size={15} /> A little space to build confidence</span></div>
+    <div className={styles.setupHeading}><div><p className={styles.eyebrow}><span className={styles.greenDot} /> YOUR INTERVIEW LOBBY</p><h1>Make this practice yours.</h1><p>{challenge ? "Check your sound, settle in, and tell us why medicine." : "Choose your stations, find your voice, and settle in. We’ll take it one question at a time."}</p></div><span className={styles.softBadge}><ShieldCheck size={15} /> A little space to build confidence</span></div>
     <div className={styles.setupGrid}>
       <section className={styles.setupCard} aria-labelledby="stations-heading">
-        <div className={styles.cardHeading}><span className={styles.sectionIcon}><SlidersHorizontal size={19} /></span><div><h2 id="stations-heading">Build your Med interview</h2><p>Keep what you need. Skip what you don’t.</p></div></div>
-        <div className={styles.presetPicker} aria-label="Med Interview format">{([['custom', 'Custom MMI circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>
-        {preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); setSelected(universityStationSlugs(event.target.value)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per {isPanel ? "panel" : "station"}.</p><p>{isPanel ? "Each panel mixes linked questions from several topics." : universityCircuitIsResearched(university.slug) ? "Pre-selected topics reflect published assessment areas where available; remaining places use balanced practice topics." : "Exact station topics are not published, so a balanced practice circuit has been pre-selected for this format."} Actual stations may differ.</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={universityStationPresets[university.slug]?.source ?? university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
-        {isPanel ? <p className={styles.smallNote}>{university.stationCount} panel {university.stationCount === 1 ? "discussion" : "discussions"}, with {stationQuestionCount(plan.stationSeconds)} linked questions each. Practise a varied mix of motivation, communication, teamwork, ethics, scenarios and healthcare issues. No image tasks or automatic probes.</p> : <>
+        <div className={styles.cardHeading}><span className={styles.sectionIcon}><SlidersHorizontal size={19} /></span><div><h2 id="stations-heading">{challenge ? "Why medicine? challenge" : "Build your Med interview"}</h2><p>{challenge ? "One question. Three minutes to share your motivation." : "Keep what you need. Skip what you don’t."}</p></div></div>
+        {!challenge && <div className={styles.presetPicker} aria-label="Med Interview format">{([['custom', 'Custom MMI circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>}
+        {!challenge && preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); setSelected(universityStationSlugs(event.target.value)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per {isPanel ? "panel" : "station"}.</p><p>{isPanel ? "Each panel mixes linked questions from several topics." : universityCircuitIsResearched(university.slug) ? "Pre-selected topics reflect published assessment areas where available; remaining places use balanced practice topics." : "Exact station topics are not published, so a balanced practice circuit has been pre-selected for this format."} Actual stations may differ.</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={universityStationPresets[university.slug]?.source ?? university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
+        {challenge ? <div className={styles.stationList}>
+          <div className={`${styles.stationOption} ${styles.stationSelected}`}>
+            <CheckCircle2 size={20} aria-hidden="true" />
+            <span className={styles.stationNumber}>01</span>
+            <div className={styles.stationName}><strong>Background to medicine</strong><span>Motivation / 1 prompt / 3 minutes</span><span>Why medicine?</span></div>
+            <span className={styles.stationState}><Check size={15} /></span>
+          </div>
+        </div> : isPanel ? <p className={styles.smallNote}>{university.stationCount} panel {university.stationCount === 1 ? "discussion" : "discussions"}, with {stationQuestionCount(plan.stationSeconds)} linked questions each. Practise a varied mix of motivation, communication, teamwork, ethics, scenarios and healthcare issues. No image tasks or automatic probes.</p> : <>
         <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span><div><button type="button" onClick={() => setSelected(interviewSetupStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div></div>
         <div className={styles.stationList}>{interviewSetupStations.map((station, index) => {
           const quantity = selected.filter((slug) => slug === station.slug).length;
@@ -96,7 +105,7 @@ export function AIInterviewSetup(props: Props) {
             }}
           >
             <input id={`station-${station.slug}`} aria-label={`Include ${station.lobbyTitle}`} type="checkbox" checked={included} onChange={() => setStationQuantity(station.slug, included ? 0 : 1)} />
-            <span className={styles.stationNumber}>{String(index + 1).padStart(2, "0")}</span><label htmlFor={`station-${station.slug}`} className={styles.stationName}><strong>{station.lobbyTitle}</strong><span>{station.theme} <span>·</span> {stationQuestionCount(plan.stationSeconds)} prompts</span></label>
+            <span className={styles.stationNumber}>{String(index + 1).padStart(2, "0")}</span><label htmlFor={`station-${station.slug}`} className={styles.stationName}><strong>{station.lobbyTitle}</strong><span>{station.theme} <span>·</span> {plan.mode === "free" ? "1 prompt" : `${stationQuestionCount(plan.stationSeconds)} prompts`}</span></label>
             {repeatable ? <span className={styles.quantityControl} aria-label={`${station.lobbyTitle} quantity`}><span>Qty</span><button type="button" aria-label={`Remove one ${station.lobbyTitle} station`} disabled={!quantity} onClick={() => setStationQuantity(station.slug, quantity - 1)}>−</button><output aria-live="polite">{quantity}</output><button type="button" aria-label={`Add one ${station.lobbyTitle} station`} disabled={stationSlugs.length >= 20 || quantity >= 6} onClick={() => setStationQuantity(station.slug, quantity + 1)}>+</button></span> : <span className={styles.stationState}>{included ? <Check size={15} /> : "Skip"}</span>}
           </div>;
         })}</div></>}

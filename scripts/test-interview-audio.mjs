@@ -66,3 +66,12 @@ test("questions.csv remains aligned with bank IDs and every recorded voice file"
 test("unknown generated follow-up questions retain a browser-voice fallback", () => {
   assert.equal(getInterviewQuestionAudioSrc(null, "A newly generated follow-up?", "female"), undefined);
 });
+
+test("Why medicine uses dedicated recorded Chirp audio even with its marking ID", () => {
+  for (const voice of ["female", "male"]) {
+    const src = `/audio/${voice}/why-medicine.mp3`;
+    assert.equal(getInterviewQuestionAudioSrc("iq-01-001-motivation-for-medicine", "Why medicine?", voice), src);
+    assert.equal(getInterviewQuestionAudioSrc(null, "Why medicine?", voice), src);
+    assert.ok(statSync(resolve(root, `public${src}`)).size > 1000);
+  }
+});

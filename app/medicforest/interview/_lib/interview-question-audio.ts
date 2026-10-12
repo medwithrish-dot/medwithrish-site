@@ -1,5 +1,6 @@
 import { INTERVIEW_QUESTIONS } from "../_data/interviewQuestionBank";
 import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretation-station";
+import { WHY_MEDICINE_PROMPT } from "./why-medicine-challenge";
 
 export type InterviewerVoice = "female" | "male";
 
@@ -130,6 +131,7 @@ export function getInterviewQuestionAudioSrc(
   questionText: string,
   voice: InterviewerVoice,
 ) {
+  if (questionText === WHY_MEDICINE_PROMPT) return `/audio/${voice}/why-medicine.mp3`;
   const questionNumber = (questionId ? questionNumberById.get(questionId) : undefined)
     ?? questionNumberByText.get(questionText);
   return questionNumber

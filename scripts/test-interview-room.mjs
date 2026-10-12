@@ -9,6 +9,7 @@ import { runInNewContext } from "node:vm";
 import { INTERVIEW_QUESTIONS } from "../app/medicforest/interview/_data/interviewQuestionBank.ts";
 import { stationQuestionCount } from "../app/medicforest/interview/_data/interview-stations.ts";
 import { medicForestPublicHref } from "../utils/medicforest/public-navigation.ts";
+import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS, WHY_MEDICINE_QUESTION_ID } from "../app/medicforest/interview/_lib/why-medicine-challenge.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -111,6 +112,45 @@ test("presets use supported university topics and preserve custom/free defaults"
   }
 });
 
+test("the Why medicine challenge reserves exactly one fixed prompt and three minutes", async () => {
+  const api = sessionRoute({ premium: false });
+  assert.equal((await api.post({ mode: "free", stationSlug: "data-analysis", stationSeconds: 900, preparationSeconds: 60 })).status, 200);
+  const payload = api.reservations[0].p_payload;
+  assert.equal(payload.station_slug, "why-medicine");
+  assert.equal(payload.title, "Background to medicine");
+  assert.equal(payload.station_count, 1);
+  assert.equal(payload.station_seconds, 180);
+  assert.equal(payload.preparation_seconds, 0);
+  assert.equal(payload.break_seconds, 0);
+  assert.deepEqual(payload.questions, ["Why medicine?"]);
+});
+
+test("the challenge lobby locks its station and preview/start plans despite a previous circuit plan", () => {
+  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/AIInterviewSetup.tsx"), "utf8");
+  const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+  const module = { exports: {} };
+  const jsx = (type, props) => ({ type, props });
+  new Function("require", "module", "exports", output)(name => {
+    if (name === "react") return { useState: value => [value, () => {}] };
+    if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
+    if (name.endsWith("university-stations")) return { standardInterviewUniversities: [{ slug: "test", format: "MMI" }], REPEATABLE_STATION_SLUGS: [], universityStationSlugs: () => [] };
+    if (name.endsWith("interview-stations")) return { findInterviewStation: slug => ({ slug }), stationQuestionCount };
+    if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS };
+    if (name.endsWith(".module.css")) return { default: {} };
+    return {};
+  }, module, module.exports);
+  const starts = [];
+  const tree = module.exports.AIInterviewSetup({ initialStationSlug: "why-medicine", initialPlan: { mode: "university", stationSlugs: ["work-experience", "data-analysis"], stationSeconds: 480 }, devices: {}, onStart: (plan, preview) => starts.push({ plan, preview }) });
+  const nodes = node => Array.isArray(node) ? node.flatMap(nodes) : node && typeof node === "object" ? [node, ...nodes(node.props?.children)] : [];
+  const text = node => Array.isArray(node) ? node.map(text).join(" ") : node && typeof node === "object" ? text(node.props?.children) : typeof node === "string" ? node : "";
+  assert.match(text(tree), /Background to medicine/);
+  assert.match(text(tree), /1 prompt.*3 minutes/);
+  assert.doesNotMatch(text(tree), /Select all|Clear|Custom MMI circuit|Skills station/);
+  for (const label of ["Preview room", "Join Med interview"]) nodes(tree).find(node => node.type === "button" && text(node).includes(label)).props.onClick();
+  assert.deepEqual(starts.map(({ plan }) => [plan.mode, plan.stationSlugs, plan.stationSeconds, plan.breakSeconds]), [["free", ["why-medicine"], 180, 0], ["free", ["why-medicine"], 180, 0]]);
+  assert.deepEqual(starts.map(({ preview }) => preview), [true, false]);
+});
+
 test("used trials reject Free retries, allow reservation replay, and route Premium retries to paid practice", async () => {
   const previous = { id: "saved-trial", circuit_id: circuitId, status: "completed", mode: "free" };
   const free = sessionRoute({ premium: false, previous });
@@ -124,6 +164,8 @@ test("used trials reject Free retries, allow reservation replay, and route Premi
   assert.equal((await premium.post({ mode: "free", stationSlug: "data-analysis" })).status, 200);
   assert.equal(premium.reservations[0].p_payload.mode, "station");
   assert.equal(premium.reservations[0].p_payload.station_slug, "why-medicine");
+  assert.equal(premium.reservations[0].p_payload.station_seconds, 180);
+  assert.deepEqual(premium.reservations[0].p_payload.questions, ["Why medicine?"]);
 });
 
 test("empty, malformed and oversized station selections do not reserve an attempt", async () => {
@@ -273,6 +315,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("interview-question-audio")) return { getInterviewQuestionAudioSrc: () => undefined };
+      if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS, WHY_MEDICINE_QUESTION_ID };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
       if (name.endsWith("station-flow")) return { parseDoneReply, parsePreviousAnswerInterrupt, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition, followUpsEnabled: () => followUps };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };

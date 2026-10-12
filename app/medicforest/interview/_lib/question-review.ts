@@ -2,6 +2,7 @@ import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type Interv
 import { questionMarkingPoints } from "../_data/question-marking-points";
 import { suppliedMarkSchemes } from "../_data/supplied-mark-schemes";
 import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretation-station";
+import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_QUESTION_ID } from "./why-medicine-challenge";
 
 export type MarkSchemeSection = {
   title: "General" | "Start" | "Middle" | "End" | "Mistakes";
@@ -318,7 +319,7 @@ const questionsByText = new Map<string, InterviewQuestion>(reviewQuestions.map((
 
 /** IDs are authoritative for saved attempts; text supports pre-ID attempts. */
 export function findReviewQuestion(id: string | null | undefined, text: string) {
-  const legacyId = LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text);
+  const legacyId = text === WHY_MEDICINE_PROMPT ? WHY_MEDICINE_QUESTION_ID : LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text);
   return (id ? questionsById.get(id) : undefined) ?? questionsByText.get(text) ?? (legacyId ? questionsById.get(legacyId) : undefined) ?? null;
 }
 
