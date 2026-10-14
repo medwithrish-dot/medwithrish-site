@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import {
+  ArrowDown,
   ArrowRight,
   BadgeCheck,
   Check,
@@ -291,9 +292,10 @@ export function InterviewTutoringClient({
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href="#packages"
-                  className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-xs transition hover:bg-blue-700 hover:shadow-md"
                 >
-                  View packages & pricing
+                  <span>View Packages & Pricing</span>
+                  <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5 animate-bounce" />
                 </a>
                 <a
                   href="https://wa.me/447305422619"

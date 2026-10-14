@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import {
+  ArrowDown,
   ArrowRight,
   BadgeCheck,
   Calculator,
@@ -316,19 +317,19 @@ export function UCATTutoringClient({
           )}
 
           {/* Hero Header */}
-          <section className="mt-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
+          <section className="mt-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8 lg:p-9">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
                 1-TO-1 UCAT CRASH COURSE
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
                 <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" />
                 Proven 99th Percentile Methods
               </span>
             </div>
 
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 max-w-3xl text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
               Turn your UCAT preparation into a{" "}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 high-percentile score.
@@ -336,8 +337,28 @@ export function UCATTutoringClient({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-              Work 1-to-1 with <strong className="text-slate-900">@medwithrish</strong> or an experienced MedicForest UCAT Specialist to fix timing bottlenecks, master high-speed mental maths shortcuts, and target your weakest subtests.
+              Work 1-to-1 with <strong className="font-semibold text-slate-900">@medwithrish</strong> or an experienced MedicForest UCAT Specialist to fix timing bottlenecks, master high-speed mental maths shortcuts, and target your weakest subtests.
             </p>
+
+            {/* Primary Action & Jump to Packages */}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <a
+                href="#packages"
+                className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-xs transition hover:bg-blue-700 hover:shadow-md"
+              >
+                <span>View Packages & Pricing</span>
+                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5 animate-bounce" />
+              </a>
+              <a
+                href={whatsappHrefForPackage(packages.rish)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs sm:text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                <MessageCircle className="h-4 w-4 text-emerald-600" />
+                <span>WhatsApp Rishoo</span>
+              </a>
+            </div>
 
             {/* Feature Pills */}
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -373,7 +394,35 @@ export function UCATTutoringClient({
                 <p className="text-[11px] text-slate-500">GMC Good Medical Practice rules</p>
               </div>
             </div>
+
+            {/* Obvious Scroll-Down Prompt to Packages */}
+            <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-blue-200/90 bg-blue-50/70 p-3.5 sm:px-4 sm:py-2.5">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
+                <span className="flex h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse" />
+                <span>
+                  <strong className="text-slate-900">3 Packages Available:</strong> Specialist (£100) · Direct with Rishoo (£140) · Complete Admissions (£200)
+                </span>
+              </div>
+              <a
+                href="#packages"
+                className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 transition hover:underline"
+              >
+                <span>Scroll down to see packages</span>
+                <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
+              </a>
+            </div>
           </section>
+
+          {/* Quick-jump link between sections */}
+          <div className="mt-4 flex justify-center">
+            <a
+              href="#packages"
+              className="group inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/95 px-4 py-1.5 text-xs font-bold text-blue-700 shadow-2xs transition hover:border-blue-400 hover:bg-blue-50/80"
+            >
+              <span>Scroll down for packages & pricing</span>
+              <ArrowDown className="h-3.5 w-3.5 text-blue-600 animate-bounce" />
+            </a>
+          </div>
 
           {/* Real Score Proof Carousel / Grid */}
           <section className="mt-8">

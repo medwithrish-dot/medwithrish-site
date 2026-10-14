@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useCallback, type FormEvent } from "react";
 import {
+  ArrowDown,
   ArrowRight,
   BadgeCheck,
   Check,
@@ -376,10 +377,10 @@ export function TutoringPageClient({
             <div className="mt-6 flex flex-wrap gap-2.5">
               <a
                 href="#packages"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-xs transition hover:bg-blue-700 hover:shadow-md"
               >
-                Browse packages & pricing
-                <ArrowRight className="h-3.5 w-3.5" />
+                <span>Browse packages & pricing</span>
+                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5 animate-bounce" />
               </a>
               <Link
                 href="/ucat-tutoring"
