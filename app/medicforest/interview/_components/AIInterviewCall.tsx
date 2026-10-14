@@ -5,7 +5,7 @@ import { findReviewQuestion } from "../_lib/question-review";
 import { InterviewStimulus } from "./InterviewStimulus";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, AudioLines, Check, Clock3, FileText, Loader2, LockKeyhole, Maximize2, MessageSquareText, Mic, MicOff, Minimize2, Phone, Sparkles, UserRound, Video, VideoOff, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowRight, AudioLines, Check, Clock3, FileText, Loader2, Maximize2, MessageSquareText, Mic, MicOff, Minimize2, Phone, Sparkles, UserRound, Video, VideoOff, Volume2, VolumeX, X } from "lucide-react";
 import type { InterviewAnswer, InterviewAttempt } from "../_lib/interview-types";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import type { useInterviewSpeech } from "../_lib/useInterviewSpeech";
@@ -14,6 +14,8 @@ import { DONE_PROMPT, questionTransition } from "../_lib/station-flow";
 import { answerConversation } from "../_lib/interviewer-transcript";
 import { findInterviewStation } from "../_data/interview-stations";
 import styles from "./AIInterviewRoom.module.css";
+import { StationNotes } from "./StationNotes";
+import { DataAnalysisBeta } from "./DataAnalysisBeta";
 
 export const formatRoomTime = (seconds: number) => `${Math.floor(Math.max(0, seconds) / 60)}:${String(Math.max(0, seconds) % 60).padStart(2, "0")}`;
 type Props = {
@@ -39,7 +41,6 @@ function ParticipantWaves() {
 
 export function AIInterviewCall(props: Props) {
   const [tab, setTab] = useState<"transcript" | "notes">("transcript");
-  const [notes, setNotes] = useState("");
   const [focus, setFocus] = useState(false);
   const [endDialog, setEndDialog] = useState(false);
   const answerInput = useRef<HTMLTextAreaElement>(null);
@@ -125,7 +126,7 @@ export function AIInterviewCall(props: Props) {
   return <div className={`${styles.callRoom} ${focus ? styles.focusRoom : ""}`}>
     <header className={styles.roomHeader}>
       <div className={styles.roomBrand}>
-        <div><h1>{attempt.title}</h1><p>MedicForest Med interview <span>·</span> {attempt.stationSlug === "panel-interview" ? "Discussion" : "Station"} {attempt.stationIndex + 1} of {attempt.stationCount}</p></div>
+        <div><h1>{attempt.title}</h1><p>MedicForest Med interview <span>·</span> {attempt.stationSlug === "panel-interview" ? "Discussion" : "Station"} {attempt.stationIndex + 1} of {attempt.stationCount} {attempt.stationSlug === "data-analysis" && <DataAnalysisBeta />}</p></div>
       </div>
       <div className={styles.headerActions}>
         <span className={styles.sessionBadge}><span className={styles.greenDot} />{preview ? "Preview" : "Private practice"}</span>
@@ -165,7 +166,7 @@ export function AIInterviewCall(props: Props) {
         </footer>
       </div>
       <aside className={styles.transcriptPanel} aria-label="Med Interview transcript and notes">
-        <div className={styles.transcriptTabs}><button type="button" aria-pressed={tab === "transcript"} onClick={() => setTab("transcript")}><MessageSquareText size={21} />Live transcript<span className={styles.transcriptCount}>{questionIndex + 1}</span></button><button type="button" aria-pressed={tab === "notes"} onClick={() => setTab("notes")}><FileText size={18} />Notes{notes && <span className={styles.notesDot} aria-label="Notes added" />}</button></div>
+        <div className={styles.transcriptTabs}><button type="button" aria-pressed={tab === "transcript"} onClick={() => setTab("transcript")}><MessageSquareText size={21} />Live transcript<span className={styles.transcriptCount}>{questionIndex + 1}</span></button><button type="button" aria-pressed={tab === "notes"} onClick={() => setTab("notes")}><FileText size={18} />Notes</button></div>
         {tab === "transcript" ? <>
           <div ref={transcriptScroll} className={styles.transcriptScroll}>
             {questionIndex > 0 && <ol className={styles.conversationHistory} aria-label="Conversation history">{attempt.questions.slice(0, questionIndex).map((previousQuestion, index) => <li key={`${index}:${previousQuestion}`}>
@@ -193,7 +194,8 @@ export function AIInterviewCall(props: Props) {
             {props.followUpNotice && <p role="status" className={styles.followUpNotice}>{props.followUpNotice}</p>}
           </div>
           <div className={styles.transcriptFooter}><span><Check size={14} />{preview ? "Preview · nothing saved to your account" : props.saved ? "Saved to your account" : "Autosaves every 15 seconds"}</span><p>Your browser’s speech service may process audio. MedicForest saves only your transcript.</p></div>
-        </> : <div className={styles.notesPanel}><h2>Station notes</h2><label htmlFor="interview-notes" className={styles.answerLabel}>Private notes · not marked</label><textarea id="interview-notes" value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={5000} placeholder="Key points, examples, and reminders…" /><p><LockKeyhole size={13} />Notes stay on this screen and aren’t saved.</p></div>}
+        </> : null}
+        <div hidden={tab !== "notes"} className={styles.notesPanel}><StationNotes attemptId={attempt.id} preview={preview} /></div>
 
       </aside>
     </div>

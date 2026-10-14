@@ -1,35 +1,15 @@
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen } from "lucide-react";
-import { interviewHistory } from "@/utils/interviews/history";
-import { interviewStations } from "../_data/interview-stations";
-import { interviewUniversities } from "../_data/universities";
+import { interviewHistory, savedInterviewSummaries } from "@/utils/interviews/history";
 import { SavedInterviewList } from "./SavedInterviewList";
-import { canResumeSavedInterview } from "../_lib/saved-interviews";
-
-const universityNames = new Map(interviewUniversities.map((university) => [university.slug, university.name]));
 
 async function savedInterviewHistory() {
-  const { attempts, message } = await interviewHistory();
-  const loadedAt = Date.now();
-  const savedAttempts = attempts.map((attempt) => ({
-    id: attempt.id,
-    circuitId: attempt.circuitId,
-    stationIndex: attempt.stationIndex,
-    stationCount: attempt.stationCount,
-    title: interviewStations.find((station) => station.slug === attempt.stationSlug)?.title ?? attempt.title,
-    stationSlug: attempt.stationSlug,
-    universitySlug: attempt.universitySlug,
-    universityName: attempt.universitySlug ? universityNames.get(attempt.universitySlug) ?? attempt.universitySlug.replaceAll("-", " ") : "General practice",
-    status: attempt.status,
-    canResume: canResumeSavedInterview(attempt, loadedAt),
-    feedbackScore: attempt.feedback?.score ?? null,
-    startedAtLabel: new Date(attempt.startedAt).toLocaleString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }),
-  }));
-  return { attempts, message, savedAttempts };
+  const { attempts, message, nextCursor } = await interviewHistory();
+  return { attempts, message, nextCursor, savedAttempts: savedInterviewSummaries(attempts) };
 }
 
 export async function InterviewHistoryViews() {
-  const { attempts, message, savedAttempts } = await savedInterviewHistory();
+  const { attempts, message, savedAttempts, nextCursor } = await savedInterviewHistory();
   return (
     <div className="space-y-6">
       {message && (
@@ -47,7 +27,7 @@ export async function InterviewHistoryViews() {
         {!attempts.length ? (
           <EmptyHistory />
         ) : (
-          <SavedInterviewList attempts={savedAttempts} />
+          <SavedInterviewList key={savedAttempts[0]?.id} attempts={savedAttempts} nextCursor={nextCursor} />
         )}
       </section>
     </div>

@@ -9,6 +9,8 @@ export type SavedInterviewSummary = Pick<InterviewAttempt, "id" | "title" | "sta
   stationIndex?: number;
   stationCount?: number;
   stationTitles?: string[];
+  feedbackCount?: number;
+  savedStationCount?: number;
 };
 
 export function groupSavedInterviews(attempts: SavedInterviewSummary[]) {
@@ -26,6 +28,9 @@ export function groupSavedInterviews(attempts: SavedInterviewSummary[]) {
       ...first,
       title: `Med Interview - ${stations.length} of ${first.stationCount ?? stations.length} stations saved`,
       stationTitles: ordered.map((station) => station.title),
+      startedAtLabel: stations[0].startedAtLabel,
+      feedbackCount: scores.length,
+      savedStationCount: stations.length,
       feedbackScore: scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null,
     };
   });
@@ -53,7 +58,7 @@ export function filterSavedInterviews(
     const matchesUniversity = university === "all" || (university === "general" ? !attempt.universitySlug : attempt.universitySlug === university);
     const matchesStatus = status === "all"
       || (status === "feedback" && attempt.feedbackScore !== null)
-      || (status === "saved" && !attempt.canResume && attempt.feedbackScore === null)
+      || (status === "saved" && !attempt.canResume && (attempt.feedbackScore === null || (attempt.feedbackCount ?? 1) < (attempt.savedStationCount ?? 1)))
       || (status === "in_progress" && attempt.canResume);
     return matchesUniversity && matchesStatus && words.every((word) => searchable.includes(word));
   });
@@ -65,8 +70,10 @@ export function savedInterviewHref(attempt: Pick<SavedInterviewSummary, "id" | "
     : `/medicforest/interview/reports/${encodeURIComponent(attempt.id)}`;
 }
 
-export function savedInterviewStatus(attempt: Pick<SavedInterviewSummary, "canResume" | "feedbackScore">) {
+export function savedInterviewStatus(attempt: Pick<SavedInterviewSummary, "canResume" | "feedbackScore"> & Partial<Pick<SavedInterviewSummary, "status" | "feedbackCount" | "savedStationCount">>) {
   if (attempt.canResume) return "Ready to continue";
+  if (attempt.feedbackCount !== undefined && attempt.savedStationCount !== undefined && attempt.feedbackCount < attempt.savedStationCount && attempt.feedbackCount > 0) return `Feedback ready for ${attempt.feedbackCount} of ${attempt.savedStationCount} saved stations`;
   if (attempt.feedbackScore !== null) return "Feedback ready";
+  if (attempt.status === "grading") return "Feedback is being prepared";
   return "Transcript saved · Ready to review";
 }

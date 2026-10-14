@@ -8600,7 +8600,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-001-data-stations",
-    text: "Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?",
+    text: "Talk me through the GP appointment-wait chart. How have North and South changed over time, and how fair is it to compare them?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8617,7 +8617,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-002-data-stations",
-    text: "Compare the smoking-cessation programmes using appropriate percentages. What can and cannot be concluded from the results?",
+    text: "Use the smoking-cessation table to compare the chances of quitting in each programme. How do people missing from follow-up affect your interpretation?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8634,7 +8634,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-003-data-stations",
-    text: "Describe the relationship between weekly exercise and wellbeing across the two age groups. Can the survey show that exercise caused the differences?",
+    text: "What story do the exercise and wellbeing results suggest for each age group? Give another explanation for the pattern before deciding whether exercise is responsible.",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8651,7 +8651,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-004-data-stations",
-    text: "Which community diabetes programme would you choose within the £200,000 first-year budget, and what further information could change your decision?",
+    text: "You are choosing a community diabetes programme with £200,000 for its first year. Make a recommendation using the table, then explain what you would check before committing.",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8668,7 +8668,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-005-data-stations",
-    text: "Describe the relationship between ward admissions and discharge delays. Which result is unusual, and what might help explain it?",
+    text: "Look across the wards: how do admissions vary with discharge delays? Pick a result that stands out and suggest what you would investigate.",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8685,7 +8685,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-006-graphs-and-trends",
-    text: "The briefing says patient satisfaction ‘rises sharply’. How could the graph and comparison be misleading?",
+    text: "A briefing describes patient satisfaction as rising sharply. Use the figure to explain the comparison and whether its presentation gives a fair impression.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8702,7 +8702,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-007-graphs-and-trends",
-    text: "Describe the vaccination-uptake trends in both districts. What might explain the changes, and what cannot be concluded?",
+    text: "Compare the vaccination patterns in North and South. Which changes deserve further investigation, and what evidence would you need to explain them?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8719,7 +8719,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-008-graphs-and-trends",
-    text: "What does the sleep and exam-score plot show? Discuss the role of revision time and whether the data prove causation.",
+    text: "Explain the sleep and exam-score scatterplot to another student. How does revision time complicate the claim that more sleep leads to better marks?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8736,7 +8736,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-009-data-interpretation",
-    text: "According to the heart-event chart, what are the main potential benefits, harms and practical burdens of the new treatment?",
+    text: "Use the heart-event chart to explain the new treatment to a patient. Balance the possible benefit against bleeding, extra tablets and monitoring.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Data Interpretation",
     sourceSection: 18,
@@ -8753,7 +8753,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-010-data-interpretation",
-    text: "Compare recovery after programmes A and B at 12 weeks and six months. What limitations and practical trade-offs should be considered?",
+    text: "A patient is deciding between the two physiotherapy programmes. Compare recovery over time and the practical commitments, and explain where the evidence leaves uncertainty.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Data Interpretation",
     sourceSection: 18,
@@ -8770,7 +8770,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-011-critical-appraisal",
-    text: "What sources of bias or uncertainty limit the energy-drink study and its reported conclusion?",
+    text: "Read the energy-drink study as though you were checking an advert. Which features make its concentration claim more or less convincing?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Appraisal",
     sourceSection: 18,
@@ -8787,7 +8787,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-012-critical-appraisal",
-    text: "What do the reminder-text results show, and why is this 24-person pilot too small to support a firm conclusion?",
+    text: "The reminder-text pilot suggests fewer missed appointments. Explain how much confidence you would put in that result and what a larger study should clarify.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Appraisal",
     sourceSection: 18,
@@ -8804,7 +8804,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-013-article-analysis",
-    text: "How reliable is the asthma-app evaluation? Discuss the missing follow-up, outcome measurements and other possible explanations for the change.",
+    text: "A hospital wants to adopt the asthma-app after this evaluation. What would you ask about the measurements, missing participants and other changes before accepting the findings?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -8821,7 +8821,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-014-article-analysis",
-    text: "Does the headline ‘Berry halves cancer risk’ match the study results? Explain how the findings should be reported more accurately.",
+    text: "You are editing the berry article for a health news site. Does its claim about cancer risk follow from the numbers, and how would you rewrite the message?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -8838,7 +8838,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-015-article-analysis",
-    text: "What further research would you conduct to test whether virtual reality improves anatomy learning?",
+    text: "Design a follow-up study of virtual reality for anatomy teaching. Explain how you would make the comparison fair and check whether any learning benefit lasts.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -10039,6 +10039,24 @@ export const INTERVIEW_QUESTIONS = [
 // Saved attempts retain the wording shown when they were completed. Keep those
 // prompts resolvable after image-specific questions are improved.
 export const LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT = new Map<string, string>([
+  ["Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?", "iq-18-001-data-stations"],
+  ["Compare the smoking-cessation programmes using appropriate percentages. What can and cannot be concluded from the results?", "iq-18-002-data-stations"],
+  ["Describe the relationship between weekly exercise and wellbeing across the two age groups. Can the survey show that exercise caused the differences?", "iq-18-003-data-stations"],
+  ["Which community diabetes programme would you choose within the £200,000 first-year budget, and what further information could change your decision?", "iq-18-004-data-stations"],
+  ["Describe the relationship between ward admissions and discharge delays. Which result is unusual, and what might help explain it?", "iq-18-005-data-stations"],
+  ["The briefing says patient satisfaction ‘rises sharply’. How could the graph and comparison be misleading?", "iq-18-006-graphs-and-trends"],
+  ["Describe the vaccination-uptake trends in both districts. What might explain the changes, and what cannot be concluded?", "iq-18-007-graphs-and-trends"],
+  ["What does the sleep and exam-score plot show? Discuss the role of revision time and whether the data prove causation.", "iq-18-008-graphs-and-trends"],
+  ["According to the heart-event chart, what are the main potential benefits, harms and practical burdens of the new treatment?", "iq-18-009-data-interpretation"],
+  ["Compare recovery after programmes A and B at 12 weeks and six months. What limitations and practical trade-offs should be considered?", "iq-18-010-data-interpretation"],
+  ["What sources of bias or uncertainty limit the energy-drink study and its reported conclusion?", "iq-18-011-critical-appraisal"],
+  ["What do the reminder-text results show, and why is this 24-person pilot too small to support a firm conclusion?", "iq-18-012-critical-appraisal"],
+  ["How reliable is the asthma-app evaluation? Discuss the missing follow-up, outcome measurements and other possible explanations for the change.", "iq-18-013-article-analysis"],
+  ["Does the headline ‘Berry halves cancer risk’ match the study results? Explain how the findings should be reported more accurately.", "iq-18-014-article-analysis"],
+  ["What further research would you conduct to test whether virtual reality improves anatomy learning?", "iq-18-015-article-analysis"],
+  ["What can you understand or interpret from this graph?", "iq-18-101-data-stations"],
+  ["What could explain this pattern? What hypothesis could you make?", "iq-18-102-data-stations"],
+  ["What would you research or investigate to see if there is evidence for your hypothesis?", "iq-18-103-data-stations"],
   ["Briefly describe the main trend shown in this graph.", "iq-18-001-data-stations"],
   ["Which conclusions can reasonably be drawn from these data?", "iq-18-002-data-stations"],
   ["Which conclusions cannot be drawn from these data?", "iq-18-003-data-stations"],

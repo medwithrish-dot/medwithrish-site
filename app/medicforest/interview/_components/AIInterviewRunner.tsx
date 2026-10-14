@@ -328,14 +328,16 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     finally { if (savePromiseRef.current === pending) savePromiseRef.current = null; }
   }, [applyResponse, stationMetrics]);
 
+  const saveDraftRef = useRef(saveDraft);
+  useEffect(() => { saveDraftRef.current = saveDraft; }, [saveDraft]);
   useEffect(() => {
     if (attempt?.status !== "in_progress" || preview) return;
     const timer = window.setInterval(() => {
       if (submitLockRef.current || actionLockRef.current || followUpRequestRef.current) return;
-      void saveDraft().catch(() => setSaveWarning("Account autosave is temporarily unavailable. Keep this page open and retry saving; a browser draft is also kept where storage is available."));
+      void saveDraftRef.current().catch(() => setSaveWarning("Account autosave is temporarily unavailable. Keep this page open and retry saving; a browser draft is also kept where storage is available."));
     }, 15_000);
     return () => window.clearInterval(timer);
-  }, [attempt?.id, attempt?.status, saveDraft, preview]);
+  }, [attempt?.id, attempt?.status, preview]);
 
   useEffect(() => {
     if (attempt?.status !== "in_progress") return;
@@ -743,13 +745,17 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
       stopCamera();
       stopMicCheck();
-      if (attempt.status === "in_progress" && !previewRef.current) await requestSession("/api/interviews/session", "DELETE", { attemptId: attempt.id });
+      if (attempt.status === "in_progress" && !previewRef.current) {
+        // Keep the final typed and spoken words before closing this attempt.
+        await saveDraft();
+        await requestSession("/api/interviews/session", "DELETE", { attemptId: attempt.id });
+      }
       if (!previewRef.current) {
         try { localStorage.removeItem(draftKey(attempt.id)); localStorage.removeItem(planKey(attempt.circuitId)); } catch { /* Optional browser storage. */ }
       }
       attemptRef.current = null;
       setAttempt(null);
-      window.history?.replaceState(null, "", "/medicforest/interview/ai-interviews");
+      window.history?.replaceState(null, "", medicForestPublicHref(window.location.pathname, "/medicforest/interview/ai-interviews"));
       setReviewRequested(false);
       setError("");
       setErrorStatus(0);

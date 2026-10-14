@@ -39,12 +39,20 @@ async function layout(page) {
 }
 
 async function visit(page, path) {
+  // Complete initial account requests before the sweep replaces the document.
+  // Windows WebKit otherwise reports cancelled fetches as access-control errors.
+  const section = ["groups", "leaderboard"].find(name => path.endsWith(`/interview/${name}`));
+  const accountResponse = section ? page.waitForResponse(response => new URL(response.url()).pathname === `/api/interviews/${section}`) : null;
   const response = await page.goto(base + path);
   assert.equal(response.status(), 200, path);
   await page.locator("h1").first().waitFor();
   if (path.includes("setup=mock")) await page.getByRole("button", { name: "Preview room", exact: true }).waitFor();
   // Dynamic section bundles and account subscriptions settle after the heading.
   await page.waitForTimeout(350);
+  if (accountResponse) {
+    const loaded = await accountResponse;
+    await loaded.finished();
+  }
 }
 
 function runtimeErrors(page, engine) {
@@ -165,9 +173,12 @@ async function authenticatedFlows(page) {
   await page.locator("#interview-answer").waitFor();
   await page.locator("#interview-answer").fill(answer);
   await page.getByRole("button", { name: "Notes", exact: true }).tap();
-  await page.locator("#interview-notes").fill("Remember my work experience example");
+  await page.locator("[data-station-notes]:visible").fill("Remember my work experience example");
   await page.getByRole("button", { name: /Live transcript/ }).tap();
   assert.equal(await page.locator("#interview-answer").inputValue(), answer);
+  await page.getByRole("button", { name: "Notes", exact: true }).tap();
+  assert.equal(await page.locator("[data-station-notes]:visible").inputValue(), "Remember my work experience example");
+  await page.getByRole("button", { name: /Live transcript/ }).tap();
   await page.getByRole("button", { name: "Done answering", exact: true }).tap();
   await page.getByRole("button", { name: "Yes, I'm done", exact: true }).tap();
   assert.equal(await page.locator("#interview-answer").inputValue(), "");

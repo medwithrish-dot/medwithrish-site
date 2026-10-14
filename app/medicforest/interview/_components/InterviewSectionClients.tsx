@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 function LoadingSection() {
-  return <p role="status" className="p-6 text-sm text-[#526b72]">Loading your interview section?</p>;
+  return <p role="status" className="p-6 text-sm text-[#526b72]">Loading your interview section…</p>;
 }
 
 // Server components stay in the route; interactive sections get separate bundles.

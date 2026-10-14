@@ -630,11 +630,7 @@ function QuestionBankCategoryView({
                             {question.text}
                           </span>
                           <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
-                            {question.difficulty} / section{" "}
-                            {question.sourceSection}
-                            {question.sourceTopic
-                              ? ` / ${question.sourceTopic}`
-                              : ""}
+                            {question.difficulty === "core" ? "Core question" : "Applied question"}
                           </span>
                           {hasSavedResponse && (
                             <span className="mt-2 inline-flex items-center gap-2 rounded-md bg-[#e2f5ef] px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-[#08787b]">

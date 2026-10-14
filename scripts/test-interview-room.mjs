@@ -260,7 +260,7 @@ test("an older tab's autosave preserves a probe answer it has not seen", async (
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", voiceSupported = false, delayedVoice = false, questions = ["Why medicine?"], initialDraft } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", voiceSupported = false, delayedVoice = false, questions = ["Why medicine?"], initialDraft, freshSpeechObjects = false } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
@@ -280,6 +280,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   let finishVoice;
   let interruptVoice;
   let currentUrl = "";
+  let autosaveRegistrations = 0;
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
     title: "Why medicine?", startedAt: new Date().toISOString(), completedAt: null, preparationSeconds,
@@ -336,7 +337,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "@/utils/medicforest/public-navigation") return { medicForestPublicHref };
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
-      if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
+      if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return freshSpeechObjects ? { ...speech } : speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("interview-question-audio")) return { getInterviewQuestionAudioSrc: () => undefined };
       if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS, WHY_MEDICINE_QUESTION_ID };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
@@ -352,7 +353,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     window: {
       dispatchEvent: () => true, location: { search: "", pathname: "/medicforest/interview/ai-interviews" }, setTimeout: () => 1, clearTimeout() {},
       history: { replaceState: (_state, _title, url) => { currentUrl = url; } },
-      setInterval: (callback, milliseconds) => { intervals.set(milliseconds, callback); return milliseconds; },
+      setInterval: (callback, milliseconds) => { if (milliseconds === 15_000) autosaveRegistrations++; intervals.set(milliseconds, callback); return milliseconds; },
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
     },
     fetch: (_path, options) => {
@@ -410,6 +411,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   return {
     requests, sessionReads, leaveRequests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
     get currentUrl() { return currentUrl; },
+    get autosaveRegistrations() { return autosaveRegistrations; },
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
     get recognitionStops() { return recognitionStops; },
@@ -425,6 +427,21 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
   };
 }
+
+test("frequent clock and speech renders cannot postpone the 15-second account autosave", async () => {
+  const room = await autosaveRoom({ freshSpeechObjects: true });
+  for (let tick = 0; tick < 30; tick++) room.render();
+  assert.equal(room.autosaveRegistrations, 1);
+  room.edit("This latest draft must reach the account while the clock keeps rendering.");
+  room.render();
+  room.save();
+  await room.flush();
+  assert.equal(room.requests.length, 1);
+  assert.equal(room.requests[0].body.answers[0].answer, "This latest draft must reach the account while the clock keeps rendering.");
+  room.requests[0].complete();
+  await room.flush();
+  assert.equal(room.latestCall().saved, true);
+});
 
 test("permission approval automatically starts the mic once and legacy reading time is respected", async () => {
   for (const preparationSeconds of [0, 60]) {
@@ -693,11 +710,36 @@ test("leaving an active station ends it and clears its reload URL and browser dr
   assert.ok(room.storage.has(`medicforest-interview-draft:${circuitId}`));
   room.leave();
   await room.flush();
+  assert.equal(room.leaveRequests.length, 0, "Do not close the station before saving its latest answer");
+  assert.equal(room.requests[0].body.answers[0].answer, "A draft answer I do not want to submit.");
+  room.requests[0].complete();
+  await room.flush();
   await room.flush();
   assert.deepEqual(room.leaveRequests, [{ attemptId: circuitId }]);
   assert.equal(room.currentUrl, "/medicforest/interview/ai-interviews");
   assert.equal(room.storage.has(`medicforest-interview-draft:${circuitId}`), false);
   assert.equal(room.latestCall(), null);
+});
+
+test("ending without review preserves final spoken words and retains the draft when saving fails", async () => {
+  const room = await autosaveRoom();
+  room.edit("Typed answer.");
+  room.finalSpeech("Final spoken words.");
+  room.leave();
+  await room.flush();
+  assert.equal(room.requests[0].body.answers[0].answer, "Typed answer. Final spoken words.");
+  room.requests[0].reject(new Error("Offline"));
+  await room.flush();
+  assert.equal(room.leaveRequests.length, 0);
+  assert.ok(room.latestCall());
+  assert.ok(room.storage.has(`medicforest-interview-draft:${circuitId}`));
+  room.latestCall().onLeave();
+  await room.flush();
+  room.requests[1].complete();
+  await room.flush();
+  await room.flush();
+  assert.equal(room.leaveRequests.length, 1);
+  assert.equal(room.requests[1].body.answers[0].answer, "Typed answer. Final spoken words.");
 });
 
 function loadQuestionModule(file, browserWindow) {

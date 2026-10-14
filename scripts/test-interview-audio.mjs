@@ -67,6 +67,13 @@ test("unknown generated follow-up questions retain a browser-voice fallback", ()
   assert.equal(getInterviewQuestionAudioSrc(null, "A newly generated follow-up?", "female"), undefined);
 });
 
+test("an older saved data prompt never plays the recording for its rewritten wording", () => {
+  for (const voice of ["female", "male"]) {
+    assert.equal(getInterviewQuestionAudioSrc("iq-18-101-data-stations", "What can you understand or interpret from this graph?", voice), undefined);
+    assert.equal(getInterviewQuestionAudioSrc("iq-18-001-data-stations", "Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?", voice), undefined);
+  }
+});
+
 test("Why medicine uses dedicated recorded Chirp audio even with its marking ID", () => {
   for (const voice of ["female", "male"]) {
     const src = `/audio/${voice}/why-medicine.mp3`;

@@ -9,6 +9,7 @@ export default function UcatWorkInProgress() {
       <h1 className="mt-4 text-3xl font-semibold">UCAT is coming soon</h1>
       <p className="mt-4 text-base leading-7 text-slate-600">We are still preparing the UCAT area. It is currently unavailable on both Free and Premium plans. You can explore interview preparation now.</p>
       <Link href="/medicforest/interview/dashboard" className="mt-6 inline-flex rounded-lg bg-[#08787b] px-5 py-3 text-sm font-semibold text-white">Open interviews</Link>
+      <Link href="https://medicforest.com/interviews" className="mt-3 flex min-h-11 justify-center rounded-lg border border-[#cfe0df] px-5 py-3 text-sm font-semibold text-[#08787b]">Return to interviews</Link>
       <Link href="/medicforest" className="mt-4 block text-sm text-[#08787b] underline">Back to MedicForest</Link>
     </section>
   </main>;

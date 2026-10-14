@@ -33,6 +33,8 @@ function renderReview(feedback = null, preview = false, configured = false) {
     if (name === "lucide-react") return new Proxy({}, { get: () => () => null });
     if (name.endsWith("/universities")) return { findInterviewUniversity: () => null };
     if (name === "./AttemptMarkSchemes") return { AttemptMarkSchemes: ({ headerAction }) => React.createElement(React.Fragment, null, headerAction) };
+    if (name === "./StationNotes") return { StationNotes: () => null };
+    if (name === "./DataAnalysisBeta") return { DataAnalysisBeta: () => React.createElement("span", null, "Beta") };
     if (name.endsWith("/speech-delivery")) return { getTranscriptHints: text => ({ wordCount: text.trim().split(/\s+/).filter(Boolean).length }), normalizeSpeechTranscript: text => text };
     if (name.endsWith("/interviewer-transcript")) return { answerConversation: answer => [{ speaker: "You", text: answer.answer }] };
     if (name === "./RewrittenAnswers") {

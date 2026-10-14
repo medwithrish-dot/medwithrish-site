@@ -6,6 +6,7 @@ import type { MarkSchemeSection } from "../_lib/question-review";
 import type { SpeechDelivery } from "../_lib/speech-delivery";
 import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
 import styles from "./InterviewMarkScheme.module.css";
+import { useReviewStorage } from "../_lib/useReviewStorage";
 
 function ChecklistToggle({
   id,
@@ -145,10 +146,17 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
   );
 }
 
-export function StationMarkScheme({ rubricGroups, headerAction }: { rubricGroups: readonly MarkSchemeSection[]; headerAction?: ReactNode }) {
-  const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
+export function StationMarkScheme({ rubricGroups, headerAction, storageKey }: { rubricGroups: readonly MarkSchemeSection[]; headerAction?: ReactNode; storageKey?: string }) {
+  const { value, setValue, saved } = useReviewStorage(storageKey ?? null);
+  let checkedItems = new Set<string>();
+  try {
+    const stored: unknown = JSON.parse(value);
+    const valid = new Set(rubricGroups.filter((group) => group.title !== "Mistakes").flatMap((group) => group.items.map((item) => `${group.title}-${item}`)));
+    if (Array.isArray(stored)) checkedItems = new Set(stored.filter((item): item is string => typeof item === "string" && valid.has(item)));
+  } catch { /* Start with an empty checklist if browser data is missing or invalid. */ }
   const [openSections, setOpenSections] = useState<Set<MarkSchemeSection["title"]>>(() => new Set(["General", "Start", "Middle", "End", "Mistakes"]));
-  return <InterviewMarkScheme compact rubricGroups={rubricGroups} headerAction={headerAction} checkedItems={checkedItems} openMarkSchemeSections={openSections}
-    toggleChecklistItem={(id) => setCheckedItems((previous) => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; })}
-    toggleMarkSchemeSection={(title) => setOpenSections((previous) => { const next = new Set(previous); if (next.has(title)) next.delete(title); else next.add(title); return next; })} />;
+  return <><InterviewMarkScheme compact rubricGroups={rubricGroups} headerAction={headerAction} checkedItems={checkedItems} openMarkSchemeSections={openSections}
+    toggleChecklistItem={(id) => { const next = new Set(checkedItems); if (next.has(id)) next.delete(id); else next.add(id); setValue(JSON.stringify([...next])); }}
+    toggleMarkSchemeSection={(title) => setOpenSections((previous) => { const next = new Set(previous); if (next.has(title)) next.delete(title); else next.add(title); return next; })} />
+    {storageKey && <p className="mt-3 text-xs leading-5 text-[#62777e]" role="status">{saved ? "Your self-marking ticks are saved on this device." : "Your browser could not save these ticks. They are kept while this page is open."}</p>}</>;
 }

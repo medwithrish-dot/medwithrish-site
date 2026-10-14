@@ -62,9 +62,9 @@ test("randomised station selection never restores unconfirmed questions to fill 
 test("data interpretation asks three linked questions about one stimulus", () => {
   const selected = selectStationQuestions("data-analysis", 300, "data-station-seed");
   assert.deepEqual(selected.map((question) => question.text), [
-    "What can you understand or interpret from this graph?",
-    "What could explain this pattern? What hypothesis could you make?",
-    "What would you research or investigate to see if there is evidence for your hypothesis?",
+    "Describe the main changes in GP appointment waits shown here. Use the figures to compare the two districts and mention any limits to that comparison.",
+    "Suggest a possible reason for the changing appointment waits. What else could produce the same pattern, and why can this graph alone not tell us the cause?",
+    "How would you check your explanation for the appointment-wait pattern? Describe the information you would collect and a fair comparison you could make.",
   ]);
   assert.equal(new Set(selected.map((question) => getQuestionStimulus(question.id)?.src)).size, 1);
   assert.equal(getQuestionStimulus(selected[0].id)?.id, "iq-18-001-data-stations");

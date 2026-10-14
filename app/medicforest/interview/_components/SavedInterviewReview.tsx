@@ -85,7 +85,6 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
       return;
     }
     if (!requestFeatureAccess(action === "retry" ? attemptRef.current.mode === "free" ? "trial" : "premium" : "free", "Saved interview practice")) return;
-    if (!requestFeatureAccess(action === "retry" && attemptRef.current.mode !== "free" ? "premium" : "free", "Saved interview practice")) return;
     actionLockRef.current = true;
     setBusy(action === "retry" ? "Opening your new attempt…" : action === "generate" ? "Preparing your AI feedback…" : "Saving your station review…");
     setError("");

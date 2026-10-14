@@ -1223,9 +1223,7 @@ export function QuestionPracticeView({
                   <p className="mt-3 text-sm font-medium text-[#4a6370]">
                     Question {String(questionNumber).padStart(2, "0")}{" "}
                     <span className="mx-2 text-[#9babb4]">/</span>
-                    {question.difficulty}{" "}
-                    <span className="mx-2 text-[#9babb4]">/</span>
-                    section {question.sourceSection}
+                    {question.difficulty === "core" ? "Core question" : "Applied question"}
                   </p>
                 </div>
                 <div className="rounded-xl border border-[#d8e0e6] bg-[#f8fbfb] p-4">

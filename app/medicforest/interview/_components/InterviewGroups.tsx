@@ -53,8 +53,9 @@ export function InterviewGroups() {
   const detailSequence = useRef(0);
   const actionInFlight = useRef(false);
 
-  const loadList = useCallback(async () => {
-    const data = await request<GroupList>();
+  const loadList = useCallback(async (signal?: AbortSignal) => {
+    const data = await request<GroupList>("", undefined, signal);
+    if (signal?.aborted) return data;
     setList(data);
     setSignedOut(false);
     setSelectedId((previous) => data.groups.some((group) => group.id === previous) ? previous : data.groups[0]?.id ?? null);
@@ -72,6 +73,7 @@ export function InterviewGroups() {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     const token = parseInvite(window.location.hash.startsWith("#invite=") ? window.location.hash : "");
     let pendingInvite = token;
     if (token) {
@@ -81,13 +83,14 @@ export function InterviewGroups() {
       try { pendingInvite = sessionStorage.getItem("interview-group-invite") || ""; } catch { /* Storage is optional. */ }
     }
     const initialLoad = setTimeout(() => {
-      void loadList().then(() => setCode(pendingInvite)).catch((cause) => {
+      void loadList(controller.signal).then(() => { if (!controller.signal.aborted) setCode(pendingInvite); }).catch((cause) => {
+        if (controller.signal.aborted) return;
         setCode(pendingInvite);
         setSignedOut(cause instanceof GroupRequestError && cause.status === 401);
         if (!(cause instanceof GroupRequestError && cause.status === 401)) setError(errorMessage(cause));
       });
     }, 0);
-    return () => clearTimeout(initialLoad);
+    return () => { clearTimeout(initialLoad); controller.abort(); };
   }, [loadList]);
 
   useEffect(() => {

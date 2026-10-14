@@ -68,3 +68,20 @@ test("only an unexpired active attempt opens the Med interview room", () => {
   }
   assert.equal(savedInterviewHref(attempt({ id: "expired", status: "in_progress" })), "/medicforest/interview/reports/expired");
 });
+
+test("partly marked circuits remain discoverable under needs feedback and show their actual coverage", () => {
+  const rows = [
+    attempt({ id: "second", circuitId: "partial", stationIndex: 1, stationCount: 3, title: "Ethics", startedAtLabel: "14 Oct 2026, 11:30" }),
+    attempt({ id: "first", circuitId: "partial", stationIndex: 0, stationCount: 3, feedbackScore: 72, startedAtLabel: "14 Oct 2026, 10:30" }),
+  ];
+  const grouped = groupSavedInterviews(rows);
+  assert.equal(grouped[0].feedbackScore, 72);
+  assert.equal(grouped[0].startedAtLabel, rows[0].startedAtLabel);
+  assert.equal(savedInterviewStatus(grouped[0]), "Feedback ready for 1 of 2 saved stations");
+  assert.equal(filterSavedInterviews(grouped, "", "all", "saved").length, 1);
+  assert.equal(filterSavedInterviews(grouped, "", "all", "feedback").length, 1);
+  const ready = groupSavedInterviews(rows.map(row => ({ ...row, feedbackScore: 72 })));
+  assert.equal(filterSavedInterviews(ready, "", "all", "saved").length, 0);
+  assert.equal(savedInterviewStatus(ready[0]), "Feedback ready");
+  assert.equal(savedInterviewStatus(attempt({ status: "grading" })), "Feedback is being prepared");
+});

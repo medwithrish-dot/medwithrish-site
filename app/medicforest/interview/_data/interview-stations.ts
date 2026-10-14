@@ -40,9 +40,9 @@ export const interviewStations = [
     "What would you do differently next time, and why?",
   ] },
   { slug: "data-analysis", title: "Data and evidence", lobbyTitle: "Data interpretation", theme: "Analysis", questions: [
-    "What can you understand or interpret from this graph?",
-    "What could explain this pattern? What hypothesis could you make?",
-    "What would you research or investigate to see if there is evidence for your hypothesis?",
+    "Describe the main changes in GP appointment waits shown here. Use the figures to compare the two districts and mention any limits to that comparison.",
+    "Suggest a possible reason for the changing appointment waits. What else could produce the same pattern, and why can this graph alone not tell us the cause?",
+    "How would you check your explanation for the appointment-wait pattern? Describe the information you would collect and a fair comparison you could make.",
   ] },
   { slug: "panel-interview", title: "Panel interview", lobbyTitle: "Panel interview", theme: "Mixed topics", questions: [
     "Why do you want to study medicine and become a doctor?",

@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, Search, X } from "lucide-react";
 import { filterSavedInterviews, groupSavedInterviews, savedInterviewHref, savedInterviewStatus, type SavedInterviewStatus, type SavedInterviewSummary } from "../_lib/saved-interviews";
+import type { InterviewHistoryCursor } from "@/utils/interviews/history";
 
 const PAGE_SIZE = 20;
 const baseFieldClass = "w-full rounded-xl border border-[#ccdcda] bg-white py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15";
 const fieldClass = `${baseFieldClass} px-3`;
 
-export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSummary[] }) {
+export function SavedInterviewList({ attempts: initialAttempts, nextCursor = null }: { attempts: SavedInterviewSummary[]; nextCursor?: InterviewHistoryCursor | null }) {
+  const [olderAttempts, setOlderAttempts] = useState<SavedInterviewSummary[]>([]);
+  const [cursor, setCursor] = useState(nextCursor);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [olderError, setOlderError] = useState("");
+  const requestRef = useRef<AbortController | null>(null);
+  useEffect(() => () => { requestRef.current?.abort(); requestRef.current = null; }, []);
+  const attempts = [...new Map([...initialAttempts, ...olderAttempts].map((attempt) => [attempt.id, attempt])).values()];
   const [query, setQuery] = useState("");
   const [university, setUniversity] = useState("all");
   const [status, setStatus] = useState<SavedInterviewStatus>("all");
@@ -18,6 +26,30 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
   const universities = Array.from(new Map(attempts.filter((attempt) => attempt.universitySlug).map((attempt) => [attempt.universitySlug!, attempt.universityName])).entries())
     .sort((a, b) => a[1].localeCompare(b[1], "en-GB"));
   const filtering = Boolean(query.trim()) || university !== "all" || status !== "all";
+
+  async function loadOlder() {
+    if (!cursor || requestRef.current) return;
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setLoadingOlder(true);
+    setOlderError("");
+    const timeout = window.setTimeout(() => controller.abort(), 20_000);
+    try {
+      const params = new URLSearchParams({ before: cursor.startedAt, beforeId: cursor.id });
+      const response = await fetch(`/api/interviews/history?${params}`, { cache: "no-store", signal: controller.signal });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Older interviews could not be loaded. Please try again.");
+      if (controller.signal.aborted) return;
+      setOlderAttempts((previous) => [...previous, ...data.attempts]);
+      setCursor(data.nextCursor);
+      setVisibleCount((count) => count + PAGE_SIZE);
+    } catch (failure) {
+      if (requestRef.current === controller) setOlderError(failure instanceof Error && failure.name !== "AbortError" ? failure.message : "Loading older interviews took too long. Please try again.");
+    } finally {
+      window.clearTimeout(timeout);
+      if (requestRef.current === controller) { requestRef.current = null; setLoadingOlder(false); }
+    }
+  }
 
   function clearFilters() {
     setQuery("");
@@ -50,7 +82,7 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
             <select id="saved-interview-status" value={status} onChange={(event) => { setStatus(event.target.value as SavedInterviewStatus); setVisibleCount(PAGE_SIZE); }} className={fieldClass}>
               <option value="all">All attempts</option>
               <option value="feedback">Feedback ready</option>
-              <option value="saved">Without feedback</option>
+              <option value="saved">Needs feedback</option>
               <option value="in_progress">In progress</option>
             </select>
           </div>
@@ -73,7 +105,7 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
             <span className="mt-1.5 block text-xs leading-5 text-[#62777e]">{savedInterviewStatus(attempt)}<span className="mx-1.5" aria-hidden="true">·</span>{attempt.startedAtLabel}</span>
           </span>
           <span className="flex shrink-0 flex-col items-end gap-1.5 text-[#08787b]">
-            {attempt.feedbackScore !== null && <span className="font-bold">{attempt.feedbackScore}%</span>}
+            {attempt.feedbackScore !== null && <><span className="font-bold">{attempt.feedbackScore}%</span>{attempt.savedStationCount && <span className="text-[11px] text-[#62777e]">{attempt.feedbackCount} of {attempt.savedStationCount} marked</span>}</>}
             <span className="flex items-center gap-1.5 text-xs font-bold"><span className="hidden sm:inline">{attempt.canResume ? "Continue" : "Review"}</span><ArrowRight size={16} aria-hidden="true" /></span>
           </span>
         </Link>)}
@@ -85,6 +117,11 @@ export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSumma
       </div>}
 
       {filtered.length > visibleCount && <div className="border-t border-[#e6edec] px-6 py-5 text-center"><button type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)} className="rounded-xl border border-[#ccdcda] px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#f7faf9]">Show more interviews ({filtered.length - visibleCount} remaining)</button></div>}
+      {(cursor || olderError) && <div className="border-t border-[#e6edec] px-6 py-5 text-center">
+        <p className="text-xs leading-5 text-[#62777e]">Filters search the interviews loaded so far. Load older interviews to search further back.</p>
+        {olderError && <p role="alert" className="mt-3 text-sm text-amber-900">{olderError}</p>}
+        {cursor && <button type="button" disabled={loadingOlder} onClick={() => void loadOlder()} className="mt-3 rounded-xl border border-[#ccdcda] px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#f7faf9] disabled:opacity-50">{loadingOlder ? "Loading older interviews…" : "Load older interviews"}</button>}
+      </div>}
     </>
   );
 }

@@ -118,6 +118,9 @@ const questionNumberById = new Map<string, number>([
   ...DATA_INTERPRETATION_STATION_QUESTIONS.map((question, index) => [question.id, dataStationAudioStart + index + 1] as const),
   ...addedQuestions.map((question, index) => [question.id, addedBankAudioStart + index + 1] as const),
 ]);
+const recordedTextById = new Map<string, string>(
+  [...originalQuestions, ...DATA_INTERPRETATION_STATION_QUESTIONS, ...addedQuestions].map((question) => [question.id, question.text]),
+);
 const questionNumberByText = new Map<string, number>([
   ...originalQuestions.map((question, index) => [question.text, index + 1] as const),
   ...SUPPLEMENTAL_AUDIO_QUESTIONS.map((question, index) => [question, ORIGINAL_RECORDED_BANK_COUNT + index + 1] as const),
@@ -132,7 +135,9 @@ export function getInterviewQuestionAudioSrc(
   voice: InterviewerVoice,
 ) {
   if (questionText === WHY_MEDICINE_PROMPT) return `/audio/${voice}/why-medicine.mp3`;
-  const questionNumber = (questionId ? questionNumberById.get(questionId) : undefined)
+  // Older saved attempts keep their original wording. Do not read a rewritten
+  // recording over a different question; browser speech can read the exact text.
+  const questionNumber = (questionId && recordedTextById.get(questionId) === questionText ? questionNumberById.get(questionId) : undefined)
     ?? questionNumberByText.get(questionText);
   return questionNumber
     ? `/audio/${voice}/q${String(questionNumber).padStart(3, "0")}.mp3`

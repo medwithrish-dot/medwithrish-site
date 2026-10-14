@@ -12,6 +12,8 @@ import { answerConversation } from "../_lib/interviewer-transcript";
 import styles from "./AIInterviewReview.module.css";
 import { RewrittenAnswers } from "./RewrittenAnswers";
 import { TRANSCRIPTION_WARNING } from "../_lib/answer-rewrite";
+import { StationNotes } from "./StationNotes";
+import { DataAnalysisBeta } from "./DataAnalysisBeta";
 
 type Props = {
   attempt: InterviewAttempt;
@@ -100,6 +102,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <span><GraduationCap size={16} /> {university?.name ?? "Independent practice"}</span>
       <span><Clock3 size={15} /> {new Date(attempt.startedAt).toLocaleDateString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric" })}</span>
       <span>Station {attempt.stationIndex + 1} of {attempt.stationCount}</span>
+      {attempt.stationSlug === "data-analysis" && <DataAnalysisBeta />}
       <span>{answered} of {transcript.length} prompts answered · {wordCount} words</span>
     </div>
     <nav className={styles.sectionLinks} aria-label="Review sections"><a href="#transcript-heading">Transcript</a><a href="#review-guide">Markscheme</a><a href="#ai-feedback-heading"><Sparkles size={14} /> AI feedback</a></nav>
@@ -119,7 +122,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
 
       <aside className={styles.studyColumn} aria-label="Station guidance and feedback">
         <section id="review-guide" aria-label="Station markscheme">
-          <AttemptMarkSchemes key={attempt.id} attempt={attempt} headerAction={feedbackAction} />
+          <AttemptMarkSchemes key={attempt.id} attempt={attempt} headerAction={feedbackAction} preview={preview} />
         </section>
 
         <section id="ai-feedback" ref={feedbackRef} tabIndex={-1} className={styles.feedback} aria-labelledby="ai-feedback-heading" aria-busy={busy && !feedback}>
@@ -134,6 +137,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
             </div>
           </>}
         </section>
+        <section className="rounded-2xl border border-[#dce6e5] bg-white p-5" aria-label="Private station notes"><StationNotes attemptId={attempt.id} preview={preview} /></section>
       </aside>
     </div>
 
@@ -149,7 +153,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       {feedback.transcriptionWarning && <p role="status" className="my-4 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900">{TRANSCRIPTION_WARNING}</p>}
       <div className={styles.takeaways}>{feedbackSections.map((group) => <section key={group.title}><h3>{group.title}</h3>{group.items.length ? <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className={styles.sourceNote}>This older report did not include a separate weaknesses section.</p>}</section>)}</div>
       <RewrittenAnswers feedback={feedback} answers={attempt.answers} />
-      <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each criterion is marked out of 100; the calibrated overall score is capped at 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
+      <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each area is marked out of 100. Your overall score is their average, up to 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}
     <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : "Your Med interview review"}</h2><p>{preview ? "This preview is not saved." : "All saved stations are available in your Med interview history."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> {retryLabel}</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>End Med interview <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/medicforest/interview/dashboard">End Med interview <ArrowRight size={16} /></Link>}</div></footer>

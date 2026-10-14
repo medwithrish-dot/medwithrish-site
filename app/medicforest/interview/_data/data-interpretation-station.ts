@@ -3,7 +3,7 @@ import type { InterviewQuestion } from "./interviewQuestionBank";
 export const DATA_INTERPRETATION_STATION_QUESTIONS = [
   {
     id: "iq-18-101-data-stations",
-    text: "What can you understand or interpret from this graph?",
+    text: "Describe the main changes in GP appointment waits shown here. Use the figures to compare the two districts and mention any limits to that comparison.",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -15,7 +15,7 @@ export const DATA_INTERPRETATION_STATION_QUESTIONS = [
   },
   {
     id: "iq-18-102-data-stations",
-    text: "What could explain this pattern? What hypothesis could you make?",
+    text: "Suggest a possible reason for the changing appointment waits. What else could produce the same pattern, and why can this graph alone not tell us the cause?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -27,7 +27,7 @@ export const DATA_INTERPRETATION_STATION_QUESTIONS = [
   },
   {
     id: "iq-18-103-data-stations",
-    text: "What would you research or investigate to see if there is evidence for your hypothesis?",
+    text: "How would you check your explanation for the appointment-wait pattern? Describe the information you would collect and a fair comparison you could make.",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
