@@ -1,6 +1,6 @@
 import "server-only";
 import OpenAI from "openai";
-import { interviewProviderLoad } from "./provider-load";
+import { withInterviewProviderCapacity, recordInterviewProviderFailure } from "./provider-capacity";
 import { RUBRIC_CRITERIA, validateFeedback } from "./scoring";
 import { validateFollowUp } from "./follow-up";
 import { stripSpeechPauseMarkers } from "@/app/medicforest/interview/_lib/speech-delivery";
@@ -23,8 +23,7 @@ type JsonGeneration = {
 async function generateInterviewJson({ model, instruction, context, schema, schemaName, maxOutputTokens, timeout }: JsonGeneration) {
   const key = process.env.OPENAI_API_KEY?.trim();
   if (!key) throw new Error("AI feedback is not enabled yet. Your answers have been saved.");
-  const release = interviewProviderLoad.acquire();
-  try {
+  return withInterviewProviderCapacity(async () => {
     let response: OpenAI.Responses.Response;
     try {
       const client = new OpenAI({ apiKey: key, maxRetries: 0, timeout });
@@ -39,7 +38,7 @@ async function generateInterviewJson({ model, instruction, context, schema, sche
       });
     } catch (error) {
       if (error instanceof OpenAI.APIError) {
-        interviewProviderLoad.unavailable(error.status, error.headers?.get("retry-after") ?? null);
+        await recordInterviewProviderFailure(error.status, error.headers?.get("retry-after") ?? null);
         if (error.status === 429) throw new Error("The AI service is busy. Your answers are saved; retry shortly.");
       }
       if (error instanceof OpenAI.APIConnectionTimeoutError) throw new Error("The AI service could not respond in time. Your answers are saved; please retry.");
@@ -55,7 +54,7 @@ async function generateInterviewJson({ model, instruction, context, schema, sche
     } catch {
       throw new Error("The AI response was incomplete. Your answers are saved; please retry.");
     }
-  } finally { release(); }
+  });
 
 }
 

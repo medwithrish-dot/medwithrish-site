@@ -9,7 +9,7 @@ import ts from "typescript";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 const id = number => `00000000-0000-4000-8000-${String(number).padStart(12, "0")}`;
-const rows = Array.from({ length: 330 }, (_, index) => ({ id: id(index), user_id: "student", started_at: "2026-10-14T10:00:00.123456+00:00", status: "completed", station_slug: "why-medicine", title: "Why medicine?", university_slug: null, preparation_seconds: 0, station_seconds: 180, questions: ["Private question"], answers: [{ answer: "Private answer" }], metrics: {}, feedback: null }));
+const rows = Array.from({ length: 330 }, (_, index) => ({ id: id(index), user_id: "student", started_at: "2026-10-14T10:00:00.123456+00:00", status: "completed", station_slug: "why-medicine", title: "Why medicine?", university_slug: null, preparation_seconds: 0, station_seconds: 180, questions: ["Private question"], answers: [{ answer: "Private answer" }], metrics: {}, feedback_score: 75 }));
 
 function harness({ user = "student", unavailable = false } = {}) {
   const queries = [];
@@ -86,6 +86,9 @@ test("history API requires an account and returns private summaries with no answ
   assert.equal(response.headers.get("Cache-Control"), "private, no-store");
   const body = await response.json();
   assert.equal(body.attempts.length, 300);
+  assert.equal(body.attempts[0].feedbackScore, 75);
+  assert.match(api.queries[0].columns, /feedback_score:feedback->score/);
+  assert.ok(!api.queries[0].columns.split(",").includes("feedback"));
   assert.doesNotMatch(JSON.stringify(body), /Private answer|Private question|user_id/);
   const older = await api.get({ before: body.nextCursor.startedAt, beforeId: body.nextCursor.id });
   assert.equal((await older.json()).attempts.length, 30);

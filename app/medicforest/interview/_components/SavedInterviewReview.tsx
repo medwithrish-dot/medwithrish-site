@@ -18,7 +18,7 @@ class ReviewRequestError extends Error {
 
 async function reviewRequest(path: string, method = "GET", body?: unknown): Promise<ReviewResponse> {
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 55_000);
+  const timeout = window.setTimeout(() => controller.abort(), 70_000);
   try {
     const response = await fetch(path, { method, cache: "no-store", signal: controller.signal,
       ...(body === undefined ? {} : { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),

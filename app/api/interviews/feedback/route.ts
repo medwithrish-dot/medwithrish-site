@@ -2,7 +2,7 @@ import { generateInterviewFeedback } from "@/utils/interviews/feedback-service";
 import { requireHumanRequest } from "@/utils/security/human-check";
 import { interviewFailure, interviewJson, readInterviewBody } from "@/utils/interviews/server";
 
-export const maxDuration = 45;
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {

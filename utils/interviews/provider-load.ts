@@ -1,10 +1,16 @@
 import "server-only";
 
 export class InterviewAiBusyError extends Error {
-  constructor() {
+  constructor(public retryAfter = 15) {
     super("The AI service is busy. Your answers are saved; retry shortly.");
     this.name = "InterviewAiBusyError";
   }
+}
+
+export function providerCooldownSeconds(retryAfter: string | null, now = Date.now()) {
+  const seconds = retryAfter ? Number(retryAfter) : NaN;
+  const requested = Number.isFinite(seconds) ? seconds : retryAfter ? (Date.parse(retryAfter) - now) / 1000 : NaN;
+  return Number.isFinite(requested) ? Math.ceil(Math.min(300, Math.max(15, requested))) : 15;
 }
 
 // Instance-local protection, not a substitute for the project's provider quotas.
@@ -16,7 +22,7 @@ export function createInterviewProviderLoad(now = Date.now) {
     return Number.isInteger(configured) && configured >= 1 && configured <= 100 ? configured : 20;
   };
   const assertAvailable = () => {
-    if (now() < availableAt || active >= capacity()) throw new InterviewAiBusyError();
+    if (now() < availableAt || active >= capacity()) throw new InterviewAiBusyError(Math.max(15, Math.ceil((availableAt - now()) / 1000)));
   };
   return {
     assertAvailable,
@@ -28,10 +34,7 @@ export function createInterviewProviderLoad(now = Date.now) {
     },
     unavailable(status: number, retryAfter: string | null) {
       if (![429, 503].includes(status)) return;
-      const seconds = retryAfter ? Number(retryAfter) : NaN;
-      const retryDate = retryAfter ? Date.parse(retryAfter) : NaN;
-      const requested = Number.isFinite(seconds) ? seconds * 1000 : retryDate - now();
-      const cooldown = Number.isFinite(requested) ? Math.min(60_000, Math.max(15_000, requested)) : 15_000;
+      const cooldown = providerCooldownSeconds(retryAfter, now()) * 1000;
       availableAt = Math.max(availableAt, now() + cooldown);
     },
   };

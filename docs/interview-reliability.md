@@ -2,6 +2,8 @@
 
 Reviewed 4 October 2026. UCAT implementation is outside this review. The twelve areas below cover the interview journey plus its shared account page; university formats have their own route even though they are reached through AI Interviews. Notifications were checked alongside the dashboard.
 
+**17 October update:** the [capacity review](interview-capacity-review-2026-10-17.md) supersedes this historical review's provider/concurrency notes. Current generation uses OpenAI, history supports pagination, and shared database admission is available after its migration and hosting flag are enabled. The older HTTP results below are not current hosted capacity evidence.
+
 ## Twelve areas, in journey order
 
 | Area | Review and resulting behaviour | Remaining operational check |

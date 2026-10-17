@@ -2,6 +2,8 @@
 
 ## Run the SQL
 
+For shared AI capacity across instances, run `supabase/medicforest_interview_ai_capacity.sql`, then follow the [17 October rollout steps](interview-capacity-review-2026-10-17.md). Both combined setup files include it. Enable `INTERVIEW_AI_SHARED_LIMITS=true` after applying it; code deployment alone retains the local limiter.
+
 If Med interview setup is already installed, run `supabase/medicforest_interview_grading_guard.sql` once to update `claim_interview_grading`. This patch changes only the claim function, so later leaderboard changes remain intact. The function now rejects feedback claims for active or abandoned stations; the API also checks submission before calling it. The SQL change has been tested locally but has not been applied to the hosted database. Fresh installs using either combined setup file already include the guard.
 
 For guest leaderboard viewing on an existing installation, also run `supabase/medicforest_interview_public_leaderboard.sql`. It grants anonymous access only to the public leaderboard RPC; attempts, preferences and groups remain private. Both combined setup files include this grant for fresh installs. This patch was tested locally and has not been applied to the hosted database.

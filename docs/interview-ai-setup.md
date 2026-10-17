@@ -8,6 +8,8 @@ Updated 12 October 2026. The application now uses OpenAI for both feedback and g
 OPENAI_API_KEY=your-server-only-project-key
 INTERVIEW_OPENAI_MODEL=gpt-6-luna
 INTERVIEW_AI_MAX_CONCURRENT=20
+# Enable on all deployments after applying medicforest_interview_ai_capacity.sql:
+INTERVIEW_AI_SHARED_LIMITS=true
 ```
 
 The API key and model are configured locally. Hosting needs its own environment variables; pushing Git does not transfer `.env.local`. GPT API calls use the project's paid quota. Set project usage alerts and provider limits; there is no free-only request option or automatic provider/model retry. Credentials stay server-side. Requests use strict JSON Schema, bounded output, deadlines and `store: false`. See [official OpenAI documentation](https://developers.openai.com/api/docs/guides/structured-outputs).
@@ -44,9 +46,11 @@ The four-case live check on 12 October returned 77.6 for the good motivation exa
 
 ## Abuse and cost controls
 
+See the [17 October capacity review and rollout](interview-capacity-review-2026-10-17.md). Shared database admission protects feedback and probes across instances when enabled, with concurrency and rolling-minute limits, expiring leases and provider cooldowns. Apply its migration before enabling it. Per-instance protection remains active either way.
+
 Vercel BotID Basic is initialized in `instrumentation-client.ts`, with matching rewrites from `withBotId`. Interview starts, probes, feedback requests and generated speech require a human classification on the server. Bots, including verified bots, are rejected; verification errors fail closed before generation. [Vercel setup](https://vercel.com/docs/botid/get-started). Local development bypasses classification as documented by Vercel; production must be deployed on Vercel with BotID functioning. Test an actual signed-in browser in production and confirm a scripted request is rejected. Do not create a WAF bypass rule for these routes.
 
-Database account quotas bound starts to free 2/day and 30/30 days, premium 20/day and 300/30 days (the free trial has its own lifetime allowance). Grading is locked per attempt and capped at three tries; completed feedback is reused. Requests have body/context limits, origin checks, IP throttling and instance concurrency/cooldown controls. Application rate limiting is instance-local; configure hosting WAF rate limits for aggregate IP abuse and Supabase signup CAPTCHA/email confirmation for account farming. Bot classification reduces automation but cannot guarantee every caller is human. Provider project limits are still necessary for aggregate spend control.
+Database account quotas bound starts to free 2/day and 30/30 days, premium 20/day and 300/30 days (the free trial has its own lifetime allowance). Grading is locked per attempt and capped at three tries; completed feedback is reused. Requests have body/context limits, origin checks, IP throttling and instance concurrency/cooldown controls. IP throttling remains instance-local; configure hosting WAF rate limits for aggregate IP abuse and Supabase signup CAPTCHA/email confirmation for account farming. Bot classification reduces automation but cannot guarantee every caller is human. Provider project limits are still necessary for aggregate spend control.
 
 ## Google Chirp speech for generated probes
 

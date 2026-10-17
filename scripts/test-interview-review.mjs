@@ -268,3 +268,30 @@ test("a failed feedback save releases its claim without exposing database detail
   assert.equal(api.state.row.completed_at, submittedAt);
   assert.equal(api.state.row.feedback, null);
 });
+
+test("overlapping feedback requests reserve capacity before spending grading retries", async () => {
+  const previous = process.env.INTERVIEW_AI_MAX_CONCURRENT;
+  process.env.INTERVIEW_AI_MAX_CONCURRENT = "1";
+  let release, entered;
+  const started = new Promise(resolve => { entered = resolve; });
+  const blocked = new Promise(resolve => { release = resolve; });
+  try {
+    const api = harness({ configured: true, assess: async () => { entered(); await blocked; return feedback; } });
+    await api.patch({ finish: true });
+    const first = api.grade();
+    await started;
+    const second = await api.grade();
+    assert.equal(second.status, 503);
+    assert.equal(second.headers.get("Retry-After"), "15");
+    assert.match((await second.json()).error, /busy/);
+    assert.equal(api.state.gradingClaims, 1);
+    assert.equal(api.state.row.grading_tries, 1);
+    assert.equal(api.state.providerCalls, 1);
+    release();
+    assert.equal((await first).status, 200);
+    assert.equal(api.state.row.answers[0].answer, words);
+  } finally {
+    release();
+    if (previous === undefined) delete process.env.INTERVIEW_AI_MAX_CONCURRENT; else process.env.INTERVIEW_AI_MAX_CONCURRENT = previous;
+  }
+});

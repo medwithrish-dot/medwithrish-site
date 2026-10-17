@@ -66,10 +66,16 @@ export const getInterviewDashboardData = cache(async () => {
 
       // No answer text or microphone metrics are transferred for a dashboard view.
       // A bounded recent history supplies details; the RPC supplies exact lifetime totals.
-      const columns = "id,mode,university_slug,station_slug,title,status,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback,started_at,completed_at";
+      const columns = "id,mode,university_slug,station_slug,title,status,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback_score:feedback->score,feedback_improvements:feedback->improvements,started_at,completed_at";
       const history = await supabase.from("interview_attempts").select(`${columns}${available ? ",answer_submitted_at" : ""}`).eq("user_id", user.id).order("started_at", { ascending: false }).order("id", { ascending: false }).limit(500);
       if (history.error) message = "Your Med interview history could not be loaded. Please try again shortly.";
-      else attempts = (history.data ?? []).map((row) => toInterviewAttempt({ ...(row as unknown as Record<string, unknown>), questions: [], answers: [], metrics: {} }));
+      else attempts = (history.data ?? []).map((result) => {
+        const row = result as unknown as Record<string, unknown>;
+        return toInterviewAttempt({ ...row,
+          feedback: typeof row.feedback_score === "number" ? { score: row.feedback_score, improvements: row.feedback_improvements } : null,
+          questions: [], answers: [], metrics: {},
+        });
+      });
     }
   } catch {
     message = "Your dashboard could not be loaded right now. Please try again shortly.";

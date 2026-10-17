@@ -2,7 +2,7 @@ import { generateQuestionFeedback, readQuestionFeedbackAccess, QuestionFeedbackU
 import { interviewFailure, interviewJson, readInterviewBody } from "@/utils/interviews/server";
 import { requireHumanRequest } from "@/utils/security/human-check";
 
-export const maxDuration = 45;
+export const maxDuration = 60;
 
 export async function GET(request: Request) {
   try { return interviewJson(await readQuestionFeedbackAccess(new URL(request.url).searchParams.get("question"))); }

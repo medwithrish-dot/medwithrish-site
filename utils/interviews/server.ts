@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
+import { InterviewAiBusyError } from "./provider-load";
 
 export class InterviewError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -24,8 +25,8 @@ export function interviewFailure(error: unknown) {
   const status = error instanceof InterviewError || error instanceof RequestBodyError ? error.status : 503;
   // Log operational metadata only: never answers, request bodies or provider keys.
   if (status >= 500) console.error("interview_service_failure", { status, kind: error instanceof Error ? error.name : "UnknownError" });
-  const response = interviewJson({ error: error instanceof InterviewError || error instanceof RequestBodyError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
-  if (status === 429 || status === 503) response.headers.set("Retry-After", "15");
+  const response = interviewJson({ error: error instanceof InterviewError || error instanceof RequestBodyError || error instanceof InterviewAiBusyError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
+  if (status === 429 || status === 503) response.headers.set("Retry-After", String(error instanceof InterviewAiBusyError ? error.retryAfter : 15));
   return response;
 }
 export function databaseError(error: { code?: string; message: string }) {

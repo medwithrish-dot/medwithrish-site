@@ -26,9 +26,9 @@ export async function interviewHistory(cursor?: InterviewHistoryCursor): Promise
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { attempts: [], signedIn: false, requiresSignIn: true, nextCursor: null, message: "Sign in to keep your interviews, feedback and progress together." };
-    // History cards need metadata and feedback; load transcripts only for a report.
+    // History cards need only the score; load full feedback and transcripts for a report.
     let query = supabase.from("interview_attempts")
-      .select("id,mode,university_slug,station_slug,title,status,last_error,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback,started_at,completed_at,answer_submitted_at")
+      .select("id,mode,university_slug,station_slug,title,status,last_error,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback_score:feedback->score,started_at,completed_at,answer_submitted_at")
       .eq("user_id", user.id).order("started_at", { ascending: false }).order("id", { ascending: false }).limit(INTERVIEW_HISTORY_PAGE_SIZE + 1);
     if (cursor) query = query.or(`started_at.lt.${cursor.startedAt},and(started_at.eq.${cursor.startedAt},id.lt.${cursor.id})`);
     const { data, error } = await query;
@@ -36,6 +36,6 @@ export async function interviewHistory(cursor?: InterviewHistoryCursor): Promise
     const rows = (data ?? []).slice(0, INTERVIEW_HISTORY_PAGE_SIZE);
     const last = rows.at(-1);
     const nextCursor = (data?.length ?? 0) > INTERVIEW_HISTORY_PAGE_SIZE && last ? { startedAt: String(last.started_at), id: String(last.id) } : null;
-    return { attempts: rows.map((row) => toInterviewAttempt({ ...row, questions: [], answers: [], metrics: {} })), signedIn: true, message: null, nextCursor };
+    return { attempts: rows.map((row) => toInterviewAttempt({ ...row, feedback: typeof row.feedback_score === "number" ? { score: row.feedback_score } : null, questions: [], answers: [], metrics: {} })), signedIn: true, message: null, nextCursor };
   } catch { return { attempts: [], signedIn: false, nextCursor: null, message: "Med Interview services are temporarily unavailable. Please try again shortly." }; }
 }

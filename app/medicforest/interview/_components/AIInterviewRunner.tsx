@@ -30,7 +30,7 @@ class InterviewRequestError extends Error {
 
 async function requestSession(path: string, method = "GET", body?: unknown, signal?: AbortSignal): Promise<SessionResponse> {
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 55_000);
+  const timeout = window.setTimeout(() => controller.abort(), 70_000);
   const abort = () => controller.abort();
   signal?.addEventListener("abort", abort, { once: true });
   if (signal?.aborted) controller.abort();

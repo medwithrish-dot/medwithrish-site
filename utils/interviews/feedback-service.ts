@@ -1,6 +1,6 @@
 import "server-only";
 import { requireAiUsage } from "@/utils/security/ai-usage";
-import { InterviewAiBusyError, interviewProviderLoad } from "./provider-load";
+import { withInterviewProviderCapacity } from "./provider-capacity";
 import { randomUUID } from "node:crypto";
 import { FREE_QUESTION_FEEDBACK_USED, QUESTION_BANK_FEEDBACK_STATION } from "@/app/medicforest/interview/_lib/question-feedback";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
@@ -55,42 +55,39 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
     await claimWhyMedicineFeedbackCredit(admin, user.id, attempt.id);
   }
 
-  // Reject a known cooldown before requesting another grading claim.
-  try { interviewProviderLoad.assertAvailable(); }
-  catch (error) {
-    if (error instanceof InterviewAiBusyError) throw new InterviewError(error.message, 503);
-    throw error;
-  }
-  const token = randomUUID();
-  await requireAiUsage(admin, user.id, "generation");
-  const { data: claimed, error: claimError } = await admin.rpc("claim_interview_grading", { p_user: user.id, p_attempt: row.id, p_token: token });
-  if (claimError) databaseError(claimError);
-  if (!claimed) throw new InterviewError("Feedback could not be started. Please retry.", 503);
-  if (claimed.status === "completed") return toInterviewAttempt(claimed);
+  // Reserve atomically before consuming a grading try, including across instances.
+  return withInterviewProviderCapacity(async () => {
+    const token = randomUUID();
+    await requireAiUsage(admin, user.id, "generation");
+    const { data: claimed, error: claimError } = await admin.rpc("claim_interview_grading", { p_user: user.id, p_attempt: row.id, p_token: token });
+    if (claimError) databaseError(claimError);
+    if (!claimed) throw new InterviewError("Feedback could not be started. Please retry.", 503);
+    if (claimed.status === "completed") return toInterviewAttempt(claimed);
 
-  const snapshot = toInterviewAttempt(claimed);
-  const releaseClaim = async () => {
-    const { error: releaseError } = await admin.from("interview_attempts")
-      .update({ status: "failed", last_error: "feedback_unavailable" })
-      .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading");
-    if (releaseError) databaseError(releaseError);
-  };
+    const snapshot = toInterviewAttempt(claimed);
+    const releaseClaim = async () => {
+      const { error: releaseError } = await admin.from("interview_attempts")
+        .update({ status: "failed", last_error: "feedback_unavailable" })
+        .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading");
+      if (releaseError) databaseError(releaseError);
+    };
 
-  let feedback: NonNullable<InterviewAttempt["feedback"]>;
-  try {
-    feedback = await assessInterview(snapshot.title, snapshot.answers, snapshot.questions.map((question, index) => ({ question, id: snapshot.questionIds?.[index] })));
-  } catch (providerError) {
-    await releaseClaim();
-    throw new InterviewError(feedbackFailureMessage(providerError), 503);
-  }
+    let feedback: NonNullable<InterviewAttempt["feedback"]>;
+    try {
+      feedback = await assessInterview(snapshot.title, snapshot.answers, snapshot.questions.map((question, index) => ({ question, id: snapshot.questionIds?.[index] })));
+    } catch (providerError) {
+      await releaseClaim();
+      throw new InterviewError(feedbackFailureMessage(providerError), 503);
+    }
 
-  const { data, error: saveError } = await admin.from("interview_attempts")
-    .update({ status: "completed", feedback, score: feedback.score, rubric_version: INTERVIEW_RUBRIC_VERSION, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null })
-    .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
-  if (saveError) {
-    await releaseClaim();
-    databaseError(saveError);
-  }
-  if (!data) throw new InterviewError("A newer feedback request is running. Refresh to see its result.", 409);
-  return toInterviewAttempt(data);
+    const { data, error: saveError } = await admin.from("interview_attempts")
+      .update({ status: "completed", feedback, score: feedback.score, rubric_version: INTERVIEW_RUBRIC_VERSION, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null })
+      .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
+    if (saveError) {
+      await releaseClaim();
+      databaseError(saveError);
+    }
+    if (!data) throw new InterviewError("A newer feedback request is running. Refresh to see its result.", 409);
+    return toInterviewAttempt(data);
+  });
 }
