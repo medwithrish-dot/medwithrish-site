@@ -1,4 +1,5 @@
 -- COMPLETE MEDICFOREST CATCH-UP SETUP
+-- Updated 18 October 2026, including all current interview patches.
 -- Run this entire file once in Supabase SQL Editor using the postgres role.
 -- Includes original accounts, UCAT practice, billing and every interview migration.
 -- Can be rerun; existing account plans, used credits and practice history are preserved.
@@ -1255,5 +1256,120 @@ returns void language sql security definer set search_path=public as $$
 $$;
 revoke all on function public.acquire_interview_ai_capacity(uuid), public.release_interview_ai_capacity(uuid), public.pause_interview_ai_capacity(integer) from public, anon, authenticated;
 grant execute on function public.acquire_interview_ai_capacity(uuid), public.release_interview_ai_capacity(uuid), public.pause_interview_ai_capacity(integer) to service_role;
+
+-- ============================================================
+-- CURRENT PATCH: medicforest_interview_free_trial.sql
+-- ============================================================
+
+-- Existing installations: apply after the interview platform setup. Safe to rerun.
+-- Starting a scored trial consumes it, including abandoned attempts. Resume and
+-- idempotent replay reuse the saved attempt. Premium retries use paid station mode.
+create or replace function public.reserve_interview_attempt(p_user uuid,p_payload jsonb,p_daily integer,p_monthly integer)
+returns public.interview_attempts language plpgsql security definer set search_path=public as $$
+declare v_row public.interview_attempts; v_count integer;
+begin
+  perform pg_advisory_xact_lock(hashtextextended(p_user::text,731));
+  select * into v_row from public.interview_attempts where user_id=p_user and status='in_progress'
+    and started_at > now()-interval '3 hours' order by started_at desc limit 1;
+  if found then return v_row; end if;
+  select * into v_row from public.interview_attempts where user_id=p_user and circuit_id=(p_payload->>'circuit_id')::uuid and station_index=(p_payload->>'station_index')::integer;
+  if found then return v_row; end if;
+  if p_payload->>'mode' = 'free' and exists (
+    select 1 from public.interview_attempts where user_id=p_user and mode='free'
+  ) then
+    raise exception 'Your free Why Medicine? attempt has already been used. Upgrade to Premium to practise again.';
+  end if;
+  select count(*) into v_count from public.interview_attempts where user_id=p_user and started_at >= now()-interval '24 hours';
+  if v_count >= p_daily then raise exception 'Daily interview limit reached. Try again tomorrow.'; end if;
+  select count(*) into v_count from public.interview_attempts where user_id=p_user and started_at >= now()-interval '30 days';
+  if v_count >= p_monthly then raise exception 'Monthly interview limit reached. Please try again later.'; end if;
+  insert into public.interview_attempts(user_id,mode,university_slug,station_slug,title,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,questions)
+  values(p_user,p_payload->>'mode',p_payload->>'university_slug',p_payload->>'station_slug',p_payload->>'title',(p_payload->>'circuit_id')::uuid,(p_payload->>'station_index')::integer,(p_payload->>'station_count')::integer,(p_payload->>'preparation_seconds')::integer,(p_payload->>'station_seconds')::integer,(p_payload->>'break_seconds')::integer,p_payload->'questions') returning * into v_row;
+  return v_row;
+end; $$;
+revoke all on function public.reserve_interview_attempt(uuid,jsonb,integer,integer) from public,anon,authenticated;
+grant execute on function public.reserve_interview_attempt(uuid,jsonb,integer,integer) to service_role;
+
+create index if not exists interview_attempts_free_trial_user
+  on public.interview_attempts(user_id) where mode='free';
+
+-- ============================================================
+-- CURRENT PATCH: medicforest_interview_grading_guard.sql
+-- ============================================================
+
+-- Apply to an existing interview installation after medicforest_interview_platform.sql.
+-- Updates only the grading claim; unrelated platform functions stay intact.
+create or replace function public.claim_interview_grading(p_user uuid,p_attempt uuid,p_token uuid)
+returns public.interview_attempts language plpgsql security definer set search_path=public as $$
+declare v_row public.interview_attempts;
+begin
+  select * into v_row from public.interview_attempts where id=p_attempt and user_id=p_user for update;
+  if not found then raise exception 'Interview not found'; end if;
+  if v_row.status='completed' then return v_row; end if;
+  if v_row.last_error='abandoned' then raise exception 'This interview was ended. Start a new station.'; end if;
+  if v_row.completed_at is null or v_row.status not in ('failed','grading') or
+    (v_row.status='failed' and coalesce(v_row.last_error,'') not in ('awaiting_feedback','feedback_unavailable')) then
+    raise exception 'Finish the station before requesting feedback.';
+  end if;
+  if (select count(*) from regexp_split_to_table(btrim((select string_agg(a->>'answer',' ') from jsonb_array_elements(v_row.answers) a)), '\s+') word where word <> '') < 20 then
+    raise exception 'Save at least 20 words before requesting feedback.';
+  end if;
+  if v_row.status='grading' and v_row.grading_started_at > now()-interval '90 seconds' then raise exception 'Feedback is already being generated. Please wait.'; end if;
+  if v_row.grading_tries >= 3 then raise exception 'Feedback retry limit reached for this station. Your answers are saved.'; end if;
+  update public.interview_attempts set status='grading',grading_token=p_token,grading_started_at=now(),grading_tries=grading_tries+1,last_error=null where id=p_attempt returning * into v_row;
+  return v_row;
+end; $$;
+revoke all on function public.claim_interview_grading(uuid,uuid,uuid) from public,anon,authenticated;
+grant execute on function public.claim_interview_grading(uuid,uuid,uuid) to service_role;
+
+-- ============================================================
+-- CURRENT PATCH: medicforest_interview_scoring_v2.sql
+-- ============================================================
+
+-- Run before deploying scoring v2. Keep historical reports and their scores intact.
+-- Update installed readers without removing moderation, policies or permissions.
+do $$
+declare reader record;
+begin
+  for reader in
+    select p.oid from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.proname in
+      ('interview_leaderboard','interview_dashboard_totals','interview_groups_action')
+  loop
+    execute replace(pg_get_functiondef(reader.oid), 'why-medicine-v1', 'why-medicine-v2');
+  end loop;
+end; $$;
+alter table public.interview_attempts alter column rubric_version set default 'why-medicine-v2';
+-- Versioned API: older installations fail closed until the scoring migration is applied.
+create or replace function public.interview_leaderboard_v2()
+returns table(rank bigint,display_name text,score numeric,completed_at timestamptz,is_you boolean)
+language sql stable security invoker set search_path=public as $$
+  select * from public.interview_leaderboard();
+$$;
+revoke all on function public.interview_leaderboard_v2() from public,anon,authenticated;
+grant execute on function public.interview_leaderboard_v2() to anon,authenticated,service_role;
+
+-- ============================================================
+-- CURRENT PATCH: medicforest_interview_challenge_leaderboard.sql
+-- ============================================================
+
+-- Optional accelerated reader. The application uses an equivalent server-side
+-- fallback until this additive migration is installed.
+create or replace function public.interview_leaderboard_v3()
+returns table(rank bigint,display_name text,score numeric,completed_at timestamptz,is_you boolean)
+language sql stable security definer set search_path=public as $$
+  with best as (
+    select distinct on(a.user_id) a.user_id,p.display_name,a.score,a.completed_at,a.id
+    from public.interview_attempts a join public.interview_preferences p on p.user_id=a.user_id
+    where p.leaderboard_opt_in and a.station_slug='why-medicine'
+      and (a.mode='free' or (a.mode='station' and a.station_seconds=180))
+      and a.status='completed' and a.rubric_version='why-medicine-v2' and a.score is not null
+    order by a.user_id,a.score desc,a.completed_at asc,a.id asc
+  ) select row_number() over(order by best.score desc,best.completed_at asc,best.id asc),
+    best.display_name,best.score,best.completed_at,coalesce(best.user_id=auth.uid(),false)
+    from best order by best.score desc,best.completed_at asc,best.id asc limit 100;
+$$;
+revoke all on function public.interview_leaderboard_v3() from public,anon,authenticated;
+grant execute on function public.interview_leaderboard_v3() to anon,authenticated,service_role;
 
 commit;
