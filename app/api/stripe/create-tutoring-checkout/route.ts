@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getRequiredSiteUrl } from "@/utils/site-url";
 import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
+import { enforcePublicRateLimit, privateFingerprint } from "@/utils/security/durable-rate-limit";
+import { logProviderFailure, providerUnavailable } from "@/utils/security/provider-failure";
 
 export const runtime = "nodejs";
 
@@ -51,6 +53,14 @@ export async function POST(request: Request) {
       );
     }
 
+    if (body.returnTo !== undefined && !["interviews", "ucat", "interview-tutoring", "tutoring", "medicforest"].includes(body.returnTo)) {
+      return NextResponse.json({ error: "Please choose a valid return destination." }, { status: 400 });
+    }
+    const requestId = request.headers.get("idempotency-key");
+    if (!requestId || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId)) {
+      return NextResponse.json({ error: "Please reload the booking form and try again." }, { status: 400 });
+    }
+
     const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
     const priceId = TUTORING_PRICE_ENV_MAP[body.packageId]?.trim();
 
@@ -63,7 +73,9 @@ export async function POST(request: Request) {
       });
     }
 
-    const stripe = new Stripe(secretKey);
+    const limited = await enforcePublicRateLimit(request, "tutoring-checkout");
+    if (limited) return limited;
+    const stripe = new Stripe(secretKey, { timeout: 10_000, maxNetworkRetries: 0 });
     const siteUrl = getRequiredSiteUrl(request);
     const returnPath =
       body.returnTo === "interviews"
@@ -105,7 +117,7 @@ export async function POST(request: Request) {
         packageId: body.packageId,
         source,
       },
-    });
+    }, { idempotencyKey: `tutoring:${privateFingerprint(`${email.toLowerCase()}:${requestId.toLowerCase()}`)}` });
 
     return NextResponse.json({
       configured: true,
@@ -114,14 +126,8 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof RequestBodyError) return NextResponse.json({ error: error.message }, { status: error.status });
     if (error instanceof SyntaxError) return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-    console.error("Tutoring checkout session failed.");
-    return NextResponse.json(
-      {
-        configured: false,
-        error: "Could not start checkout. Please retry.",
-      },
-      { status: 500 }
-    );
+    logProviderFailure("stripe", "tutoring_checkout", error);
+    return providerUnavailable(error, "Could not start checkout. Please retry.");
   }
 }
 

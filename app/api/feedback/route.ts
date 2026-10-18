@@ -1,4 +1,6 @@
 import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
+import { enforcePublicRateLimit } from "@/utils/security/durable-rate-limit";
+import { logProviderFailure, providerUnavailable } from "@/utils/security/provider-failure";
 
 const FEEDBACK_RECIPIENT = process.env.FEEDBACK_TO_EMAIL?.trim() || "medwithrish@gmail.com";
 const FEEDBACK_SENDER = process.env.FEEDBACK_FROM_EMAIL?.trim() || "MedicForest Feedback <onboarding@resend.dev>";
@@ -81,6 +83,8 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
+    const limited = await enforcePublicRateLimit(request, "feedback");
+    if (limited) return limited;
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       signal: AbortSignal.timeout(10_000),
@@ -98,15 +102,13 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      console.error("Feedback email provider rejected the request.", {
-        status: response.status,
-      });
-      return failure("Feedback could not be sent right now. Please email us directly instead.", 502);
+      logProviderFailure("resend", "feedback", { status: response.status });
+      return providerUnavailable({ status: response.status }, "Feedback could not be sent right now. Please email us directly instead.");
     }
 
     return Response.json({ ok: true });
-  } catch {
-    console.error("Feedback email request failed.");
-    return failure("Feedback could not be sent right now. Please email us directly instead.", 502);
+  } catch (error) {
+    logProviderFailure("resend", "feedback", error);
+    return providerUnavailable(error, "Feedback could not be sent right now. Please email us directly instead.");
   }
 }

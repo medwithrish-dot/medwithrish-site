@@ -1,4 +1,5 @@
 "use client";
+import { tutoringCheckoutFetch } from "@/utils/billing/tutoring-checkout-fetch";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -219,7 +220,7 @@ export function UCATTutoringClient({
     setShowContactFallback(false);
 
     try {
-      const response = await fetch("/api/stripe/create-tutoring-checkout", {
+      const response = await tutoringCheckoutFetch("/api/stripe/create-tutoring-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

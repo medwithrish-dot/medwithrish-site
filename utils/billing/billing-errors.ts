@@ -1,4 +1,5 @@
 import { RequestBodyError } from "@/utils/security/request-body";
+import { logProviderFailure, isTemporaryProviderFailure, providerUnavailable } from "@/utils/security/provider-failure";
 
 export class BillingError extends Error {
   readonly statusCode: number;
@@ -98,6 +99,9 @@ export function toBillingResponse(
   if (isBillingError(error)) {
     return Response.json({ error: error.message }, { status: error.statusCode });
   }
+
+  logProviderFailure("billing", "request", error);
+  if (isTemporaryProviderFailure(error)) return providerUnavailable(error, fallbackMessage);
 
   return Response.json({ error: fallbackMessage }, { status: 500 });
 }

@@ -2,6 +2,7 @@ import { guardApiRequest } from "@/utils/security/api-guard";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isMedicForestHost, previewPathname } from "@/utils/medicforest/preview-routing";
+import { serverSupabaseFetch } from "@/utils/supabase/server-fetch";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -42,6 +43,7 @@ export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    global: { fetch: serverSupabaseFetch },
     cookies: {
       getAll() {
         return request.cookies.getAll();

@@ -25,6 +25,10 @@ function load(file, mocks = {}, cache = new Map()) {
   const localRequire = (name) => {
     if (name === "server-only") return {};
     if (Object.hasOwn(mocks, name)) return mocks[name];
+    // This suite isolates infrastructure; durable SQL/receipt behaviour is tested
+    // against embedded PostgreSQL in test-public-api-security.mjs.
+    if (name === "@/utils/security/durable-rate-limit") return { enforcePublicRateLimit: async () => null, privateFingerprint: value => value };
+    if (name === "@/utils/billing/webhooks/webhook-receipts") return { processStripeEventOnce: async (_id, work) => work() };
     if (name === "@/utils/billing/stripe-client" && Object.hasOwn(mocks, "@/utils/stripe")) return mocks["@/utils/stripe"];
     if (name === "@/utils/stripe" && Object.hasOwn(mocks, "@/utils/billing/stripe-client")) return mocks["@/utils/billing/stripe-client"];
     if (name === "@/utils/billing/stripe-subscriptions" && Object.hasOwn(mocks, "@/utils/stripe-subscriptions")) return mocks["@/utils/stripe-subscriptions"];
@@ -55,7 +59,7 @@ async function withEnv(values, callback) {
 }
 
 const jsonRequest = (body) => new Request("https://example.test/api", {
-  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": "4dd2d670-4a37-4b78-bfb6-a464e66d29f0" }, body: JSON.stringify(body),
 });
 const auth = { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }) };
 const noStripe = { createStripeClient() { throw new Error("Stripe must not be called for invalid input"); } };

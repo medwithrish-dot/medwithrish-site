@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { logProviderFailure, isTemporaryProviderFailure, providerUnavailable } from "@/utils/security/provider-failure";
 
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
@@ -403,6 +404,10 @@ export async function POST(request: Request) {
     error: userError,
   } = await supabase.auth.getUser();
 
+  if (userError && isTemporaryProviderFailure(userError)) {
+    logProviderFailure("supabase", "diagnostic_auth", userError);
+    return providerUnavailable(userError, "Sign-in services are temporarily unavailable. Please retry.");
+  }
   if (userError || !user) {
     return Response.json(
       { error: "Log in before requesting AI feedback." },
@@ -438,7 +443,8 @@ export async function POST(request: Request) {
     .in("id", requestedAttemptIds);
 
   if (attemptError) {
-    return Response.json({ error: attemptError.message }, { status: 500 });
+    logProviderFailure("supabase", "diagnostic_read", attemptError);
+    return providerUnavailable(attemptError, "Your saved results could not be loaded. Please retry.");
   }
 
   const attemptRows = ((attempts ?? []) as DiagnosticAttemptRow[]).filter(
@@ -498,7 +504,8 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   if (profileError) {
-    return Response.json({ error: profileError.message }, { status: 500 });
+    logProviderFailure("supabase", "diagnostic_profile", profileError);
+    return providerUnavailable(profileError, "Your account could not be loaded. Please retry.");
   }
 
   const profileRow: ProfileRow = {
@@ -596,7 +603,8 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   if (reserveError) {
-    return Response.json({ error: reserveError.message }, { status: 500 });
+    logProviderFailure("supabase", "diagnostic_reserve", reserveError);
+    return providerUnavailable(reserveError, "Your feedback credit could not be reserved. Please retry.");
   }
 
   if (!reservedProfile) {
@@ -624,6 +632,7 @@ export async function POST(request: Request) {
 
     const client = new Anthropic({
       timeout: 25000,
+      maxRetries: 0,
     });
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
@@ -692,17 +701,17 @@ export async function POST(request: Request) {
     if (plan === "free") {
       refundQuery.eq("diagnostic_credits", Math.max(0, currentSnapshot.credits - 1));
     }
-    await refundQuery;
+    let refundFailed = false;
+    try {
+      const { error: refundError } = await refundQuery;
+      if (refundError) throw refundError;
+    } catch (refundError) {
+      refundFailed = true;
+      logProviderFailure("supabase", "diagnostic_refund", refundError);
+    }
 
-    return Response.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "AI feedback generation failed.",
-        ...currentSnapshot,
-      },
-      { status: 502 }
-    );
+    logProviderFailure("anthropic", "diagnostic_feedback", error);
+    const failure = providerUnavailable(error, "AI feedback is temporarily unavailable. Please try again shortly.");
+    return Response.json({ ...(await failure.json()), ...(refundFailed ? reservedSnapshot : currentSnapshot) }, { status: failure.status, headers: failure.headers });
   }
 }

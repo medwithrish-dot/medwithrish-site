@@ -3,8 +3,12 @@ import { getStripeWebhookSecret } from "@/utils/billing/billing-config";
 import { createStripeClient } from "@/utils/billing/stripe-client";
 import { dispatchStripeWebhookEvent } from "@/utils/billing/webhooks/dispatch-stripe-event";
 import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
+import { processStripeEventOnce } from "@/utils/billing/webhooks/webhook-receipts";
+import { logProviderFailure } from "@/utils/security/provider-failure";
 
 export const runtime = "nodejs";
+// Shorter than the receipt lease, so a crashed invocation cannot overlap recovery.
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   let webhookSecret: string;
@@ -12,7 +16,7 @@ export async function POST(request: Request) {
     webhookSecret = getStripeWebhookSecret();
   } catch {
     return Response.json(
-      { error: "Missing STRIPE_WEBHOOK_SECRET." },
+      { error: "Webhook service is temporarily unavailable." },
       { status: 500 }
     );
   }
@@ -44,12 +48,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    const outcome = await dispatchStripeWebhookEvent({ event, stripe });
+    const outcome = await processStripeEventOnce(event.id, () => dispatchStripeWebhookEvent({ event, stripe }));
     return Response.json(outcome);
-  } catch {
+  } catch (error) {
+    logProviderFailure("stripe", "webhook", error);
     return Response.json(
       { error: "Could not process webhook." },
-      { status: 500 }
+      { status: 503, headers: { "Retry-After": "30" } }
     );
   }
 }

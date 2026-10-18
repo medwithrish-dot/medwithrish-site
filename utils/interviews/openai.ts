@@ -1,5 +1,6 @@
 import "server-only";
 import OpenAI from "openai";
+import { logProviderFailure } from "@/utils/security/provider-failure";
 import { withInterviewProviderCapacity, recordInterviewProviderFailure } from "./provider-capacity";
 import { RUBRIC_CRITERIA, validateFeedback } from "./scoring";
 import { validateFollowUp } from "./follow-up";
@@ -37,6 +38,7 @@ async function generateInterviewJson({ model, instruction, context, schema, sche
         store: false,
       });
     } catch (error) {
+      logProviderFailure("openai", "interview_json", error);
       if (error instanceof OpenAI.APIError) {
         await recordInterviewProviderFailure(error.status, error.headers?.get("retry-after") ?? null);
         if (error.status === 429) throw new Error("The AI service is busy. Your answers are saved; retry shortly.");

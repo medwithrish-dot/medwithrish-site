@@ -2,6 +2,7 @@ import { createClient as createServerSupabaseClient } from "@/utils/supabase/ser
 import { synchronizeCheckoutSession } from "@/utils/billing/billing-service";
 import { toBillingResponse } from "@/utils/billing/billing-errors";
 import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
+import { isTemporaryProviderFailure } from "@/utils/security/provider-failure";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ export async function POST(request: Request) {
       error: userError,
     } = await supabase.auth.getUser();
 
+    if (userError && isTemporaryProviderFailure(userError)) throw userError;
     if (userError || !user) {
       return Response.json({ error: "Log in before syncing." }, { status: 401 });
     }

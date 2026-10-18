@@ -10,6 +10,12 @@ If you want only interview setup and already have the account tables, use [RUN_A
 
 Save and exit, interruption filtering, panel variety, Reports tabs and Medwithrish's 96% benchmark use the existing schema. They need the latest website deployment; they do not need additional SQL or a fabricated leaderboard account.
 
+Feedback/guest-checkout abuse limits and Stripe webhook replay protection also require
+[medicforest_public_api_security.sql](medicforest_public_api_security.sql). Run this
+additional migration once as `postgres` **before deploying the matching code**, even
+if you already ran a combined setup file. It is safe to rerun and preserves accounts
+and billing data. See [deployment instructions](../docs/public-api-security.md).
+
 SQL cannot set hosting secrets or enable external services. Keep these configured in Vercel for the production deployment:
 
 ```dotenv

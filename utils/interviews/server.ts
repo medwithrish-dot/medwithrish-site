@@ -5,13 +5,15 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
 import { InterviewAiBusyError } from "./provider-load";
+import { isTemporaryProviderFailure } from "@/utils/security/provider-failure";
 
 export class InterviewError extends Error {
   constructor(message: string, public status = 400) { super(message); }
 }
 export async function interviewContext() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError && isTemporaryProviderFailure(authError)) throw new InterviewError("Sign-in services are temporarily unavailable. Please retry.", 503);
   if (!user) throw new InterviewError("Sign in to save your Med interview and receive feedback.", 401);
   const admin = createAdminClient();
   const { data, error } = await admin.from("profiles").select("current_plan").eq("id", user.id).maybeSingle();
