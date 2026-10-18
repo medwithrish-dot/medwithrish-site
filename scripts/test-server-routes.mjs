@@ -515,9 +515,12 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
   assert.equal(writes[0].user_id, "account-123");
   assert.equal(writes[0].display_name, "Shital Shah");
   const board = await (await GET()).json();
-  assert.equal(board.entries[0].display_name, "Candidate");
-  assert.equal(board.entries[0].score, 88.5);
-  assert.equal(board.entries[1].display_name, "Hassan");
+  assert.equal(board.entries[0].display_name, "Medwithrish");
+  assert.equal(board.entries[0].score, 96);
+  assert.equal(board.entries[0].is_benchmark, true);
+  assert.equal(board.entries[1].display_name, "Candidate");
+  assert.equal(board.entries[1].score, 88.5);
+  assert.equal(board.entries[2].display_name, "Hassan");
   assert.equal(board.preference.display_name, "Candidate accoun");
   signedIn = false;
   assert.equal((await PATCH(jsonRequest({ displayName: "Hassan", optIn: true }))).status, 401);

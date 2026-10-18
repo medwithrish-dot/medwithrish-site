@@ -57,7 +57,7 @@ function harness({ usageAllowed = true, overrides = {}, configured = false, user
       if (this.table === "profiles") return { data: { current_plan: "premium" }, error: null };
       if (this.mutation?.status === "completed" && saveError) return { data: null, error: { code: "XX000", message: saveError } };
       if (this.mutation && beforeUpdate) { const callback = beforeUpdate; beforeUpdate = undefined; callback(state); }
-      const match = this.filters.every(([key, value]) => ["questions", "answers"].includes(key) ? JSON.stringify(state.row[key]) === value : state.row[key] === value);
+      const match = this.filters.every(([key, value]) => ["questions", "answers", "metrics"].includes(key) ? JSON.stringify(state.row[key]) === value : state.row[key] === value);
       if (!match) return { data: null, error: null };
       if (this.mutation) { state.writes += 1; Object.assign(state.row, structuredClone(this.mutation)); }
       return { data: structuredClone(state.row), error: null };
