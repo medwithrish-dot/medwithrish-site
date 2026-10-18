@@ -203,6 +203,33 @@ test("two words interrupt playback on the same mic session and the final utteran
   assert.equal(room.recognitions.length, 1);
 });
 
+test("noise, fillers, stray words and uncertain recognition cannot interrupt a question", async t => {
+  for (const previousAnswer of [false, true]) {
+    const room = speechHarness({ continuousListening: true });
+    t.after(() => room.unmount());
+    room.speech.start();
+    let interrupted = 0;
+    let completed = 0;
+    await room.speech.speak("Describe a time you showed leadership.", () => completed++, "/audio/female/q018.mp3", previousAnswer ? () => interrupted++ : undefined);
+    const recognition = room.recognitions[0];
+    recognition.onspeechstart();
+    recognition.onspeechend();
+    for (const transcript of ["", "...", "[background noise]", "(coughing)", "um uh", "hmm hmm", "I", "yes", "um I"]) {
+      recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript, confidence: 0.9 } }] });
+    }
+    for (const transcript of ["I also", "Wait"]) {
+      recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript, confidence: 0.2 } }] });
+    }
+    assert.equal(room.recorded[0].paused, undefined);
+    assert.equal(interrupted, 0);
+    assert.equal(completed, 0);
+    assert.deepEqual(room.transcripts, []);
+    recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I also", confidence: 0.9 } }] });
+    assert.equal(room.recorded[0].paused, true);
+    assert.equal(previousAnswer ? interrupted : completed, 1);
+  }
+});
+
 test("wait and hold on interrupt immediately while playback completion keeps the microphone running", async t => {
   const room = speechHarness({ continuousListening: true });
   t.after(() => room.unmount());

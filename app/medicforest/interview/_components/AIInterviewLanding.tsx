@@ -2,12 +2,14 @@ import Link from "@/app/medicforest/_components/MedicForestLink";
 import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
 import { ArrowRight, AudioLines, BookOpenCheck, Mic, RotateCcw, ShieldCheck } from "lucide-react";
 import { interviewHistory } from "@/utils/interviews/history";
+import { getMedicForestEntitlements } from "@/utils/medicforest/premium-access";
 import { UniversityCatalogue } from "../universities/UniversityCatalogue";
 import styles from "./AIInterviewLanding.module.css";
 import { WHY_MEDICINE_SECONDS } from "../_lib/why-medicine-challenge";
 
 export async function AIInterviewLanding() {
   const { attempts } = await interviewHistory();
+  const { isPremium } = await getMedicForestEntitlements();
   const completed = attempts.filter((attempt) => attempt.status === "completed" && attempt.completedAt);
   const recentUniversityAttempts: Record<string, { href: string; completedAt: string }> = {};
   for (const attempt of completed) {
@@ -34,7 +36,7 @@ export async function AIInterviewLanding() {
         </div>
         {freeAttempt ? <div className={styles.heroActions}>
           <Link href={`/medicforest/interview/reports/${encodeURIComponent(freeAttempt.id)}`} className={styles.primaryAction}><BookOpenCheck size={18} aria-hidden="true" /> Review answer <ArrowRight size={18} aria-hidden="true" /></Link>
-          <FeatureActionLink tier="trial" feature="Why Medicine? practice" href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.retryAction}><RotateCcw size={15} aria-hidden="true" /> Retry the challenge</FeatureActionLink>
+          {isPremium && <FeatureActionLink tier="premium" feature="Why Medicine? practice" href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.retryAction}><RotateCcw size={15} aria-hidden="true" /> Retry the challenge</FeatureActionLink>}
         </div> : <FeatureActionLink tier="trial" feature="Why Medicine? practice" href="/medicforest/interview/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Try the free Med interview <ArrowRight size={18} aria-hidden="true" /></FeatureActionLink>}
       </section>
       <UniversityCatalogue mode="practice" recentAttempts={recentUniversityAttempts} />

@@ -108,7 +108,7 @@ test("panel discussions mix linked topic groups without image tasks or probes", 
     assert.ok(selected.some(question => question.category === "Ethics & Professionalism"));
     assert.ok(["Strengths, Weaknesses & Resilience", "Personal Insight"].includes(selected.at(-1).subcategory));
     assert.ok(selected.every(question => !getQuestionStimulus(question.id) && questionEligible(question.text, emptyApplicant)));
-    assert.ok(selected.every(question => !/graph|chart|image|table|provided|shown/i.test(question.text)));
+    assert.ok(selected.every(question => !/\b(?:graph|chart|image|table|provided|shown)\b/i.test(question.text)));
     assert.equal(selectStationQuestions("panel-interview", 1200, String(seed), emptyApplicant).length, 8);
   }
   assert.ok(starts.size >= 3, "Panel order must vary");
@@ -130,6 +130,24 @@ test("extended mixed discussions use full-length varied question flows", () => {
     assert.equal(universityUsesPanelFlow(slug), false);
     assert.ok(universityStationSlugs(slug).every(station => station !== "panel-interview"));
   }
+});
+
+test("panels rotate skills and topic order instead of repeating teamwork and communication", () => {
+  const skills = new Set();
+  const orders = new Set();
+  let panelsWithoutTeamworkOrCommunication = 0;
+  for (let seed = 0; seed < 160; seed++) {
+    const selected = selectStationQuestions("panel-interview", 900, `variety-${seed}`, emptyApplicant);
+    assert.deepEqual(selected, selectStationQuestions("panel-interview", 900, `variety-${seed}`, emptyApplicant));
+    selected.forEach(question => skills.add(question.subcategory));
+    orders.add(selected.map(question => question.category).join("/"));
+    if (selected.every(question => !["Teamwork", "Communication & Empathy", "Working in Healthcare Teams"].includes(question.subcategory))) panelsWithoutTeamworkOrCommunication++;
+  }
+  for (const topic of ["Leadership", "Giving & Receiving Feedback", "Conflict & Difficult Conversations", "Prioritisation Stations", "Critical Thinking", "Strengths, Weaknesses & Resilience"]) {
+    assert.ok(skills.has(topic), `Panel selection must reach ${topic}`);
+  }
+  assert.ok(orders.size > 12, "Topic order must vary beyond four fixed routes");
+  assert.ok(panelsWithoutTeamworkOrCommunication > 30, "Teamwork and communication must be optional topics");
 });
 
 

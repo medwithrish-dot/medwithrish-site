@@ -283,12 +283,12 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   useEffect(() => {
     const controller = new AbortController();
     const attemptId = new URLSearchParams(window.location.search).get("attempt");
-    requestSession(`/api/interviews/session${attemptId ? `?attempt=${encodeURIComponent(attemptId)}` : ""}`, "GET", undefined, controller.signal)
+    requestSession(`/api/interviews/session${attemptId ? `?attempt=${encodeURIComponent(attemptId)}` : initialStationSlug === "why-medicine" ? "?station=why-medicine" : ""}`, "GET", undefined, controller.signal)
       .then((response) => { if (!controller.signal.aborted) applyResponse(response, true); })
       .catch((failure) => { if (!controller.signal.aborted && !(failure instanceof InterviewRequestError && failure.status === 401)) showError(failure); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [applyResponse, showError]);
+  }, [applyResponse, showError, initialStationSlug]);
 
   const clockDeadline = attempt?.status === "in_progress"
     ? Date.parse(attempt.startedAt) + (attempt.preparationSeconds + attempt.stationSeconds) * 1000

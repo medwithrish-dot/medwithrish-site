@@ -31,12 +31,12 @@ function load(file, mocks, cache = new Map()) {
   return loaded.exports;
 }
 
-function harness({ signedIn = false } = {}) {
+function harness({ signedIn = false, score = 91 } = {}) {
   const state = {
     userId: signedIn ? owner : null, authThrows: false, anonymousCalls: 0, signedInCalls: 0, reads: [], scoreFilter: null, writes: [], readError: null, writeError: null,
     rpcErrorCode: null, attemptPages: [], publicPreferences: [], adminReads: [], fallbackError: null,
   };
-  const rows = [{ rank: 1, display_name: "f.u.c.k", score: 91, completed_at: "2026-09-01T12:00:00Z", is_you: null, email: "private@example.test", user_id: "private-id" }];
+  const rows = [{ rank: 1, display_name: "f.u.c.k", score, completed_at: "2026-09-01T12:00:00Z", is_you: null, email: "private@example.test", user_id: "private-id" }];
   const result = () => ({ data: rows, error: state.rpcErrorCode ? { code: state.rpcErrorCode, message: "Missing RPC" } : state.readError && { code: "XX000", message: state.readError } });
   const query = table => {
     state.reads.push(table);
@@ -99,7 +99,7 @@ test("guests see only opted-in public scores and cannot save preferences", async
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.doesNotMatch(JSON.stringify(data), /private@example|private-id|user_id/);
-  assert.deepEqual(data.entries.map(({ display_name, is_you }) => [display_name, is_you]), [["Candidate", false]]);
+  assert.deepEqual(data.entries.map(({ display_name, is_you }) => [display_name, is_you]), [["Medwithrish", false], ["Candidate", false]]);
   assert.equal(data.preference, null);
   assert.equal(data.bestScore, null);
   assert.equal(api.state.anonymousCalls, 1);
@@ -110,6 +110,21 @@ test("guests see only opted-in public scores and cannot save preferences", async
   api.state.authThrows = true;
   assert.equal((await api.route.GET()).status, 200);
   assert.equal(api.state.anonymousCalls, 2);
+});
+
+test("Medwithrish's 96% benchmark ranks by score and does not displace earlier ties", async () => {
+  for (const score of [99, 96, 80]) {
+    const api = harness({ score });
+    const { entries } = await (await api.route.GET()).json();
+    assert.equal(entries.length, 2);
+    assert.deepEqual(entries.map(row => row.rank), [1, 2]);
+    assert.ok(entries[0].score >= entries[1].score);
+    assert.equal(entries[score >= 96 ? 1 : 0].display_name, "Medwithrish");
+    const benchmark = entries.find(row => row.is_benchmark);
+    assert.equal(benchmark.score, 96);
+    assert.equal(benchmark.completed_at, null);
+    assert.equal(benchmark.is_you, false);
+  }
 });
 
 test("missing retry-aware RPC includes challenge retries, uses current scores only, honours opt-in and strips private identifiers", async () => {
@@ -130,7 +145,7 @@ test("missing retry-aware RPC includes challenge retries, uses current scores on
   const response = await api.route.GET();
   assert.equal(response.status, 200);
   const data = await response.json();
-  assert.deepEqual(data.entries.map(row => [row.rank, row.display_name, row.score, row.is_you]), [[1, "Rish", 90, true], [2, "Student", 80, false]]);
+  assert.deepEqual(data.entries.map(row => [row.rank, row.display_name, row.score, row.is_you]), [[1, "Medwithrish", 96, false], [2, "Rish", 90, true], [3, "Student", 80, false]]);
   assert.doesNotMatch(JSON.stringify(data.entries), /user_id|private-user|Hidden/);
   assert.deepEqual(api.state.adminReads, [["interview_attempts", "user_id,score,completed_at"], ["interview_preferences", "user_id,display_name"]]);
 });
@@ -138,12 +153,12 @@ test("missing retry-aware RPC includes challenge retries, uses current scores on
 test("compatibility paginates duplicate attempts and returns an honest empty board", async () => {
   const api = harness();
   api.state.rpcErrorCode = "42883";
-  assert.deepEqual((await (await api.route.GET()).json()).entries, []);
+  assert.deepEqual((await (await api.route.GET()).json()).entries.map(row => [row.display_name, row.score, row.is_benchmark]), [["Medwithrish", 96, true]]);
   api.state.attemptPages = [Array.from({ length: 200 }, () => ({ user_id: owner, score: 90, completed_at: "2026-10-08T09:00:00Z" })), [{ user_id: "other", score: 80, completed_at: "2026-10-08T10:00:00Z" }]];
   api.state.publicPreferences = [{ user_id: owner, display_name: "Rish", leaderboard_opt_in: true }, { user_id: "other", display_name: "Student", leaderboard_opt_in: true }];
   const data = await (await api.route.GET()).json();
-  assert.equal(data.entries.length, 2);
-  assert.equal(data.entries[1].rank, 2);
+  assert.equal(data.entries.length, 3);
+  assert.equal(data.entries[2].rank, 3);
   api.state.fallbackError = { code: "XX000", message: "Private database detail" };
   const failed = await api.route.GET();
   assert.equal(failed.status, 503);
@@ -170,7 +185,8 @@ test("compatibility limits the board to 100 people and bounds database work", as
 test("signed-in members see their own preference and save only their own validated name", async () => {
   const api = harness({ signedIn: true });
   const data = await (await api.route.GET()).json();
-  assert.equal(data.entries[0].is_you, true);
+  assert.equal(data.entries[0].is_benchmark, true);
+  assert.equal(data.entries[1].is_you, true);
   assert.deepEqual(data.preference, { display_name: "Rish", leaderboard_opt_in: true });
   assert.equal(data.bestScore, 88.5);
   assert.deepEqual(api.state.scoreFilter, ["score", "is", null]);
@@ -194,6 +210,24 @@ test("leaderboard read and write failures never expose database details", async 
   const write = await api.patch({ displayName: "Rish", optIn: true });
   assert.equal(write.status, 503);
   assert.doesNotMatch((await write.json()).error, /Private database diagnostic/);
+});
+
+test("free challenge links recover the lifetime attempt and preserve Premium retries", async () => {
+  for (const premium of [false, true]) for (const status of ["completed", "failed", "grading", "in_progress"]) {
+    let reads = 0;
+    const query = {
+      select() { return this; }, eq() { return this; }, order() { return this; }, limit() { return this; },
+      maybeSingle: async () => { reads++; return { data: { id: "saved-answer", status }, error: null }; },
+    };
+    const service = load("utils/interviews/challenge-access.ts", {
+      "@/utils/medicforest/premium-access": { getMedicForestEntitlements: async () => ({ userId: owner, isPremium: premium }) },
+      "@/utils/supabase/server": { createClient: async () => ({ from: () => query }) },
+      "./server": { databaseError: error => { throw error; } },
+    });
+    assert.equal(await service.freeChallengeDestination(), premium ? null : status === "in_progress"
+      ? "/medicforest/interview/ai-interviews?attempt=saved-answer" : "/medicforest/interview/reports/saved-answer");
+    assert.equal(reads, premium ? 0 : 1);
+  }
 });
 
 for (const failed of [false, true]) test(failed ? "a failed load does not pretend the leaderboard is empty" : "the guest leaderboard shows a sign-in action instead of editable preferences", async () => {

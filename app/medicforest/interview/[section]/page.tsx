@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { freeChallengeDestination } from "@/utils/interviews/challenge-access";
 import { InterviewQuestionBankDashboard, AIInterviewRunner, InterviewGroups, InterviewLeaderboard, InterviewGuides } from "../_components/InterviewSectionClients";
 import { getMedicForestEntitlements } from "@/utils/medicforest/premium-access";
 import { AIInterviewLanding } from "../_components/AIInterviewLanding";
@@ -28,6 +29,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const config = Object.hasOwn(pages, section) ? pages[section] : undefined;
   if (!config) notFound();
   const search = await searchParams;
+  const challengeDestination = section === "leaderboard" || (section === "ai-interviews" && single(search.station) === "why-medicine" && !single(search.attempt))
+    ? await freeChallengeDestination() : null;
+  if (section === "ai-interviews" && challengeDestination) redirect(challengeDestination);
   if (section === "ai-interviews" && isAcademicInterview(single(search.university)) && !single(search.attempt)) {
     return <InterviewShell {...config}><p className="mb-5 text-sm text-[#526b72]">Oxford and Cambridge academic interviews will have a separate Med interview format.</p><AIInterviewLanding /></InterviewShell>;
   }
@@ -41,7 +45,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} initialMockCircuit={single(search.setup) === "mock"} />
       : <AIInterviewLanding />)
       : section === "groups" ? <InterviewGroups />
-      : section === "leaderboard" ? <InterviewLeaderboard />
+      : section === "leaderboard" ? <InterviewLeaderboard challengeDestination={challengeDestination} />
       : section === "guides" ? <InterviewGuides />
       : <InterviewPreparationViews view={section as "progress" | "plan" | "notifications"} />}
   </InterviewShell>;

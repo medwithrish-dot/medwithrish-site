@@ -21,10 +21,16 @@ export function parsePreviousAnswerInterrupt(text: string): string | null {
   return text.trim().slice(match[0].length).replace(/^(?:please[,.!?]?\s*)?(?:i (?:want|would like) to|can i) add (?:something )?to (?:my |the )?previous answer[,.!?]?\s*/i, "").trim();
 }
 
-export function automaticInterruption(text: string): string | null {
+export function automaticInterruption(text: string, confidence?: number): string | null {
+  // Browsers often omit confidence or report zero for interim text. When a
+  // positive estimate is available, reject uncertain recognition during playback.
+  if (confidence !== undefined && confidence > 0 && confidence < 0.5) return null;
+  if (/^\s*(?:\[|\()?\s*(?:background noise|noise|cough(?:ing)?|laugh(?:ter|ing)?|music|inaudible|unintelligible)\s*(?:\]|\))?\s*[.!?]*\s*$/i.test(text)) return null;
   const command = parsePreviousAnswerInterrupt(text);
   if (command !== null) return command;
-  return (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? []).length >= 2 ? text.trim() : null;
+  const words = (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? [])
+    .filter(word => !/^(?:u+m+|u+h+|e+r+m*|h+m+|m+m+|a+h+|o+h+)$/i.test(word));
+  return words.length >= 2 ? text.trim() : null;
 }
 
 /** Ignore recognized fragments of the interviewer's current/recent playback. */

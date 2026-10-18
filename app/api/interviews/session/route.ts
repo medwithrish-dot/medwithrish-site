@@ -40,13 +40,24 @@ async function completeQuestionBankProgress(
 export async function GET(request: Request) {
   try {
     const { user, admin, isPremium } = await interviewContext();
-    const id = new URL(request.url).searchParams.get("attempt");
+    const search = new URL(request.url).searchParams;
+    const id = search.get("attempt");
     if (id && !validId(id)) throw new InterviewError("Invalid Med interview ID");
     let query = admin.from("interview_attempts").select("*").eq("user_id", user.id);
     query = id ? query.eq("id", id) : query.in("status", ["in_progress", "grading"]).order("started_at", { ascending: false }).limit(1);
-    const { data, error } = await query.maybeSingle();
+    const result = await query.maybeSingle();
+    let data = result.data;
+    const error = result.error;
     if (error) databaseError(error);
     if (id && !data) throw new InterviewError("Med Interview not found", 404);
+    // A fresh URL must recover the used trial, rather than opening a new lobby
+    // (including its practice preview) for a free account.
+    if (!id && !data && !isPremium && search.get("station") === "why-medicine") {
+      const trial = await admin.from("interview_attempts").select("*")
+        .eq("user_id", user.id).eq("mode", "free").limit(1).maybeSingle();
+      if (trial.error) databaseError(trial.error);
+      data = trial.data;
+    }
     return interviewJson({ attempt: data ? toInterviewAttempt(data) : null, configured: interviewAiConfigured(), isPremium });
   } catch (error) { return interviewFailure(error); }
 }

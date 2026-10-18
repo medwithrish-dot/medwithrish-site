@@ -41,31 +41,44 @@ function matchingQuestions(stationSlug: string) {
     || (rule.subcategories?.includes(question.subcategory) ?? false));
 }
 
-// Authored topic routes vary the order while keeping neighbouring topics related.
-// Every question comes from the bank; panel planning needs no provider request.
-const PANEL_ROUTES: readonly (readonly (readonly InterviewQuestion["subcategory"][])[])[] = [
-  [["Motivation for Medicine"], ["Role of a Doctor"], ["Communication & Empathy"], ["Consent, Capacity & Confidentiality"], ["Ethical & Professional Scenarios"], ["Working in Healthcare Teams"], ["Healthcare Resources & Priorities"], ["Strengths, Weaknesses & Resilience"]],
-  [["NHS Structure & Challenges"], ["Health Inequalities"], ["Organ Donation & Resource Allocation"], ["Ethical & Professional Scenarios"], ["Communication & Empathy"], ["Working in Healthcare Teams"], ["Role of a Doctor"], ["Personal Insight"]],
-  [["Teamwork"], ["Communication & Empathy"], ["Professionalism & Professional Boundaries"], ["Safeguarding & Duty of Candour"], ["Role of a Doctor"], ["Motivation for Medicine"], ["Technology, AI & Digital Health"], ["Strengths, Weaknesses & Resilience"]],
-  [["Motivation for Medicine"], ["Work Experience & Reflection", "Personal Insight"], ["Working in Healthcare Teams"], ["Ethical & Professional Scenarios"], ["Consent, Capacity & Confidentiality"], ["Communication & Empathy"], ["Health Inequalities"], ["Personal Insight"]],
+// Balance broad topic areas, then vary their order, subcategories and questions.
+// Choose subcategories before questions so large teamwork/communication pools
+// cannot crowd out leadership, feedback, judgement or critical thinking.
+const PANEL_TOPIC_AREAS: readonly (readonly InterviewQuestion["subcategory"][])[] = [
+  ["Motivation for Medicine", "Medical School & Course", "Work Experience & Reflection"],
+  ["Communication & Empathy", "Teamwork", "Leadership", "Conflict & Difficult Conversations", "Giving & Receiving Feedback", "Working in Healthcare Teams", "Prioritisation Stations"],
+  ["Core Medical Ethics", "Consent, Capacity & Confidentiality", "Safeguarding & Duty of Candour", "Professionalism & Professional Boundaries", "Ethical & Professional Scenarios", "Situational Judgement", "End-of-Life Care & Assisted Dying"],
+  ["NHS Structure & Challenges", "Role of a Doctor", "Health Inequalities", "Public Health", "Healthcare Policy & Funding", "Healthcare Resources & Priorities", "Current NHS Issues", "Workforce Issues"],
+  ["Research & Evidence", "Critical Appraisal", "Critical Thinking", "Technology, AI & Digital Health", "New Treatments & Innovation", "Public Health Debates"],
 ];
+const PANEL_REFLECTION_TOPICS: readonly InterviewQuestion["subcategory"][] = ["Strengths, Weaknesses & Resilience", "Personal Insight"];
 
 export function selectPanelQuestions(stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
   const count = panelQuestionCount(stationSeconds);
-  // For a 15-minute panel: six prompts including a closing reflection.
-  const route = PANEL_ROUTES[seedNumber(`${seed}:route`) % PANEL_ROUTES.length];
-  const topics = [...Array.from({ length: count - 1 }, (_, index) => route[index % (route.length - 1)]), route.at(-1)!];
-  const used = new Set<string>();
-  return topics.flatMap((subcategories, index) => {
-    const pool = questions.filter(question => subcategories.includes(question.subcategory)
-      && !used.has(question.id) && !getQuestionStimulus(question.id)
-      && !/\b(?:graph|chart|image|photograph|diagram|table|article|role.?play|provided|shown|above|below)\b/i.test(question.text)
-      && questionEligible(question.text, applicant));
-    if (!pool.length) return [];
-    const picked = pool[seedNumber(`${seed}:panel:${index}`) % pool.length];
-    used.add(picked.id);
-    return [picked];
-  });
+  const eligible = questions.filter(question => !getQuestionStimulus(question.id)
+    && !/\b(?:graph|chart|image|photograph|diagram|table|article|role.?play|provided|shown|above|below)\b/i.test(question.text)
+    && questionEligible(question.text, applicant));
+  const selected: InterviewQuestion[] = [];
+  const usedTopics = new Set<InterviewQuestion["subcategory"]>();
+  const pick = (topics: readonly InterviewQuestion["subcategory"][], index: number) => {
+    const available = topics.map(topic => ({ topic, pool: eligible.filter(question => question.subcategory === topic && !selected.includes(question)) }))
+      .filter(choice => choice.pool.length);
+    const fresh = available.filter(choice => !usedTopics.has(choice.topic));
+    const choices = fresh.length ? fresh : available;
+    if (!choices.length) return;
+    const choice = choices[seedNumber(`${seed}:topic:${index}`) % choices.length];
+    const question = choice.pool[seedNumber(`${seed}:question:${index}`) % choice.pool.length];
+    usedTopics.add(choice.topic);
+    selected.push(question);
+  };
+  for (let index = 0; index < count - 1; index++) {
+    const round = Math.floor(index / PANEL_TOPIC_AREAS.length);
+    const areas = PANEL_TOPIC_AREAS.map((topics, area) => ({ topics, order: seedNumber(`${seed}:round:${round}:area:${area}`) }))
+      .toSorted((a, b) => a.order - b.order);
+    pick(areas[index % areas.length].topics, index);
+  }
+  pick(PANEL_REFLECTION_TOPICS, count - 1);
+  return selected;
 }
 
 /**

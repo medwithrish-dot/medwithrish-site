@@ -11,7 +11,12 @@ type Preference = { display_name: string; leaderboard_opt_in: boolean };
 let publicClient: ReturnType<typeof createSupabaseClient> | null = null;
 
 function publicEntries(rows: BoardRow[]) {
-  return rows.map((entry) => ({ rank: entry.rank, display_name: safePublicName(entry.display_name), score: entry.score, completed_at: entry.completed_at, is_you: entry.is_you === true }));
+  const entries = rows.map((entry) => ({ rank: entry.rank, display_name: safePublicName(entry.display_name), score: entry.score, completed_at: entry.completed_at as string | null, is_you: entry.is_you === true, is_benchmark: false }));
+  // The challenge's published reference score belongs on the board without
+  // inventing a user account, private answer or AI-marked attempt.
+  entries.push({ rank: 0, display_name: "Medwithrish", score: 96, completed_at: null, is_you: false, is_benchmark: true });
+  return entries.sort((a, b) => b.score - a.score).slice(0, 100)
+    .map((entry, index) => ({ ...entry, rank: index + 1 }));
 }
 
 // Include Premium retries of the same three-minute challenge, but exclude

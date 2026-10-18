@@ -265,7 +265,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
           const playback = playbackRef.current;
           const interrupt = playback?.onInterrupt ?? overlappingResults.get(index);
           if (interrupt) {
-            const continuation = automaticInterruption(text);
+            const continuation = automaticInterruption(text, result[0].confidence);
             if (continuation === null) {
               if (text) overlappingResults.set(index, interrupt);
               continue;
@@ -278,7 +278,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
             // answer first, then commit its complete text exactly once at final.
             interrupt("");
           } else if (playback && text) {
-            if (playback.text !== DONE_PROMPT && automaticInterruption(text) === null) continue;
+            if (playback.text !== DONE_PROMPT && automaticInterruption(text, result[0].confidence) === null) continue;
             stopSpeaking();
             playback.onComplete?.();
           }

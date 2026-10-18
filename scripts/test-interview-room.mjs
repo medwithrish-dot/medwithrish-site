@@ -26,6 +26,7 @@ test("challenge landing offers answer review after submission, grading, failure 
     const jsx = (type, props) => ({ type, props });
     new Function("require", "module", "exports", output)(name => {
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
+      if (name.endsWith("premium-access")) return { getMedicForestEntitlements: async () => ({ isPremium: false }) };
       if (name.endsWith("history")) return { interviewHistory: async () => ({ attempts: [{ id: "saved-answer", status, mode, stationSeconds, stationSlug: "why-medicine", completedAt: status === "in_progress" ? null : "2026-10-12", answerSubmittedAt: "2026-10-12" }] }) };
       if (name.endsWith("why-medicine-challenge")) return { WHY_MEDICINE_SECONDS };
       if (name.endsWith(".module.css")) return { default: {} };
@@ -46,15 +47,18 @@ function sessionRoute({ premium = true, previous = null, applicant = null } = {}
   const filters = [];
   const mutations = [];
   const questionProgress = [];
+  let activeLookup = false;
   class InterviewError extends Error {
     constructor(message, status = 400) { super(message); this.status = status; }
   }
   const query = {
-    select() { return this; },
+    select() { activeLookup = false; return this; },
+    in() { activeLookup = true; return this; },
+    order() { return this; },
     limit() { return this; },
     eq(key, value) { filters.push([key, value]); return this; },
     update(value) { mutations.push(value); return this; },
-    async maybeSingle() { return { data: previous, error: null }; },
+    async maybeSingle() { return { data: activeLookup && previous?.status !== "in_progress" ? null : previous, error: null }; },
   };
   const server = {
     InterviewError,
@@ -88,10 +92,23 @@ function sessionRoute({ premium = true, previous = null, applicant = null } = {}
   const route = load(resolve(root, "app/api/interviews/session/route.ts"));
   return {
     reservations, filters, mutations, questionProgress,
+    get: (search = "?station=why-medicine") => route.GET(new Request(`http://localhost/api/interviews/session${search}`)),
     post: body => route.POST(new Request("http://localhost/api/interviews/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
     patch: body => route.PATCH(new Request("http://localhost/api/interviews/session", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
   };
 }
+
+test("fresh session URLs recover a free user's saved trial while Premium can restart", async () => {
+  for (const status of ["completed", "failed", "grading", "in_progress"]) {
+    const previous = { id: "saved-answer", circuit_id: circuitId, status, mode: "free" };
+    const free = sessionRoute({ premium: false, previous });
+    assert.equal((await (await free.get()).json()).attempt.id, "saved-answer", status);
+    assert.equal(free.reservations.length, 0);
+    if (status !== "in_progress" && status !== "grading") assert.equal((await (await free.get("")).json()).attempt, null, "Other setup previews remain available");
+    const premium = sessionRoute({ premium: true, previous });
+    assert.equal((await (await premium.get()).json()).attempt?.id ?? null, status === "in_progress" ? "saved-answer" : null);
+  }
+});
 
 test("a custom circuit reserves the chosen first topic and count", async () => {
   const api = sessionRoute();
