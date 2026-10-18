@@ -21,7 +21,7 @@ export async function InterviewHistoryViews() {
         <div className="border-b border-[#e6edec] p-6">
           <h2 className="font-bold">Your saved interviews</h2>
           <p className="mt-2 text-sm leading-6 text-[#62777e]">
-            Every saved attempt stays here when you retry a station. Revisit your transcript, answer framework and feedback, or find a particular university below.
+            Choose AI interviews or Question bank below. Resume paused interviews, or revisit saved answers and feedback.
           </p>
         </div>
         {!attempts.length ? (

@@ -25,7 +25,7 @@ type Props = {
   saved: boolean; busy: string; preview: boolean; readAloud: boolean;
   onToggleMicrophone: () => void;
   setReadAloud: (enabled: boolean) => void; onAnswer: (value: string) => void;
-  onSubmit: () => void; onLeave: () => void;
+  onSubmit: () => void; onSaveExit: () => void; onLeave: () => void;
   wordCount: number; onSkipPreparation: () => void;
   followUpBusy: boolean; followUpNotice: string; awaitingDone: boolean; prompting: boolean; micWanted: boolean; onReadQuestion: () => void;
   onDone: () => void; onConfirmDone: () => void; onKeepAnswering: () => void;
@@ -158,7 +158,7 @@ export function AIInterviewCall(props: Props) {
           <div className={styles.deviceControls}>
             <button type="button" disabled={(!active && !props.micWanted && !speech.listening) || microphonePending || !speech.supported} aria-label={microphoneLabel} title={microphoneLabel} aria-pressed={speech.listening} className={speech.listening ? styles.controlActive : ""} onClick={props.onToggleMicrophone}>{microphonePending ? <Loader2 size={21} className="animate-spin" /> : speech.listening ? <Mic size={21} /> : <MicOff size={21} />}<span>{props.micWanted && !speech.error ? "Stop mic" : "Start mic"}</span></button>
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
-            <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Finish station" title="Finish station" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish</span></button>
+            <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Leave or finish interview" title="Leave or finish interview" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish / exit</span></button>
           </div>
           {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
           {devices.cameraError && <p role="status" className={styles.callNotice}>{devices.cameraError}</p>}
@@ -211,14 +211,13 @@ export function AIInterviewCall(props: Props) {
       }}>
         <button type="button" autoFocus aria-label="Return to Med interview" className={styles.closeDialog} disabled={Boolean(busy)} onClick={closeEndDialog}><X size={19} /></button>
         <span className={styles.sectionIcon}><Check size={22} /></span>
-        <h2 id="finish-title">Ready to reflect?</h2>
-        <p>{preview ? "Review your preview transcript and markscheme. Sample AI feedback is optional." : "Save your transcript and open the station review, with the markscheme. You can choose to generate AI feedback there."}</p>
+        <h2 id="finish-title">{preview ? "Ready to reflect?" : "Leave or finish your interview?"}</h2>
+        <p>{preview ? "Review your preview transcript and markscheme. Sample AI feedback is optional." : "Save and exit to pause the timer and return later from Progress. Finish and review when you are ready to submit your answers."}</p>
         <div className={styles.finishSummary}><span>{answers.filter((item) => item.answer.trim()).length} / {answers.length} prompts answered</span><span>{props.wordCount} words</span></div>
         {!preview && props.wordCount < 20 && <p className={styles.deviceError}>Add at least 20 words across your answers to receive feedback.</p>}
         <button type="button" className={styles.primaryButton} disabled={Boolean(busy)} onClick={() => { closeEndDialog(); props.onSubmit(); }}>{busy ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}Finish & review</button>
-        <button type="button" className={styles.secondaryButton} disabled={Boolean(busy)} onClick={closeEndDialog}>Keep practising</button>
-        <button type="button" className={styles.leaveButton} disabled={Boolean(busy)} onClick={() => { closeEndDialog(); props.onLeave(); }}>{preview ? "Leave preview" : "End without review"}</button>
-        {!preview && <p className={styles.deviceError}>Ending now closes this station. You can start a new one from setup.</p>}
+        {!preview && <button type="button" className={styles.secondaryButton} disabled={Boolean(busy) || props.followUpBusy} onClick={() => { closeEndDialog(); props.onSaveExit(); }}>Save and exit</button>}
+        <button type="button" className={styles.leaveButton} disabled={Boolean(busy)} onClick={preview ? () => { closeEndDialog(); props.onLeave(); } : closeEndDialog}>{preview ? "Leave preview" : "Keep practising"}</button>
       </div>
     </div>}
   </div>;

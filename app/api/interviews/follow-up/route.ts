@@ -37,6 +37,7 @@ export async function POST(request: Request) {
     };
     const validateWindow = (current: typeof row) => {
       if (current.status !== "in_progress") throw new InterviewError("This station is already submitted.", 409);
+      if (current.metrics?.pausedAt) throw new InterviewError("Resume your interview before requesting a follow-up.", 409);
       const readyAt = Date.parse(current.started_at) + Number(current.preparation_seconds) * 1000;
       const endsAt = readyAt + Number(current.station_seconds) * 1000;
       if (!Number.isFinite(readyAt) || !Number.isFinite(endsAt)) throw new InterviewError("The Med interview timing could not be checked.", 409);
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
     const bit = 1 << questionNumber;
     if (mask & bit) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
     await requireAiUsage(admin, user.id, "generation");
-    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress");
+    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("metrics", JSON.stringify(row.metrics ?? {}));
     claim = row.last_error == null ? claim.is("last_error", null) : claim.eq("last_error", row.last_error);
     const { data: claimed, error: claimError } = await claim.select("id").maybeSingle();
     if (claimError) databaseError(claimError);
@@ -96,7 +97,7 @@ export async function POST(request: Request) {
       const questions = [...row.questions];
       if (questions.length >= originals.length * 2 || questions.includes(followUp)) throw new InterviewError("Continue with the remaining Med interview questions.", 409);
       questions.splice(questions.indexOf(question) + 1, 0, followUp);
-      const { data, error } = await admin.from("interview_attempts").update({ questions }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("questions", JSON.stringify(row.questions)).select().maybeSingle();
+      const { data, error } = await admin.from("interview_attempts").update({ questions }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("questions", JSON.stringify(row.questions)).eq("metrics", JSON.stringify(row.metrics ?? {})).select().maybeSingle();
       if (error) databaseError(error);
       if (data) return reply(data, followUp, source);
     }

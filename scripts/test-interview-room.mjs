@@ -42,7 +42,7 @@ const circuitId = "12345678-1234-4234-8234-123456789012";
 
 // Run the real route and catalogue, substituting only account/database services.
 // No credentials, writes to a real account, or AI provider are needed.
-function sessionRoute({ premium = true, previous = null, applicant = null } = {}) {
+function sessionRoute({ premium = true, previous = null, applicant = null, conflict = false } = {}) {
   const reservations = [];
   const filters = [];
   const mutations = [];
@@ -58,7 +58,7 @@ function sessionRoute({ premium = true, previous = null, applicant = null } = {}
     limit() { return this; },
     eq(key, value) { filters.push([key, value]); return this; },
     update(value) { mutations.push(value); return this; },
-    async maybeSingle() { return { data: activeLookup && previous?.status !== "in_progress" ? null : previous, error: null }; },
+    async maybeSingle() { return { data: (conflict && mutations.length) || (activeLookup && previous?.status !== "in_progress") ? null : previous, error: null }; },
   };
   const server = {
     InterviewError,
@@ -108,6 +108,54 @@ test("fresh session URLs recover a free user's saved trial while Premium can res
     const premium = sessionRoute({ premium: true, previous });
     assert.equal((await (await premium.get()).json()).attempt?.id ?? null, status === "in_progress" ? "saved-answer" : null);
   }
+});
+
+test("save and exit preserves answers, question position and the original timer allowance", async () => {
+  const previous = { id: circuitId, status: "in_progress", started_at: new Date(Date.now() - 60_000).toISOString(), preparation_seconds: 0, station_seconds: 480,
+    questions: ["First question?", "Second question?"], answers: [], metrics: { totalPausedMs: 1234 }, };
+  const api = sessionRoute({ previous });
+  assert.equal((await api.patch({ attemptId: circuitId, action: "pause", questionIndex: 1, answers: [{ question: "Second question?", answer: "My saved answer" }], metrics: { pausedAt: 1, stationSeconds: 9000, wordCount: 3 } })).status, 200);
+  const saved = api.mutations[0];
+  assert.ok(Math.abs(saved.metrics.pausedAt - Date.now()) < 1000);
+  assert.equal(saved.metrics.resumeQuestionIndex, 1);
+  assert.equal(saved.metrics.totalPausedMs, 1234);
+  assert.equal(saved.metrics.originalStartedAt, Date.parse(previous.started_at));
+  assert.equal(saved.answers[1].answer, "My saved answer");
+  assert.equal(saved.started_at, undefined);
+  assert.equal(saved.station_seconds, undefined);
+  assert.equal(saved.status, undefined);
+  assert.ok(api.filters.some(([key, value]) => key === "metrics" && value === JSON.stringify(previous.metrics)));
+});
+
+test("resuming after days preserves remaining time and duplicate resumes do not reset it", async () => {
+  const start = Date.now() - 3 * 86_400_000;
+  const previous = { id: circuitId, status: "in_progress", started_at: new Date(start).toISOString(), preparation_seconds: 0, station_seconds: 480,
+    questions: ["First question?"], answers: [], metrics: { pausedAt: start + 60_000, totalPausedMs: 1200 } };
+  const api = sessionRoute({ previous });
+  assert.equal((await api.patch({ attemptId: circuitId, action: "resume", answers: [] })).status, 200);
+  const resumed = api.mutations[0];
+  assert.ok(Math.abs(Date.parse(resumed.started_at) - (Date.now() - 60_000)) < 1000);
+  assert.equal(resumed.metrics.pausedAt, 0);
+  assert.ok(resumed.metrics.totalPausedMs > 2 * 86_400_000);
+  assert.equal(resumed.answers, undefined);
+  const active = sessionRoute({ previous: { ...previous, metrics: resumed.metrics } });
+  assert.equal((await active.patch({ attemptId: circuitId, action: "resume", answers: [] })).status, 200);
+  assert.equal(active.mutations.length, 0);
+});
+
+test("paused interviews reject stale edits, submission and conflicting resume updates", async () => {
+  const previous = { id: circuitId, status: "in_progress", started_at: new Date().toISOString(), preparation_seconds: 0, station_seconds: 480,
+    questions: ["First question?"], answers: [], metrics: { pausedAt: Date.now() } };
+  const api = sessionRoute({ previous });
+  for (const finish of [false, true]) assert.equal((await api.patch({ attemptId: circuitId, answers: [], finish })).status, 409);
+  assert.equal(api.mutations.length, 0);
+  assert.equal((await api.patch({ attemptId: circuitId, action: "pause", answers: [] })).status, 200);
+  assert.equal(api.mutations.length, 0);
+  const race = sessionRoute({ previous, conflict: true });
+  assert.equal((await race.patch({ attemptId: circuitId, action: "resume", answers: [] })).status, 409);
+  const expired = sessionRoute({ previous: { ...previous, started_at: new Date(Date.now() - 600_000).toISOString(), metrics: {} } });
+  assert.equal((await expired.patch({ attemptId: circuitId, action: "pause", questionIndex: 0, answers: [] })).status, 409);
+  assert.equal(expired.mutations.length, 0);
 });
 
 test("a custom circuit reserves the chosen first topic and count", async () => {
@@ -277,7 +325,7 @@ test("an older tab's autosave preserves a probe answer it has not seen", async (
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", voiceSupported = false, delayedVoice = false, questions = ["Why medicine?"], initialDraft, freshSpeechObjects = false } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", voiceSupported = false, delayedVoice = false, questions = ["Why medicine?"], initialDraft, freshSpeechObjects = false, paused = false } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
@@ -302,7 +350,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
     title: "Why medicine?", startedAt: new Date().toISOString(), completedAt: null, preparationSeconds,
     stationSeconds: 480, breakSeconds: 0, questions, answers: [],
-    stationIndex: 0, stationCount: 1, feedback: null, nextAvailableAt: null,
+    stationIndex: 0, stationCount: 1, feedback: null, nextAvailableAt: null, metrics: paused ? { pausedAt: Date.now(), resumeQuestionIndex: 0 } : {},
   };
   if (initialDraft) storage.set(`medicforest-interview-draft:${circuitId}`, JSON.stringify(initialDraft));
   const memo = (factory, dependencies) => {
@@ -368,7 +416,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     localStorage: { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
     document: { addEventListener() {}, removeEventListener() {} },
     window: {
-      dispatchEvent: () => true, location: { search: "", pathname: "/medicforest/interview/ai-interviews" }, setTimeout: () => 1, clearTimeout() {},
+      dispatchEvent: () => true, location: { search: "", pathname: "/medicforest/interview/ai-interviews", assign: url => { currentUrl = url; } }, setTimeout: () => 1, clearTimeout() {},
       history: { replaceState: (_state, _title, url) => { currentUrl = url; } },
       setInterval: (callback, milliseconds) => { if (milliseconds === 15_000) autosaveRegistrations++; intervals.set(milliseconds, callback); return milliseconds; },
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
@@ -398,7 +446,9 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       const body = JSON.parse(options.body);
       return new Promise((resolve, reject) => requests.push({
         body, reject, complete: () => {
-          attempt.answers = body.answers;
+          if (body.action !== "resume") attempt.answers = body.answers;
+          if (body.action === "pause") attempt.metrics = { ...body.metrics, pausedAt: Date.now(), resumeQuestionIndex: body.questionIndex };
+          if (body.action === "resume") attempt.metrics = { ...attempt.metrics, pausedAt: 0 };
           if (body.finish) Object.assign(attempt, { status: "submitted", completedAt: new Date().toISOString() });
           resolve(Response.json({ attempt: { ...attempt } }));
         },
@@ -424,7 +474,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const findCall = node => findComponent(node, "interview-call");
   const findReview = node => findComponent(node, "interview-review");
   const call = findCall(tree);
-  if (hasAttempt) assert.ok(call || findReview(tree));
+  if (hasAttempt && !paused) assert.ok(call || findReview(tree));
   return {
     requests, sessionReads, leaveRequests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
     get currentUrl() { return currentUrl; },
@@ -432,7 +482,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
     get recognitionStops() { return recognitionStops; },
-    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(), leave: () => call.onLeave(),
+    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(), leave: () => call.onLeave(), saveExit: () => call.onSaveExit(),
     finalSpeech: text => { pendingSpeech = text; },
     completeVoice: () => finishVoice?.(),
     interruptVoice: text => {
@@ -444,6 +494,44 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
   };
 }
+
+test("Save and exit waits for final speech and account saving before opening Progress", async () => {
+  const room = await autosaveRoom();
+  room.edit("My typed answer.");
+  room.finalSpeech("My final spoken detail.");
+  room.saveExit();
+  await room.flush();
+  assert.equal(room.requests.length, 1);
+  assert.equal(room.requests[0].body.action, "pause");
+  assert.match(room.requests[0].body.answers[0].answer, /My typed answer.*My final spoken detail/);
+  assert.equal(room.requests[0].body.questionIndex, 0);
+  assert.doesNotMatch(room.currentUrl, /\/progress/);
+  assert.equal(room.leaveRequests.length, 0, "Save and exit must never abandon the station");
+  room.requests[0].complete();
+  await room.flush();
+  assert.equal(room.currentUrl, "/medicforest/interview/progress");
+});
+
+test("failed Save and exit keeps the interview and transcript available to retry", async () => {
+  const room = await autosaveRoom();
+  room.edit("Keep this answer safe.");
+  room.saveExit();
+  await room.flush();
+  room.requests[0].reject(new Error("Saving unavailable"));
+  await room.flush();
+  assert.doesNotMatch(room.currentUrl, /\/progress/);
+  assert.equal(room.latestCall().answers[0].answer, "Keep this answer safe.");
+  assert.equal(room.leaveRequests.length, 0);
+});
+
+test("opening a paused interview waits for Resume before starting the mic or timer", async () => {
+  const room = await autosaveRoom({ paused: true });
+  assert.equal(room.latestCall(), null);
+  assert.equal(room.latestReview(), null);
+  assert.equal(room.microphoneRequests, 0);
+  assert.equal(room.autosaveRegistrations, 0);
+  assert.equal(room.requests.length, 0);
+});
 
 test("frequent clock and speech renders cannot postpone the 15-second account autosave", async () => {
   const room = await autosaveRoom({ freshSpeechObjects: true });

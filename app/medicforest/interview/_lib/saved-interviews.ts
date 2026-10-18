@@ -5,6 +5,7 @@ export type SavedInterviewSummary = Pick<InterviewAttempt, "id" | "title" | "sta
   startedAtLabel: string;
   feedbackScore: number | null;
   canResume: boolean;
+  paused?: boolean;
   circuitId?: string;
   stationIndex?: number;
   stationCount?: number;
@@ -38,12 +39,16 @@ export function groupSavedInterviews(attempts: SavedInterviewSummary[]) {
 
 export type SavedInterviewStatus = "all" | "feedback" | "saved" | "in_progress";
 
+export function filterSavedInterviewSource(attempts: SavedInterviewSummary[], source: "ai" | "question-bank") {
+  return attempts.filter(attempt => (attempt.stationSlug === "question-bank-feedback") === (source === "question-bank"));
+}
+
 export function canResumeSavedInterview(
-  attempt: Pick<InterviewAttempt, "status" | "startedAt" | "preparationSeconds" | "stationSeconds">,
+  attempt: Pick<InterviewAttempt, "status" | "startedAt" | "preparationSeconds" | "stationSeconds"> & Partial<Pick<InterviewAttempt, "metrics">>,
   now: number,
 ) {
   return attempt.status === "in_progress"
-    && now < Date.parse(attempt.startedAt) + (attempt.preparationSeconds + attempt.stationSeconds) * 1000;
+    && (Boolean(attempt.metrics?.pausedAt) || now < Date.parse(attempt.startedAt) + (attempt.preparationSeconds + attempt.stationSeconds) * 1000);
 }
 
 export function filterSavedInterviews(
@@ -70,7 +75,8 @@ export function savedInterviewHref(attempt: Pick<SavedInterviewSummary, "id" | "
     : `/medicforest/interview/reports/${encodeURIComponent(attempt.id)}`;
 }
 
-export function savedInterviewStatus(attempt: Pick<SavedInterviewSummary, "canResume" | "feedbackScore"> & Partial<Pick<SavedInterviewSummary, "status" | "feedbackCount" | "savedStationCount">>) {
+export function savedInterviewStatus(attempt: Pick<SavedInterviewSummary, "canResume" | "feedbackScore"> & Partial<Pick<SavedInterviewSummary, "status" | "feedbackCount" | "savedStationCount" | "paused">>) {
+  if (attempt.canResume && attempt.paused) return "Paused · Ready to resume";
   if (attempt.canResume) return "Ready to continue";
   if (attempt.feedbackCount !== undefined && attempt.savedStationCount !== undefined && attempt.feedbackCount < attempt.savedStationCount && attempt.feedbackCount > 0) return `Feedback ready for ${attempt.feedbackCount} of ${attempt.savedStationCount} saved stations`;
   if (attempt.feedbackScore !== null) return "Feedback ready";

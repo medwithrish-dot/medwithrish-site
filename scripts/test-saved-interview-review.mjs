@@ -175,6 +175,13 @@ test("an active saved station offers Resume and uses the server clock despite lo
   assert.ok(find(page.tree(), node => node.props?.href?.includes("ai-interviews?attempt=")));
 });
 
+test("a paused interview stays resumable after the original deadline and is never auto-submitted", async () => {
+  const page = await savedReview({ overrides: { status: "in_progress", completedAt: null, metrics: { pausedAt: Date.now() - 300_000 } } });
+  assert.equal(page.review(), undefined);
+  assert.equal(page.state.requests.length, 0);
+  assert.ok(find(page.tree(), node => node.props?.href?.includes("ai-interviews?attempt=")));
+});
+
 test("an unrelated active Med interview is offered for resume without replacing the saved review", async () => {
   const page = await savedReview({ onRequest: (request, state) => request.method === "POST" ? Response.json({ attempt: { ...state.attempt, id: "active-other", circuitId: "different-circuit" } }) : undefined });
   const original = page.review().attempt.id;

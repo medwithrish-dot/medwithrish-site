@@ -1,3 +1,4 @@
+import { InterviewResumeList } from "./InterviewResumeList";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, CalendarDays, CheckCircle2, Clock3, TrendingUp } from "lucide-react";
 import { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
@@ -18,6 +19,7 @@ export async function InterviewPreparationViews({ view }: { view: "plan" | "prog
     {message && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">{message}{!signedIn && <> <Link href="/medicforest/account" className="font-bold underline">Sign in</Link></>}</p>}
 
     {view === "progress" ? <>
+      <InterviewResumeList />
       <div className="grid gap-4 sm:grid-cols-3">
         {[
           { title: "Completed stations", value: String(stats.completedCount), note: "Saved completed interviews" },

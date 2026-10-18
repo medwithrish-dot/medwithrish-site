@@ -144,6 +144,7 @@ export async function PATCH(request: Request) {
     const { data: row, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("id", body.attemptId).maybeSingle();
     if (error) databaseError(error);
     if (!row) throw new InterviewError("Med Interview not found", 404);
+    if (body.action !== undefined && body.action !== "pause" && body.action !== "resume") throw new InterviewError("Choose a valid interview action");
     const finish = body.finish === true;
     if (row.status !== "in_progress") {
       if (finish && row.last_error !== "abandoned") {
@@ -153,6 +154,25 @@ export async function PATCH(request: Request) {
       }
       throw new InterviewError("This station is already submitted. Your saved answers are locked.", 409);
     }
+    const pausedAt = Number(row.metrics?.pausedAt) || 0;
+    if (body.action === "resume") {
+      if (!pausedAt) return interviewJson({ attempt: toInterviewAttempt(row) });
+      const pauseDuration = Math.max(0, Date.now() - pausedAt);
+      const metrics = { ...row.metrics, pausedAt: 0, totalPausedMs: (Number(row.metrics?.totalPausedMs) || 0) + pauseDuration };
+      const { data, error: resumeError } = await admin.from("interview_attempts").update({
+        started_at: new Date(Date.parse(row.started_at) + pauseDuration).toISOString(), metrics,
+      }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress")
+        .eq("metrics", JSON.stringify(row.metrics)).eq("started_at", row.started_at).select().maybeSingle();
+      if (resumeError) databaseError(resumeError);
+      if (!data) throw new InterviewError("Your interview changed in another tab. Please reload before resuming.", 409);
+      return interviewJson({ attempt: toInterviewAttempt(data) });
+    }
+    if (pausedAt) {
+      if (body.action === "pause") return interviewJson({ attempt: toInterviewAttempt(row) });
+      throw new InterviewError("This interview is paused. Resume it before changing or submitting answers.", 409);
+    }
+    const deadline = Date.parse(row.started_at) + (row.preparation_seconds + row.station_seconds) * 1000;
+    if (body.action === "pause" && (finish || Date.now() >= deadline)) throw new InterviewError("The timer has finished. Review your saved answers instead.", 409);
     // Short transport grace allows an in-flight final autosave, never extra practice time.
     const answerWindowClosed = Date.now() > Date.parse(row.started_at) + (row.preparation_seconds + row.station_seconds + 30) * 1000;
     if (answerWindowClosed && !finish) throw new InterviewError("The answer window has closed. Finish the station to review your last saved answers.", 409);
@@ -174,7 +194,7 @@ export async function PATCH(request: Request) {
     const answers = (row.questions as string[]).map((question) => incomingAnswers.find((answer) => answer.question === question)
       ?? savedAnswers.find((answer) => answer.question === question) ?? { question, answer: "" });
     if (answers.reduce((sum, answer) => sum + answer.answer.length, 0) > 18000) throw new InterviewError("Please keep the station transcript under 18,000 characters");
-    const metrics: Record<string, number> = answerWindowClosed ? toInterviewAttempt(row).metrics : {};
+    const metrics: Record<string, number> = { ...toInterviewAttempt(row).metrics };
     if (!answerWindowClosed && body.metrics && typeof body.metrics === "object") {
       for (const key of ["wordCount", "fillerCount", "repetitionCount", "speechSampleCount", "speechWordsPerSevenSeconds", "speechFastAnswers", "speechSlowAnswers", "speechTranscriptionWarnings", "speechFluencyWarnings"]) {
         const value = (body.metrics as Record<string, unknown>)[key];
@@ -182,9 +202,17 @@ export async function PATCH(request: Request) {
       }
     }
     const finishedAt = new Date().toISOString();
+    if (body.action === "pause") {
+      if (!Number.isInteger(body.questionIndex) || Number(body.questionIndex) < 0 || Number(body.questionIndex) >= row.questions.length) throw new InterviewError("Choose a valid question to save");
+      metrics.pausedAt = Date.now();
+      metrics.resumeQuestionIndex = Number(body.questionIndex);
+      metrics.resumePreviousAnswer = body.resumePreviousAnswer === true ? 1 : 0;
+      metrics.originalStartedAt = metrics.originalStartedAt || Date.parse(row.started_at);
+    }
     const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics,
       ...(finish ? { status: "failed", last_error: "awaiting_feedback", completed_at: row.completed_at ?? finishedAt, answer_submitted_at: row.answer_submitted_at ?? finishedAt } : {}),
-    }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
+    }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers))
+      .eq("metrics", JSON.stringify(row.metrics ?? {})).eq("started_at", row.started_at).select().maybeSingle();
     if (saveError) databaseError(saveError);
     if (!data) throw new InterviewError("Your Med interview changed while saving. Please retry to keep the latest answers.", 409);
     const attempt = toInterviewAttempt(data);

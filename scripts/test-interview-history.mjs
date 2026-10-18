@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 const id = number => `00000000-0000-4000-8000-${String(number).padStart(12, "0")}`;
 const rows = Array.from({ length: 330 }, (_, index) => ({ id: id(index), user_id: "student", started_at: "2026-10-14T10:00:00.123456+00:00", status: "completed", station_slug: "why-medicine", title: "Why medicine?", university_slug: null, preparation_seconds: 0, station_seconds: 180, questions: ["Private question"], answers: [{ answer: "Private answer" }], metrics: {}, feedback_score: 75 }));
 
-function harness({ user = "student", unavailable = false } = {}) {
+function harness({ user = "student", unavailable = false, sourceRows = rows } = {}) {
   const queries = [];
   const supabase = { auth: { getUser: async () => ({ data: { user: user ? { id: user } : null } }) }, from(table) {
     const state = { table, filters: [], orders: [] };
@@ -23,7 +23,7 @@ function harness({ user = "student", unavailable = false } = {}) {
       limit(count) { state.count = count; return this; },
       or(value) { state.cursor = value; return this; },
       then(resolvePromise, reject) {
-        let data = rows.filter(row => state.filters.every(([key, value]) => row[key] === value)).toSorted((a, b) => b.started_at.localeCompare(a.started_at) || b.id.localeCompare(a.id));
+        let data = sourceRows.filter(row => state.filters.every(([key, value]) => row[key] === value)).toSorted((a, b) => b.started_at.localeCompare(a.started_at) || b.id.localeCompare(a.id));
         if (state.cursor) {
           const match = /^started_at\.lt\.(.+),and\(started_at\.eq\.(.+),id\.lt\.([a-f0-9-]+)\)$/.exec(state.cursor);
           assert.ok(match, "Pagination uses a validated time and ID pair");
@@ -45,7 +45,7 @@ function harness({ user = "student", unavailable = false } = {}) {
       interviewFailure: error => Response.json({ error: error.message }, { status: error.status || 503 }),
     },
   };
-  mocks["./server"] = { toInterviewAttempt: row => ({ id: row.id, stationSlug: row.station_slug, title: row.title, status: row.status, universitySlug: row.university_slug, startedAt: row.started_at, questions: row.questions, answers: row.answers, preparationSeconds: row.preparation_seconds, stationSeconds: row.station_seconds, feedback: row.feedback }) };
+  mocks["./server"] = { toInterviewAttempt: row => ({ id: row.id, stationSlug: row.station_slug, title: row.title, status: row.status, universitySlug: row.university_slug, startedAt: row.started_at, questions: row.questions, answers: row.answers, preparationSeconds: row.preparation_seconds, stationSeconds: row.station_seconds, feedback: row.feedback, metrics: row.metrics }) };
   const cache = new Map();
   function load(file) {
     const filename = file.endsWith(".ts") ? file : `${file}.ts`;
@@ -75,6 +75,20 @@ test("older saved history remains reachable after 300 attempts, including identi
     assert.doesNotMatch(query.columns, /questions|answers|user_id/);
     assert.equal(query.count, 301);
   }
+});
+
+test("Progress retrieves older paused work separately from hundreds of newer completed attempts", async () => {
+  const pausedAt = Date.parse("2026-09-01T10:00:30Z");
+  const older = { ...rows[0], id: id(999), status: "in_progress", started_at: "2026-09-01T10:00:00Z", paused_at: pausedAt };
+  const api = harness({ sourceRows: [...rows, older] });
+  const recent = await api.history();
+  assert.ok(recent.attempts.every(attempt => attempt.id !== older.id));
+  const unfinished = await api.history(undefined, true);
+  assert.equal(unfinished.attempts.length, 1);
+  assert.equal(unfinished.attempts[0].id, older.id);
+  assert.equal(unfinished.attempts[0].metrics.pausedAt, pausedAt);
+  assert.deepEqual(api.queries[1].filters, [["user_id", "student"], ["status", "in_progress"]]);
+  assert.doesNotMatch(api.queries[1].columns, /answers|questions/);
 });
 
 test("history API requires an account and returns private summaries with no answer content", async () => {

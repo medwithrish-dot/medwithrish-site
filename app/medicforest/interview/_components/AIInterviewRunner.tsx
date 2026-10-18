@@ -223,7 +223,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       speechDeliveryRef.current.clear();
       resumeQuestionRef.current = null;
       let restoredAnswers = next.questions.map((question) => ({ question, answer: "", ...next.answers.find((item) => item.question === question) }));
-      let restoredIndex = 0;
+      let restoredIndex = Math.max(0, Math.min(next.questions.length - 1, next.metrics?.resumeQuestionIndex ?? 0));
+      if (next.metrics?.resumePreviousAnswer === 1) resumeQuestionRef.current = next.questions[restoredIndex + 1] ?? null;
       savedSignatureRef.current = JSON.stringify(restoredAnswers);
       if (next.status === "in_progress") {
         try {
@@ -237,6 +238,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
             });
             const localQuestion = Number.isInteger(draft.questionIndex) ? draft.answers[draft.questionIndex]?.question : undefined;
             restoredIndex = Math.max(0, next.questions.indexOf(localQuestion ?? ""));
+            resumeQuestionRef.current = null;
             if (draft.resumeQuestion === next.questions[restoredIndex + 1] && restoredAnswers[restoredIndex]?.answer.trim() && !restoredAnswers[restoredIndex + 1]?.answer.trim()) {
               resumeQuestionRef.current = draft.resumeQuestion ?? null;
             }
@@ -290,7 +292,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     return () => controller.abort();
   }, [applyResponse, showError, initialStationSlug]);
 
-  const clockDeadline = attempt?.status === "in_progress"
+  const paused = Boolean(attempt?.status === "in_progress" && attempt.metrics?.pausedAt);
+  const clockDeadline = attempt?.status === "in_progress" && !paused
     ? Date.parse(attempt.startedAt) + (attempt.preparationSeconds + attempt.stationSeconds) * 1000
     : attempt?.nextAvailableAt ? Date.parse(attempt.nextAvailableAt) : 0;
   useEffect(() => {
@@ -308,7 +311,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     // same request. A failed earlier save must not prevent saving the latest text.
     while (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
     const current = attemptRef.current;
-    if (!current || current.status !== "in_progress" || previewRef.current) return;
+    if (!current || current.status !== "in_progress" || current.metrics?.pausedAt || previewRef.current) return;
     const snapshot = answersRef.current;
     const signature = JSON.stringify(snapshot);
     if (signature === savedSignatureRef.current) return;
@@ -331,17 +334,17 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const saveDraftRef = useRef(saveDraft);
   useEffect(() => { saveDraftRef.current = saveDraft; }, [saveDraft]);
   useEffect(() => {
-    if (attempt?.status !== "in_progress" || preview) return;
+    if (attempt?.status !== "in_progress" || paused || preview) return;
     const timer = window.setInterval(() => {
       if (submitLockRef.current || actionLockRef.current || followUpRequestRef.current) return;
       void saveDraftRef.current().catch(() => setSaveWarning("Account autosave is temporarily unavailable. Keep this page open and retry saving; a browser draft is also kept where storage is available."));
     }, 15_000);
     return () => window.clearInterval(timer);
-  }, [attempt?.id, attempt?.status, preview]);
+  }, [attempt?.id, attempt?.status, paused, preview]);
 
   useEffect(() => {
-    if (attempt?.status !== "in_progress") return;
-    const warnBeforeLeaving = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    if (attempt?.status !== "in_progress" || paused) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => { if (attemptRef.current?.metrics?.pausedAt) return; event.preventDefault(); event.returnValue = ""; };
     const handleVisibility = () => {
       setNow(Date.now() + clockOffsetRef.current);
       if (document.hidden) {
@@ -359,7 +362,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       window.removeEventListener("beforeunload", warnBeforeLeaving);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [attempt?.status, saveDraft, stopListening, stopSpeaking, cancelMicrophoneRequest]);
+  }, [attempt?.status, paused, saveDraft, stopListening, stopSpeaking, cancelMicrophoneRequest]);
 
   const finishStation = useCallback(async () => {
     const current = attemptRef.current;
@@ -434,10 +437,10 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
 
   const preparationEnd = attempt ? Date.parse(attempt.startedAt) + attempt.preparationSeconds * 1000 : 0;
   const stationEnd = preparationEnd + (attempt?.stationSeconds ?? 0) * 1000;
-  const preparing = Boolean(attempt?.status === "in_progress" && now < preparationEnd);
-  const expired = Boolean(attempt && now >= stationEnd);
+  const preparing = Boolean(attempt?.status === "in_progress" && !paused && now < preparationEnd);
+  const expired = Boolean(attempt && !paused && now >= stationEnd);
   const reviewing = Boolean(attempt && (reviewRequested || attempt.status !== "in_progress" || expired));
-  const active = attempt?.status === "in_progress" && !reviewing && !preparing && !expired && !busy && !followUpBusy;
+  const active = attempt?.status === "in_progress" && !paused && !reviewing && !preparing && !expired && !busy && !followUpBusy;
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
@@ -457,7 +460,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && followUpsEnabled(attempt.stationSlug) && !originalQuestions.includes(question)
     ? `/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`
     : undefined);
-  const microphoneRoomId = !loading && attempt?.status === "in_progress" && !reviewing ? attempt.id : null;
+  const microphoneRoomId = !loading && attempt?.status === "in_progress" && !paused && !reviewing ? attempt.id : null;
 
   useEffect(() => {
     if (!microphoneRoomId) return;
@@ -733,6 +736,44 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     interruptQuestionRef.current = (continuation) => { void interruptQuestion(continuation); };
   });
 
+  const saveAndExit = async () => {
+    const current = attemptRef.current;
+    if (!current || previewRef.current || actionLockRef.current || submitLockRef.current) return;
+    actionLockRef.current = true;
+    followUpRequestRef.current?.abort();
+    setBusy("Saving your interview...");
+    try {
+      cancelMicrophoneRequest();
+      await speech.stop();
+      speech.stopSpeaking();
+      setMicWanted(false);
+      while (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
+      const snapshot = answersRef.current;
+      const response = await requestSession("/api/interviews/session", "PATCH", {
+        attemptId: current.id, action: "pause", answers: snapshot, metrics: stationMetrics(snapshot, true),
+        questionIndex: questionIndexRef.current, resumePreviousAnswer: Boolean(resumeQuestionRef.current),
+      });
+      applyResponse(response);
+      stopCamera();
+      stopMicCheck();
+      window.location.assign(medicForestPublicHref(window.location.pathname, "/medicforest/interview/progress"));
+    } catch (failure) { showError(failure); }
+    finally { actionLockRef.current = false; setBusy(""); }
+  };
+
+  const resumeAttempt = async () => {
+    if (!attempt || actionLockRef.current || submitLockRef.current) return;
+    actionLockRef.current = true;
+    setBusy("Resuming your interview...");
+    try {
+      const response = await requestSession("/api/interviews/session", "PATCH", { attemptId: attempt.id, action: "resume", answers: [] });
+      applyResponse(response, true);
+      setReviewRequested(false);
+      spokenQuestionRef.current = "";
+    } catch (failure) { showError(failure); }
+    finally { actionLockRef.current = false; setBusy(""); }
+  };
+
   const leaveAttempt = async () => {
     if (!attempt || actionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
@@ -824,7 +865,12 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       } }}
       speechSupported={speech.supported}
       isPremium={isPremium} busy={Boolean(busy)} onStart={beginRoom}
-    /> : reviewing ? <AIInterviewReview key={attempt.id}
+    /> : paused ? <section className={styles.statusCard} aria-label="Paused interview"><div>
+      <h2 className="text-xl font-bold">Your interview is saved and paused</h2>
+      <p className="mt-3">Your answers and current question are saved. The timer will continue from where you left off.</p>
+      <button type="button" className={styles.primaryButton} disabled={Boolean(busy)} onClick={() => void resumeAttempt()}>Resume interview <ArrowRight size={16} /></button>
+      <Link href="/medicforest/interview/progress" className="mt-4 block text-sm font-bold underline">Back to Progress</Link>
+    </div></section> : reviewing ? <AIInterviewReview key={attempt.id}
       attempt={{ ...attempt, answers }} preview={preview} configured={configured} onRetry={retryStation} onGenerate={() => void generateFeedback()}
       onNext={attempt.stationIndex + 1 < attempt.stationCount && roomPlan && attempt.completedAt ? nextStation : undefined}
       breakRemaining={breakRemaining} busy={Boolean(busy)}
@@ -839,7 +885,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc, canInterruptQuestion ? (continuation) => interruptQuestionRef.current(continuation) : undefined); } }}
         onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
-        onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
+        onSubmit={() => void finishStation()} onSaveExit={() => void saveAndExit()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
         onSkipPreparation={() => { if (preview) applyResponse({ attempt: { ...attempt, startedAt: new Date(Date.now() - attempt.preparationSeconds * 1000).toISOString() } }); }}
       />
     </>}

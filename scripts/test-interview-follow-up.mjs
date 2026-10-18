@@ -67,7 +67,7 @@ function harness({ usageAllowed = true, generate = async () => probe, configured
     async maybeSingle() {
       if (this.table === "profiles") return { data: { current_plan: "premium" }, error: null };
       if (this.table === "interview_preparation_profiles") return { data: { applicant }, error: null };
-      const match = this.filters.every(([key, value]) => key === "questions" ? JSON.stringify(state.row.questions) === value : state.row[key] === value);
+      const match = this.filters.every(([key, value]) => ["questions", "metrics"].includes(key) ? JSON.stringify(state.row[key]) === value : state.row[key] === value);
       if (!match) return { data: null, error: null };
       if (this.mutation) Object.assign(state.row, structuredClone(this.mutation));
       return { data: structuredClone(state.row), error: null };

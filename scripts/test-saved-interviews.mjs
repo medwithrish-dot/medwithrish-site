@@ -10,7 +10,7 @@ const compiledModule = { exports: {} };
 new Function("module", "exports", ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 },
 }).outputText)(compiledModule, compiledModule.exports);
-const { filterSavedInterviews, groupSavedInterviews, canResumeSavedInterview, savedInterviewHref, savedInterviewStatus } = compiledModule.exports;
+const { filterSavedInterviews, filterSavedInterviewSource, groupSavedInterviews, canResumeSavedInterview, savedInterviewHref, savedInterviewStatus } = compiledModule.exports;
 
 function attempt(overrides = {}) {
   return {
@@ -84,4 +84,47 @@ test("partly marked circuits remain discoverable under needs feedback and show t
   assert.equal(filterSavedInterviews(ready, "", "all", "saved").length, 0);
   assert.equal(savedInterviewStatus(ready[0]), "Feedback ready");
   assert.equal(savedInterviewStatus(attempt({ status: "grading" })), "Feedback is being prepared");
+});
+
+
+test("paused interviews remain resumable after days and reports separate AI from question bank", () => {
+  const paused = { status: "in_progress", startedAt: "2026-09-12T10:00:00Z", preparationSeconds: 0, stationSeconds: 480, metrics: { pausedAt: Date.parse("2026-09-12T10:01:00Z") } };
+  assert.equal(canResumeSavedInterview(paused, Date.parse("2026-10-18T10:00:00Z")), true);
+  assert.equal(canResumeSavedInterview({ ...paused, status: "completed" }, Date.now()), false);
+  assert.equal(savedInterviewStatus(attempt({ canResume: true, paused: true })), "Paused \u00b7 Ready to resume");
+  const ai = attempt({ id: "ai", stationSlug: "why-medicine" });
+  const bank = attempt({ id: "bank", stationSlug: "question-bank-feedback" });
+  assert.deepEqual(filterSavedInterviewSource([ai, bank], "ai"), [ai]);
+  assert.deepEqual(filterSavedInterviewSource([ai, bank], "question-bank"), [bank]);
+});
+
+test("the Reports switch shows AI interviews and question bank feedback separately", () => {
+  const cells = [];
+  let cursor = 0;
+  const jsx = (type, props) => ({ type, props });
+  const loaded = { exports: {} };
+  const output = ts.transpileModule(readFileSync(new URL("../app/medicforest/interview/_components/SavedInterviewList.tsx", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
+  }).outputText;
+  new Function("require", "module", "exports", output)(name => {
+    if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
+    if (name === "react") return {
+      useEffect() {}, useRef: () => ({ current: null }),
+      useState(initial) { const index = cursor++; if (!(index in cells)) cells[index] = initial; return [cells[index], value => { cells[index] = typeof value === "function" ? value(cells[index]) : value; }]; },
+    };
+    if (name.endsWith("saved-interviews")) return compiledModule.exports;
+    if (name.includes("MedicForestLink")) return { default: "link" };
+    return {};
+  }, loaded, loaded.exports);
+  const attempts = [attempt({ id: "ai", title: "Saved AI interview" }), attempt({ id: "bank", title: "Saved question feedback", stationSlug: "question-bank-feedback" })];
+  const nodes = node => Array.isArray(node) ? node.flatMap(nodes) : node && typeof node === "object" ? [node, ...nodes(node.props?.children)] : [];
+  const render = () => { cursor = 0; return nodes(loaded.exports.SavedInterviewList({ attempts })); };
+  const hrefs = tree => tree.filter(node => node.props?.href).map(node => node.props.href);
+  let tree = render();
+  assert.deepEqual(hrefs(tree), ["/medicforest/interview/reports/ai"]);
+  tree.find(node => node.type === "button" && node.props.children === "Question bank").props.onClick();
+  tree = render();
+  assert.deepEqual(hrefs(tree), ["/medicforest/interview/reports/bank"]);
+  tree.find(node => node.type === "button" && node.props.children === "AI interviews").props.onClick();
+  assert.deepEqual(hrefs(render()), ["/medicforest/interview/reports/ai"]);
 });
