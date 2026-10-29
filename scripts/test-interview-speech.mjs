@@ -175,104 +175,93 @@ test("recorded questions use their matched MP3 at the selected pace", async t =>
   assert.equal(completed, true);
 });
 
-test("two words interrupt playback on the same mic session and the final utterance is saved once", async t => {
-  const room = speechHarness({ continuousListening: true, answerKey: "question-2" });
-  t.after(() => room.unmount());
-  const additions = [];
-  room.speech.start();
-  let completed = 0;
-  await room.speech.speak("What did you learn?", () => completed++, "/audio/female/q018.mp3", text => additions.push(text));
-  const recognition = room.recognitions[0];
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "What did you learn?" } }] });
-  assert.deepEqual(additions, [], "Question playback never becomes a candidate answer");
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I" } }] });
-  assert.equal(additions.length, 0, "One ordinary word does not interrupt");
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I also" } }] });
-  room.render({ answerKey: "question-1" });
-  assert.equal(room.recorded[0].paused, true);
-  assert.equal(room.speech.speaking, false);
-  assert.equal(recognition.abortCalls, 0);
-  assert.equal(recognition.stopCalls, 0);
-  assert.deepEqual(additions, [""]);
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "I also asked for support, which changed my approach." } }] });
-  room.recorded[0].end();
-  assert.equal(additions.length, 1);
-  assert.equal(completed, 0, "Interrupted playback must not advance the question");
-  assert.deepEqual(room.transcripts, ["I also asked for support, which changed my approach."]);
-  room.speech.start();
-  assert.equal(room.recognitions.length, 1);
-});
-
-test("noise, fillers, stray words and uncertain recognition cannot interrupt a question", async t => {
-  for (const previousAnswer of [false, true]) {
-    const room = speechHarness({ continuousListening: true });
+test("question playback drains candidate speech, blocks listening and rejects delayed echo", async t => {
+  for (const audioSrc of [undefined, "/audio/female/q018.mp3"]) {
+    const room = speechHarness({ continuousListening: true, answerKey: "question-1" });
     t.after(() => room.unmount());
     room.speech.start();
-    let interrupted = 0;
+    const previous = room.recognitions[0];
+    const lateResult = previous.onresult;
+    previous.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "My last thought" } }] });
     let completed = 0;
-    await room.speech.speak("Describe a time you showed leadership.", () => completed++, "/audio/female/q018.mp3", previousAnswer ? () => interrupted++ : undefined);
-    const recognition = room.recognitions[0];
-    recognition.onspeechstart();
-    recognition.onspeechend();
-    for (const transcript of ["", "...", "[background noise]", "(coughing)", "um uh", "hmm hmm", "I", "yes", "um I"]) {
-      recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript, confidence: 0.9 } }] });
+    const pending = room.speech.speak("What did you learn?", () => completed++, audioSrc);
+    assert.equal(previous.stopCalls, 1);
+    assert.equal(room.recorded.length + room.played.length, 0, "Playback waits for final candidate words");
+    room.speech.start();
+    assert.equal(room.recognitions.length, 1, "Listening cannot reopen while playback is pending");
+    previous.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "My last thought." } }] });
+    previous.end();
+    await pending;
+    room.render({ answerKey: "question-2" });
+    assert.equal(room.speech.listening, false);
+    assert.equal(room.speech.speaking, true);
+    for (const transcript of ["What did you learn?", "What have you learned", "I also", "Wait, I would consider consent."]) {
+      lateResult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript } }] });
     }
-    for (const transcript of ["I also", "Wait"]) {
-      recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript, confidence: 0.2 } }] });
-    }
-    assert.equal(room.recorded[0].paused, undefined);
-    assert.equal(interrupted, 0);
-    assert.equal(completed, 0);
-    assert.deepEqual(room.transcripts, []);
-    recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I also", confidence: 0.9 } }] });
-    assert.equal(room.recorded[0].paused, true);
-    assert.equal(previousAnswer ? interrupted : completed, 1);
+    room.speech.start();
+    assert.equal(room.recognitions.length, 1, "Listening stays paused throughout playback");
+    assert.deepEqual(room.transcripts, ["My last thought."]);
+    if (audioSrc) room.recorded.at(-1).end();
+    else room.utterances.at(-1).onend();
+    assert.equal(completed, 1);
+    room.speech.start();
+    const next = room.recognitions[1];
+    lateResult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Late question echo mixed with words." } }] });
+    next.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I would" } }] });
+    next.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "I would ask for support." } }] });
+    assert.deepEqual(room.transcripts, ["My last thought.", "I would ask for support."]);
   }
 });
 
-test("wait and hold on interrupt immediately while playback completion keeps the microphone running", async t => {
-  const room = speechHarness({ continuousListening: true });
+test("confirmation and follow-up playback each use a fresh listening session", async t => {
+  const room = speechHarness({ continuousListening: true, answerKey: "main" });
   t.after(() => room.unmount());
-  const additions = [];
   room.speech.start();
-  await room.speech.speak("Follow-up question?", undefined, undefined, text => additions.push(text));
-  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "Wait" } }] });
-  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Wait, I have more detail." } }] });
-  assert.deepEqual(room.transcripts, ["I have more detail."]);
-  await room.speech.speak("Follow-up question?", undefined, undefined, text => additions.push(text));
-  room.recognitions[0].onresult({ resultIndex: 1, results: { length: 2, 1: { isFinal: true, 0: { transcript: "Hold on." } } } });
-  assert.deepEqual(additions, ["", ""]);
-  assert.ok(room.cancellations > 0);
-  let completed = 0;
-  await room.speech.speak("The same follow-up question?", () => completed++, undefined, text => additions.push(text));
-  room.utterances.at(-1).onend();
-  assert.equal(room.recognitions.length, 1);
-  assert.equal(room.recognitions[0].abortCalls, 0);
-  assert.equal(room.recognitions[0].stopCalls, 0);
-  assert.equal(completed, 1);
+  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "My main answer." } }] });
+  for (const [prompt, answer] of [["Done? Say yes or no.", "Yes."], ["What did you learn?", "Wait, I would ask for support."]]) {
+    const previous = room.recognitions.at(-1);
+    const delayed = previous.onresult;
+    const pending = room.speech.speak(prompt);
+    previous.end();
+    await pending;
+    delayed({ resultIndex: 1, results: { length: 2, 1: { isFinal: true, 0: { transcript: prompt } } } });
+    room.utterances.at(-1).onend();
+    room.speech.start();
+    room.recognitions.at(-1).onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: answer } }] });
+  }
+  assert.equal(room.recognitions.length, 3);
+  assert.deepEqual(room.transcripts, ["My main answer.", "Yes.", "Wait, I would ask for support."]);
 });
 
-test("manual mic stop or leaving cancels recognition and its pending restart during playback", async t => {
+test("cancelling playback permits listening but cannot revive a superseded prompt", async t => {
   const room = speechHarness({ continuousListening: true });
   t.after(() => room.unmount());
-  const additions = [];
+  await room.speech.speak("Question one?");
+  const lateEnd = room.utterances[0].onend;
+  const second = room.speech.speak("Question two?");
+  await second;
+  lateEnd();
   room.speech.start();
-  await room.speech.speak("Question two?", undefined, undefined, text => additions.push(text));
-  const recognition = room.recognitions[0];
-  recognition.end();
-  const stopped = room.speech.stop();
-  room.finishStopTimeouts();
-  await stopped;
-  room.fireRestartTimers();
-  assert.equal(recognition.startCalls, 1);
-  assert.equal(recognition.abortCalls, 1);
+  assert.equal(room.recognitions.length, 0, "An old completion cannot release the new question");
+  room.speech.stopSpeaking();
   room.speech.start();
-  await room.speech.speak("Question three?", undefined, undefined, text => additions.push(text));
-  const lateResult = room.recognitions[1].onresult;
-  room.unmount();
-  lateResult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Wait, a late result." } }] });
-  assert.equal(room.recognitions[1].abortCalls, 1);
-  assert.deepEqual(additions, []);
+  assert.equal(room.recognitions.length, 1);
+});
+
+test("fallback voice keeps recognition paused until it finishes", async t => {
+  const room = speechHarness({ continuousListening: true, audioPlayRejects: true });
+  t.after(() => room.unmount());
+  room.speech.start();
+  const pending = room.speech.speak("What did you learn?", undefined, "/audio/female/q018.mp3");
+  room.recognitions[0].end();
+  await pending;
+  await Promise.resolve();
+  room.speech.start();
+  assert.equal(room.recognitions.length, 1);
+  assert.deepEqual(room.played, ["What did you learn?"]);
+  room.utterances[0].onend();
+  room.speech.start();
+  assert.equal(room.recognitions.length, 2);
 });
 
 test("recognition failures leave question playback available", async t => {
@@ -281,66 +270,11 @@ test("recognition failures leave question playback available", async t => {
     t.after(() => room.unmount());
     let completed = 0;
     room.speech.start();
-    await room.speech.speak("Question two?", () => completed++, "/audio/female/q018.mp3", () => {});
+    await room.speech.speak("Question two?", () => completed++, "/audio/female/q018.mp3");
     assert.equal(room.recorded.length, 1);
     room.recorded[0].end();
     assert.equal(completed, 1);
   }
-});
-
-test("question and confirmation playback and answer changes never stop continuous listening", async t => {
-  const room = speechHarness({ continuousListening: true, answerKey: "question-1" });
-  t.after(() => room.unmount());
-  room.speech.start();
-  const recognition = room.recognitions[0];
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "A complete first answer." } }] });
-  await room.speech.flush();
-  await room.speech.speak("Done? Say yes or no.");
-  recognition.onresult({ resultIndex: 1, results: { length: 2, 1: { isFinal: true, 0: { transcript: "Yes." } } } });
-  room.render({ answerKey: "question-2" });
-  await room.speech.speak("What did you learn?");
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "A complete first answer." } }] });
-  recognition.onresult({ resultIndex: 1, results: { length: 2, 1: { isFinal: true, 0: { transcript: "Yes, I'm done." } } } });
-  recognition.onresult({ resultIndex: 2, results: { length: 3, 2: { isFinal: true, 0: { transcript: "What did you learn?" } } } });
-  assert.deepEqual(room.transcripts, ["A complete first answer.", "Yes."]);
-  assert.equal(recognition.stopCalls, 0);
-  assert.equal(recognition.abortCalls, 0);
-  assert.equal(room.recognitions.length, 1);
-  room.render();
-  assert.equal(room.speech.listening, true);
-});
-
-test("a two-word utterance that begins during playback still interrupts when its second word arrives after playback", async t => {
-  const room = speechHarness({ continuousListening: true });
-  t.after(() => room.unmount());
-  room.speech.start();
-  let interruptions = 0;
-  await room.speech.speak("What did you learn?", undefined, "/audio/female/q018.mp3", () => interruptions++);
-  const recognition = room.recognitions[0];
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I" } }] });
-  room.recorded[0].end();
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "I also" } }] });
-  assert.equal(interruptions, 1);
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "I also learned to seek advice." } }] });
-  assert.deepEqual(room.transcripts, ["I also learned to seek advice."]);
-  assert.equal(recognition.stopCalls, 0);
-});
-
-test("recognized confirmation echoes are ignored and a spoken no stops playback without stopping the mic", async t => {
-  const room = speechHarness({ continuousListening: true });
-  t.after(() => room.unmount());
-  room.speech.start();
-  let completed = 0;
-  await room.speech.speak("Done? Say yes or no.", () => completed++);
-  const recognition = room.recognitions[0];
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "Done" } }] });
-  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Done? Say yes or no." } }] });
-  assert.equal(completed, 0);
-  recognition.onresult({ resultIndex: 1, results: { length: 2, 1: { isFinal: true, 0: { transcript: "No." } } } });
-  assert.equal(completed, 1);
-  assert.deepEqual(room.transcripts, ["No."]);
-  assert.equal(recognition.stopCalls, 0);
-  assert.equal(recognition.abortCalls, 0);
 });
 
 test("a failed question recording falls back to browser text-to-speech", async t => {

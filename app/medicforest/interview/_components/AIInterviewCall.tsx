@@ -30,6 +30,7 @@ type Props = {
   followUpBusy: boolean; followUpNotice: string; awaitingDone: boolean; prompting: boolean; micWanted: boolean; onReadQuestion: () => void;
   onDone: () => void; onConfirmDone: () => void; onKeepAnswering: () => void;
   resumingPrevious: boolean;
+  canAddToPreviousAnswer: boolean; onAddToPreviousAnswer: () => void;
 };
 
 function ParticipantWaves() {
@@ -160,7 +161,7 @@ export function AIInterviewCall(props: Props) {
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
             <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Leave or finish interview" title="Leave or finish interview" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish / exit</span></button>
           </div>
-          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
+          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.speaking && props.micWanted ? "Listening pauses while the interviewer speaks and resumes afterwards." : speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
           {devices.cameraError && <p role="status" className={styles.callNotice}>{devices.cameraError}</p>}
           {!speech.supported && !devices.microphoneError && !speech.error && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
         </footer>
@@ -181,6 +182,7 @@ export function AIInterviewCall(props: Props) {
             </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
             {props.resumingPrevious && <p role="status" className={styles.followUpNotice}>Continue your previous answer. The next question is paused.</p>}
+            {props.canAddToPreviousAnswer && <button type="button" className={styles.textButton} onClick={props.onAddToPreviousAnswer}>Add to previous answer</button>}
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>
             <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
             <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening || props.awaitingDone} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here…" : "Your words will appear here. You can type, too…"} className={styles.answerInput} />

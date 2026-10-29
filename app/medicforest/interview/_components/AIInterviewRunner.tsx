@@ -444,7 +444,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
-  const canInterruptQuestion = Boolean(active && questionIndex > 0 && !resumeQuestion && !awaitingDone
+  const canAddToPreviousAnswer = Boolean(active && questionIndex > 0 && !resumeQuestion && !awaitingDone
     && !answers[questionIndex]?.answer.trim() && answers[questionIndex - 1]?.answer.trim());
   const recordedQuestionAudioSrc = getInterviewQuestionAudioSrc(attempt?.questionIds?.[questionIndex], question, interviewerVoice);
   const originalQuestions: readonly string[] = useMemo(() => attempt
@@ -488,7 +488,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       || questionIndexRef.current !== index || actionLockRef.current || submitLockRef.current || document.hidden
       || Date.now() + clockOffsetRef.current >= deadline) return;
     setMicWanted(true);
-    speech.start();
+    if (!promptingRef.current && !speech.speaking) speech.start();
   };
 
   useEffect(() => {
@@ -511,18 +511,17 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       promptingRef.current = false;
       setPrompting(false);
     };
-    const onInterrupt = canInterruptQuestion ? (continuation: string) => interruptQuestionRef.current(continuation) : undefined;
     if (transition) {
       void speak(transition, () => {
-        if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc, onInterrupt);
-      }, getInterviewQuestionAudioSrc(null, transition, interviewerVoice), onInterrupt);
+        if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc);
+      }, getInterviewQuestionAudioSrc(null, transition, interviewerVoice));
     } else {
-      void speak(question, finishPrompt, questionAudioSrc, onInterrupt);
+      void speak(question, finishPrompt, questionAudioSrc);
     }
-  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice, canInterruptQuestion, micWanted]);
+  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice, micWanted]);
 
   useEffect(() => {
-    if (!active || !micWanted || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
+    if (!active || !micWanted || promptingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
       || actionLockRef.current || submitLockRef.current || completionLockRef.current || spokenQuestionRef.current !== `${attempt?.id}:${questionIndex}`) return;
     startListening();
   }, [active, micWanted, prompting, speech.speaking, speech.listening, speech.error, startListening, questionIndex, attempt?.id, awaitingDone, entryReady]);
@@ -592,7 +591,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     actionLockRef.current = true;
     try {
       speech.stopSpeaking();
-      await flushListening();
+      await stopListening();
       questionIndexRef.current = index;
       setQuestionIndex(index);
       setFollowUpNotice("");
@@ -611,8 +610,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       || answersRef.current[interruptedIndex]?.answer.trim() || !answersRef.current[interruptedIndex - 1]?.answer.trim()
       || actionLockRef.current || completionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
-    // Keep the question in the saved station. Moving the visible turn back hides
-    // it from the transcript, and completion will replay it without generating AI.
+    // Stop the new question before changing the answer destination. Its saved
+    // text is replayed after the candidate finishes adding to the previous turn.
     resumeQuestionRef.current = current.questions[interruptedIndex];
     const previousIndex = interruptedIndex - 1;
     questionIndexRef.current = previousIndex;
@@ -650,6 +649,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (controller.signal.aborted) return;
       const response = await requestSession("/api/interviews/follow-up", "POST", { attemptId: current.id, question: sourceQuestion }, controller.signal);
       if (controller.signal.aborted || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress" || submitLockRef.current) return;
+      await stopListening();
+      if (controller.signal.aborted || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress" || submitLockRef.current) return;
       applyResponse(response);
       const index = response.attempt?.questions.indexOf(response.followUp ?? "") ?? -1;
       if (index >= 0) {
@@ -677,7 +678,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const index = questionIndexRef.current;
     confirmationPendingRef.current = true;
     try {
-      await flushListening(); // Keep listening while switching to yes/no confirmation.
+      await flushListening(); // Commit pending answer words before yes/no confirmation.
       if (submitLockRef.current || attemptRef.current?.id !== currentId || attemptRef.current?.status !== "in_progress" || questionIndexRef.current !== index) return;
       if (!answersRef.current[index]?.answer.trim()) return;
       awaitingDoneRef.current = true;
@@ -882,7 +883,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
         followUpBusy={followUpBusy} followUpNotice={followUpNotice} awaitingDone={awaitingDone} prompting={prompting || speech.speaking} micWanted={micWanted}
         resumingPrevious={Boolean(resumeQuestion)}
-        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc, canInterruptQuestion ? (continuation) => interruptQuestionRef.current(continuation) : undefined); } }}
+        canAddToPreviousAnswer={canAddToPreviousAnswer} onAddToPreviousAnswer={() => void interruptQuestion()}
+        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc); } }}
         onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
         onSubmit={() => void finishStation()} onSaveExit={() => void saveAndExit()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}

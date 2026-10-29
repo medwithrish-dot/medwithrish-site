@@ -14,33 +14,10 @@ export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(sl
 export const ANSWER_SILENCE_MS = 5_000;
 export const DONE_PROMPT = "Done? Say yes or no.";
 
-/** Optional commands are removed from the candidate's answer. */
+/** Only an explicit request can move speech back to a completed answer. */
 export function parsePreviousAnswerInterrupt(text: string): string | null {
-  const match = text.trim().match(/^(?:wait|hold on)(?:\b[,.!?]?\s*)/i);
-  if (!match) return null;
-  return text.trim().slice(match[0].length).replace(/^(?:please[,.!?]?\s*)?(?:i (?:want|would like) to|can i) add (?:something )?to (?:my |the )?previous answer[,.!?]?\s*/i, "").trim();
-}
-
-export function automaticInterruption(text: string, confidence?: number): string | null {
-  // Browsers often omit confidence or report zero for interim text. When a
-  // positive estimate is available, reject uncertain recognition during playback.
-  if (confidence !== undefined && confidence > 0 && confidence < 0.5) return null;
-  if (/^\s*(?:\[|\()?\s*(?:background noise|noise|cough(?:ing)?|laugh(?:ter|ing)?|music|inaudible|unintelligible)\s*(?:\]|\))?\s*[.!?]*\s*$/i.test(text)) return null;
-  const command = parsePreviousAnswerInterrupt(text);
-  if (command !== null) return command;
-  const words = (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? [])
-    .filter(word => !/^(?:u+m+|u+h+|e+r+m*|h+m+|m+m+|a+h+|o+h+)$/i.test(word));
-  return words.length >= 2 ? text.trim() : null;
-}
-
-/** Ignore recognized fragments of the interviewer's current/recent playback. */
-export function isInterviewerEcho(text: string, prompts: readonly string[]) {
-  const words = (value: string) => (value.toLowerCase().match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) ?? []).join(" ");
-  const heard = words(text);
-  if (!heard) return false;
-  // Single-word yes/no must remain usable during the completion prompt.
-  if (["yes", "no", "yeah", "yep", "yup", "nope"].includes(heard)) return false;
-  return prompts.some((prompt) => ` ${words(prompt)} `.includes(` ${heard} `));
+  const match = text.trim().match(/^(?:(?:wait|hold on)[,.!?]?\s+)?(?:please\s+)?(?:i (?:want|would like|need) to|can i|let me) (?:add (?:something |more )?to|continue|finish) (?:my |the )?(?:previous|last) answer\b[,.!?:]?\s*/i);
+  return match ? text.trim().slice(match[0].length).trim() : null;
 }
 
 const QUESTION_TRANSITIONS = [
