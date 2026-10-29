@@ -15,11 +15,9 @@ import {
   Mail,
   MessageCircle,
   Mic2,
-  Quote,
   School,
   Sparkles,
   Target,
-  UserRoundCheck,
   UsersRound,
   X,
 } from "lucide-react";
@@ -144,9 +142,6 @@ const interviewFormats = [
     copy: "Practice guided by the style and priorities of the medical schools on your list.",
   },
 ];
-
-const generalWhatsappHref =
-  "https://wa.me/447305422619?text=Hi%20Rish%2C%20I%E2%80%99m%20interested%20in%20tutoring.";
 
 export function InterviewTutoringPageClient({
   checkoutStatus,

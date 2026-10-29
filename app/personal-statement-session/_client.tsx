@@ -6,12 +6,8 @@ import { useState, type FormEvent, useEffect } from "react";
 import {
   ArrowRight,
   BadgeCheck,
-  Check,
   CheckCircle2,
-  Clock3,
   FileText,
-  GraduationCap,
-  HelpCircle,
   Loader2,
   Mail,
   MessageCircle,
@@ -47,7 +43,6 @@ export function PersonalStatementClient({
   const [bookingEmail, setBookingEmail] = useState("");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [showContactFallback, setShowContactFallback] = useState(false);
 
   useEffect(() => {
     if (!bookingOpen) return;
@@ -62,7 +57,6 @@ export function PersonalStatementClient({
     event.preventDefault();
     setLoadingCheckout(true);
     setCheckoutError(null);
-    setShowContactFallback(false);
 
     try {
       const response = await tutoringCheckoutFetch("/api/stripe/create-tutoring-checkout", {
@@ -90,12 +84,10 @@ export function PersonalStatementClient({
           ? "Online payment is temporarily unavailable. Contact us below and we will arrange your booking."
           : data.error ?? "We could not start checkout. Please try again."
       );
-      setShowContactFallback(response.ok);
     } catch {
       setCheckoutError(
         "We could not connect to secure checkout. Contact us below or try again."
       );
-      setShowContactFallback(true);
     } finally {
       setLoadingCheckout(false);
     }

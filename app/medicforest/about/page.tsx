@@ -18,69 +18,6 @@ export const metadata: Metadata = productPageMetadata({
   path: "/about",
 });
 
-const PINE_TREE_PATH =
-  "M18 3 C18 3 13.5 10.5 10 14 C12 14.5 13.8 14.5 14.5 14.5 C12 18.5 8 22 5.5 24.5 C7.8 25 10 25 11.5 25 C8 29 4 33 2 34.5 C6.5 34.5 13.5 34.5 16 34.5 L16 39.5 C16 40 16.5 40.5 17 40.5 L19 40.5 C19.5 40.5 20 40 20 39.5 L20 34.5 C22.5 34.5 29.5 34.5 34 34.5 C32 33 28 29 24.5 25 C26 25 28.2 25 30.5 24.5 C28 22 24 18.5 21.5 14.5 C22.2 14.5 24 14.5 26 14 C22.5 10.5 18 3 18 3 Z";
-
-function PineTree({
-  className = "",
-  style,
-}: {
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <svg
-      viewBox="0 0 36 42"
-      fill="currentColor"
-      aria-hidden="true"
-      className={className}
-      style={style}
-    >
-      <path d={PINE_TREE_PATH} />
-    </svg>
-  );
-}
-
-function FadedForestBackground() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden select-none"
-      aria-hidden="true"
-    >
-      {/* ── Mid Left Grove ── */}
-      <div className="absolute -left-16 top-[680px] flex items-end -space-x-10 text-teal-950/[0.035] lg:left-2 xl:left-8">
-        <PineTree className="h-64 w-48 opacity-85" />
-        <PineTree className="h-80 w-60 opacity-95" />
-        <PineTree className="h-52 w-40 opacity-70" />
-      </div>
-
-      {/* ── Mid Right Grove ── */}
-      <div className="absolute -right-20 top-[980px] flex items-end -space-x-8 text-emerald-950/[0.035] lg:right-2 xl:right-10">
-        <PineTree className="h-48 w-36 opacity-60" />
-        <PineTree className="h-72 w-56 opacity-90" />
-        <PineTree className="h-56 w-44 opacity-75" />
-      </div>
-
-      {/* ── Bottom Horizon Forest Skyline ── */}
-      <div className="absolute bottom-0 inset-x-0 h-40 overflow-hidden [mask-image:linear-gradient(to_top,black_40%,transparent_100%)]">
-        <div className="flex w-full items-end justify-between -space-x-6 text-teal-950/[0.03] px-2">
-          <PineTree className="h-28 w-24" />
-          <PineTree className="h-36 w-28 -mb-2" />
-          <PineTree className="h-24 w-20" />
-          <PineTree className="h-44 w-36 -mb-4" />
-          <PineTree className="h-32 w-24" />
-          <PineTree className="h-28 w-20" />
-          <PineTree className="h-40 w-32 -mb-2" />
-          <PineTree className="h-24 w-18" />
-          <PineTree className="h-48 w-36 -mb-6" />
-          <PineTree className="h-32 w-24" />
-          <PineTree className="h-36 w-28" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function MedicForestAboutPage() {
   return (
     <MedicForestLandingShell>

@@ -11,8 +11,6 @@ import {
   Calculator,
   Check,
   CheckCircle2,
-  Clock3,
-  Crown,
   HelpCircle,
   Loader2,
   Mail,
@@ -186,7 +184,6 @@ export function UCATTutoringClient({
 }: {
   checkoutStatus: CheckoutStatus;
 }) {
-  const [selectedTier, setSelectedTier] = useState<UcatTutorTier>("specialist");
   const [bookingPackageKey, setBookingPackageKey] =
     useState<UcatTutorTier>("specialist");
   const [bookingOpen, setBookingOpen] = useState(false);

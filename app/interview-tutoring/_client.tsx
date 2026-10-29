@@ -8,16 +8,12 @@ import {
   ArrowDown,
   ArrowRight,
   BadgeCheck,
-  Check,
   CheckCircle2,
-  Clock3,
-  Crown,
   HelpCircle,
   Loader2,
   Mail,
   MessageCircle,
   Mic2,
-  Quote,
   School,
   Sparkles,
   UsersRound,
@@ -140,7 +136,6 @@ export function InterviewTutoringClient({
 }: {
   checkoutStatus: CheckoutStatus;
 }) {
-  const [selectedTier, setSelectedTier] = useState<InterviewTier>("specialist");
   const [bookingPackageKey, setBookingPackageKey] =
     useState<InterviewTier>("specialist");
   const [bookingOpen, setBookingOpen] = useState(false);
