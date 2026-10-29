@@ -6,6 +6,7 @@ import "./mobile.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getProductSiteUrl()),
+  applicationName: "MedicForest",
   title: "MedicForest",
   description:
     "Medical school Med interview practice, free questions and personalised admissions tutoring.",

@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 import { FeedbackPageClient } from "./_client";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = productPageMetadata({
   title: "Feedback & Support | MedicForest",
-  description:
-    "Get in touch with MedicForest. Email medwithrish@gmail.com, DM @medwithrish_ on Instagram, or @medwithrish on TikTok, or send technical feedback.",
-  alternates: {
-    canonical: "/feedback",
-  },
-};
+  description: "Send technical feedback or get help with MedicForest medicine interview practice. Contact MedWithRish by email or social media.",
+  path: "/feedback",
+});
 
 export default function FeedbackPage() {
   return <FeedbackPageClient />;

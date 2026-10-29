@@ -7,7 +7,7 @@ import { InterviewShell } from "../../_components/InterviewShell";
 import { SavedInterviewReview } from "../../_components/SavedInterviewReview";
 import { findInterviewStation } from "../../_data/interview-stations";
 
-export const metadata = { title: "Your saved Med interview review | MedicForest" };
+export const metadata = { title: "Your saved Med interview review | MedicForest", robots: { index: false, follow: true } };
 
 export default async function Page({ params }: { params: Promise<{ report: string }> }) {
   const { report } = await params;

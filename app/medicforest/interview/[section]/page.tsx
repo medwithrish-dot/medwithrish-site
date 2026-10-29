@@ -7,13 +7,14 @@ import { AIInterviewLanding } from "../_components/AIInterviewLanding";
 import { InterviewShell } from "../_components/InterviewShell";
 import { InterviewPreparationViews } from "../_components/InterviewPreparationViews";
 import { isAcademicInterview } from "../_data/university-stations";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
   "ai-interviews": { title: "Start AI Med Interview Practice", subtitle: "Choose the free station, a university preset, or a focused Med interview topic.", activeLabel: "AI Interviews" },
   "question-bank": { title: "Question Bank", subtitle: "Explore Med interview questions and practise your answers.", activeLabel: "Question Bank" },
   groups: { title: "Better practice, together.", subtitle: "Bring your friends into a study group and build your confidence as a team.", activeLabel: "Groups" },
   leaderboard: { title: "The free AI Med interview challenge", subtitle: "Try the Why Medicine? station and beat Medwithrish’s score of 96%.", activeLabel: "Leaderboard" },
-  guides: { title: "Med Interview guide library", subtitle: "Search explanations, station techniques and hot topics. Start with a featured guide or explore a subject.", activeLabel: "Guides" },
+  guides: { title: "Medicine interview guides: MMI, ethics & NHS hot topics", subtitle: "Search explanations, station techniques and hot topics. Start with a featured guide or explore a subject.", activeLabel: "Guides" },
   progress: { title: "See how far you have come.", subtitle: "Your saved Med interview feedback, brought together. Practice scores are capped at 99%.", activeLabel: "Progress" },
   plan: { title: "One station at a time.", subtitle: "Master seven core stations with guides and practice questions, then move on to mock interviews.", activeLabel: "Plan" },
   notifications: { title: "Your Med interview updates.", subtitle: "Pick up a station or explore your latest feedback.", activeLabel: "Dashboard" },
@@ -22,7 +23,18 @@ type Search = Record<string, string | string[] | undefined>;
 const single = (value: string | string[] | undefined) => Array.isArray(value) ? value[0] : value;
 export async function generateMetadata({ params }: { params: Promise<{ section: string }> }): Promise<Metadata> {
   const { section } = await params;
-  return { title: `${pages[section]?.activeLabel ?? "Med Interviews"} | MedicForest` };
+  const config = Object.hasOwn(pages, section) ? pages[section] : undefined;
+  if (!config) notFound();
+  const searchDetails: Record<string, { title: string; description: string }> = {
+    guides: { title: "Medicine Interview Guides: MMI, Ethics & NHS Topics | MedicForest", description: "Free medicine interview guides covering motivation, MMI techniques, medical ethics and NHS hot topics. Explore practical approaches, examples and official sources." },
+    "question-bank": { title: "Free Medicine Interview Questions & Markschemes | MedicForest", description: "Practise medicine interview questions with free markschemes. Explore motivation, ethics, communication and NHS topics for MMI and panel preparation." },
+    leaderboard: { title: "Free Why Medicine Interview Challenge | MedicForest", description: "Explore the free Why Medicine interview challenge and public leaderboard. Practise reflecting on your motivation for becoming a doctor." },
+  };
+  return productPageMetadata({
+    ...(searchDetails[section] ?? { title: `${config.activeLabel} | MedicForest`, description: config.subtitle }),
+    path: `/interviews/${section}`,
+    noIndex: !Object.hasOwn(searchDetails, section),
+  });
 }
 export default async function Page({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<Search> }) {
   const { section } = await params;

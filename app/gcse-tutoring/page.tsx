@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "GCSE Tutoring | MedWithRish",
   description: "Build stronger GCSE grades and confidence with revision planning, teaching and exam practice.",
-  alternates: { canonical: "/gcse-tutoring" },
-};
+  path: "/gcse-tutoring",
+});
 
 import GuidePage from "@/components/GuidePage";
 import { contactHref } from "@/utils/medwithrish/site-links";

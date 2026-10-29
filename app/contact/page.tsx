@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "Help & Support | MedWithRish",
   description: "Contact Rishoo about UCAT tutoring, interviews, personal statement sessions and admissions resources.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 import Image from "next/image";
 import Link from "next/link";

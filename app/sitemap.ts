@@ -10,6 +10,7 @@ const publicRoutes: Array<{
 }> = [
   { path: "/", changeFrequency: "monthly", priority: 1 },
   { path: "/ucat-tutoring", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/tutoring", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-mock-difficulty", changeFrequency: "weekly", priority: 0.85 },
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },

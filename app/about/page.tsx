@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "About MedWithRish | MedWithRish",
   description: "Meet Rishoo and learn about MedWithRish medical and dental admissions resources and tutoring.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 import Navbar from "@/components/Navbar";
 import Link from "next/link";

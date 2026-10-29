@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import {
   ArrowRight,
@@ -23,14 +24,11 @@ import { MedicForestLogo } from "../_components/MedicForestLogo";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
-  title: {
-    absolute: "MedicForest Interviews | 550+ free questions with markschemes",
-  },
-  description:
-    "Start practising immediately with 550+ free medicine interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
-  alternates: { canonical: "/interviews" },
-};
+export const metadata: Metadata = productPageMetadata({
+  title: "Free Medicine Interview Questions & AI Practice | MedicForest",
+  description: "Prepare for medical school interviews with 550+ free questions and markschemes, MMI and ethics guides, AI interview practice and personalised preparation tools.",
+  path: "/",
+});
 
 const bankHref = "/medicforest/interview/question-bank";
 const platformHref = "/interviews/dashboard";

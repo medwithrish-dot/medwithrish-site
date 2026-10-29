@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "A-Level Tutoring | MedWithRish",
   description: "Get support with A-Level topics, exam technique, revision planning and predicted grades.",
-  alternates: { canonical: "/alevel-tutoring" },
-};
+  path: "/alevel-tutoring",
+});
 
 import GuidePage from "@/components/GuidePage";
 import { contactHref } from "@/utils/medwithrish/site-links";

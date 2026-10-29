@@ -8,7 +8,9 @@ const personalStatement = { label: "UCAS: personal statements from 2026 entry", 
 
 export const admissionsGuides: Record<string, GuidePageProps> = {
   "personal-statements-guide": {
-    eyebrow: "Your application", title: "A personal statement that sounds like you.",
+    eyebrow: "Your application", title: "Medicine & dentistry personal statement guide",
+    canonicalPath: "/personal-statements-guide",
+    searchDescription: "Write your medicine or dentistry personal statement using the three UCAS questions, reflective examples and a practical editing checklist.",
     intro: "Build a clear, reflective application for medicine or dentistry. Start with your own evidence, organise it around the current UCAS questions, and explain what each experience taught you.",
     takeaway: "You do not need a dramatic opening. You need specific experiences, thoughtful reflection and a clear reason for choosing the course.",
     sections: [
@@ -23,7 +25,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Work experience", href: "/work-experience-guide", description: "Gather evidence worth reflecting on." }, { label: "Year 12 planning", href: "/year12-guide", description: "Bring your preparation together." }, { label: "Interview preparation", href: "/interviews", description: "Practise explaining your experiences." }],
   },
   "work-experience-guide": {
-    eyebrow: "Explore the profession", title: "Make your work experience count.",
+    eyebrow: "Explore the profession", title: "Medicine & dentistry work experience guide",
+    canonicalPath: "/work-experience-guide",
+    searchDescription: "Find medicine and dentistry work experience, explore volunteering options and learn how to reflect on your experiences for applications and interviews.",
     intro: "Learn what to notice, how to reflect, and how to discuss an experience without turning it into a list of hours. Useful learning can come from care, service, employment and observation.",
     takeaway: "The value of an experience lies in what you understand afterwards. Record small, specific moments while they are still fresh.",
     sections: [
@@ -38,7 +42,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Personal statements", href: "/personal-statements-guide", description: "Turn evidence into clear writing." }, { label: "Year 12 planning", href: "/year12-guide", description: "Make time for experience and study." }, { label: "Healthcare careers", href: "/related-careers-guide", description: "Explore the wider team." }],
   },
   "year12-guide": {
-    eyebrow: "Plan your next steps", title: "Your Year 12 application roadmap.",
+    eyebrow: "Plan your next steps", title: "Year 12 medicine & dentistry application roadmap",
+    canonicalPath: "/year12-guide",
+    searchDescription: "Plan your medicine or dentistry application in Year 12: academics, work experience, UCAT preparation, personal statements and course research.",
     intro: "Balance schoolwork, career exploration and admissions preparation with a plan you can actually follow. Build the foundations early so your summer is manageable.",
     takeaway: "Start with your school timetable and academic priorities. Fit admissions preparation around them, then review the plan each half term.",
     sections: [
@@ -53,7 +59,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "UCAT preparation", href: "/ucat-timeline", description: "Build a flexible practice plan." }, { label: "Work experience", href: "/work-experience-guide", description: "Learn from the opportunities you have." }, { label: "Personal statements", href: "/personal-statements-guide", description: "Organise your application evidence." }],
   },
   "gcse-revision-guide": {
-    eyebrow: "Study with purpose", title: "A GCSE revision plan that earns its time.",
+    eyebrow: "Study with purpose", title: "GCSE revision guide: active recall & exam practice",
+    canonicalPath: "/gcse-revision-guide",
+    searchDescription: "Build a GCSE revision plan with active recall, exam questions, spaced practice and an error log. Use your specification to target weaker topics.",
     intro: "Replace endless rereading with focused recall, exam questions and careful corrections. Use your specification and recent work to decide what deserves attention next.",
     takeaway: "Every revision session should leave you with something you can do better. Measure what you can recall or answer, not how polished your notes look.",
     sections: [
@@ -67,7 +75,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Year 12 planning", href: "/year12-guide", description: "Prepare for the next stage." }, { label: "Healthcare careers", href: "/related-careers-guide", description: "Explore what interests you." }, { label: "Admissions resources", href: "/resources", description: "Find the right next resource." }],
   },
   "ucat-timeline": {
-    eyebrow: "Prepare for the UCAT", title: "Build your UCAT plan backwards.",
+    eyebrow: "Prepare for the UCAT", title: "UCAT preparation timeline & study plan",
+    canonicalPath: "/ucat-timeline",
+    searchDescription: "Create a flexible UCAT study plan, from learning question types to timed practice, mock review and test-day preparation for VR, DM, QR and SJT.",
     intro: "A flexible preparation timeline for learning the test, practising under time pressure and reviewing what went wrong. Adapt the suggested stages to your test date and available time.",
     takeaway: "More questions are only useful when they change your next attempt. Make time for review, targeted practice and rest alongside mocks.",
     sections: [
@@ -82,7 +92,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Free score tracker", href: "/ucat-score-tracker", description: "Keep a record of practice and review." }, { label: "Mock difficulty spreadsheet", href: "/ucat-mock-difficulty", description: "Add context to commercial mock scores." }, { label: "Year 12 planning", href: "/year12-guide", description: "Balance preparation with schoolwork." }],
   },
   "gateway-foundation-guide": {
-    eyebrow: "Explore your options", title: "Understand gateway and foundation routes.",
+    eyebrow: "Explore your options", title: "Gateway & foundation medicine and dentistry guide",
+    canonicalPath: "/gateway-foundation-guide",
+    searchDescription: "Explore gateway and foundation routes into medicine and dentistry. Compare course eligibility, entry requirements, progression conditions and funding.",
     intro: "Compare the purpose, eligibility and progression rules of alternative routes into medicine or dentistry. A course title alone does not tell you whether a programme fits your circumstances.",
     takeaway: "Check the exact course code, entry year and progression conditions. A generic foundation course is not a guaranteed route into medicine or dentistry.",
     sections: [
@@ -96,7 +108,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Healthcare careers", href: "/related-careers-guide", description: "Compare different professional roles." }, { label: "Year 12 planning", href: "/year12-guide", description: "Build a considered application plan." }, { label: "Personal statements", href: "/personal-statements-guide", description: "Explain your motivation clearly." }],
   },
   "related-careers-guide": {
-    eyebrow: "Explore healthcare", title: "Find the healthcare role that fits you.",
+    eyebrow: "Explore healthcare", title: "Healthcare careers: alternatives to medicine & dentistry",
+    canonicalPath: "/related-careers-guide",
+    searchDescription: "Compare healthcare careers beyond medicine and dentistry. Explore different roles, training routes and responsibilities to inform your course choice.",
     intro: "Look beyond a degree title. Compare the work people do, the way they train, and the responsibilities they hold before deciding what you want from a healthcare career.",
     takeaway: "Start with the kind of work you enjoy: direct care, investigation, rehabilitation, medicines or research. Then explore the professions that do it.",
     sections: [
@@ -111,7 +125,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "Work experience", href: "/work-experience-guide", description: "Explore careers through experience." }, { label: "Gateway routes", href: "/gateway-foundation-guide", description: "Understand different entry pathways." }, { label: "Personal statements", href: "/personal-statements-guide", description: "Explain your course choice." }],
   },
   "ucat-score-tracker": {
-    eyebrow: "Free planning tool", title: "Turn your mock scores into a plan.",
+    eyebrow: "Free planning tool", title: "Free UCAT mock score tracker: Excel download",
+    canonicalPath: "/ucat-score-tracker",
+    searchDescription: "Download a free UCAT score tracker in Excel. Record mock results, review VR, DM, QR and SJT separately, and turn recurring mistakes into practice targets.",
     intro: "Download the MedWithRish UCAT score tracker and use your practice history to choose what to work on next. A score is a starting point for review, not a verdict on your application.",
     takeaway: "Keep one consistent record of scores, conditions and lessons. Your next practice task should come from the mistakes behind the numbers.",
     sections: [
@@ -125,7 +141,9 @@ export const admissionsGuides: Record<string, GuidePageProps> = {
     related: [{ label: "UCAT preparation timeline", href: "/ucat-timeline", description: "Give your practice a structure." }, { label: "Mock difficulty spreadsheet", href: "/ucat-mock-difficulty", description: "Understand the limits of comparisons." }, { label: "UCAT tutoring", href: "/ucat-tutoring", description: "Work on a specific sticking point." }],
   },
   "ucat-mock-difficulty": {
-    eyebrow: "Community practice resource", title: "Put your UCAT mock scores in context.",
+    eyebrow: "Community practice resource", title: "UCAT mock difficulty comparison spreadsheet",
+    canonicalPath: "/ucat-mock-difficulty",
+    searchDescription: "Compare student-reported UCAT mock scores with the MedWithRish difficulty spreadsheet. Learn how to interpret averages and contribute your results.",
     intro: "Use the shared difficulty spreadsheet to compare practice experiences, then bring the focus back to your own errors, timing and progress.",
     takeaway: "Community averages can add context. They do not tell you what your official score will be or which mock every student should find easy.",
     sections: [

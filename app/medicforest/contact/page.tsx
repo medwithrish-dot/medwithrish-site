@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Mail, MessageSquare } from "lucide-react";
 import { FaInstagram, FaTiktok } from "react-icons/fa";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 
-export const metadata: Metadata = {
-  title: "Help & Support | MedicForest",
-  description:
-    "Get in touch with MedWithRish and MedicForest. Email medwithrish@gmail.com or DM @medwithrish_ on Instagram or @medwithrish on TikTok.",
-  alternates: {
-    canonical: "/contact",
-  },
-};
+export const metadata: Metadata = productPageMetadata({
+  title: "Contact MedicForest & MedWithRish | Help and Support",
+  description: "Contact MedWithRish and MedicForest about medicine admissions resources, tutoring and interview practice. Find email and social contact details.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

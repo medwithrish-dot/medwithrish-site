@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, Check, Clock3 } from "lucide-react";
 import Navbar from "./Navbar";
+import JsonLd from "./JsonLd";
+import { articleSchema, breadcrumbSchema } from "@/utils/seo";
+import { getPublicSiteUrl } from "@/utils/site-url";
 import styles from "./GuidePage.module.css";
 
 export type GuideSection = {
@@ -15,6 +18,8 @@ export type GuidePageProps = {
   eyebrow: string;
   title: string;
   intro: string;
+  canonicalPath?: string;
+  searchDescription?: string;
   sections: GuideSection[];
   takeaway?: string;
   readTime?: string;
@@ -32,7 +37,10 @@ export default function GuidePage({
   eyebrow, title, intro, sections, takeaway, readTime = "5 min read",
   checklist, sources, related, ctaLabel, ctaHref, download = false,
   resourceLabel = "Free guide", secondaryAction,
+  canonicalPath, searchDescription,
 }: GuidePageProps) {
+  const siteUrl = getPublicSiteUrl();
+  const url = canonicalPath ? new URL(canonicalPath, siteUrl).href : null;
   const cta = ctaLabel && ctaHref && (
     download || ctaHref.startsWith("https://") ? (
       <a href={ctaHref} download={download || undefined} target={download ? undefined : "_blank"} rel={download ? undefined : "noopener noreferrer"} className={styles.primaryAction}>
@@ -44,15 +52,23 @@ export default function GuidePage({
 
   return (
     <div className="medwithrish-bg">
+      {url && <JsonLd data={[
+        articleSchema({ title, description: searchDescription ?? intro, url, siteName: "MedWithRish", siteUrl, sections: sections.map(section => section.title), sources: sources?.map(source => source.href) }),
+        breadcrumbSchema([{ name: "Home", url: `${siteUrl}/` }, { name: "Admissions resources", url: `${siteUrl}/resources` }, { name: title, url }]),
+      ]} />}
       <Navbar />
       <main className={styles.page}>
-        <Link href="/resources" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All resources</Link>
+        <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
+          <Link href="/">Home</Link><span aria-hidden="true">/</span>
+          <Link href="/resources" className={styles.back}><ArrowLeft size={15} aria-hidden="true" /> All resources</Link>
+          <span aria-hidden="true">/</span><span aria-current="page">{title}</span>
+        </nav>
         <header className={styles.hero}>
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}><BookOpen size={14} aria-hidden="true" /> {eyebrow}</p>
             <h1>{title}</h1>
             <p className={styles.intro}>{intro}</p>
-            <div className={styles.meta}><span>By MedWithRish</span><span><Clock3 size={14} aria-hidden="true" />{readTime}</span><span>{resourceLabel}</span></div>
+            <div className={styles.meta}><span>By <Link href="/about" rel="author">MedWithRish</Link></span><span><Clock3 size={14} aria-hidden="true" />{readTime}</span><span>{resourceLabel}</span></div>
           </div>
           <div className={styles.heroAside}>
             <span className={styles.asideLabel}>Start with this</span>
@@ -72,7 +88,7 @@ export default function GuidePage({
             <p className={styles.sideNote}>Keep this guide open while you plan. Use the section links to come back to the part you need.</p>
           </aside>
 
-          <div className={styles.article}>
+          <article className={styles.article} aria-label={title}>
             {sections.map((section, index) => (
               <section id={`guide-section-${index + 1}`} className={styles.section} key={section.title} aria-labelledby={`guide-heading-${index + 1}`}>
                 <div className={styles.sectionHeading}><span className={styles.number}>{String(index + 1).padStart(2, "0")}</span><h2 id={`guide-heading-${index + 1}`}>{section.title}</h2></div>
@@ -88,7 +104,7 @@ export default function GuidePage({
             {sources && <section className={styles.sources} aria-label="Official sources"><h2>Check the official guidance</h2><p>Use the original guidance for application rules, course requirements and test changes.</p><ul>{sources.map(source => <li key={source.href}><a href={source.href} target="_blank" rel="noopener noreferrer">{source.label}<ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a></li>)}</ul></section>}
 
             {cta && <section className={styles.support}><div><p className={styles.eyebrow}>Take the next step</p><h2>{download ? "Your planning tools, ready to use." : "A little direction can make a difference."}</h2><p>{download ? "Download the resource and turn your next practice session into a useful record." : "Use the resources or book focused support for the part of your preparation you want to improve."}</p></div>{cta}{secondaryAction && <a href={secondaryAction.href} target="_blank" rel="noopener noreferrer" className={styles.secondaryAction}>{secondaryAction.label}<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>}</section>}
-          </div>
+          </article>
         </div>
 
         {related && <section className={styles.related} aria-labelledby="related-guides-heading"><p className={styles.eyebrow}>Keep exploring</p><h2 id="related-guides-heading">Your next read</h2><div>{related.map(item => <Link href={item.href} key={item.href}><span><strong>{item.label}</strong>{item.description && <span>{item.description}</span>}</span><ArrowRight size={18} aria-hidden="true" /></Link>)}</div></section>}

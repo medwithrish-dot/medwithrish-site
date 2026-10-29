@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,14 +18,11 @@ import {
 import Navbar from "@/components/Navbar";
 import { FREE_INTERVIEW_GUIDE_URL } from "@/utils/medwithrish/site-links";
 
-export const metadata: Metadata = {
-  title: "Medicine Interviews | MedWithRish",
-  description:
-    "Prepare for medicine interviews with MMI strategy, panel Med interview guidance, ethics, motivation, reflection and practice structure.",
-  alternates: {
-    canonical: "/interviews",
-  },
-};
+export const metadata: Metadata = publicPageMetadata({
+  title: "Medicine Interview Preparation: MMI & Panel Guide | MedWithRish",
+  description: "Prepare for medicine interviews with MMI techniques, panel interview guidance, medical ethics, motivation and work experience reflection.",
+  path: "/interviews",
+});
 
 const interviewFormats = [
   {

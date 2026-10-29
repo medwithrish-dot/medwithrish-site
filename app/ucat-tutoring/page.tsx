@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 import { UCATTutoringClient } from "./_client";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "1-to-1 UCAT Tutoring & Crash Course | MedWithRish",
   description:
     "Book 1-to-1 UCAT tutoring with @medwithrish or a specialist. Master calculator shortcuts, timing strategy, triage methods and weak subtests.",
-  alternates: { canonical: "/ucat-tutoring" },
-};
+  path: "/ucat-tutoring",
+});
 
 export default async function Page({
   searchParams,

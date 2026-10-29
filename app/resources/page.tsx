@@ -5,15 +5,18 @@ import Navbar from "@/components/Navbar";
 import ResourceLibrary, { type ResourceCategory } from "@/components/ResourceLibrary";
 import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 import styles from "./page.module.css";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
+import { getProductSiteUrl } from "@/utils/site-url";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "Admissions Resources & Revision Guides | MedWithRish",
   description: "Free guides, UCAT planning tools and focused tutoring for medicine and dentistry applications. Explore personal statements, experience, revision and interviews.",
-  alternates: { canonical: "/resources" },
-};
+  path: "/resources",
+});
 
 const categories: ResourceCategory[] = [
   { id: "interviews", name: "Interviews", description: "Build clear answers, explore scenarios and practise reflecting on your own experiences.", items: [
+    { title: "Medicine interview guide library", href: `${getProductSiteUrl()}/interviews/guides`, badge: "Free reading guides", description: "Read practical guides to MMI techniques, medical ethics, motivation and NHS hot topics on MedicForest.", external: true },
     { title: "The Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, badge: "Free PDF", description: "Ethical frameworks, interview topics and reflection guidance to help structure your preparation.", external: true },
     { title: "Interview preparation hub", href: "/interviews", badge: "Practice & guidance", description: "Explore interview resources and the MedicForest question bank, station practice and feedback." },
     { title: "1-to-1 interview tutoring", href: "/interview-tutoring", badge: "Tutoring", description: "Practise a mock interview and work through specific feedback with a tutor." },
@@ -45,7 +48,7 @@ const categories: ResourceCategory[] = [
 export default function ResourcesPage() {
   return <div className="medwithrish-bg"><Navbar /><main className={styles.page}>
     <header className={styles.hero}>
-      <div><p className={styles.eyebrow}><BookOpen size={15} aria-hidden="true" /> The MedWithRish library</p><h1>A clearer path<br />to your next step.</h1><p className={styles.intro}>Practical guides, useful tools and a little direction for your medicine or dentistry application. Start where you are, and find what helps next.</p><div className={styles.tags}><span>Free reading guides</span><span>Downloadable tools</span><span>Focused support</span></div></div>
+      <div><p className={styles.eyebrow}><BookOpen size={15} aria-hidden="true" /> The MedWithRish library</p><h1>Free medicine &amp; dentistry<br />admissions guides</h1><p className={styles.intro}>Practical guides, useful tools and a little direction for your medicine or dentistry application. Start where you are, and find what helps next.</p><div className={styles.tags}><span>Free reading guides</span><span>Downloadable tools</span><span>Focused support</span></div></div>
       <aside className={styles.featured}><span className={styles.eyebrow}>A good place to start</span><span className={styles.featuredIcon}><BookOpen size={27} aria-hidden="true" /></span><h2>The Medicine<br />Interview Guide</h2><p>A free PDF to help you organise ethical scenarios, interview topics and personal reflections.</p><a href={FREE_INTERVIEW_GUIDE_URL} target="_blank" rel="noopener noreferrer">Get the free guide<ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a></aside>
     </header>
     <ResourceLibrary categories={categories} />

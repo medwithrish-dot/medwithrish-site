@@ -5,6 +5,7 @@ import { InterviewDashboard } from "../_components/InterviewDashboard";
 import { InterviewShell } from "../_components/InterviewShell";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   title: "Med Interviews | MedicForest",
   description:
     "Your medicine Med interview preparation: university dates, a personal practice plan, saved feedback and progress.",

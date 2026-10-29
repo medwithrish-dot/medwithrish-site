@@ -3,6 +3,7 @@ import { ManageAccountClient } from "./_client";
 import { safeInterviewReturnPath } from "@/utils/medicforest/feature-access";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   title: "Manage Account | MedicForest",
   description:
     "Manage your MedicForest account settings, subscription billing, permissions, and platform access across UCAT and Med Interviews.",

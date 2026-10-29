@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,20 +12,11 @@ import { FaInstagram, FaTiktok } from "react-icons/fa";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import { RealStudentSuccessStories } from "./_components/RealStudentSuccessStories";
 
-export const metadata: Metadata = {
-  title: "About MedicForest | Structured Medical Admissions & Mentorship",
-  description:
-    "Learn about MedicForest - realistic medical interview practice, useful feedback and personalised guidance founded by Rish (@medwithrish_).",
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "About MedicForest | Structured Medical Admissions & Mentorship",
-    description:
-      "Helping future medics prepare with more structure, confidence and support. Founded from real admissions experience by Rish.",
-    url: "/about",
-    siteName: "MedicForest",
-    type: "website",
-  },
-};
+export const metadata: Metadata = productPageMetadata({
+  title: "About MedicForest & MedWithRish | Medical Admissions Support",
+  description: "Meet Rish and explore MedicForest: medicine interview practice, free admissions resources, structured feedback and personalised preparation support.",
+  path: "/about",
+});
 
 const PINE_TREE_PATH =
   "M18 3 C18 3 13.5 10.5 10 14 C12 14.5 13.8 14.5 14.5 14.5 C12 18.5 8 22 5.5 24.5 C7.8 25 10 25 11.5 25 C8 29 4 33 2 34.5 C6.5 34.5 13.5 34.5 16 34.5 L16 39.5 C16 40 16.5 40.5 17 40.5 L19 40.5 C19.5 40.5 20 40 20 39.5 L20 34.5 C22.5 34.5 29.5 34.5 34 34.5 C32 33 28 29 24.5 25 C26 25 28.2 25 30.5 24.5 C28 22 24 18.5 21.5 14.5 C22.2 14.5 24 14.5 26 14 C22.5 10.5 18 3 18 3 Z";

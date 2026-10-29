@@ -19,9 +19,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getPublicSiteUrl()),
-  title: "MedWithRish",
+  title: "Medicine & Dentistry Admissions Guides and Tutoring | MedWithRish",
   description:
     "Medical and dental school admissions guides, Med interview preparation, tutoring and application resources from MedWithRish.",
+  applicationName: "MedWithRish",
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

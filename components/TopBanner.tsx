@@ -33,11 +33,11 @@ export default function TopBanner() {
         </span>
 
         {/* Headline */}
-        <h2 className="max-w-4xl text-2xl font-bold leading-tight tracking-tight md:text-4xl">
+        <h1 className="max-w-4xl text-2xl font-bold leading-tight tracking-tight md:text-4xl">
           UCAT Notes +{" "}
           <span className="text-yellow-300 font-extrabold">FREE</span>{" "}
           Medicine Med Interview Guide
-        </h2>
+        </h1>
 
         {/* Subtext */}
         <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 md:text-base">

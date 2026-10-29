@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 import { PersonalStatementClient } from "./_client";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "1-to-1 Personal Statement Support & Review | MedWithRish",
   description:
     "Improve the structure, clarity and medical reflection in your medicine or dentistry personal statement with dedicated 1-to-1 review.",
-  alternates: { canonical: "/personal-statement-session" },
-};
+  path: "/personal-statement-session",
+});
 
 export default async function Page({
   searchParams,

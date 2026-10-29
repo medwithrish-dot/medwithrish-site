@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Clock3, ExternalLink, Users } from "lucide-react";
 import { InterviewShell } from "../../_components/InterviewShell";
 import { findInterviewUniversity, interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../../_data/universities";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 
 export function generateStaticParams() {
   return interviewUniversities.map(({ slug }) => ({ university: slug }));
@@ -13,7 +14,12 @@ type UniversityPageProps = { params: Promise<{ university: string }> };
 
 export async function generateMetadata({ params }: UniversityPageProps): Promise<Metadata> {
   const entry = findInterviewUniversity((await params).university);
-  return { title: `${entry?.name ?? "University"} Med Interview | MedicForest` };
+  if (!entry) notFound();
+  return productPageMetadata({
+    title: `${entry.name} Medicine Interview Preparation | MedicForest`,
+    description: `Prepare for your ${entry.name} medicine interview with format notes, official admissions sources and a practice preset. Check your invitation for confirmed timings.`,
+    path: `/interviews/universities/${entry.slug}`,
+  });
 }
 
 export default async function Page({ params }: UniversityPageProps) {

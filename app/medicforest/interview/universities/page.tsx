@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { InterviewShell } from "../_components/InterviewShell";
 import { UniversityCatalogue } from "./UniversityCatalogue";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 
-export const metadata: Metadata = { title: "Med Interview Universities | MedicForest" };
+export const metadata: Metadata = productPageMetadata({
+  title: "Medical School Interview Formats by University | MedicForest",
+  description: "Explore UK medical school interview formats, timing notes and official admissions links. Compare university practice presets before your MMI or panel interview.",
+  path: "/interviews/universities",
+});
 
 export default function Page() {
   return (

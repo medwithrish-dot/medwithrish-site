@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import AccountPage from "../medicforest/account/page";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   title: "Manage Account | MedicForest",
   description:
     "Manage your MedicForest account settings, subscription billing, permissions, and platform access across UCAT and Med Interviews.",

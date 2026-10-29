@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/utils/medwithrish/metadata";
 import { InterviewTutoringClient } from "./_client";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicPageMetadata({
   title: "1-to-1 Med Interview Tutoring | MedWithRish",
   description:
     "Personal 1-to-1 medicine interview coaching with @medwithrish and specialists. Realistic MMI and panel mock practice, station scorecards and structured technique.",
-  alternates: { canonical: "/interview-tutoring" },
-};
+  path: "/interview-tutoring",
+});
 
 export default async function Page({
   searchParams,

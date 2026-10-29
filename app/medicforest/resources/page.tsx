@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { productPageMetadata } from "@/utils/medicforest/metadata";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -12,12 +13,11 @@ import {
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
-export const metadata: Metadata = {
-  title: "Admissions Resources & Revision Guides | MedicForest",
-  description:
-    "Free medical admissions resources - UCAT guides, free Medicine interview guide, personal statement support and 1-to-1 coaching.",
-  alternates: { canonical: "/resources" },
-};
+export const metadata: Metadata = productPageMetadata({
+  title: "Free Medicine Admissions Resources & Guides | MedicForest",
+  description: "Explore free medicine interview guides, UCAT planning tools, personal statement resources and admissions support from MedicForest and MedWithRish.",
+  path: "/resources",
+});
 
 type Resource = {
   title: string;
@@ -43,6 +43,12 @@ const categories: ResourceCategory[] = [
     icon: MessageSquare,
     description: "Realistic MMI station frameworks, ethical scenarios, NHS hot topics and model reflections.",
     items: [
+      {
+        title: "Medicine Interview Guide Library",
+        href: "/medicforest/interview/guides",
+        badge: "Free Reading Guides",
+        description: "Explore MMI techniques, medical ethics, motivation and NHS hot topics with practical approaches and official sources.",
+      },
       {
         title: "The Complete Medicine Interview Guide",
         href: FREE_INTERVIEW_GUIDE_URL,
