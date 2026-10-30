@@ -230,7 +230,7 @@ test("free challenge links recover the lifetime attempt and preserve Premium ret
   }
 });
 
-for (const failed of [false, true]) test(failed ? "a failed load does not pretend the leaderboard is empty" : "the guest leaderboard shows a sign-in action instead of editable preferences", async () => {
+async function leaderboardView({ failed = false, boardData = { entries: [], preference: null, bestScore: null }, challengeDestination = null } = {}) {
   const source = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewLeaderboard.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true,
@@ -256,6 +256,7 @@ for (const failed of [false, true]) test(failed ? "a failed load does not preten
     },
   };
   const loaded = { exports: {} };
+  const requests = [];
   new Function("require", "module", "exports", "fetch", output)(name => {
     if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return react;
@@ -264,10 +265,13 @@ for (const failed of [false, true]) test(failed ? "a failed load does not preten
     if (name === "lucide-react") return new Proxy({}, { get: () => "icon" });
     if (name === "@/utils/interviews/public-name") return { publicNameError: () => null };
     throw new Error(`Unexpected leaderboard dependency: ${name}`);
-  }, loaded, loaded.exports, async () => failed ? Response.json({ error: "Please retry." }, { status: 503 }) : Response.json({ entries: [], preference: null, bestScore: null }));
+  }, loaded, loaded.exports, async (url, options = {}) => {
+    requests.push({ url, ...options });
+    return failed ? Response.json({ error: "Please retry." }, { status: 503 }) : Response.json(boardData);
+  });
   const render = () => {
     cursor = 0;
-    const tree = loaded.exports.InterviewLeaderboard();
+    const tree = loaded.exports.InterviewLeaderboard({ challengeDestination });
     const pendingEffects = effects; effects = [];
     pendingEffects.forEach(effect => effect());
     return tree;
@@ -279,13 +283,72 @@ for (const failed of [false, true]) test(failed ? "a failed load does not preten
   };
   render();
   await new Promise(resolve => setImmediate(resolve));
-  const guest = render();
+  return { tree: render(), render, find, requests };
+}
+
+function viewText(node) {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(viewText).join(" ");
+  return node && typeof node === "object" ? viewText(node.props?.children) : "";
+}
+
+for (const failed of [false, true]) test(failed ? "a failed personal-score load keeps the paused notice and benchmark available" : "the guest leaderboard shows a sign-in action instead of editable preferences", async () => {
+  const { tree: guest, find } = await leaderboardView({ failed });
+  assert.match(viewText(guest), /Public rankings are temporarily paused/);
+  assert.match(viewText(guest), /The challenge is still open/);
+  assert.match(viewText(guest), /Your benchmark to beat/);
+  assert.equal(find(guest, node => node.type === "table"), undefined);
   if (failed) {
     assert.ok(find(guest, node => node.props?.role === "alert"));
-    assert.equal(find(guest, node => node.props?.children === "A fresh start for everyone"), undefined);
-    assert.ok(find(guest, node => node.props?.children === "Scores are currently unavailable. Use Try again above."));
+    assert.doesNotMatch(viewText(guest), /A fresh start for everyone/);
     return;
   }
   assert.ok(find(guest, node => node.type === "link" && node.props?.href === "/medicforest/account"));
   assert.equal(find(guest, node => node.type === "input" && node.props?.id === "leaderboard-name"), undefined);
+});
+
+for (const signedIn of [false, true]) test(`paused rankings hide participant entries for ${signedIn ? "members" : "guests"} while keeping challenge access`, async () => {
+  const { tree, find } = await leaderboardView({ boardData: {
+    entries: [
+      { rank: 1, display_name: "Participant Alice", score: 97.5, is_you: false },
+      { rank: 2, display_name: "Medwithrish", score: 96, is_benchmark: true },
+      { rank: 3, display_name: "Participant Bob", score: 89, is_you: signedIn },
+    ],
+    preference: signedIn ? { display_name: "My nickname", leaderboard_opt_in: true } : null,
+    bestScore: signedIn ? 89 : null,
+  } });
+  const text = viewText(tree);
+  assert.doesNotMatch(text, /Participant Alice|Participant Bob|97\.5%|A fresh start for everyone/);
+  assert.match(text, /Medwithrish/);
+  assert.match(text, /96%/);
+  assert.match(text, /Your scores are still saved as usual/);
+  assert.equal(find(tree, node => node.type === "table"), undefined);
+  assert.ok(find(tree, node => node.type === "link" && node.props?.href === "/medicforest/interview/ai-interviews?station=why-medicine"));
+  if (signedIn) {
+    assert.match(text, /89%/);
+    assert.match(text, /Show my best score when the leaderboard reopens/);
+    assert.equal(find(tree, node => node.type === "input" && node.props?.type === "checkbox").props.checked, true);
+  }
+});
+
+test("sharing preferences still save through the existing API while rankings are paused", async () => {
+  const view = await leaderboardView({ boardData: {
+    entries: [], preference: { display_name: "My nickname", leaderboard_opt_in: false }, bestScore: 89,
+  } });
+  view.find(view.tree, node => node.props?.id === "leaderboard-name").props.onChange({ target: { value: "Future nickname" } });
+  let tree = view.render();
+  view.find(tree, node => node.type === "input" && node.props?.type === "checkbox").props.onChange({ target: { checked: true } });
+  tree = view.render();
+  await view.find(tree, node => node.type === "button" && viewText(node).trim() === "Save preferences").props.onClick();
+  await new Promise(resolve => setImmediate(resolve));
+  const request = view.requests.find(item => item.method === "PATCH");
+  assert.equal(request.url, "/api/interviews/leaderboard");
+  assert.deepEqual(JSON.parse(request.body), { displayName: "Future nickname", optIn: true });
+  assert.match(viewText(view.render()), /Preferences saved/);
+});
+
+test("paused rankings retain the saved challenge review link", async () => {
+  const destination = "/medicforest/interview/reports/saved-attempt";
+  const { tree, find } = await leaderboardView({ challengeDestination: destination });
+  assert.ok(find(tree, node => node.type === "link" && node.props?.href === destination && viewText(node).includes("Review your answer")));
 });
