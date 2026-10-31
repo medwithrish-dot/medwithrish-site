@@ -11,6 +11,7 @@ import styles from "./InterviewMobileNav.module.css";
 
 const interviewLinks = [
   ["Dashboard", "/medicforest/interview/dashboard"],
+  ["Pricing", "/medicforest/pricing"],
   ["AI Interviews", "/medicforest/interview/ai-interviews"],
   ["Question Bank", "/medicforest/interview/question-bank"],
   ["Guides", "/medicforest/interview/guides"],

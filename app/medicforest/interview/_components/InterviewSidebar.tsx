@@ -31,6 +31,11 @@ const interviewPrimaryItems = [
     icon: Home,
     href: "/medicforest/interview/dashboard",
   },
+  {
+    label: "Pricing",
+    icon: BadgePoundSterling,
+    href: "/medicforest/pricing",
+  },
 ] as const;
 
 const landingPrimaryItems = [
