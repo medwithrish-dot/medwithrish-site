@@ -10,7 +10,7 @@ import {
 import { findOrCreateStripeCustomer, customerExists } from "@/utils/billing/stripe-customers";
 import { resolvePremiumPriceId } from "@/utils/billing/stripe-prices";
 import { createCustomerPortalSession } from "@/utils/billing/stripe-portal";
-import { createPremiumCheckoutSession } from "@/utils/billing/stripe-checkout";
+import { createPremiumCheckoutSession, inspectPremiumCheckout } from "@/utils/billing/stripe-checkout";
 import { getBillingReturnPath, type CheckoutReturnArea } from "@/utils/billing/return-destination";
 import {
   billingActionStatuses,
@@ -108,6 +108,16 @@ export async function preparePremiumCheckout({
     existingCustomerId: profile.stripe_customer_id,
   });
 
+  const checkout = await inspectPremiumCheckout(stripe, customerId, user.id);
+  if (checkout.subscription) {
+    await syncStripeSubscription(checkout.subscription, user.id, admin);
+    const url = await createCustomerPortalSession(
+      stripe, customerId, `${siteUrl}${getBillingReturnPath(siteUrl, returnArea, "portal")}`
+    );
+    return { kind: "portal", url };
+  }
+  if (checkout.openSessionUrl) return { kind: "checkout", url: checkout.openSessionUrl };
+
   const priceId = await resolvePremiumPriceId(stripe);
 
   const checkoutUrl = await createPremiumCheckoutSession(stripe, {
@@ -116,6 +126,7 @@ export async function preparePremiumCheckout({
     priceId,
     siteUrl,
     returnArea,
+    previousSessionId: checkout.previousSessionId,
   });
 
   return { kind: "checkout", url: checkoutUrl };

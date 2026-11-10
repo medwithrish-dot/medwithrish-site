@@ -1,4 +1,5 @@
 import type Stripe from "stripe";
+import { createHash } from "node:crypto";
 import { type AdminSupabase, updateProfileCustomerId } from "@/utils/billing/billing-repository";
 
 export async function customerExists(
@@ -53,6 +54,9 @@ export async function findOrCreateStripeCustomer(
     metadata: {
       supabase_user_id: userId,
     },
+  }, {
+    // First-time requests must agree on a customer before they can share checkout.
+    idempotencyKey: `billing-customer-${createHash("sha256").update(`${userId}:${existingCustomerId ?? "first"}`).digest("hex")}`,
   });
 
   await updateProfileCustomerId(admin, userId, customer.id);

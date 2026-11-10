@@ -36,6 +36,129 @@ function load(file, mocks = {}) {
   return compiledModule.exports;
 }
 
+// Model Stripe's durable idempotency cache, independently of application instances.
+function checkoutHarness({ sessions = [], subscriptions = [] } = {}) {
+  const state = { sessions: [...sessions], subscriptions, creations: [], keys: new Map(), synced: [], reads: [], failRead: false };
+  const stripe = {
+    checkout: { sessions: {
+      list: () => {
+        const snapshot = structuredClone(state.sessions);
+        state.reads.push("sessions");
+        return (async function* () {
+          if (state.failRead) throw new Error("Stripe unavailable");
+          yield* snapshot;
+        })();
+      },
+      create: async (params, options) => {
+        assert.ok(options.idempotencyKey);
+        if (state.keys.has(options.idempotencyKey)) return state.keys.get(options.idempotencyKey);
+        const session = { id: `cs_${state.creations.length + 1}`, mode: "subscription", status: "open",
+          client_reference_id: params.client_reference_id, url: `https://checkout.stripe.com/session_${state.creations.length + 1}` };
+        state.creations.push({ params, options });
+        state.keys.set(options.idempotencyKey, session);
+        state.sessions.unshift(session);
+        return session;
+      },
+    } },
+    subscriptions: { list: () => {
+      state.reads.push("subscriptions");
+      return (async function* () { yield* state.subscriptions; })();
+    } },
+  };
+  const mocks = {
+    "@/utils/billing/billing-repository": {
+      ensureBillingProfile: async () => ({ current_plan: "free", stripe_customer_id: "cus_shared", full_name: "Student" }),
+      findManageableSubscription: async () => null,
+    },
+    "@/utils/billing/stripe-customers": { findOrCreateStripeCustomer: async () => "cus_shared" },
+    "@/utils/billing/stripe-prices": { resolvePremiumPriceId: async () => "price_premium" },
+    "@/utils/billing/stripe-subscriptions": {
+      billingActionStatuses: ["active", "trialing", "past_due", "unpaid", "incomplete", "paused"],
+      paidSubscriptionStatuses: ["active", "trialing"],
+      syncStripeSubscription: async subscription => { state.synced.push(subscription); },
+    },
+    "@/utils/billing/stripe-portal": { createCustomerPortalSession: async () => "https://billing.stripe.com/portal" },
+  };
+  // Two separately loaded services represent distinct server instances, with no shared app lock.
+  const services = [load("utils/billing/billing-service.ts", mocks), load("utils/billing/billing-service.ts", mocks)];
+  const run = (index = 0, returnArea = "interviews") => services[index].preparePremiumCheckout({
+    user: { id: "user-shared" }, siteUrl: "https://medicforest.com", returnArea, stripe, admin: {},
+  });
+  return { state, stripe, run };
+}
+
+test("simultaneous checkout requests across instances create one payable session", async () => {
+  const { state, run } = checkoutHarness();
+  const outcomes = await Promise.all([run(0), run(1)]);
+  assert.equal(state.creations.length, 1);
+  assert.equal(outcomes[0].url, outcomes[1].url);
+  const fromAnotherArea = await run(1, "ucat");
+  assert.equal(fromAnotherArea.url, outcomes[0].url);
+  assert.equal(state.creations.length, 1);
+  assert.deepEqual(state.reads.slice(0, 4), ["sessions", "sessions", "subscriptions", "subscriptions"]);
+});
+
+test("expired checkout rotates the key and permits a new purchase after cancellation", async () => {
+  const { state, run } = checkoutHarness({ subscriptions: [{ id: "sub_old", status: "canceled" }] });
+  const first = await run();
+  state.sessions[0].status = "expired";
+  const second = await run();
+  assert.notEqual(first.url, second.url);
+  assert.notEqual(state.creations[0].options.idempotencyKey, state.creations[1].options.idempotencyKey);
+  assert.equal((await run()).url, second.url);
+  assert.equal(state.creations.length, 2);
+});
+
+test("live subscriptions block another checkout while webhook data is delayed", async () => {
+  for (const status of ["active", "trialing", "past_due", "unpaid", "incomplete", "paused"]) {
+    const subscription = { id: "sub_existing", status };
+    const { state, run } = checkoutHarness({ subscriptions: [subscription] });
+    assert.deepEqual(await run(), { kind: "portal", url: "https://billing.stripe.com/portal" });
+    assert.deepEqual(state.synced, [subscription]);
+    assert.equal(state.creations.length, 0);
+  }
+});
+
+test("an older owned open subscription checkout is reused among unrelated payments", async () => {
+  const unrelated = Array.from({ length: 101 }, (_, i) => ({ id: `cs_payment_${i}`, mode: "payment", status: "open" }));
+  const { state, run } = checkoutHarness({ sessions: [
+    ...unrelated,
+    { id: "cs_other", mode: "subscription", status: "open", client_reference_id: "another-user", url: "https://checkout.stripe.com/wrong" },
+    { id: "cs_owned", mode: "subscription", status: "open", metadata: { supabase_user_id: "user-shared" }, url: "https://checkout.stripe.com/owned" },
+  ] });
+  assert.equal((await run()).url, "https://checkout.stripe.com/owned");
+  assert.equal(state.creations.length, 0);
+});
+
+test("checkout fails closed when Stripe session history is unavailable", async () => {
+  const { state, run } = checkoutHarness();
+  state.failRead = true;
+  await assert.rejects(run(), /Stripe unavailable/);
+  assert.equal(state.creations.length, 0);
+});
+
+test("first-time parallel requests share a Stripe customer and replacement uses a different key", async () => {
+  const saved = [];
+  const keys = new Map();
+  const { findOrCreateStripeCustomer } = load("utils/billing/stripe-customers.ts", {
+    "@/utils/billing/billing-repository": { updateProfileCustomerId: async (_admin, _user, id) => saved.push(id) },
+  });
+  const stripe = { customers: {
+    retrieve: async () => ({ deleted: true }),
+    create: async (_params, { idempotencyKey }) => {
+      if (!keys.has(idempotencyKey)) keys.set(idempotencyKey, { id: `cus_${keys.size + 1}` });
+      return keys.get(idempotencyKey);
+    },
+  } };
+  const create = existingCustomerId => findOrCreateStripeCustomer(stripe, {}, { userId: "user-new", email: "test@example.test", existingCustomerId });
+  const [a, b] = await Promise.all([create(), create()]);
+  assert.equal(a, b);
+  assert.equal(keys.size, 1);
+  assert.notEqual(await create(a), a);
+  assert.equal(keys.size, 2);
+  assert.deepEqual(saved.slice(0, 2), [a, a]);
+});
+
 async function withEnv(values, callback) {
   const previous = Object.fromEntries(Object.keys(values).map((key) => [key, process.env[key]]));
   for (const [key, value] of Object.entries(values)) {
@@ -112,7 +235,7 @@ test("Med interview checkout returns to pricing for confirmation and UCAT checko
     created.push(params);
     return { url: "https://checkout.stripe.com/pay/cs_123" };
   } } } };
-  const base = { customerId: "cus_123", userId: "user-1", priceId: "price_123", siteUrl: "https://medicforest.com" };
+  const base = { customerId: "cus_123", userId: "user-1", priceId: "price_123", siteUrl: "https://medicforest.com", previousSessionId: "first" };
 
   await createPremiumCheckoutSession(stripe, { ...base, returnArea: "interviews" });
   assert.equal(created[0].success_url, "https://medicforest.com/pricing?checkout=success&session_id={CHECKOUT_SESSION_ID}");
@@ -218,6 +341,7 @@ test("checkout creates customer and session for eligible free users", async () =
       resolvePremiumPriceId: async () => "price_premium_123",
     },
     "@/utils/billing/stripe-checkout": {
+      inspectPremiumCheckout: async () => ({ previousSessionId: "first", openSessionUrl: null, subscription: null }),
       createPremiumCheckoutSession: async (_stripe, params) => {
         assert.equal(params.customerId, "cus_new_123");
         assert.equal(params.userId, "user-new");

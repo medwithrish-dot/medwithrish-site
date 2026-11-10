@@ -63,7 +63,7 @@ for (const engine of [chromium, webkit]) {
       await page.locator("#interview-answer").waitFor();
       await page.getByRole("button", { name: "Notes", exact: true }).click();
       assert.equal(await page.locator("[data-station-notes]:visible").inputValue(), note, "Private notes survive a reload");
-      await page.getByRole("button", { name: "Finish station", exact: true }).click();
+      await page.getByRole("button", { name: "Leave or finish interview", exact: true }).click();
       await page.getByRole("button", { name: "Finish & review", exact: true }).click();
       await page.locator("[data-station-review]").waitFor();
       assert.equal(await page.locator("[data-station-notes]").inputValue(), note, "Room notes remain available in review");
