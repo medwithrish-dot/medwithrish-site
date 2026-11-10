@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "@/app/medicforest/_components/MedicForestLink";
+import Link from "next/link";
+import { useVisiblePathname } from "../_components/useVisiblePathname";
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
+import { useInterviewPlatform } from "./_lib/platform-context";
 import { MedicForestLogo } from "../_components/MedicForestLogo";
 import {
   Brain,
@@ -10,6 +13,7 @@ import {
 } from "lucide-react";
 
 const interviewSwitchItems = [
+  { area: "dentistry", label: "Dentistry Interviews", eyebrow: "Dental school preparation", href: "/medicforest/dentistry/interviews/dashboard", icon: Stethoscope },
   {
     area: "ucat",
     label: "UCAT",
@@ -31,6 +35,8 @@ export function InterviewAreaSwitcher({
 }: {
   area?: "admissions" | "interviews";
 }) {
+  const platform = useInterviewPlatform();
+  const pathname = useVisiblePathname();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -115,11 +121,11 @@ export function InterviewAreaSwitcher({
         >
           {interviewSwitchItems.map((item) => {
             const Icon = item.icon;
-            const current = item.area === area;
+            const current = item.area === (platform === "dentistry" ? "dentistry" : area);
             return (
               <Link
                 key={item.label}
-                href={item.href}
+                href={medicForestPublicHref(pathname.startsWith("/medicforest/") ? "/medicforest" : "/", item.href)}
                 role="menuitem"
                 aria-current={current ? "page" : undefined}
                 onClick={() => setOpen(false)}
@@ -143,7 +149,7 @@ export function InterviewAreaSwitcher({
                     {item.label}
                   </span>
                   <span className="mt-0.5 block truncate text-xs font-semibold text-slate-500">
-                    {item.eyebrow}
+                    {current ? "Current workspace" : item.area === "interviews" ? "Medicine preparation" : item.eyebrow}
                   </span>
                 </span>
               </Link>

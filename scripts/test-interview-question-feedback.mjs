@@ -109,7 +109,7 @@ test("Why Medicine and question-bank feedback share one free account credit", as
   const h = harness();
   const now = new Date(Date.now() - 60_000).toISOString();
   const whyAttempt = {
-    id: randomUUID(), user_id: h.state.userId, mode: "free", university_slug: null,
+    platform: "medicine", id: randomUUID(), user_id: h.state.userId, mode: "free", university_slug: null,
     station_slug: "why-medicine", title: "Why medicine?", status: "failed",
     circuit_id: randomUUID(), station_index: 0, station_count: 1,
     preparation_seconds: 0, station_seconds: 180, break_seconds: 0,
@@ -216,6 +216,7 @@ async function feedbackPanel({ used = false, denied = false, premium = false } =
     if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: (...args) => state.prompts.push(args) };
     if (name === "../_lib/question-feedback") return { FREE_QUESTION_FEEDBACK_USED: "You've used your free AI feedback report. Upgrade to Premium for more personalised feedback." };
     if (name === "../_lib/speech-delivery") return { stripSpeechPauseMarkers: value => value };
+    if (name === "@/utils/interviews/platform") return { interviewRequestPath: path => path };
     if (name === "../_lib/question-bank-storage") return { getWordCount: value => value.trim().split(/\s+/).length };
     return {};
   }, compiled, compiled.exports, async (path, options) => {

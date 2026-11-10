@@ -143,6 +143,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
+        { source: "/dentistry/:path*", has: [medicForestHost], destination: "/medicforest/dentistry/:path*" },
         {
           source: "/robots.txt",
           has: [medicForestHost],

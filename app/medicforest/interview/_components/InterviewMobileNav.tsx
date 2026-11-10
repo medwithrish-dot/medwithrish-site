@@ -2,6 +2,7 @@
 
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useVisiblePathname } from "@/app/medicforest/_components/useVisiblePathname";
+import { useInterviewPlatform } from "../_lib/platform-context";
 import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
 import { getLandingActiveLabel } from "./InterviewSidebar";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
@@ -42,7 +43,8 @@ export function InterviewMobileNav({
   mode?: "interview" | "landing";
 }) {
   const pathname = useVisiblePathname();
-  const links = mode === "landing" ? landingLinks : interviewLinks;
+  const dental = useInterviewPlatform() === "dentistry";
+  const links = mode === "landing" ? landingLinks : dental ? interviewLinks.filter(([label]) => !["Groups", "Leaderboard", "1-1 Tutoring"].includes(label)) : interviewLinks;
   const currentActive =
     activeLabel || (mode === "landing" ? getLandingActiveLabel(pathname) : "");
 
@@ -64,6 +66,8 @@ export function InterviewMobileNav({
             <span>Menu</span>
           </summary>
           <div className={styles.links}>
+            {dental && <a href={pathname.startsWith("/medicforest/") ? "/medicforest/interview/dashboard" : "/interviews/dashboard"} className={styles.link}>Medicine Interviews</a>}
+            <Link href={pathname.startsWith("/medicforest/") ? "/medicforest/dentistry/interviews/dashboard" : "/dentistry/interviews/dashboard"} className={styles.link}>Dentistry Interviews</Link>
             {links.map(([label, href]) => (
               <Link
                 key={href}

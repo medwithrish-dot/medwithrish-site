@@ -1,5 +1,7 @@
 "use client";
 
+import { interviewRequestPath } from "@/utils/interviews/platform";
+
 import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
@@ -44,7 +46,7 @@ export function QuestionFeedbackPanel({ questionId, answer, ref, onCoverage, onB
     const controller = new AbortController();
     const refresh = async () => {
       try {
-        const response = await fetch(`/api/interviews/question-feedback?question=${encodeURIComponent(questionId)}`, { cache: "no-store", signal: controller.signal });
+        const response = await fetch(interviewRequestPath(`/api/interviews/question-feedback?question=${encodeURIComponent(questionId)}`), { cache: "no-store", signal: controller.signal });
         const payload = await response.json();
         if (!controller.signal.aborted && response.ok) setAccess(payload);
       } catch { /* Generating feedback performs a fresh server-side access check. */ }
@@ -61,7 +63,7 @@ export function QuestionFeedbackPanel({ questionId, answer, ref, onCoverage, onB
     requestRunning.current = true;
     setBusy(true); setError("");
     try {
-      const response = await fetch("/api/interviews/question-feedback", {
+      const response = await fetch(interviewRequestPath("/api/interviews/question-feedback"), {
         method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ questionId, answer: cleanAnswer }),
       });
       const payload = await response.json();

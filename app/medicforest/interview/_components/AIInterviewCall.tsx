@@ -127,7 +127,7 @@ export function AIInterviewCall(props: Props) {
   return <div className={`${styles.callRoom} ${focus ? styles.focusRoom : ""}`}>
     <header className={styles.roomHeader}>
       <div className={styles.roomBrand}>
-        <div><h1>{attempt.title}</h1><p>MedicForest Med interview <span>·</span> {attempt.stationSlug === "panel-interview" ? "Discussion" : "Station"} {attempt.stationIndex + 1} of {attempt.stationCount} {attempt.stationSlug === "data-analysis" && <DataAnalysisBeta />}</p></div>
+        <div><h1>{attempt.title}</h1><p>MedicForest {attempt.platform === "dentistry" ? "dentistry" : "Med"} interview <span>·</span> {attempt.stationSlug === "panel-interview" ? "Discussion" : "Station"} {attempt.stationIndex + 1} of {attempt.stationCount} {attempt.stationSlug === "data-analysis" && <DataAnalysisBeta />}</p></div>
       </div>
       <div className={styles.headerActions}>
         <span className={styles.sessionBadge}><span className={styles.greenDot} />{preview ? "Preview" : "Private practice"}</span>

@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import type { InterviewAttempt } from "../_lib/interview-types";
 import { practiceResult, PRACTICE_PASS_AVERAGE } from "@/utils/interviews/scoring";
+import { universitiesForPlatform } from "@/utils/interviews/catalogue";
 import { findInterviewUniversity } from "../_data/universities";
 import { AttemptMarkSchemes } from "./AttemptMarkSchemes";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
@@ -38,7 +39,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const assessmentRef = useRef<HTMLElement>(null);
   const feedbackRequestedRef = useRef(false);
   useEffect(() => { headingRef.current?.focus(); }, []);
-  const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
+  const university = attempt.platform === "dentistry" ? universitiesForPlatform("dentistry").find(u => u.slug === attempt.universitySlug) : findInterviewUniversity(attempt.universitySlug);
   const transcript = attempt.questions.map((question) => ({ question, answer: "", ...attempt.answers.find((item) => item.question === question) }));
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
   const answered = transcript.filter((item) => item.answer.trim()).length;
@@ -107,7 +108,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
     </div>
     <nav className={styles.sectionLinks} aria-label="Review sections"><a href="#transcript-heading">Transcript</a><a href="#review-guide">Markscheme</a><a href="#ai-feedback-heading"><Sparkles size={14} /> AI feedback</a></nav>
     {preview && <p className={styles.notice} role="note">This preview is not saved. Any sample AI feedback is illustrative and does not assess your answers.</p>}
-    {!questionBankReport && !onNext && attempt.stationIndex + 1 >= attempt.stationCount && !needsSaving && <section className={styles.circuitCallout} aria-label="Med Interview complete"><div><p className={styles.eyebrow}>INTERVIEW COMPLETE</p><h2>All stations complete.</h2></div><Link className={styles.nextPrimary} href="/medicforest/interview/dashboard">End Med interview <ArrowRight size={18} /></Link></section>}
+    {!questionBankReport && !onNext && attempt.stationIndex + 1 >= attempt.stationCount && !needsSaving && <section className={styles.circuitCallout} aria-label={attempt.platform === "dentistry" ? "Dentistry interview complete" : "Med Interview complete"}><div><p className={styles.eyebrow}>INTERVIEW COMPLETE</p><h2>All stations complete.</h2></div><Link className={styles.nextPrimary} href="/medicforest/interview/dashboard">End {attempt.platform === "dentistry" ? "dentistry" : "Med"} interview <ArrowRight size={18} /></Link></section>}
     {onNext && <section className={styles.circuitCallout} aria-label="Continue circuit"><div><p className={styles.eyebrow}>NEXT STATION READY</p><h2>Keep your circuit moving.</h2><p>{breakRemaining > 0 ? `Scheduled break: ${Math.floor(breakRemaining / 60)}:${String(breakRemaining % 60).padStart(2, "0")} remaining. You can continue now if you feel ready.` : "You can continue now, or take a moment to review first."}</p></div><div className={styles.calloutActions}><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> {retryLabel}</button><button type="button" className={styles.nextPrimary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={18} /></button></div></section>}
 
     <div className={styles.workspace}>
@@ -147,7 +148,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
         <h3 className="text-xl font-bold text-[#042724]">{decision.outcome === "pass" ? "Practice pass" : "Practice fail - needs improvement"}</h3>
         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[#415b61]">{decision.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>
         {decision.borderline && <p className="mt-3 text-sm font-semibold text-[#785819]">Close to a practice cutoff. Review the marking reasons and compare another attempt; small scoring differences can change this result.</p>}
-        <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least {PRACTICE_PASS_AVERAGE}/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; medical schools set their own admissions criteria.</p>
+        <p className="mt-3 text-xs leading-5 text-[#62777e]">To pass: average at least {PRACTICE_PASS_AVERAGE}/100, reasoning and professionalism at least 50 each, and every other criterion at least 40. This is MedicForest’s practice standard; {attempt.platform === "dentistry" ? "dental" : "medical"} schools set their own admissions criteria.</p>
       </section>}
       {!preview && !decision && <p className={styles.sourceNote}>This older report was not assessed under the current practice pass/fail standard.</p>}
       {feedback.transcriptionWarning && <p role="status" className="my-4 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900">{TRANSCRIPTION_WARNING}</p>}
@@ -156,6 +157,6 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each area is marked out of 100. Your overall score is their average, up to 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}
-    <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : "Your Med interview review"}</h2><p>{preview ? "This preview is not saved." : "All saved stations are available in your Med interview history."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> {retryLabel}</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>End Med interview <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/medicforest/interview/dashboard">End Med interview <ArrowRight size={16} /></Link>}</div></footer>
+    <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : attempt.platform === "dentistry" ? "Your dentistry interview review" : "Your Med interview review"}</h2><p>{preview ? "This preview is not saved." : attempt.platform === "dentistry" ? "All saved stations are available in your dentistry interview history." : "All saved stations are available in your Med interview history."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> {retryLabel}</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>End {attempt.platform === "dentistry" ? "dentistry" : "Med"} interview <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/medicforest/interview/dashboard">End {attempt.platform === "dentistry" ? "dentistry" : "Med"} interview <ArrowRight size={16} /></Link>}</div></footer>
   </div>;
 }

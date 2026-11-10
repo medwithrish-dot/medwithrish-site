@@ -1,5 +1,7 @@
 "use client";
 
+import { interviewRequestPath } from "@/utils/interviews/platform";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, Search, X } from "lucide-react";
@@ -38,7 +40,7 @@ export function SavedInterviewList({ attempts: initialAttempts, nextCursor = nul
     const timeout = window.setTimeout(() => controller.abort(), 20_000);
     try {
       const params = new URLSearchParams({ before: cursor.startedAt, beforeId: cursor.id });
-      const response = await fetch(`/api/interviews/history?${params}`, { cache: "no-store", signal: controller.signal });
+      const response = await fetch(interviewRequestPath(`/api/interviews/history?${params}`), { cache: "no-store", signal: controller.signal });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Older interviews could not be loaded. Please try again.");
       if (controller.signal.aborted) return;

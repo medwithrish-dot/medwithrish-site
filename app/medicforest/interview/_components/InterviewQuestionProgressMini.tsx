@@ -1,3 +1,4 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpenCheck } from "lucide-react";
 import {
@@ -11,12 +12,14 @@ export function InterviewQuestionProgressMini({
   rows,
   signedIn,
   available,
+  platform = "medicine",
 }: {
+  platform?: InterviewPlatform;
   rows: readonly InterviewQuestionProgressRow[];
   signedIn: boolean;
   available: boolean;
 }) {
-  const progress = deriveInterviewQuestionProgress(rows);
+  const progress = deriveInterviewQuestionProgress(rows, platform);
 
   return <section className="rounded-2xl border border-[#d7e3e1] bg-white p-5" aria-labelledby="question-progress-title">
     <div className="flex items-center justify-between gap-3">

@@ -1,3 +1,5 @@
+import { DENTISTRY_QUESTIONS } from "@/app/medicforest/interview/_data/dentistry-question-bank";
+import type { InterviewPlatform } from "./platform";
 import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion } from "@/app/medicforest/interview/_data/interviewQuestionBank";
 import { panelQuestionCount, stationQuestionCount } from "@/app/medicforest/interview/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
@@ -33,7 +35,8 @@ function seedNumber(seed: string) {
   return value >>> 0;
 }
 
-function matchingQuestions(stationSlug: string) {
+function matchingQuestions(stationSlug: string, platform: InterviewPlatform = "medicine") {
+  if (platform === "dentistry") return DENTISTRY_QUESTIONS.filter(q => q.tags.includes(stationSlug));
   const rule = rules[stationSlug];
   if (!rule) return [];
   return questions.filter((question) =>
@@ -85,14 +88,14 @@ export function selectPanelQuestions(stationSeconds: number, seed: string, appli
  * Selects a coherent cluster from the question bank. Questions with a source
  * topic stay within that topic; older questions fall back to their subcategory.
  */
-export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
-  if (stationSlug === "panel-interview") return selectPanelQuestions(stationSeconds, seed, applicant);
+export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string, applicant?: ApplicantProfile, platform: InterviewPlatform = "medicine") {
+  if (platform === "medicine" && stationSlug === "panel-interview") return selectPanelQuestions(stationSeconds, seed, applicant);
   // A data station is one visual explored in three stages, not three unrelated
   // visual questions sampled from the wider question bank.
-  if (stationSlug === "data-analysis") return [...DATA_INTERPRETATION_STATION_QUESTIONS];
+  if (platform === "medicine" && stationSlug === "data-analysis") return [...DATA_INTERPRETATION_STATION_QUESTIONS];
   const count = stationQuestionCount(stationSeconds);
   const groups = new Map<string, InterviewQuestion[]>();
-  for (const question of matchingQuestions(stationSlug)) {
+  for (const question of matchingQuestions(stationSlug, platform)) {
     if (stationSlug === "data-analysis" && !getQuestionStimulus(question.id)) continue;
     if (!questionEligible(question.text, applicant)) continue;
     const key = stationSlug === "data-analysis" ? "visual-data" : question.sourceTopic || question.subcategory;
@@ -116,7 +119,8 @@ export function selectStationQuestions(stationSlug: string, stationSeconds: numb
   return stationQuestions.slice(0, count);
 }
 
-export function questionIdForText(text: string) {
+export function questionIdForText(text: string, platform: InterviewPlatform = "medicine") {
+  if (platform === "dentistry") return DENTISTRY_QUESTIONS.find(question => question.text === text)?.id ?? null;
   if (text === WHY_MEDICINE_PROMPT) return WHY_MEDICINE_QUESTION_ID;
   return questionByText.get(text)?.id ?? LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text) ?? null;
 }

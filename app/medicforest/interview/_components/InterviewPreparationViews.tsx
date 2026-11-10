@@ -1,3 +1,4 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
 import { InterviewResumeList } from "./InterviewResumeList";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, CalendarDays, CheckCircle2, Clock3, TrendingUp } from "lucide-react";
@@ -7,19 +8,20 @@ import { getInterviewPathwayStations } from "../_data/interview-pathway";
 import { InterviewStationPathway } from "./InterviewStationPathway";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
 
-export async function InterviewPreparationViews({ view }: { view: "plan" | "progress" | "notifications" }) {
+export async function InterviewPreparationViews({ view, platform = "medicine" }: { view: "plan" | "progress" | "notifications"; platform?: InterviewPlatform }) {
+  const name = platform === "dentistry" ? "dentistry" : "Med";
   if (view === "plan") {
     const pathway = await getInterviewPathwayData();
     return <InterviewStationPathway key={pathway.userId ?? "guest"} stations={getInterviewPathwayStations()} userId={pathway.userId} initialCompleted={pathway.completedTaskIds} available={pathway.available} isPremium={pathway.isPremium} />;
   }
-  const { analytics, profile, signedIn, available, message, historyLimited } = await getInterviewDashboardData();
+  const { analytics, profile, signedIn, available, message, historyLimited } = await getInterviewDashboardData(platform);
   const { stats, weeklyInsight } = analytics;
   const due = analytics.targets.filter((target) => target.daysUntil !== null && target.daysUntil >= 0 && target.daysUntil <= 14);
   return <div className="space-y-6">
     {message && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">{message}{!signedIn && <> <Link href="/medicforest/account" className="font-bold underline">Sign in</Link></>}</p>}
 
     {view === "progress" ? <>
-      <InterviewResumeList />
+      <InterviewResumeList platform={platform} />
       <div className="grid gap-4 sm:grid-cols-3">
         {[
           { title: "Completed stations", value: String(stats.completedCount), note: "Saved completed interviews" },
@@ -36,9 +38,9 @@ export async function InterviewPreparationViews({ view }: { view: "plan" | "prog
       {historyLimited && <p className="text-xs text-[#62777e]">Lifetime totals include all saved attempts. Theme and recent activity details use your latest 500 attempts.</p>}
     </> : <>
       <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><div className="flex items-center gap-3"><CalendarDays className="text-[#08787b]" size={23} /><h2 className="text-lg font-bold">Your upcoming interviews</h2></div>
-        {due.length ? <div className="mt-5 divide-y divide-[#e7eeee]">{due.map((target) => <Link key={target.universitySlug} href={target.href} className="flex items-center justify-between gap-4 py-4"><span><span className="block text-sm font-bold">{target.name}</span><span className="mt-1 block text-xs text-[#62777e]">{target.daysUntil === 0 ? "Today" : `${target.daysUntil} days to go`} · {target.interviewDate}</span></span><ArrowRight className="shrink-0 text-[#08787b]" size={18} /></Link>)}</div> : <p className="mt-4 text-sm leading-7 text-[#62777e]">{profile?.targets.length ? "No confirmed Med interview dates in the next two weeks. You can update your dates below." : "Add your target universities and optional dates to see upcoming Med interview reminders here."}</p>}
+        {due.length ? <div className="mt-5 divide-y divide-[#e7eeee]">{due.map((target) => <Link key={target.universitySlug} href={target.href} className="flex items-center justify-between gap-4 py-4"><span><span className="block text-sm font-bold">{target.name}</span><span className="mt-1 block text-xs text-[#62777e]">{target.daysUntil === 0 ? "Today" : `${target.daysUntil} days to go`} · {target.interviewDate}</span></span><ArrowRight className="shrink-0 text-[#08787b]" size={18} /></Link>)}</div> : <p className="mt-4 text-sm leading-7 text-[#62777e]">{profile?.targets.length ? `No confirmed ${name} interview dates in the next two weeks. You can update your dates below.` : `Add your target universities and optional dates to see upcoming ${name} interview reminders here.`}</p>}
       </section>
-      <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><div className="flex items-center gap-3"><CheckCircle2 className="text-[#08787b]" size={23} /><h2 className="text-lg font-bold">Feedback ready to review</h2></div>{analytics.recentPerformance.length ? <div className="mt-5 divide-y divide-[#e7eeee]">{analytics.recentPerformance.slice(0, 5).map((attempt) => <Link href={attempt.href} key={attempt.id} className="flex items-center justify-between gap-4 py-4"><span><span className="block text-sm font-semibold">{attempt.title}</span><span className="mt-1 block text-xs text-[#62777e]">{new Date(attempt.completedAt).toLocaleDateString("en-GB", { timeZone: "Europe/London" })}</span></span><span className="font-bold text-[#08787b]">{attempt.score}%</span></Link>)}</div> : <div className="mt-5 rounded-xl bg-[#f5f9f8] p-5"><Clock3 className="text-[#8bab9f]" size={24} /><p className="mt-3 text-sm text-[#62777e]">Your completed Med interview feedback will appear here.</p><Link href="/medicforest/interview/ai-interviews?station=why-medicine" className="mt-4 inline-flex text-sm font-bold text-[#08787b]">Start the free station →</Link></div>}</section>
+      <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><div className="flex items-center gap-3"><CheckCircle2 className="text-[#08787b]" size={23} /><h2 className="text-lg font-bold">Feedback ready to review</h2></div>{analytics.recentPerformance.length ? <div className="mt-5 divide-y divide-[#e7eeee]">{analytics.recentPerformance.slice(0, 5).map((attempt) => <Link href={attempt.href} key={attempt.id} className="flex items-center justify-between gap-4 py-4"><span><span className="block text-sm font-semibold">{attempt.title}</span><span className="mt-1 block text-xs text-[#62777e]">{new Date(attempt.completedAt).toLocaleDateString("en-GB", { timeZone: "Europe/London" })}</span></span><span className="font-bold text-[#08787b]">{attempt.score}%</span></Link>)}</div> : <div className="mt-5 rounded-xl bg-[#f5f9f8] p-5"><Clock3 className="text-[#8bab9f]" size={24} /><p className="mt-3 text-sm text-[#62777e]">Your completed {name} interview feedback will appear here.</p><Link href={platform === "dentistry" ? "/medicforest/dentistry/interviews/question-bank" : "/medicforest/interview/ai-interviews?station=why-medicine"} className="mt-4 inline-flex text-sm font-bold text-[#08787b]">{platform === "dentistry" ? "Start questions" : "Start the free station"} →</Link></div>}</section>
       <InterviewPreparationSetup initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
     </>}
   </div>;

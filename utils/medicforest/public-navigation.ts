@@ -1,5 +1,9 @@
 export function medicForestPublicHref(pathname: string, href: string) {
   if (!href.startsWith("/") || href.startsWith("//")) return href;
+  const dental = /^\/(?:medicforest\/)?dentistry(?:\/|$)/.test(pathname);
+  if (dental && /^\/medicforest\/interview(?:[/?#]|$)/.test(href)) href = href.replace("/medicforest/interview", "/medicforest/dentistry/interviews");
+  if (pathname.startsWith("/medicforest/") && /^\/dentistry(?:[/?#]|$)/.test(href)) return `/medicforest${href}`;
+  if (!pathname.startsWith("/medicforest/") && href.startsWith("/medicforest/dentistry/")) return href.slice("/medicforest".length);
   const prefixedPath = pathname === "/medicforest" || pathname.startsWith("/medicforest/");
   if (prefixedPath) {
     if (href === "/medicforest" || href.startsWith("/medicforest/")) return href;

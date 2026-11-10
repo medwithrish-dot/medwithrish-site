@@ -53,7 +53,7 @@ const request = (body) => new Request("https://example.test/api/interviews/follo
 
 function harness({ usageAllowed = true, generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {}, applicant = {}, selectedQuestions, botCheck = async () => ({ isHuman: true, isBot: false, isVerifiedBot: false }) } = {}) {
   const state = { row: {
-    id: attemptId, user_id: "user-1", station_slug: "why-medicine", title: "Why medicine?", status: "in_progress",
+    platform: "medicine", id: attemptId, user_id: "user-1", station_slug: "why-medicine", title: "Why medicine?", status: "in_progress",
     started_at: new Date(Date.now() - 120_000).toISOString(), preparation_seconds: 60, station_seconds: 480,
     break_seconds: 0, station_index: 0, station_count: 1, questions: [...originals],
     answers: originals.map((question) => ({ question, answer: words })), metrics: {}, last_error: null, ...overrides,

@@ -20,6 +20,7 @@ import {
   Users,
   Brain,
 } from "lucide-react";
+import { useInterviewPlatform } from "../_lib/platform-context";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 
@@ -212,7 +213,8 @@ export function InterviewSidebar({
   const pathname = useVisiblePathname();
   const primaryItems =
     mode === "landing" ? landingPrimaryItems : interviewPrimaryItems;
-  const sections = mode === "landing" ? landingSections : interviewSections;
+  const dental = useInterviewPlatform() === "dentistry";
+  const sections = mode === "landing" ? landingSections : dental ? interviewSections.map(section => ({ ...section, items: section.items.filter(item => !["Groups", "Leaderboard", "1-1 Tutoring"].includes(item.label)) })).filter(section => section.items.length) : interviewSections;
   const resolvedActiveLabel =
     mode === "landing" ? getLandingActiveLabel(pathname) : activeLabel;
 
@@ -268,7 +270,7 @@ export function InterviewSidebar({
           <p className="mt-2 text-xs font-medium leading-5 text-slate-300">
             {mode === "landing"
               ? "Try our AI feedback to find your weak spots."
-              : "Unlock more Med interview stations, deeper analytics and guided practice."}
+              : dental ? "Unlock dentistry AI stations, saved feedback and focused practice." : "Unlock more Med interview stations, deeper analytics and guided practice."}
           </p>
           <Link
             href={mode === "landing" ? medicForestPublicHref(pathname, "/interviews") : "/medicforest/pricing"}

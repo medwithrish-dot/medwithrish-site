@@ -1,3 +1,4 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
 import type { ReactNode } from "react";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowLeft } from "lucide-react";
@@ -7,6 +8,7 @@ import { InterviewSidebar } from "./InterviewSidebar";
 import { InterviewMobileNav } from "./InterviewMobileNav";
 
 export type InterviewShellProps = {
+  platform?: InterviewPlatform;
   title: string;
   subtitle: string;
   activeLabel: string;
@@ -16,10 +18,11 @@ export type InterviewShellProps = {
 };
 
 export async function InterviewShell({
+  platform = "medicine",
   title,
   subtitle,
   activeLabel,
-  eyebrow = "Med Interviews",
+  eyebrow,
   heroHeader = false,
   children,
 }: InterviewShellProps) {
@@ -36,10 +39,10 @@ export async function InterviewShell({
             <header className={`flex flex-col gap-5 sm:flex-row sm:justify-between ${heroHeader ? "sm:items-center" : "border-b border-[#d3dfe1] pb-7 sm:items-start"}`}>
               <div className="min-w-0">
                 {activeLabel !== "Dashboard" && <Link href="/medicforest/interview/dashboard" className="inline-flex items-center gap-2 text-xs font-bold text-[#08787b] hover:text-[#042724]">
-                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Med Interview dashboard
+                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> {platform === "dentistry" ? "Dentistry" : "Med Interview"} dashboard
                 </Link>}
                 {!heroHeader && <>
-                <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#08787b]">{eyebrow}</p>
+                <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#08787b]">{eyebrow ?? (platform === "dentistry" ? "Dentistry Interviews" : "Med Interviews")}</p>
                 <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight text-[#042724] sm:text-4xl">{title}</h1>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4a6370]">{subtitle}</p>
                 </>}

@@ -1,11 +1,16 @@
 "use client";
 
+import { interviewRequestPath } from "@/utils/interviews/platform";
+
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
-import { findInterviewStation, interviewStations } from "../_data/interview-stations";
+import { findInterviewStation as findMedicineStation } from "../_data/interview-stations";
+import { stationsForPlatform } from "@/utils/interviews/catalogue";
+import { useInterviewPlatform } from "../_lib/platform-context";
+import { interviewApiHref } from "@/utils/interviews/platform";
 import { previewInterviewFeedback } from "../_data/interview-preview";
 import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/interview-types";
 import { getInterviewQuestionAudioSrc, type InterviewerVoice } from "../_lib/interview-question-audio";
@@ -35,7 +40,7 @@ async function requestSession(path: string, method = "GET", body?: unknown, sign
   signal?.addEventListener("abort", abort, { once: true });
   if (signal?.aborted) controller.abort();
   try {
-    const response = await fetch(path, {
+    const response = await fetch(interviewRequestPath(path), {
       method, cache: "no-store", signal: controller.signal,
       ...(body === undefined ? {} : { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
     });
@@ -55,6 +60,9 @@ const draftKey = (id: string) => `medicforest-interview-draft:${id}`;
 const planKey = (id: string) => `medicforest-interview-plan:${id}`;
 
 export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, initialMockCircuit = false }: { initialUniversitySlug?: string; initialStationSlug?: string; initialMockCircuit?: boolean }) {
+  const platform = useInterviewPlatform();
+  const interviewStations = stationsForPlatform(platform);
+  const findInterviewStation = useCallback((slug: string) => platform === "medicine" ? findMedicineStation(slug) : interviewStations.find(station => station.slug === slug), [platform, interviewStations]);
   const [attempt, setAttempt] = useState<InterviewAttempt | null>(null);
   const [answers, setAnswers] = useState<InterviewAnswer[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -414,14 +422,18 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     setErrorStatus(0);
     try {
       if (previewRef.current) {
-        applyResponse({ attempt: { ...current, status: "completed", feedback: previewInterviewFeedback } });
+        applyResponse({ attempt: { ...current, status: "completed", feedback: platform === "dentistry" ? { ...previewInterviewFeedback, summary: "This is an example report showing how feedback is presented. It does not assess your answer.", strengths: [], weaknesses: [], improvements: [], rubric: [] } : previewInterviewFeedback } });
         return;
       }
       if (current.status === "grading") {
         const latest = await requestSession(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
         applyResponse(latest);
-        setSaveWarning(latest.attempt?.status === "grading" ? "Your feedback is still being prepared. Check again in a moment." : "");
-        return;
+        if (!latest.attempt || latest.attempt.status === "completed") {
+          setSaveWarning("");
+          return;
+        }
+        // The server's atomic claim rejects fresh grading and reclaims stale work.
+        // Refreshing alone would leave an interrupted request stuck forever.
       }
       applyResponse(await requestSession("/api/interviews/feedback", "POST", { attemptId: current.id }));
       setSaveWarning("");
@@ -458,7 +470,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     && (attempt?.questions.length ?? 0) - originalQuestions.length < 3
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
   const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && followUpsEnabled(attempt.stationSlug) && !originalQuestions.includes(question)
-    ? `/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`
+    ? interviewApiHref(`/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`, platform)
     : undefined);
   const microphoneRoomId = !loading && attempt?.status === "in_progress" && !paused && !reviewing ? attempt.id : null;
 
@@ -553,7 +565,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         const station = findInterviewStation(options.stationSlug ?? plan.stationSlugs[0])!;
         const panelQuestions = station.slug === "panel-interview" ? selectPanelQuestions(plan.stationSeconds, crypto.randomUUID()) : [];
         applyResponse({ attempt: {
-          id: `preview-${crypto.randomUUID()}`, mode: plan.mode, universitySlug: plan.universitySlug ?? null,
+          platform, id: `preview-${crypto.randomUUID()}`, mode: plan.mode, universitySlug: plan.universitySlug ?? null,
           stationSlug: station.slug, title: station.lobbyTitle, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
           preparationSeconds: 0, stationSeconds: plan.stationSeconds, breakSeconds: 0,
           stationIndex: options.stationIndex ?? 0, stationCount: plan.stationSlugs.length,
@@ -856,13 +868,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       <label className="flex items-center gap-3 font-semibold"><input type="checkbox" checked={probingEnabled} disabled={followUpBusy} onChange={(event) => setProbingPreference(event.target.checked)} />Automatic follow-up questions</label>
       <p className="mt-2">{attempt ? "Ethics only · One probe per main answer · Up to three." : "For ethics stations only, the interviewer can ask one brief follow-up based on each main answer. Up to three per station. Your choice is remembered on this device."}</p>
     </div>}
-    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your Med interview space ready…</div> : !attempt ? <AIInterviewSetup
+    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your {platform === "dentistry" ? "dentistry" : "Med"} interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       interviewerVoice={interviewerVoice} setInterviewerVoice={setInterviewerVoice}
       voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else {
-        const sample = "What has influenced your decision to pursue a career in medicine?";
-        void speech.speak(sample, undefined, getInterviewQuestionAudioSrc("iq-01-001-motivation-for-medicine", sample, interviewerVoice));
+        const sample = platform === "dentistry" ? "What interests you about a career in dentistry?" : "What has influenced your decision to pursue a career in medicine?";
+        void speech.speak(sample, undefined, platform === "dentistry" ? undefined : getInterviewQuestionAudioSrc("iq-01-001-motivation-for-medicine", sample, interviewerVoice));
       } }}
       speechSupported={speech.supported}
       isPremium={isPremium} busy={Boolean(busy)} onStart={beginRoom}

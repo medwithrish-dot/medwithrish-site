@@ -1,15 +1,16 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { interviewHistory, savedInterviewSummaries } from "@/utils/interviews/history";
 import { SavedInterviewList } from "./SavedInterviewList";
 
-async function savedInterviewHistory() {
-  const { attempts, message, nextCursor } = await interviewHistory();
+async function savedInterviewHistory(platform: InterviewPlatform) {
+  const { attempts, message, nextCursor } = await interviewHistory(undefined, false, platform);
   return { attempts, message, nextCursor, savedAttempts: savedInterviewSummaries(attempts) };
 }
 
-export async function InterviewHistoryViews() {
-  const { attempts, message, savedAttempts, nextCursor } = await savedInterviewHistory();
+export async function InterviewHistoryViews({ platform = "medicine" }: { platform?: InterviewPlatform } = {}) {
+  const { attempts, message, savedAttempts, nextCursor } = await savedInterviewHistory(platform);
   return (
     <div className="space-y-6">
       {message && (
@@ -25,7 +26,7 @@ export async function InterviewHistoryViews() {
           </p>
         </div>
         {!attempts.length ? (
-          <EmptyHistory />
+          <EmptyHistory platform={platform} />
         ) : (
           <SavedInterviewList key={savedAttempts[0]?.id} attempts={savedAttempts} nextCursor={nextCursor} />
         )}
@@ -34,14 +35,14 @@ export async function InterviewHistoryViews() {
   );
 }
 
-function EmptyHistory() {
+function EmptyHistory({ platform }: { platform: InterviewPlatform }) {
   return (
     <div className="px-6 py-14 text-center">
       <BookOpen className="mx-auto text-[#9bb4b1]" size={32} />
       <h3 className="mt-5 font-bold">Ready when you are</h3>
-      <p className="mt-2 text-sm text-[#62777e]">Complete your first Med interview to start building your progress.</p>
+      <p className="mt-2 text-sm text-[#62777e]">Complete your first {platform === "dentistry" ? "dentistry" : "Med"} interview to start building your progress.</p>
       <Link href="/medicforest/interview/ai-interviews" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white">
-        Try the free station <ArrowRight size={16} />
+        {platform === "dentistry" ? "Explore AI practice" : "Try the free station"} <ArrowRight size={16} />
       </Link>
     </div>
   );

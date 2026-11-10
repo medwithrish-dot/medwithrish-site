@@ -1,3 +1,4 @@
+import type { InterviewPlatform } from "./platform";
 import "server-only";
 import { requireAiUsage } from "@/utils/security/ai-usage";
 import { withInterviewProviderCapacity } from "./provider-capacity";
@@ -29,10 +30,10 @@ function feedbackFailureMessage(error: unknown) {
   return "Feedback could not be generated. Your answers are saved; please retry.";
 }
 
-export async function generateInterviewFeedback(attemptId: unknown): Promise<InterviewAttempt> {
+export async function generateInterviewFeedback(attemptId: unknown, platform: InterviewPlatform = "medicine"): Promise<InterviewAttempt> {
   const { user, admin, isPremium } = await interviewContext();
   if (!validId(attemptId)) throw new InterviewError("Invalid Med interview ID");
-  const { data: row, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
+  const { data: row, error } = await admin.from("interview_attempts").select("*").eq("id", attemptId).eq("user_id", user.id).eq("platform", platform).maybeSingle();
   if (error) databaseError(error);
   if (!row) throw new InterviewError("Med Interview not found", 404);
   if (row.status === "completed") return toInterviewAttempt(row);
@@ -41,6 +42,11 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
     throw new InterviewError(FREE_QUESTION_FEEDBACK_USED, 403);
   }
   requireSubmittedAttempt(row);
+  if (row.status === "grading" && Date.parse(String(row.grading_started_at)) > Date.now() - 90_000) {
+    // Checking active work must not consume AI usage or reserve another provider slot.
+    // The database repeats this check atomically if another request wins the race.
+    throw new InterviewError("Feedback is already being generated. Please wait and check again shortly.", 409);
+  }
   if (!interviewAiConfigured()) throw new InterviewError("Free AI feedback is not enabled yet. Your answers are saved.", 503);
 
   const attempt = toInterviewAttempt(row);
@@ -68,13 +74,13 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
     const releaseClaim = async () => {
       const { error: releaseError } = await admin.from("interview_attempts")
         .update({ status: "failed", last_error: "feedback_unavailable" })
-        .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading");
+        .eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("grading_token", token).eq("status", "grading");
       if (releaseError) databaseError(releaseError);
     };
 
     let feedback: NonNullable<InterviewAttempt["feedback"]>;
     try {
-      feedback = await assessInterview(snapshot.title, snapshot.answers, snapshot.questions.map((question, index) => ({ question, id: snapshot.questionIds?.[index] })));
+      feedback = await assessInterview(snapshot.title, snapshot.answers, snapshot.questions.map((question, index) => ({ question, id: snapshot.questionIds?.[index] })), platform);
     } catch (providerError) {
       await releaseClaim();
       throw new InterviewError(feedbackFailureMessage(providerError), 503);
@@ -82,7 +88,7 @@ export async function generateInterviewFeedback(attemptId: unknown): Promise<Int
 
     const { data, error: saveError } = await admin.from("interview_attempts")
       .update({ status: "completed", feedback, score: feedback.score, rubric_version: INTERVIEW_RUBRIC_VERSION, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null })
-      .eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
+      .eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
     if (saveError) {
       await releaseClaim();
       databaseError(saveError);

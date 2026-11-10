@@ -24,6 +24,7 @@ export type InterviewFeedback = {
   rubric: { criterion: string; score: number; reason: string }[];
 };
 export type InterviewAttempt = {
+  platform?: "medicine" | "dentistry";
   id: string;
   mode: InterviewMode;
   universitySlug: string | null;

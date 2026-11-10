@@ -42,6 +42,7 @@ import {
 import { InterviewSidebar } from "./InterviewSidebar";
 import { InterviewMobileNav } from "./InterviewMobileNav";
 import { InterviewMarkScheme } from "./InterviewMarkScheme";
+import { isIOSSpeechBrowser } from "../_lib/speech-platform";
 import {
   monitorSpeechActivity,
   createSpeechBoundaryTracker,
@@ -405,6 +406,11 @@ export function QuestionPracticeView({
   }, [finalizeAudioRecording, revokeRecordingUrl]);
 
   const startAudioRecording = useCallback(async () => {
+    // WebKit cannot reliably share microphone capture with speech recognition.
+    if (isIOSSpeechBrowser(navigator)) {
+      setRecordingError("On iPhone and iPad, voice mode saves your transcript without an audio replay.");
+      return;
+    }
     audioPlayerRef.current?.pause();
     setIsPlayingAudio(false);
     if (
@@ -705,7 +711,7 @@ export function QuestionPracticeView({
       setSpeechError("Voice transcription could not start. Try again or type your answer.");
       return;
     }
-    recognition.continuous = true;
+    recognition.continuous = !isIOSSpeechBrowser(navigator);
     recognition.interimResults = true;
     recognition.lang = "en-GB";
     speechBoundaryRef.current.reset();
@@ -796,7 +802,7 @@ export function QuestionPracticeView({
 
     try {
       recognition.start();
-      activityStopRef.current = monitorSpeechActivity(recognition);
+      activityStopRef.current = isIOSSpeechBrowser(navigator) ? null : monitorSpeechActivity(recognition);
       void startAudioRecording();
       setIsListening(true);
       beginAttempt();

@@ -1,3 +1,4 @@
+import { isIOSSpeechBrowser } from "../app/medicforest/interview/_lib/speech-platform.ts";
 import assert from "node:assert/strict";
 import { parseDoneReply, parsePreviousAnswerInterrupt, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/medicforest/interview/_lib/station-flow.ts";
 import { test } from "node:test";
@@ -219,6 +220,8 @@ test("the challenge lobby locks its station and preview/start plans despite a pr
   const compiledModule = { exports: {} };
   const jsx = (type, props) => ({ type, props });
   new Function("require", "module", "exports", output)(name => {
+    if (name.endsWith("platform-context")) return { useInterviewPlatform: () => "medicine" };
+    if (name.endsWith("catalogue")) return { stationsForPlatform: () => [{slug:"why-medicine"}], setupStationsForPlatform: () => [], universitiesForPlatform: () => [{slug:"test",format:"MMI"}], platformUniversityStations: () => [], motivationStation: () => "why-medicine" };
     if (name === "react") return { useState: value => [value, () => {}] };
     if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
     if (name.endsWith("university-stations")) return { standardInterviewUniversities: [{ slug: "test", format: "MMI" }], REPEATABLE_STATION_SLUGS: [], universityStationSlugs: () => [], universityUsesPanelFlow: () => false };
@@ -397,6 +400,9 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   runInNewContext(output, {
     module: loaded, exports: loaded.exports, AbortController, URLSearchParams, Date, Error,
     require(name) {
+      if (name === "@/utils/interviews/platform") return { interviewRequestPath: path => path, interviewApiHref: path => path };
+      if (name.endsWith("platform-context")) return { useInterviewPlatform: () => "medicine" };
+      if (name === "@/utils/interviews/catalogue") return { stationsForPlatform: () => [{ slug: attempt.stationSlug, questions }] };
       if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "@/utils/medicforest/public-navigation") return { medicForestPublicHref };
       if (name === "react") return react;
@@ -740,12 +746,12 @@ test("feedback is requested explicitly from review and does not resubmit the tra
   assert.equal(room.latestCall(), null);
 });
 
-test("checking feedback already being prepared reads its status without a second assessment", async () => {
+test("checking interrupted feedback refreshes status before asking the server to guard or reclaim grading", async () => {
   const room = await autosaveRoom({ status: "grading" });
   const readsBefore = room.sessionReads.length;
   room.latestReview().onGenerate();
   await room.flush();
-  assert.equal(room.feedbackRequests.length, 0);
+  assert.equal(room.feedbackRequests.length, 1, "The server atomically rejects fresh work or reclaims a stale job");
   assert.equal(room.sessionReads.length, readsBefore + 1);
   assert.match(room.sessionReads.at(-1), /\?attempt=/);
 });
@@ -844,7 +850,7 @@ test("ending without review preserves final spoken words and retains the draft w
 function loadQuestionModule(file, browserWindow) {
   const compiled = { exports: {} };
   const output = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-  new Function("require", "module", "exports", "window", output)(name => name.startsWith(".") ? loadQuestionModule(resolve(dirname(file), `${name}.ts`), browserWindow) : require(name), compiled, compiled.exports, browserWindow);
+  new Function("require", "module", "exports", "window", output)(name => name === "@/utils/interviews/platform" ? { platformFromPath: () => "medicine" } : name.startsWith(".") ? loadQuestionModule(resolve(dirname(file), `${name}.ts`), browserWindow) : require(name), compiled, compiled.exports, browserWindow);
   return compiled.exports;
 }
 
@@ -890,10 +896,14 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   runInNewContext(`${output}\nexports.testPracticeView = QuestionPracticeView;`, {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
+      if (name.endsWith("speech-platform")) return { isIOSSpeechBrowser };
       if (name.endsWith("speech-delivery") || name.endsWith("question-review") || name.endsWith("question-practice-timer") || name.endsWith("question-bank-storage") || name.endsWith("question-bank-model")) {
         return loadQuestionModule(resolve(root, `app/medicforest/interview/_lib/${name.split("/").at(-1)}.ts`), recordingWindow);
       }
       if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/medicforest/interview/_data/interview-stimuli.ts"));
+      if (name === "@/utils/interviews/platform") return { interviewRequestPath: path => path, interviewApiHref: path => path };
+      if (name.endsWith("platform-context")) return { useInterviewPlatform: () => "medicine" };
+      if (name === "@/utils/interviews/catalogue") return { stationsForPlatform: () => [{ slug: attempt.stationSlug, questions }] };
       if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "react") return {
         useState: initial => [typeof initial === "function" ? initial() : initial, () => {}],
@@ -904,7 +914,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       return {};
     },
-    navigator: { mediaDevices: { getUserMedia: () => new Promise(resolve => { grantPermission = () => resolve(stream); }) } },
+    navigator: { userAgent: "Chrome", mediaDevices: { getUserMedia: () => new Promise(resolve => { grantPermission = () => resolve(stream); }) } },
     window: recordingWindow,
   });
   const tree = loaded.exports.testPracticeView({
@@ -1001,7 +1011,7 @@ function microphoneDevices({ supported = true } = {}) {
   }).outputText, {
     module: loaded, exports: loaded.exports,
     require: name => { assert.equal(name, "react"); return react; },
-    navigator: { mediaDevices: supported ? {
+    navigator: { userAgent: "Chrome", mediaDevices: supported ? {
       getUserMedia: constraints => new Promise((resolve, reject) => {
         const request = {
           constraints, stoppedTracks: 0,

@@ -52,6 +52,7 @@ async function savedReview({ overrides = {}, serverNow = new Date().toISOString(
     require(name) {
       if (name === "@/utils/medicforest/feature-access") return { requestFeatureAccess: () => true };
       if (name === "@/utils/medicforest/public-navigation") return { medicForestPublicHref };
+      if (name === "@/utils/interviews/platform") return { interviewRequestPath: path => path };
       if (name === "react") return react;
       if (name === "next/navigation") return { useRouter: () => router };
       if (name === "@/app/medicforest/_components/MedicForestLink") return { default: "link" };

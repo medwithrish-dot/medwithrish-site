@@ -1,3 +1,5 @@
+import { questionsForPlatform } from "./catalogue";
+import type { InterviewPlatform } from "./platform";
 import {
   INTERVIEW_QUESTION_CATEGORIES,
   INTERVIEW_QUESTIONS,
@@ -33,7 +35,8 @@ function percentage(completed: number, total: number) {
   return total > 0 ? Math.round((completed / total) * 100) : 0;
 }
 
-export function deriveInterviewQuestionProgress(rows: readonly InterviewQuestionProgressRow[]) {
+export function deriveInterviewQuestionProgress(rows: readonly InterviewQuestionProgressRow[], platform: InterviewPlatform = "medicine") {
+  const INTERVIEW_QUESTIONS = questionsForPlatform(platform);
   const knownQuestionIds = new Set<string>(INTERVIEW_QUESTIONS.map((question) => question.id));
   const completedIds = new Set<string>();
   const reviewIds = new Set<string>();
@@ -61,7 +64,7 @@ export function deriveInterviewQuestionProgress(rows: readonly InterviewQuestion
   const completed = completedIds.size;
 
   return {
-    categories,
+    categories: categories.filter(category => category.total > 0),
     completed,
     review: reviewIds.size,
     total,

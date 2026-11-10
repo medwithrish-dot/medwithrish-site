@@ -1,12 +1,13 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, Clock3 } from "lucide-react";
 import { interviewHistory, savedInterviewSummaries } from "@/utils/interviews/history";
 import { filterSavedInterviewSource, groupSavedInterviews, savedInterviewHref } from "../_lib/saved-interviews";
 
-export async function InterviewResumeList() {
+export async function InterviewResumeList({ platform = "medicine" }: { platform?: InterviewPlatform } = {}) {
   // Fetch unfinished work separately so older paused interviews remain visible
   // even when there are hundreds of newer completed attempts.
-  const { attempts, message, signedIn } = await interviewHistory(undefined, true);
+  const { attempts, message, signedIn } = await interviewHistory(undefined, true, platform);
   if (!signedIn) return null;
   const saved = groupSavedInterviews(filterSavedInterviewSource(savedInterviewSummaries(attempts), "ai"));
   const resumable = saved.filter(attempt => attempt.canResume);

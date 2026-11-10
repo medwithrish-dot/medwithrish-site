@@ -1,3 +1,4 @@
+import { InvalidInterviewPlatform } from "./platform";
 import "server-only";
 import { readLimitedText, RequestBodyError } from "@/utils/security/request-body";
 import { createClient } from "@/utils/supabase/server";
@@ -24,10 +25,10 @@ export function interviewJson(data: object, status = 200) {
   return Response.json({ ...data, serverNow: new Date().toISOString() }, { status, headers: { "Cache-Control": "private, no-store" } });
 }
 export function interviewFailure(error: unknown) {
-  const status = error instanceof InterviewError || error instanceof RequestBodyError ? error.status : 503;
+  const status = error instanceof InterviewError || error instanceof RequestBodyError || error instanceof InvalidInterviewPlatform ? error.status : 503;
   // Log operational metadata only: never answers, request bodies or provider keys.
   if (status >= 500) console.error("interview_service_failure", { status, kind: error instanceof Error ? error.name : "UnknownError" });
-  const response = interviewJson({ error: error instanceof InterviewError || error instanceof RequestBodyError || error instanceof InterviewAiBusyError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
+  const response = interviewJson({ error: error instanceof InterviewError || error instanceof RequestBodyError || error instanceof InvalidInterviewPlatform || error instanceof InterviewAiBusyError ? error.message : "Med Interview services are temporarily unavailable. Please retry." }, status);
   if (status === 429 || status === 503) response.headers.set("Retry-After", String(error instanceof InterviewAiBusyError ? error.retryAfter : 15));
   return response;
 }
@@ -54,6 +55,7 @@ export function validId(value: unknown): value is string {
 export function toInterviewAttempt(row: Record<string, unknown>): InterviewAttempt {
   const completedAt = row.completed_at as string | null;
   return {
+    platform: row.platform === "dentistry" ? "dentistry" : "medicine",
     id: row.id as string, mode: row.mode as InterviewAttempt["mode"], universitySlug: row.university_slug as string | null,
     stationSlug: row.station_slug as string, title: row.title as string,
     // Keep the existing database status constraint and grading RPC compatible:
@@ -61,7 +63,7 @@ export function toInterviewAttempt(row: Record<string, unknown>): InterviewAttem
     status: row.status === "failed" && row.last_error === "awaiting_feedback" ? "submitted" : row.status as InterviewAttempt["status"],
     startedAt: row.started_at as string, completedAt, answerSubmittedAt: row.answer_submitted_at as string | null | undefined, preparationSeconds: Number(row.preparation_seconds), stationSeconds: Number(row.station_seconds),
     breakSeconds: Number(row.break_seconds), stationIndex: Number(row.station_index), stationCount: Number(row.station_count),
-    questions: row.questions as string[], questionIds: (row.questions as string[]).map(questionIdForText), answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,
+    questions: row.questions as string[], questionIds: (row.questions as string[]).map(text => questionIdForText(text, row.platform === "dentistry" ? "dentistry" : "medicine")), answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,
     feedback: row.feedback as InterviewAttempt["feedback"], circuitId: row.circuit_id as string,
     nextAvailableAt: completedAt ? new Date(Date.parse(completedAt) + Number(row.break_seconds) * 1000).toISOString() : null,
   };

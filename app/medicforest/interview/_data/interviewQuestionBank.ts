@@ -64,7 +64,11 @@ export const INTERVIEW_QUESTION_SUBCATEGORIES = [
 ] as const;
 
 export type InterviewQuestionSubcategory =
-  (typeof INTERVIEW_QUESTION_SUBCATEGORIES)[number];
+  (typeof INTERVIEW_QUESTION_SUBCATEGORIES)[number]
+  | "Motivation for Dentistry" | "Role of a Dentist" | "Dental Work Experience"
+  | "Dental Communication" | "Dental Ethics and Consent" | "Dental Teamwork"
+  | "NHS Dentistry and Access" | "Oral Health and Prevention" | "Dental School and Course"
+  | "Dexterity and Reflection" | "Dental Evidence and Innovation";
 
 export type InterviewQuestionStatus = "completed" | "review" | "not-attempted";
 export type InterviewQuestionDifficulty = "core" | "applied" | "advanced";

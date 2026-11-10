@@ -1,9 +1,11 @@
+import type { InterviewPlatform } from "./platform";
+import { universitiesForPlatform } from "./catalogue";
 import { findInterviewUniversity } from "../../app/medicforest/interview/_data/universities";
 import { emptyApplicant, readApplicant } from "./applicant-profile";
 
 export const PREPARATION_THEMES = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"] as const;
 
-export function validatePreparation(value: Record<string, unknown>) {
+export function validatePreparation(value: Record<string, unknown>, platform: InterviewPlatform = "medicine") {
   if (value.applicant !== undefined) {
     if (!value.applicant || typeof value.applicant !== "object" || Array.isArray(value.applicant)) throw new Error("Check your applicant details.");
     for (const [key, entry] of Object.entries(value.applicant)) {
@@ -26,7 +28,7 @@ export function validatePreparation(value: Record<string, unknown>) {
   const targets = value.targets.map((entry: unknown) => {
     if (!entry || typeof entry !== "object" || Array.isArray(entry)) throw new Error("Choose a university from the list.");
     const target = entry as Record<string, unknown>;
-    if (typeof target.universitySlug !== "string" || !findInterviewUniversity(target.universitySlug)) throw new Error("Choose a university from the list.");
+    if (typeof target.universitySlug !== "string" || !(platform === "medicine" ? findInterviewUniversity(target.universitySlug) : universitiesForPlatform(platform).some(u => u.slug === target.universitySlug))) throw new Error("Choose a university from the list.");
     if (seen.has(target.universitySlug)) throw new Error("Each university can only be added once.");
     seen.add(target.universitySlug);
     const date = target.interviewDate;

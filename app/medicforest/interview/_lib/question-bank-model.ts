@@ -422,9 +422,9 @@ export function getCompletedCount(questions: readonly InterviewQuestion[]) {
 
 export function getCategoryQuestions(
   categoryTitle: InterviewQuestionCategoryTitle,
-  statusById: ReadonlyMap<string, QuestionStatus>
+  statusById: ReadonlyMap<string, QuestionStatus>,
+  questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS
 ): InterviewQuestion[] {
-  const questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS;
 
   return questions.filter(
     (question) => question.category === categoryTitle
@@ -437,9 +437,10 @@ export function getCategoryQuestions(
 
 export function withQuestionStats(
   category: InterviewQuestionCategory,
-  statusById: ReadonlyMap<string, QuestionStatus>
+  statusById: ReadonlyMap<string, QuestionStatus>,
+  bank: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS
 ): InterviewQuestionCategorySummary {
-  const questions = getCategoryQuestions(category.title, statusById);
+  const questions = getCategoryQuestions(category.title, statusById, bank);
 
   return {
     ...category,

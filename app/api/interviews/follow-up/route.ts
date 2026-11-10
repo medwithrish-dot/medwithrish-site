@@ -1,3 +1,5 @@
+import { requestInterviewPlatform, preparationTable } from "@/utils/interviews/platform";
+import { stationsForPlatform } from "@/utils/interviews/catalogue";
 import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
 import { requireHumanRequest } from "@/utils/security/human-check";
 import { requireAiUsage } from "@/utils/security/ai-usage";
@@ -11,18 +13,19 @@ export const maxDuration = 25;
 
 export async function POST(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
     if (!validId(body.attemptId) || typeof body.question !== "string" || body.question.length > 500) throw new InterviewError("Choose a valid Med interview question");
 
     const loadAttempt = async () => {
-      const { data, error } = await admin.from("interview_attempts").select("*").eq("id", body.attemptId).eq("user_id", user.id).maybeSingle();
+      const { data, error } = await admin.from("interview_attempts").select("*").eq("id", body.attemptId).eq("user_id", user.id).eq("platform", platform).maybeSingle();
       if (error) databaseError(error);
       if (!data) throw new InterviewError("Med Interview not found", 404);
       return data;
     };
     let row = await loadAttempt();
-    const station = findInterviewStation(row.station_slug);
+    const station = platform === "medicine" ? findInterviewStation(row.station_slug) : stationsForPlatform(platform).find(station => station.slug === row.station_slug);
     if (!station) throw new InterviewError("Station not found", 404);
     if (!followUpsEnabled(station.slug)) throw new InterviewError("Follow-ups are not enabled for this station.", 403);
     const snapshot = toInterviewAttempt(row);
@@ -62,19 +65,19 @@ export async function POST(request: Request) {
     const bit = 1 << questionNumber;
     if (mask & bit) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
     await requireAiUsage(admin, user.id, "generation");
-    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("metrics", JSON.stringify(row.metrics ?? {}));
+    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("status", "in_progress").eq("metrics", JSON.stringify(row.metrics ?? {}));
     claim = row.last_error == null ? claim.is("last_error", null) : claim.eq("last_error", row.last_error);
     const { data: claimed, error: claimError } = await claim.select("id").maybeSingle();
     if (claimError) databaseError(claimError);
     if (!claimed) throw new InterviewError("Another Med interview update is running. Please try again.", 409);
 
     let source: "ai" | "practice" = "practice";
-    let followUp = practiceFollowUp(answer, questionNumber, station.theme);
-    const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
+    let followUp = practiceFollowUp(answer, questionNumber, station.theme, platform);
+    const { data: preparation } = await admin.from(preparationTable(platform)).select("*").eq("user_id", user.id).maybeSingle();
     const applicant = readApplicant(preparation?.applicant);
     if (interviewAiConfigured()) {
       try {
-        followUp = await generateInterviewFollowUp({ title: station.lobbyTitle, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions, applicant });
+        followUp = await generateInterviewFollowUp({ title: station.lobbyTitle, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions, platform, applicant });
         source = "ai";
       } catch {
         // No automatic provider/model retry, billing upgrade or second AI request.
@@ -83,7 +86,7 @@ export async function POST(request: Request) {
     }
 
     if (!questionEligible(followUp, applicant)) {
-      followUp = practiceFollowUp(answer, questionNumber, station.theme);
+      followUp = practiceFollowUp(answer, questionNumber, station.theme, platform);
       source = "practice";
     }
 
@@ -97,7 +100,7 @@ export async function POST(request: Request) {
       const questions = [...row.questions];
       if (questions.length >= originals.length * 2 || questions.includes(followUp)) throw new InterviewError("Continue with the remaining Med interview questions.", 409);
       questions.splice(questions.indexOf(question) + 1, 0, followUp);
-      const { data, error } = await admin.from("interview_attempts").update({ questions }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("questions", JSON.stringify(row.questions)).eq("metrics", JSON.stringify(row.metrics ?? {})).select().maybeSingle();
+      const { data, error } = await admin.from("interview_attempts").update({ questions }).eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("status", "in_progress").eq("questions", JSON.stringify(row.questions)).eq("metrics", JSON.stringify(row.metrics ?? {})).select().maybeSingle();
       if (error) databaseError(error);
       if (data) return reply(data, followUp, source);
     }

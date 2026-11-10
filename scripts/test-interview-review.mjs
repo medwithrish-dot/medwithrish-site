@@ -14,6 +14,37 @@ const question = "Why medicine?";
 const words = "Working with residents in a care home taught me to listen carefully and recognise how different members of the healthcare team support each person.";
 const feedback = { score: 75, summary: "A thoughtful answer", strengths: ["Reflection"], improvements: ["Be specific"], rubric: [] };
 
+test("a dentistry session draws from its bank and rejects medicine station IDs", async () => {
+  const api = harness({ requestPlatform: "dentistry" });
+  const response = await api.post({ mode: "station", stationSlug: "dental-ethics" });
+  assert.equal(response.status, 200);
+  const attempt = (await response.json()).attempt;
+  assert.equal(attempt.platform, "dentistry");
+  assert.equal(attempt.questions.length, 3);
+  assert.ok(attempt.questionIds.every(id => id.startsWith("dq-05-")));
+  assert.equal((await api.post({ mode: "station", stationSlug: "why-medicine" })).status, 404);
+  assert.equal((await api.post({ mode: "free", stationSlug: "why-dentistry" })).status, 403);
+  assert.equal((await harness().post({ mode: "station", stationSlug: "why-dentistry" })).status, 404);
+});
+
+test("session writes and feedback cannot cross platform even for the same owner", async () => {
+  const dentalRow = { platform: "dentistry" };
+  assert.equal((await harness({ overrides: dentalRow }).patch({ finish: true })).status, 404);
+  assert.equal((await harness({ overrides: dentalRow }).grade()).status, 404);
+  assert.equal((await harness({ requestPlatform: "dentistry" }).patch({ finish: true })).status, 404);
+  assert.equal((await harness({ requestPlatform: "dentistry" }).grade()).status, 404);
+});
+
+test("dentistry grading passes its context to the shared assessor", async () => {
+  let assessedPlatform;
+  const api = harness({ requestPlatform: "dentistry", configured: true, overrides: {
+    platform: "dentistry", status: "failed", last_error: "awaiting_feedback",
+    completed_at: new Date().toISOString(), answers: [{ question, answer: words }],
+  }, assess: async (_title, _answers, _questions, platform) => { assessedPlatform = platform; return feedback; } });
+  assert.equal((await api.grade()).status, 200);
+  assert.equal(assessedPlatform, "dentistry");
+});
+
 function load(file, mocks, cache = new Map()) {
   const filename = resolve(root, file);
   if (cache.has(filename)) return cache.get(filename);
@@ -35,9 +66,9 @@ function load(file, mocks, cache = new Map()) {
 
 // Exercise real validation, ownership, mapping and route behaviour; substitute
 // only Supabase transport and the external AI provider.
-function harness({ usageAllowed = true, overrides = {}, configured = false, user = "user-1", beforeUpdate, saveError = null, assess = async () => feedback } = {}) {
+function harness({ requestPlatform = "medicine", usageAllowed = true, overrides = {}, configured = false, user = "user-1", beforeUpdate, saveError = null, assess = async () => feedback } = {}) {
   const state = { row: {
-    id: attemptId, user_id: "user-1", mode: "reference", university_slug: null, station_slug: "why-medicine", title: question,
+    platform: "medicine", id: attemptId, user_id: "user-1", mode: "reference", university_slug: null, station_slug: "why-medicine", title: question,
     status: "in_progress", started_at: new Date(Date.now() - 180_000).toISOString(), completed_at: null, answer_submitted_at: null,
     preparation_seconds: 60, station_seconds: 480, break_seconds: 120, station_index: 0, station_count: 3, circuit_id: circuitId,
     questions: [question], answers: [{ question, answer: "Previously saved answer" }], metrics: { wordCount: 3 },
@@ -79,6 +110,7 @@ function harness({ usageAllowed = true, overrides = {}, configured = false, user
     },
   };
   const mocks = {
+    "@/utils/security/human-check": { requireHumanRequest: async () => {} },
     "@/utils/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: user ? { id: user } : null } }) } }) },
     "@/utils/supabase/admin": { createAdminClient: () => admin },
     "@/utils/interviews/openai": { interviewAiConfigured: () => configured, assessInterview: async (...args) => { state.providerCalls += 1; return assess(...args); } },
@@ -86,7 +118,7 @@ function harness({ usageAllowed = true, overrides = {}, configured = false, user
   const cache = new Map();
   const session = load("app/api/interviews/session/route.ts", mocks, cache);
   const grade = load("app/api/interviews/feedback/route.ts", mocks, cache);
-  const request = (path, method, body) => new Request(`https://example.test/api/interviews/${path}`, { method,
+  const request = (path, method, body) => new Request(`https://example.test/api/interviews/${path}?platform=${requestPlatform}`, { method,
     headers: { "Content-Type": "application/json", Origin: "https://example.test" }, body: JSON.stringify(body) });
   return { state,
     patch: (body = {}) => session.PATCH(request("session", "PATCH", { attemptId, answers: [{ question, answer: words }], ...body })),
@@ -94,6 +126,33 @@ function harness({ usageAllowed = true, overrides = {}, configured = false, user
     grade: () => grade.POST(request("feedback", "POST", { attemptId })),
   };
 }
+
+test("checking fresh grading does not spend usage, claim another try or call AI", async () => {
+  const api = harness({ configured: true, usageAllowed: false, overrides: {
+    status: "grading", completed_at: new Date().toISOString(), grading_started_at: new Date().toISOString(),
+    answers: [{ question, answer: words }],
+  } });
+  const response = await api.grade();
+  assert.equal(response.status, 409);
+  assert.match((await response.json()).error, /already being generated/);
+  assert.equal(api.state.providerCalls, 0);
+  assert.equal(api.state.gradingClaims, 0);
+  assert.equal(api.state.writes, 0);
+});
+
+test("an interrupted grading request can reclaim a stale attempt and preserve its transcript", async () => {
+  const api = harness({ configured: true, overrides: {
+    status: "grading", completed_at: new Date().toISOString(), grading_started_at: new Date(Date.now() - 100_000).toISOString(),
+    answers: [{ question, answer: words }],
+  } });
+  const response = await api.grade();
+  assert.equal(response.status, 200);
+  const { attempt } = await response.json();
+  assert.equal(attempt.status, "completed");
+  assert.deepEqual(attempt.answers, [{ question, answer: words }]);
+  assert.equal(api.state.providerCalls, 1);
+  assert.equal(api.state.gradingClaims, 1);
+});
 
 test("finishing saves even an empty transcript and opens an ungraded review without AI", async () => {
   for (const answer of ["", "A short answer"]) {

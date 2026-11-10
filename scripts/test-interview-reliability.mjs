@@ -14,6 +14,7 @@ function load(file, cache = new Map()) {
   const output = ts.transpileModule(readFileSync(path, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
   new Function("require", "module", "exports", output)(name => {
     if (name === "server-only") return {};
+    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, cache);
     return name.startsWith(".") ? load(resolve(dirname(path), `${name}.ts`), cache) : require(name);
   }, compiled, compiled.exports);
   return compiled.exports;

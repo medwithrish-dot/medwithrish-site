@@ -1,17 +1,18 @@
+import { findInterviewStation as findMedicineStation } from "@/app/medicforest/interview/_data/interview-stations";
+import { findInterviewUniversity as findMedicineUniversity } from "@/app/medicforest/interview/_data/universities";
+import { requestInterviewPlatform, preparationTable } from "@/utils/interviews/platform";
+import { questionsForPlatform, stationsForPlatform, universitiesForPlatform, platformUniversityStations, motivationStation } from "@/utils/interviews/catalogue";
 import { randomUUID } from "node:crypto";
 import { requireHumanRequest } from "@/utils/security/human-check";
 import { interviewAiConfigured } from "@/utils/interviews/openai";
-import { findInterviewUniversity } from "@/app/medicforest/interview/_data/universities";
-import { findInterviewStation, interviewStations } from "@/app/medicforest/interview/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
 import { selectStationQuestions } from "@/utils/interviews/station-question-selection";
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
 import { interviewerSpeech } from "@/app/medicforest/interview/_lib/interviewer-transcript";
-import { isAcademicInterview, universityStationSlugs, universityUsesPanelFlow } from "@/app/medicforest/interview/_data/university-stations";
-import { INTERVIEW_QUESTIONS } from "@/app/medicforest/interview/_data/interviewQuestionBank";
+import { isAcademicInterview, universityUsesPanelFlow } from "@/app/medicforest/interview/_data/university-stations";
 import { WHY_MEDICINE_PROMPT, WHY_MEDICINE_SECONDS } from "@/app/medicforest/interview/_lib/why-medicine-challenge";
 
-const interviewQuestionIds = new Set<string>(INTERVIEW_QUESTIONS.map((question) => question.id));
+
 
 async function completeQuestionBankProgress(
   admin: Awaited<ReturnType<typeof interviewContext>>["admin"],
@@ -19,6 +20,7 @@ async function completeQuestionBankProgress(
   attempt: ReturnType<typeof toInterviewAttempt>,
   completedAt: string,
 ) {
+  const interviewQuestionIds = new Set(questionsForPlatform(attempt.platform ?? "medicine").map(q => q.id));
   const rows = attempt.answers.flatMap((answer) => {
     if (!answer.answer.trim()) return [];
     const index = attempt.questions.indexOf(answer.question);
@@ -39,11 +41,12 @@ async function completeQuestionBankProgress(
 
 export async function GET(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const { user, admin, isPremium } = await interviewContext();
     const search = new URL(request.url).searchParams;
     const id = search.get("attempt");
     if (id && !validId(id)) throw new InterviewError("Invalid Med interview ID");
-    let query = admin.from("interview_attempts").select("*").eq("user_id", user.id);
+    let query = admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("platform", platform);
     query = id ? query.eq("id", id) : query.in("status", ["in_progress", "grading"]).order("started_at", { ascending: false }).limit(1);
     const result = await query.maybeSingle();
     let data = result.data;
@@ -52,9 +55,9 @@ export async function GET(request: Request) {
     if (id && !data) throw new InterviewError("Med Interview not found", 404);
     // A fresh URL must recover the used trial, rather than opening a new lobby
     // (including its practice preview) for a free account.
-    if (!id && !data && !isPremium && search.get("station") === "why-medicine") {
+    if (!id && !data && !isPremium && search.get("station") === motivationStation(platform)) {
       const trial = await admin.from("interview_attempts").select("*")
-        .eq("user_id", user.id).eq("mode", "free").limit(1).maybeSingle();
+        .eq("user_id", user.id).eq("platform", platform).eq("mode", "free").limit(1).maybeSingle();
       if (trial.error) databaseError(trial.error);
       data = trial.data;
     }
@@ -69,19 +72,23 @@ function configuredLimit(name: string, fallback: number) {
 
 export async function POST(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const body = await readInterviewBody(request);
     const { user, admin, isPremium } = await interviewContext();
     await requireHumanRequest();
+    if (platform === "dentistry" && body.mode === "free") throw new InterviewError("Dentistry AI interviews require Premium.", 403);
     const requestedFree = body.mode === "free";
     let mode = body.mode;
     if (!["free", "university", "station", "reference"].includes(String(mode))) throw new InterviewError("Choose a Med interview mode");
     if (mode !== "free" && !isPremium) throw new InterviewError("University circuits and additional stations require Premium. The Why medicine? station is free.", 403);
-    const university = typeof body.universitySlug === "string" ? findInterviewUniversity(body.universitySlug) : undefined;
+    const university = platform === "medicine" ? findMedicineUniversity(typeof body.universitySlug === "string" ? body.universitySlug : undefined) : universitiesForPlatform(platform).find(item => item.slug === body.universitySlug);
+    const interviewStations = stationsForPlatform(platform);
+    const findInterviewStation = (slug: string) => platform === "medicine" ? findMedicineStation(slug) : interviewStations.find(item => item.slug === slug);
     if (mode === "university" && !university) throw new InterviewError("Choose a university");
-    if (mode === "university" && isAcademicInterview(university?.slug) && !body.stationIndex) throw new InterviewError("Oxford and Cambridge academic interviews are a separate format and are not available in this circuit.");
+    if (platform === "medicine" && mode === "university" && isAcademicInterview(university?.slug) && !body.stationIndex) throw new InterviewError("Oxford and Cambridge academic interviews are a separate format and are not available in this circuit.");
     const index = body.stationIndex === undefined ? 0 : Number(body.stationIndex);
     const circuitMode = mode === "university" || mode === "reference";
-    const presetStations = universityStationSlugs(university?.slug);
+    const presetStations = platformUniversityStations(platform, university?.slug);
     if (mode === "university" && !body.stationSlug && !presetStations.length) throw new InterviewError("Choose your practice topics before starting this university Med interview.");
     const defaultCount = mode === "university" ? presetStations.length || 1 : mode === "reference" ? 5 : 1;
     let count = defaultCount;
@@ -91,7 +98,7 @@ export async function POST(request: Request) {
     }
     if (!Number.isInteger(index) || index < 0 || index >= 20 || (!circuitMode && index !== 0)) throw new InterviewError("Invalid station number");
     if (requestedFree) {
-      const { data: previousFree, error } = await admin.from("interview_attempts").select("id,circuit_id").eq("user_id", user.id).eq("mode", "free").limit(1).maybeSingle();
+      const { data: previousFree, error } = await admin.from("interview_attempts").select("id,circuit_id").eq("user_id", user.id).eq("platform", platform).eq("mode", "free").limit(1).maybeSingle();
       if (error) databaseError(error);
       if (previousFree && previousFree.circuit_id !== body.circuitId) {
         if (!isPremium) throw new InterviewError("Your free Why Medicine? attempt has already been used. Upgrade to Premium to practise again.", 403);
@@ -102,7 +109,7 @@ export async function POST(request: Request) {
     const circuitId = typeof body.circuitId === "string" ? body.circuitId : randomUUID();
     if (index > 0) {
       if (!body.circuitId) throw new InterviewError("Start your circuit with the first station");
-      const { data: previous, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("circuit_id", circuitId).eq("station_index", index - 1).maybeSingle();
+      const { data: previous, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("platform", platform).eq("circuit_id", circuitId).eq("station_index", index - 1).maybeSingle();
       if (error) databaseError(error);
       const stationEnded = previous && (previous.status === "completed" ||
         (["failed", "grading"].includes(previous.status) && previous.completed_at && previous.answer_submitted_at && previous.last_error !== "abandoned"));
@@ -111,20 +118,20 @@ export async function POST(request: Request) {
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
-    const panel = mode === "university" && universityUsesPanelFlow(university?.slug);
+    const panel = platform === "medicine" && mode === "university" && universityUsesPanelFlow(university?.slug);
     const station = panel ? findInterviewStation("panel-interview") : requestedFree ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const stationSeconds = requestedFree ? WHY_MEDICINE_SECONDS : mode === "university" ? university!.stationSeconds : 480;
-    const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
+    const { data: preparation } = await admin.from(preparationTable(platform)).select("*").eq("user_id", user.id).maybeSingle();
     const applicant = readApplicant(preparation?.applicant);
-    const selectedQuestions = requestedFree ? [] : selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`, applicant);
+    const selectedQuestions = requestedFree ? [] : selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`, applicant, platform);
     const payload = {
-      mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
+      platform, mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
       title: station.lobbyTitle, circuit_id: circuitId, station_index: index, station_count: count,
       preparation_seconds: 0,
       station_seconds: stationSeconds,
       break_seconds: circuitMode ? (mode === "university" ? university!.breakSeconds : 120) : 0,
-      questions: requestedFree ? [WHY_MEDICINE_PROMPT] : selectedQuestions.length ? selectedQuestions.map((question) => question.text) : station.questions.filter((question) => questionEligible(question, applicant)),
+      questions: requestedFree ? [platform === "dentistry" ? interviewStations[0].questions[0] : WHY_MEDICINE_PROMPT] : selectedQuestions.length ? selectedQuestions.map((question) => question.text) : station.questions.filter((question) => questionEligible(question, applicant)),
     };
     const { data, error } = await admin.rpc("reserve_interview_attempt", {
       p_user: user.id, p_payload: payload,
@@ -138,10 +145,11 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
     if (!validId(body.attemptId) || !Array.isArray(body.answers)) throw new InterviewError("Invalid Med interview answers");
-    const { data: row, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("id", body.attemptId).maybeSingle();
+    const { data: row, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("platform", platform).eq("id", body.attemptId).maybeSingle();
     if (error) databaseError(error);
     if (!row) throw new InterviewError("Med Interview not found", 404);
     if (body.action !== undefined && body.action !== "pause" && body.action !== "resume") throw new InterviewError("Choose a valid interview action");
@@ -161,7 +169,7 @@ export async function PATCH(request: Request) {
       const metrics = { ...row.metrics, pausedAt: 0, totalPausedMs: (Number(row.metrics?.totalPausedMs) || 0) + pauseDuration };
       const { data, error: resumeError } = await admin.from("interview_attempts").update({
         started_at: new Date(Date.parse(row.started_at) + pauseDuration).toISOString(), metrics,
-      }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress")
+      }).eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("status", "in_progress")
         .eq("metrics", JSON.stringify(row.metrics)).eq("started_at", row.started_at).select().maybeSingle();
       if (resumeError) databaseError(resumeError);
       if (!data) throw new InterviewError("Your interview changed in another tab. Please reload before resuming.", 409);
@@ -211,7 +219,7 @@ export async function PATCH(request: Request) {
     }
     const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics,
       ...(finish ? { status: "failed", last_error: "awaiting_feedback", completed_at: row.completed_at ?? finishedAt, answer_submitted_at: row.answer_submitted_at ?? finishedAt } : {}),
-    }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers))
+    }).eq("id", row.id).eq("user_id", user.id).eq("platform", platform).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers))
       .eq("metrics", JSON.stringify(row.metrics ?? {})).eq("started_at", row.started_at).select().maybeSingle();
     if (saveError) databaseError(saveError);
     if (!data) throw new InterviewError("Your Med interview changed while saving. Please retry to keep the latest answers.", 409);
@@ -223,10 +231,11 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const body = await readInterviewBody(request);
     const { user, admin } = await interviewContext();
     if (!validId(body.attemptId)) throw new InterviewError("Invalid Med interview ID");
-    const { data, error } = await admin.from("interview_attempts").update({ status: "failed", last_error: "abandoned" }).eq("user_id", user.id).eq("id", body.attemptId).eq("status", "in_progress").select("id").maybeSingle();
+    const { data, error } = await admin.from("interview_attempts").update({ status: "failed", last_error: "abandoned" }).eq("user_id", user.id).eq("platform", platform).eq("id", body.attemptId).eq("status", "in_progress").select("id").maybeSingle();
     if (error) databaseError(error);
     if (!data) throw new InterviewError("Only an active station can be ended", 409);
     return interviewJson({ ended: true });

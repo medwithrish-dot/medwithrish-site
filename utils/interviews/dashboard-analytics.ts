@@ -1,7 +1,9 @@
+import type { InterviewPlatform } from "./platform";
+import { universitiesForPlatform } from "./catalogue";
 import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import type { ApplicantProfile } from "./applicant-profile";
 import { findInterviewStation, interviewStations } from "@/app/medicforest/interview/_data/interview-stations";
-import { findInterviewUniversity } from "@/app/medicforest/interview/_data/universities";
+import { findInterviewUniversity as findMedicineUniversity } from "@/app/medicforest/interview/_data/universities";
 
 export const INTERVIEW_THEMES = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"] as const;
 export type InterviewTheme = (typeof INTERVIEW_THEMES)[number];
@@ -130,6 +132,12 @@ function average(values: readonly number[]) {
 }
 
 export function interviewTheme(attempt: Pick<InterviewAttempt, "stationSlug" | "mode">): InterviewTheme | null {
+  const dentalThemes: Record<string, InterviewTheme> = {
+    "why-dentistry": "motivation", "dental-school": "motivation", "dental-experience": "reflection",
+    "dental-dexterity": "reflection", "dental-communication": "teamwork", "dental-teamwork": "teamwork",
+    "dental-ethics": "ethics", "dental-access": "nhs", "dental-role": "nhs", "dental-prevention": "nhs", "dental-evidence": "analysis",
+  };
+  if (dentalThemes[attempt.stationSlug]) return dentalThemes[attempt.stationSlug];
   const station = findInterviewStation(attempt.stationSlug);
   return station ? stationThemes[station.theme] ?? null : attempt.mode === "free" ? "motivation" : null;
 }
@@ -185,7 +193,9 @@ export function deriveDashboard(
   now: string,
   isPremium: boolean,
   completedTaskIds: readonly string[] = [],
+  platform: InterviewPlatform = "medicine",
 ): DashboardAnalytics {
+  const findInterviewUniversity = (slug: string | null) => platform === "medicine" ? findMedicineUniversity(slug) : universitiesForPlatform(platform).find(u => u.slug === slug);
   const today = londonDate(now);
   const todayOrdinal = calendarOrdinal(today)!;
   const nowMs = Date.parse(now);
@@ -292,6 +302,9 @@ export function deriveDashboard(
     nextAction = { title: "Develop your Why medicine? answer", description: "Return to the free station and apply one idea from your feedback.", href: stationHref("why-medicine"), reason: "focus" };
   } else {
     nextAction = { title: `Focus on ${THEME_LABELS[suggestedTheme].toLowerCase()}`, description: weaknesses[0] ? `Your recent ${THEME_LABELS[suggestedTheme].toLowerCase()} average is lower than your other sampled themes. Try one station and reflect on the feedback.` : "Build practice around the theme you selected and a specific example from your experience.", href: stationHref(suggestedStation.slug), reason: weaknesses[0] ? "weakness" : "focus" };
+  }
+  if (platform === "dentistry" && nextAction.reason !== "resume" && nextAction.reason !== "interview-soon") {
+    nextAction = { title: "Build your dentistry answers", description: "Reflect on your motivation, then practise one topic and review what you can improve.", href: isPremium ? "/medicforest/dentistry/interviews/ai-interviews?station=why-dentistry" : "/medicforest/dentistry/interviews/question-bank", reason: "focus" };
   }
   const recentScores = scored.slice(0, 5).map((attempt) => scoreOf(attempt)!);
   const freeScores = scored.filter((attempt) => attempt.mode === "free").map((attempt) => scoreOf(attempt)!);

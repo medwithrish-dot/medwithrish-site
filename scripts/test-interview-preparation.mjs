@@ -14,7 +14,7 @@ function loadModule(file) {
   const compiledModule = { exports: {} };
   modules.set(path, compiledModule);
   const javascript = ts.transpileModule(readFileSync(path, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
-  const localRequire = (name) => name.startsWith(".") ? loadModule(resolve(dirname(path), name)) : createRequire(path)(name);
+  const localRequire = (name) => name.startsWith("@/") ? loadModule(resolve(root, name.slice(2))) : name.startsWith(".") ? loadModule(resolve(dirname(path), name)) : createRequire(path)(name);
   new Function("require", "module", "exports", javascript)(localRequire, compiledModule, compiledModule.exports);
   return compiledModule.exports;
 }

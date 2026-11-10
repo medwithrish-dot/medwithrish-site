@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { monitorSpeechActivity, createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
+import { isIOSSpeechBrowser } from "./speech-platform";
 import { ANSWER_SILENCE_MS } from "./station-flow";
 export { getTranscriptHints } from "./speech-delivery";
 
@@ -227,7 +228,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     };
     retargetRef.current = retarget;
     recognition.lang = "en-GB";
-    recognition.continuous = true;
+    recognition.continuous = !isIOSSpeechBrowser(navigator);
     recognition.interimResults = true;
     recognition.onspeechstart = () => {
       if (!current() || !listeningWantedRef.current || finishRef.current) return;
@@ -325,7 +326,9 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     recognitionRef.current = recognition;
     try {
       recognition.start();
-      activityStopRef.current = monitorSpeechActivity(recognition, (active) => {
+      // A second getUserMedia capture can mute WebKit recognition on iPhone/iPad.
+      // Native speech events and the result watchdog still detect pauses.
+      activityStopRef.current = isIOSSpeechBrowser(navigator) ? null : monitorSpeechActivity(recognition, (active) => {
         measuredActivityRef.current = active;
         if (active === true) clearSilence();
         else if (silenceTimerRef.current === null) scheduleSilence();

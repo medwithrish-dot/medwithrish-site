@@ -1,3 +1,4 @@
+import type { InterviewPlatform } from "./platform";
 /** Pure validation shared by the provider adapter and route tests. */
 export function validateFollowUp(value: unknown, existingQuestions: readonly string[]) {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid follow-up");
@@ -14,7 +15,7 @@ export function validateFollowUp(value: unknown, existingQuestions: readonly str
 }
 
 /** A labelled practice prompt remains available if the provider is busy. */
-export function practiceFollowUp(answer: string, questionNumber: number, theme?: string) {
+export function practiceFollowUp(answer: string, questionNumber: number, theme?: string, platform: InterviewPlatform = "medicine") {
   const text = answer.toLowerCase();
   const options = theme === "Ethics"
     ? ["What further information would you need before deciding whether your proposed approach was proportionate?", "How would you weigh the competing interests of the people affected by your proposed approach?", "What would make you reconsider your proposed approach and seek support from a supervising professional?"]
@@ -26,7 +27,7 @@ export function practiceFollowUp(answer: string, questionNumber: number, theme?:
         ? ["How would you find out what support the individual actually needed before deciding on an approach?", "What would you consider if two people's needs appeared to conflict?", "How would you check whether your proposed approach was fair in practice?"]
         : /data|evidence|research|percent|statistic/.test(text)
           ? ["What additional evidence would most strengthen or change the conclusion you have drawn?", "What alternative explanation would you want to rule out before accepting that conclusion?", "How would you communicate the uncertainty in your answer to someone without a scientific background?"]
-          : ["What evidence or observation best supports the point you have made?", "What alternative perspective would you consider before reaching your conclusion?", "How would your reasoning influence your approach as a medical student?"];
+          : ["What evidence or observation best supports the point you have made?", "What alternative perspective would you consider before reaching your conclusion?", platform === "dentistry" ? "How would your reasoning influence your approach as a dental student?" : "How would your reasoning influence your approach as a medical student?"];
   return options[questionNumber % options.length];
 }
 

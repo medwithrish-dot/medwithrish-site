@@ -1,3 +1,4 @@
+import { platformFromPath } from "@/utils/interviews/platform";
 import type { InterviewQuestionStatus } from "../_data/interviewQuestionBank";
 import type { createClient } from "@/utils/supabase/client";
 import { stripSpeechPauseMarkers } from "./speech-delivery";
@@ -435,7 +436,7 @@ export async function readSupabaseQuestionProgress(
         "word_count",
       ].join(",")
     )
-    .eq("user_id", userId);
+    .eq("user_id", userId).eq("platform", typeof window === "undefined" ? "medicine" : platformFromPath(window.location.pathname));
 
   if (error) throw error;
 

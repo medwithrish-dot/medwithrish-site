@@ -23,7 +23,8 @@ export async function proxy(request: NextRequest) {
   if (apiFailure) return apiFailure;
 
   // Browse the interview platform freely. Features verify identity in their routes.
-  const needsSessionRefresh = accessPathname.startsWith("/medicforest/interview/")
+  const needsSessionRefresh = accessPathname.startsWith("/medicforest/dentistry/")
+    || accessPathname.startsWith("/medicforest/interview/")
     || accessPathname === "/medicforest/account"
     || pathname.startsWith("/api/interviews/")
     || ["/api/stripe/create-checkout-session", "/api/stripe/create-portal-session", "/api/stripe/sync-checkout-session"].includes(pathname);
@@ -82,6 +83,7 @@ export const config = {
     "/medicforest/:path*",
     "/ucat/:path*",
     "/interviews/:path*",
+    "/dentistry/:path*",
     "/api/:path*",
   ],
 };

@@ -1,3 +1,5 @@
+import { requestInterviewPlatform } from "@/utils/interviews/platform";
+import { stationsForPlatform } from "@/utils/interviews/catalogue";
 import { databaseError, interviewContext, interviewFailure, InterviewError, validId } from "@/utils/interviews/server";
 import { synthesizeInterviewSpeech } from "@/utils/interviews/text-to-speech";
 import { requireHumanRequest } from "@/utils/security/human-check";
@@ -11,6 +13,7 @@ export const maxDuration = 20;
 
 export async function GET(request: Request) {
   try {
+    const platform = requestInterviewPlatform(request);
     const url = new URL(request.url);
     const attemptId = url.searchParams.get("attempt");
     const questionIndex = url.searchParams.get("question");
@@ -20,7 +23,7 @@ export async function GET(request: Request) {
       throw new InterviewError("Invalid speech request");
     }
     const { user, admin } = await interviewContext();
-    const { data, error } = await admin.from("interview_attempts").select("questions,status,last_error,station_slug").eq("id", attemptId).eq("user_id", user.id).maybeSingle();
+    const { data, error } = await admin.from("interview_attempts").select("questions,status,last_error,station_slug").eq("id", attemptId).eq("user_id", user.id).eq("platform", platform).maybeSingle();
     if (error) databaseError(error);
     if (!data) throw new InterviewError("Med Interview not found", 404);
     if (data.status !== "in_progress") throw new InterviewError("This Med interview has ended", 409);
@@ -33,7 +36,7 @@ export async function GET(request: Request) {
     // Fixed questions already have local MP3s and must not spend Cloud TTS quota.
     const lastError = typeof data.last_error === "string" ? data.last_error : "";
     const claimed = lastError.startsWith("ai_followup:") && followUpClaimMask(lastError) > 0;
-    const probableProbe = claimed && index > 0 && index < questions.length && !questionIdForText(question);
+    const probableProbe = claimed && index > 0 && index < questions.length && !questionIdForText(question, platform);
     if (!probableProbe) throw new InterviewError("Recorded audio is used for this question", 400);
 
     await requireHumanRequest();

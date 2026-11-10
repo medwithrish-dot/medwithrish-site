@@ -6,6 +6,7 @@
 export const FOLLOW_UP_STATIONS: readonly string[] = [
   "disability-in-medicine",
   "equality-diversity-inclusion",
+  "dental-ethics",
 ];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 

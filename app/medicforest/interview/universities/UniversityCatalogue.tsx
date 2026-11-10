@@ -1,16 +1,23 @@
 "use client";
 
+import { useInterviewPlatform } from "../_lib/platform-context";
+import { universitiesForPlatform } from "@/utils/interviews/catalogue";
 import { useState } from "react";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, BookOpenCheck, Clock3, Mic, RotateCcw, Search } from "lucide-react";
 import styles from "../_components/AIInterviewLanding.module.css";
-import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
+import { universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
+import { DENTISTRY_UNIVERSITY_SOURCES_CHECKED } from "../_data/dentistry-universities";
 import { isAcademicInterview } from "../_data/university-stations";
 
 type UniversityCatalogueMode = "practice" | "reference";
 type RecentAttempt = { href: string; completedAt: string };
 
 export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }: { mode?: UniversityCatalogueMode; recentAttempts?: Record<string, RecentAttempt> }) {
+  const platform = useInterviewPlatform();
+  const dental = platform === "dentistry";
+  const interviewUniversities = universitiesForPlatform(platform);
+  const checked = dental ? DENTISTRY_UNIVERSITY_SOURCES_CHECKED : UNIVERSITY_SOURCES_CHECKED;
   const [query, setQuery] = useState("");
   const [format, setFormat] = useState("All");
   const practiceMode = mode === "practice";
@@ -24,28 +31,28 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
   if (practiceMode) return (
     <section className={styles.catalogue} aria-labelledby="university-heading">
       <div className={styles.catalogueHeading}>
-        <h2 id="university-heading">Find your medical school</h2>
+        <h2 id="university-heading">Find your {dental ? "dental" : "medical"} school</h2>
         <p>Your university. Your next practice session.</p>
       </div>
       <div className={styles.filters}>
         <label className={styles.search}>
           <span className="sr-only">Search universities</span>
           <Search size={18} aria-hidden="true" />
-          <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search university or medical school..." />
+          <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={dental ? "Search university or dental school..." : "Search university or medical school..."} />
         </label>
-        <select aria-label="Med Interview format" value={format} onChange={(event) => setFormat(event.target.value)}>
-          <option value="All">All Med interview formats</option>
+        <select aria-label={dental ? "Dentistry interview format" : "Med Interview format"} value={format} onChange={(event) => setFormat(event.target.value)}>
+          <option value="All">All {dental ? "dentistry" : "Med"} interview formats</option>
           <option value="MMI">MMI</option>
           <option value="Panel">Panel</option>
           <option value="Mixed">Mixed / group assessment</option>
-          <option value="Unconfirmed">Awarding body / general practice</option>
+          <option value="Unconfirmed">{dental ? "Check invitation / general practice" : "Awarding body / general practice"}</option>
         </select>
       </div>
       <div className={styles.results}>
         <span role="status">{visible.length} {visible.length === 1 ? "practice option" : "practice options"}</span>
         {(query || format !== "All") && <button type="button" onClick={() => { setQuery(""); setFormat("All"); }}>Clear filters</button>}
       </div>
-      {visible.length === 0 ? <p className={styles.empty}>No medical schools match your search. Try another name or clear your filters.</p> : (
+      {visible.length === 0 ? <p className={styles.empty}>No {dental ? "dental" : "medical"} schools match your search. Try another name or clear your filters.</p> : (
         <div className={styles.cards}>
           {visible.map((entry) => {
             const recentAttempt = recentAttempts[entry.slug];
@@ -58,16 +65,16 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
               <p className={styles.preparation}>{entry.preparationSeconds > 0 ? `${entry.preparationSeconds}s preparation per block` : "No separate preparation timer"}{entry.breakSeconds > 0 ? ` · ${entry.breakSeconds}s intervals` : ""}</p>
               <div className={styles.cardFooter}>
                 {recentAttempt ? <div className={styles.cardActions}>
-                  <Link href={recentAttempt.href} className={styles.primaryAction} aria-label={`Review your last ${entry.name} Med interview`}><BookOpenCheck size={16} aria-hidden="true" />View previous<ArrowRight size={16} aria-hidden="true" /></Link>
-                  <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.cardRetryAction} aria-label={`Retry AI Med interview for ${entry.name}`}><RotateCcw size={14} aria-hidden="true" />Retry</Link>
-                </div> : <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI Med interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI Med interview<ArrowRight size={16} aria-hidden="true" /></Link>}
+                  <Link href={recentAttempt.href} className={styles.primaryAction} aria-label={`Review your last ${entry.name} ${dental ? "dentistry" : "Med"} interview`}><BookOpenCheck size={16} aria-hidden="true" />View previous<ArrowRight size={16} aria-hidden="true" /></Link>
+                  <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.cardRetryAction} aria-label={`Retry AI ${dental ? "dentistry" : "Med"} interview for ${entry.name}`}><RotateCcw size={14} aria-hidden="true" />Retry</Link>
+                </div> : <Link href={`/medicforest/interview/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI ${dental ? "dentistry" : "Med"} interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI {dental ? "dentistry" : "Med"} interview<ArrowRight size={16} aria-hidden="true" /></Link>}
                 <div className={styles.details}><span>{recentAttempt ? `Last attempt ${new Date(recentAttempt.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}` : entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span><Link href={`/medicforest/interview/universities/${entry.slug}`} aria-label={`View format and sources for ${entry.name}`}>Format &amp; sources</Link></div>
               </div>
             </article>;
           })}
         </div>
       )}
-      <p className={styles.sourceNote}>Practice presets may include estimated timings. Always follow your university invitation. Sources checked {UNIVERSITY_SOURCES_CHECKED}.</p>
+      <p className={styles.sourceNote}>Practice presets may include estimated timings. Always follow your university invitation. Sources checked {checked}.</p>
     </section>
   );
 
@@ -77,7 +84,7 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
         <label className="relative flex-1">
           <span className="sr-only">Search universities</span>
           <Search className="absolute left-4 top-3.5 h-5 w-5 text-[#4a6370]" aria-hidden="true" />
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search university or medical school" className="w-full rounded-xl border border-[#cbd7dc] bg-white py-3 pl-12 pr-4 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/20" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={dental ? "Search university or dental school" : "Search university or medical school"} className="w-full rounded-xl border border-[#cbd7dc] bg-white py-3 pl-12 pr-4 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/20" />
         </label>
         <label>
           <span className="sr-only">Med Interview format</span>
@@ -86,11 +93,11 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
             <option value="MMI">MMI</option>
             <option value="Panel">Panel</option>
             <option value="Mixed">Mixed / group assessment</option>
-            <option value="Unconfirmed">Awarding body / general practice</option>
+            <option value="Unconfirmed">{dental ? "Check invitation / general practice" : "Awarding body / general practice"}</option>
           </select>
         </label>
       </div>
-      <p className="mt-3 text-xs leading-5 text-[#4a6370]">Sources checked {UNIVERSITY_SOURCES_CHECKED}. “Practice preset” includes estimates or adaptations. Your university invitation takes precedence.</p>
+      <p className="mt-3 text-xs leading-5 text-[#4a6370]">Sources checked {checked}. “Practice preset” includes estimates or adaptations. Your university invitation takes precedence.</p>
       <p className="mt-5 text-sm font-semibold text-[#314956]" role="status">{visible.length} {visible.length === 1 ? "entry" : "entries"}</p>
       {visible.length === 0 ? (
         <div className="mt-4 rounded-2xl border border-[#d8e0e6] bg-white p-6">
@@ -102,7 +109,7 @@ export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }:
           {visible.map((entry) => (
             <article key={entry.slug} className="flex flex-col rounded-2xl border border-[#d8e0e6] bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
               <div className="flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wide">
-                <span className="rounded-full bg-[#edf7f6] px-2.5 py-1 text-[#08787b]">{entry.format === "Unconfirmed" ? "Awarding body" : entry.format}</span>
+                <span className="rounded-full bg-[#edf7f6] px-2.5 py-1 text-[#08787b]">{entry.format === "Unconfirmed" ? dental ? "Check invitation" : "Awarding body" : entry.format}</span>
                 <span className="rounded-full bg-[#f0f3f5] px-2.5 py-1 text-[#4a6370]">{entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span>
               </div>
               <h2 className="mt-4 text-lg font-bold leading-6 text-[#042724]"><Link href={`/medicforest/interview/universities/${entry.slug}`} className="hover:text-[#08787b]">{entry.name}</Link></h2>

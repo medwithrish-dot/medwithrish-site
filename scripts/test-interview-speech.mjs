@@ -1,3 +1,4 @@
+import { isIOSSpeechBrowser } from "../app/medicforest/interview/_lib/speech-platform.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
@@ -34,6 +35,7 @@ function speechHarness(options = {}) {
   const transcripts = [];
   const recognitions = [];
   let reportActivity;
+  let activityMonitorStarts = 0;
   let cancellations = 0;
   let now = 0;
   const react = {
@@ -85,10 +87,12 @@ function speechHarness(options = {}) {
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports,
     require: name => {
+      if (name === "./speech-platform") return { isIOSSpeechBrowser };
       if (name === "./station-flow") return flowModule.exports;
       if (name === "./speech-delivery") return options.measuredActivity ? {
         ...deliveryModule.exports,
         monitorSpeechActivity: (_recognition, onActivity) => {
+          activityMonitorStarts++;
           reportActivity = onActivity;
           return () => { reportActivity = undefined; };
         },
@@ -96,6 +100,7 @@ function speechHarness(options = {}) {
       assert.equal(name, "react", "Only the React hook lifecycle is substituted");
       return react;
     },
+    navigator: { userAgent: options.ios ? "Mozilla/5.0 (iPhone) AppleWebKit Safari" : "Chrome", maxTouchPoints: options.ios ? 5 : 0 },
     SpeechSynthesisUtterance: Utterance,
     Audio: AudioPlayer,
     Date: class extends Date { static now() { return now; } },
@@ -124,6 +129,7 @@ function speechHarness(options = {}) {
     get speech() { return speech; }, render, played, utterances, recorded, recognitions, transcripts,
     advanceTime: milliseconds => { now += milliseconds; },
     reportActivity: active => reportActivity?.(active),
+    get activityMonitorStarts() { return activityMonitorStarts; },
     get cancellations() { return cancellations; },
     fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === (options.silenceMs ?? 5000)) { timers[index] = null; callback?.(); } }); },
     get pendingTimerDelays() { return delays.filter((_delay, index) => timers[index]); },
@@ -142,6 +148,31 @@ function speechHarness(options = {}) {
     },
   };
 }
+
+test("iPhone recognition avoids a competing capture and restarts after each utterance", t => {
+  const room = speechHarness({ ios: true, measuredActivity: true, continuousListening: true });
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  assert.equal(recognition.continuous, false);
+  assert.equal(room.activityMonitorStarts, 0);
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "I enjoy helping people", confidence: 0.9 } }] });
+  recognition.end();
+  room.fireRestartTimers();
+  assert.equal(recognition.startCalls, 2);
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "and learning practical skills", confidence: 0.9 } }] });
+  assert.deepEqual(room.transcripts, ["I enjoy helping people", "and learning practical skills"]);
+});
+
+test("iPad desktop mode also uses the iOS capture policy; desktop keeps measured activity", t => {
+  assert.equal(isIOSSpeechBrowser({ userAgent: "Mozilla/5.0 Macintosh", maxTouchPoints: 5 }), true);
+  assert.equal(isIOSSpeechBrowser({ userAgent: "Mozilla/5.0 Macintosh", maxTouchPoints: 0 }), false);
+  const room = speechHarness({ measuredActivity: true, continuousListening: true });
+  t.after(() => room.unmount());
+  room.speech.start();
+  assert.equal(room.recognitions[0].continuous, true);
+  assert.equal(room.activityMonitorStarts, 1);
+});
 
 test("leaving the room cancels read-aloud waiting for recognition to stop", async t => {
   const room = speechHarness();

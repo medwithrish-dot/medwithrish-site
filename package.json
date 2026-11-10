@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test:dentistry": "node --test scripts/test-dentistry.mjs && node scripts/test-dentistry-db.mjs",
     "test:mobile": "node scripts/test-mobile-platform.mjs",
     "test": "npm run test:seo && npm run test:security && npm run test:unit && npm run test:interviews:db && node scripts/test-interview-dashboard-db.mjs && node --test scripts/test-profile-security.mjs",
     "test:seo": "node --test scripts/test-seo.mjs",

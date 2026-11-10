@@ -16,9 +16,9 @@ export function featureAccessDecision(userId: string | null, isPremium: boolean,
 }
 
 export function safeInterviewReturnPath(value: unknown): string | null {
-  if (typeof value !== "string" || value.includes("\\") || !/^\/(?:medicforest\/interview|interviews)(?:[/?]|$)/.test(value)) return null;
+  if (typeof value !== "string" || value.includes("\\") || !/^\/(?:medicforest\/interview|interviews|(?:medicforest\/)?dentistry\/interviews)(?:[/?]|$)/.test(value)) return null;
   const base = "https://medicforest.invalid";
   const url = new URL(value, base);
-  if (url.origin !== base || !/^\/(?:medicforest\/interview|interviews)(?:\/|$)/.test(url.pathname)) return null;
+  if (url.origin !== base || !/^\/(?:medicforest\/interview|interviews|(?:medicforest\/)?dentistry\/interviews)(?:\/|$)/.test(url.pathname)) return null;
   return url.pathname + url.search;
 }

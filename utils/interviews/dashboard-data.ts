@@ -1,3 +1,4 @@
+import { preparationTable, type InterviewPlatform } from "./platform";
 import "server-only";
 import { cache } from "react";
 import { createClient } from "@/utils/supabase/server";
@@ -19,8 +20,9 @@ export function preparationFromRow(row: Record<string, unknown> | null): Prepara
   };
 }
 
-export const getInterviewDashboardData = cache(async () => {
+export const getInterviewDashboardData = cache(async (platform: InterviewPlatform = "medicine") => {
   const now = new Date().toISOString();
+  const name = platform === "dentistry" ? "dentistry" : "Med";
   let attempts: InterviewAttempt[] = [];
   let profile: PreparationProfile | null = null;
   let signedIn = false;
@@ -37,17 +39,17 @@ export const getInterviewDashboardData = cache(async () => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      message = "Sign in to save your university choices, Med interview dates and preparation plan.";
+      message = `Sign in to save your university choices, ${name} interview dates and preparation plan.`;
     } else {
       signedIn = true;
       const monthStart = `${londonDate(now).slice(0, 8)}01`;
       const [settings, plan, tasks, allTime, questionBank, activity] = await Promise.all([
-        supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle(),
+        supabase.from(preparationTable(platform)).select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("profiles").select("current_plan").eq("id", user.id).maybeSingle(),
         supabase.from("interview_dashboard_tasks").select("task_id").eq("user_id", user.id).eq("date", londonDate(now)),
-        supabase.rpc("interview_dashboard_totals"),
-        supabase.from("interview_question_progress").select("question_id,status").eq("user_id", user.id).in("status", ["completed", "review"]).limit(1000),
-        supabase.from("interview_daily_questions").select("practice_date").eq("user_id", user.id).gte("practice_date", monthStart).lte("practice_date", londonDate(now)).limit(5000),
+        platform === "medicine" ? supabase.rpc("interview_dashboard_totals") : supabase.rpc("interview_platform_dashboard_totals", { p_platform: platform }),
+        supabase.from("interview_question_progress").select("question_id,status").eq("user_id", user.id).eq("platform", platform).in("status", ["completed", "review"]).limit(1000),
+        supabase.from("interview_daily_questions").select("practice_date").eq("user_id", user.id).eq("platform", platform).gte("practice_date", monthStart).lte("practice_date", londonDate(now)).limit(5000),
       ]);
       isPremium = plan.data?.current_plan === "premium";
       available = !settings.error && !tasks.error && !allTime.error;
@@ -62,13 +64,13 @@ export const getInterviewDashboardData = cache(async () => {
         dailyActivity = [...counts].map(([practice_date, questions]) => ({ practice_date, questions }));
         activityAvailable = true;
       }
-      if (!available) message = "Your saved Med interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
+      if (!available) message = `Your saved ${name} interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.`;
 
       // No answer text or microphone metrics are transferred for a dashboard view.
       // A bounded recent history supplies details; the RPC supplies exact lifetime totals.
-      const columns = "id,mode,university_slug,station_slug,title,status,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback_score:feedback->score,feedback_improvements:feedback->improvements,started_at,completed_at";
-      const history = await supabase.from("interview_attempts").select(`${columns}${available ? ",answer_submitted_at" : ""}`).eq("user_id", user.id).order("started_at", { ascending: false }).order("id", { ascending: false }).limit(500);
-      if (history.error) message = "Your Med interview history could not be loaded. Please try again shortly.";
+      const columns = "platform,id,mode,university_slug,station_slug,title,status,circuit_id,station_index,station_count,preparation_seconds,station_seconds,break_seconds,feedback_score:feedback->score,feedback_improvements:feedback->improvements,started_at,completed_at";
+      const history = await supabase.from("interview_attempts").select(`${columns}${available ? ",answer_submitted_at" : ""}`).eq("user_id", user.id).eq("platform", platform).order("started_at", { ascending: false }).order("id", { ascending: false }).limit(500);
+      if (history.error) message = `Your ${name} interview history could not be loaded. Please try again shortly.`;
       else attempts = (history.data ?? []).map((result) => {
         const row = result as unknown as Record<string, unknown>;
         return toInterviewAttempt({ ...row,
@@ -80,7 +82,7 @@ export const getInterviewDashboardData = cache(async () => {
   } catch {
     message = "Your dashboard could not be loaded right now. Please try again shortly.";
   }
-  const analytics = deriveDashboard(attempts, profile, now, isPremium, completedTasks);
+  const analytics = deriveDashboard(attempts, profile, now, isPremium, completedTasks, platform);
   if (totals) {
     analytics.stats.completedCount = Number(totals.completedCount ?? 0);
     analytics.stats.scoredCount = Number(totals.scoredCount ?? 0);

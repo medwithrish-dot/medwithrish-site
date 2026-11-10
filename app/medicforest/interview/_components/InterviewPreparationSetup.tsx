@@ -1,5 +1,7 @@
 "use client";
 
+import { interviewRequestPath } from "@/utils/interviews/platform";
+
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 import { FeatureActionLink } from "@/app/medicforest/_components/FeatureActionLink";
 
@@ -7,7 +9,8 @@ import Link from "@/app/medicforest/_components/MedicForestLink";
 import { useId, useRef, useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, Check, ChevronDown, GraduationCap, Loader2, Plus, Search, Settings2, Target, X } from "lucide-react";
-import { interviewUniversities } from "../_data/universities";
+import { universitiesForPlatform } from "@/utils/interviews/catalogue";
+import { useInterviewPlatform } from "../_lib/platform-context";
 import { THEME_LABELS, type InterviewTheme, type PreparationProfile } from "@/utils/interviews/dashboard-analytics";
 import { readApplicant, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 
@@ -25,7 +28,7 @@ const experiences = [
 ] as const;
 
 const themes: InterviewTheme[] = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"];
-const schoolNames = new Map(interviewUniversities.map((university) => [university.slug, university.name]));
+
 const baseField = "w-full min-w-0 rounded-xl border border-[#d4dfe1] bg-white py-2.5 text-sm text-[#123a3c] outline-none transition focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15 disabled:cursor-not-allowed disabled:bg-[#f4f7f7] disabled:opacity-60";
 const field = `${baseField} px-3.5`;
 const primary = "inline-flex items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#065d60] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#08787b] disabled:cursor-not-allowed disabled:opacity-50";
@@ -53,6 +56,10 @@ function validDate(value: string) {
 }
 
 export function InterviewPreparationSetup({ initialProfile, signedIn, available, variant = "full" }: InterviewPreparationSetupProps) {
+  const platform = useInterviewPlatform();
+  const dental = platform === "dentistry";
+  const interviewUniversities = universitiesForPlatform(platform);
+  const schoolNames = new Map(interviewUniversities.map((university) => [university.slug, university.name]));
   const router = useRouter();
   const uniqueId = useId();
   const editorId = `${uniqueId}-editor`;
@@ -131,7 +138,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
     savingRef.current = true;
     setSaving(true);
     try {
-      const response = await fetch("/api/interviews/preparation", {
+      const response = await fetch(interviewRequestPath("/api/interviews/preparation"), {
         method: "PUT", cache: "no-store", signal: AbortSignal.timeout(15_000), headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           experience: draft.experience, focusThemes: draft.focusThemes,
@@ -165,8 +172,8 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#cde5dc] bg-[#e6f3eb] text-[#08787b]" aria-hidden="true"><Settings2 size={21} /></span>
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6e8a79]">Your preparation, your pace</p>
-          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your Med interview plan</h2>
-          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, Med interview dates, application route and personal experience.</p>
+          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your {dental ? "dentistry" : "Med"} interview plan</h2>
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, {dental ? "dentistry" : "Med"} interview dates, application route and personal experience.</p>
           {savedProfile && !expanded && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-[#43625d]">
             <span className="inline-flex items-center gap-1.5"><GraduationCap size={14} aria-hidden="true" />{savedProfile.targets.length} {savedProfile.targets.length === 1 ? "university" : "universities"}</span>
             <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} aria-hidden="true" />{knownDateCount ? `${knownDateCount} ${knownDateCount === 1 ? "date" : "dates"} added` : "Dates to be confirmed"}</span>
@@ -182,7 +189,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
       </button>}
     </div>
 
-    {!signedIn && <div className="border-t border-[#deebe5] px-5 py-4 sm:px-6"><p className="text-sm leading-6 text-[#536d72]">Sign in to keep your university choices and preparation plan in your account.</p><div className="mt-3 flex flex-wrap items-center gap-4"><FeatureActionLink feature="Preparation plan" href="/medicforest/account" className={primary}>Set up my free plan <ArrowRight size={15} aria-hidden="true" /></FeatureActionLink><Link href="/medicforest/interview/ai-interviews" className="text-xs font-bold text-[#08787b] hover:underline">Explore the free station</Link></div></div>}
+    {!signedIn && <div className="border-t border-[#deebe5] px-5 py-4 sm:px-6"><p className="text-sm leading-6 text-[#536d72]">Sign in to keep your university choices and preparation plan in your account.</p><div className="mt-3 flex flex-wrap items-center gap-4"><FeatureActionLink feature="Preparation plan" href="/medicforest/account" className={primary}>Set up my free plan <ArrowRight size={15} aria-hidden="true" /></FeatureActionLink><Link href="/medicforest/interview/ai-interviews" className="text-xs font-bold text-[#08787b] hover:underline">{dental ? "Explore AI practice" : "Explore the free station"}</Link></div></div>}
 
     {signedIn && !available && <div role="status" className="mx-5 mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900 sm:mx-6"><p>Saving preparation plans is not available yet. You can keep practising and return to add your targets once setup is complete.</p><button type="button" disabled={refreshing} onClick={() => startRefresh(() => router.refresh())} className="mt-2 inline-flex items-center gap-2 font-bold underline disabled:opacity-50">{refreshing && <Loader2 size={14} className="animate-spin" aria-hidden="true" />}{refreshing ? "Checking…" : "Try again"}</button></div>}
     {notice && signedIn && <p role="status" className="mx-5 mb-4 flex items-start gap-2 rounded-xl bg-[#edf7ef] px-3.5 py-3 text-xs leading-5 text-[#296242] sm:mx-6"><Check size={15} className="mt-0.5 shrink-0" aria-hidden="true" />{notice}</p>}
@@ -203,12 +210,12 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
           {draft.targets.length > 0 && <div className="mt-4 grid gap-3 2xl:grid-cols-2">
             {draft.targets.map((target) => <div key={target.universitySlug} className="min-w-0 rounded-xl border border-[#dce8e2] bg-white p-3.5">
               <div className="flex items-start justify-between gap-2"><p className="pt-1 text-sm font-bold leading-5 text-[#254b47]">{schoolNames.get(target.universitySlug) || target.universitySlug}</p><button type="button" onClick={() => { setDraft((current) => ({ ...current, targets: current.targets.filter((entry) => entry.universitySlug !== target.universitySlug) })); setNotice(""); }} className="shrink-0 rounded-lg p-1.5 text-[#738882] hover:bg-red-50 hover:text-red-700" aria-label={`Remove ${schoolNames.get(target.universitySlug)}`}><X size={16} aria-hidden="true" /></button></div>
-              <label htmlFor={`${uniqueId}-${target.universitySlug}-date`} className="mb-1.5 mt-3 block text-[11px] font-semibold text-[#6a8180]">Med Interview date <span className="font-normal">(optional)</span></label>
+              <label htmlFor={`${uniqueId}-${target.universitySlug}-date`} className="mb-1.5 mt-3 block text-[11px] font-semibold text-[#6a8180]">{dental ? "Dentistry interview" : "Med Interview"} date <span className="font-normal">(optional)</span></label>
               <div className="flex min-w-0 flex-wrap items-center gap-2"><input id={`${uniqueId}-${target.universitySlug}-date`} type="date" value={target.interviewDate ?? ""} min="2000-01-01" max="2099-12-31" onChange={(event) => changeDate(target.universitySlug, event.target.value || null)} className={`${field} max-w-[220px] flex-1`} />{target.interviewDate ? <button type="button" onClick={() => changeDate(target.universitySlug, null)} className="shrink-0 rounded-lg px-2 py-2 text-[11px] font-semibold text-[#58736b] hover:bg-[#edf7f3]" aria-label={`Clear Med interview date for ${schoolNames.get(target.universitySlug)}`}>Clear date</button> : <span className="text-[11px] text-[#84958f]">Date unknown is fine</span>}</div>
             </div>)}
           </div>}
           {draft.targets.length < 10 && <div className="mt-4 rounded-xl border border-[#dce8e2] bg-white p-3">
-            <label className="relative block" htmlFor={`${uniqueId}-university-search`}><span className="sr-only">Search universities to add</span><Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#789085]" aria-hidden="true" /><input ref={searchRef} id={`${uniqueId}-university-search`} value={query} onChange={(event) => { setQuery(event.target.value); setShowAllUniversities(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }} placeholder="Search a university or medical school" autoComplete="off" className={`${baseField} pl-10 pr-3.5`} aria-describedby={`${uniqueId}-university-help`} /></label>
+            <label className="relative block" htmlFor={`${uniqueId}-university-search`}><span className="sr-only">Search universities to add</span><Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#789085]" aria-hidden="true" /><input ref={searchRef} id={`${uniqueId}-university-search`} value={query} onChange={(event) => { setQuery(event.target.value); setShowAllUniversities(false); }} onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }} placeholder={dental ? "Search a university or dental school" : "Search a university or medical school"} autoComplete="off" className={`${baseField} pl-10 pr-3.5`} aria-describedby={`${uniqueId}-university-help`} /></label>
             <div className="mt-2 max-h-52 overflow-y-auto" aria-label="Available universities">
               {visibleUniversities.map((university) => <button type="button" key={university.slug} onClick={() => addUniversity(university.slug)} className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-xs text-[#355852] hover:bg-[#eef7f1] focus-visible:bg-[#eef7f1]" aria-label={`Add ${university.name}`}><span className="font-semibold">{university.name}</span><Plus size={15} className="shrink-0 text-[#08787b]" aria-hidden="true" /></button>)}
               {matches.length === 0 && <p className="px-3 py-4 text-xs leading-5 text-[#738882]">No universities match. Try a different name.</p>}
@@ -226,7 +233,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <label className="text-xs font-semibold text-[#315451]">Application route
               <select className={`${field} mt-2`} value={draft.applicant?.entryRoute ?? ""} onChange={(event) => setDraft((current) => ({ ...current, applicant: { ...readApplicant(current.applicant), entryRoute: (event.target.value || null) as ApplicantProfile["entryRoute"] } }))}>
-                <option value="">Not confirmed</option><option value="undergraduate">Undergraduate medicine</option><option value="graduate">Graduate-entry medicine</option>
+                <option value="">Not confirmed</option><option value="undergraduate">Undergraduate {dental ? "dentistry" : "medicine"}</option><option value="graduate">Graduate-entry {dental ? "dentistry" : "medicine"}</option>
               </select>
             </label>
             {([
@@ -234,7 +241,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
               ["previousDegree", "Have you completed a previous degree?"],
               ["workExperience", "Have you done healthcare work experience?"],
               ["volunteering", "Have you done volunteering?"],
-              ["reapplicant", "Are you reapplying to medicine?"],
+              ["reapplicant", dental ? "Are you reapplying to dentistry?" : "Are you reapplying to medicine?"],
               ["international", "Are you an international applicant?"],
               ["careerChanger", "Are you changing from another career?"],
             ] as const).map(([key, label]) => <label key={key} className="text-xs font-semibold text-[#315451]">{label}

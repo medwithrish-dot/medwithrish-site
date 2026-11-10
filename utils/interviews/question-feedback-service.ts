@@ -1,6 +1,7 @@
+import type { InterviewPlatform } from "./platform";
+import { questionsForPlatform } from "./catalogue";
 import "server-only";
 import { createHash } from "node:crypto";
-import { INTERVIEW_QUESTIONS } from "@/app/medicforest/interview/_data/interviewQuestionBank";
 import { getWordCount } from "@/app/medicforest/interview/_lib/question-bank-storage";
 import { stripSpeechPauseMarkers } from "@/app/medicforest/interview/_lib/speech-delivery";
 import { FREE_QUESTION_FEEDBACK_USED, QUESTION_BANK_FEEDBACK_STATION } from "@/app/medicforest/interview/_lib/question-feedback";
@@ -9,8 +10,8 @@ import { interviewAiConfigured } from "./openai";
 import { databaseError, InterviewError, interviewContext, toInterviewAttempt } from "./server";
 import { readFreeInterviewFeedbackCredit } from "./free-feedback-credit";
 
-function findQuestion(id: unknown) {
-  const question = INTERVIEW_QUESTIONS.find((item) => item.id === id);
+function findQuestion(id: unknown, platform: InterviewPlatform) {
+  const question = questionsForPlatform(platform).find((item) => item.id === id);
   if (!question) throw new InterviewError("Interview question not found", 404);
   return question;
 }
@@ -27,12 +28,12 @@ function paidCircuitId(userId: string, questionId: string, answer: string) {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 }
 
-export async function readQuestionFeedbackAccess(questionId: unknown) {
-  const question = findQuestion(questionId);
+export async function readQuestionFeedbackAccess(questionId: unknown, platform: InterviewPlatform = "medicine") {
+  const question = findQuestion(questionId, platform);
   const { user, admin, isPremium } = await interviewContext();
   const [credit, latest] = await Promise.all([
     readFreeInterviewFeedbackCredit(admin, user.id),
-    admin.from("interview_attempts").select("*").eq("user_id", user.id)
+    admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("platform", platform)
       .eq("station_slug", QUESTION_BANK_FEEDBACK_STATION).contains("questions", [question.text])
       .order("started_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
@@ -40,15 +41,15 @@ export async function readQuestionFeedbackAccess(questionId: unknown) {
   return { isPremium, freeUsed: credit.freeUsed, attempt: latest.data ? toInterviewAttempt(latest.data) : null };
 }
 
-export async function generateQuestionFeedback(questionId: unknown, rawAnswer: unknown) {
-  const question = findQuestion(questionId);
+export async function generateQuestionFeedback(questionId: unknown, rawAnswer: unknown, platform: InterviewPlatform = "medicine") {
+  const question = findQuestion(questionId, platform);
   if (typeof rawAnswer !== "string" || rawAnswer.length > 30000) throw new InterviewError("Invalid saved answer");
   const answer = stripSpeechPauseMarkers(rawAnswer).trim();
   if (getWordCount(answer) < 20) throw new InterviewError("Write at least 20 words before generating AI feedback.");
   const { user, admin, isPremium } = await interviewContext();
   const circuitId = isPremium ? paidCircuitId(user.id, question.id, answer) : user.id;
   const lookup = () => admin.from("interview_attempts").select("*")
-    .eq("user_id", user.id).eq("circuit_id", circuitId).eq("station_index", 0).maybeSingle();
+    .eq("user_id", user.id).eq("platform", platform).eq("circuit_id", circuitId).eq("station_index", 0).maybeSingle();
   const { data: initialRow, error } = await lookup();
   if (error) databaseError(error);
   let row = initialRow;
@@ -59,7 +60,7 @@ export async function generateQuestionFeedback(questionId: unknown, rawAnswer: u
     }
     const now = new Date().toISOString();
     const inserted = await admin.from("interview_attempts").insert({
-      user_id: user.id, mode: "reference", station_slug: QUESTION_BANK_FEEDBACK_STATION,
+      platform, user_id: user.id, mode: "reference", station_slug: QUESTION_BANK_FEEDBACK_STATION,
       title: question.text, circuit_id: circuitId, station_index: 0, station_count: 1,
       preparation_seconds: 0, station_seconds: 60, break_seconds: 0,
       questions: [question.text], answers: [{ question: question.text, answer }],
@@ -81,6 +82,6 @@ export async function generateQuestionFeedback(questionId: unknown, rawAnswer: u
     if (!isPremium) throw new QuestionFeedbackUpgradeRequired();
     throw new InterviewError("Saved feedback does not match this answer. Please retry.", 409);
   }
-  const attempt = await generateInterviewFeedback(saved.id);
+  const attempt = await generateInterviewFeedback(saved.id, platform);
   return { attempt, isPremium, freeUsed: !isPremium };
 }

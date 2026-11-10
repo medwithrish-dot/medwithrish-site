@@ -1,3 +1,4 @@
+import { DENTISTRY_QUESTIONS, DENTISTRY_MARK_SCHEMES } from "../_data/dentistry-question-bank";
 import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion, type InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
 import { questionMarkingPoints } from "../_data/question-marking-points";
 import { suppliedMarkSchemes } from "../_data/supplied-mark-schemes";
@@ -288,7 +289,7 @@ export const categoryRubric = {
 >;
 
 export function getQuestionMarkScheme(question: InterviewQuestion): MarkSchemeSection[] {
-  const supplied = suppliedMarkSchemes[question.id];
+  const supplied = DENTISTRY_MARK_SCHEMES[question.id] ?? suppliedMarkSchemes[question.id];
   if (supplied) return supplied.map((section) => ({ ...section, items: [...section.items] }));
   const key = question.id.split("-").slice(1, 3).join("-");
   const points = questionMarkingPoints[key];
@@ -313,7 +314,7 @@ export function getQuestionMarkScheme(question: InterviewQuestion): MarkSchemeSe
   ];
 }
 
-const reviewQuestions: readonly InterviewQuestion[] = [...INTERVIEW_QUESTIONS, ...DATA_INTERPRETATION_STATION_QUESTIONS];
+const reviewQuestions: readonly InterviewQuestion[] = [...DENTISTRY_QUESTIONS, ...INTERVIEW_QUESTIONS, ...DATA_INTERPRETATION_STATION_QUESTIONS];
 const questionsById = new Map<string, InterviewQuestion>(reviewQuestions.map((question) => [question.id, question]));
 const questionsByText = new Map<string, InterviewQuestion>(reviewQuestions.map((question) => [question.text, question]));
 

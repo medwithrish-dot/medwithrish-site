@@ -157,6 +157,8 @@ test("Dundee lobby replaces station building and stale choices with mixed discus
   const compiled = { exports: {} };
   const jsx = (type, props) => ({ type, props });
   const require = name => {
+    if (name.endsWith("platform-context")) return { useInterviewPlatform: () => "medicine" };
+    if (name === "@/utils/interviews/catalogue") return load(resolve(root, "utils/interviews/catalogue"));
     if (name === "react") return { useState: value => [value, () => {}] };
     if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
     if (name.startsWith("../_data/")) return load(resolve(dirname(filename), name));

@@ -9,7 +9,7 @@ import ts from "typescript";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 const id = number => `00000000-0000-4000-8000-${String(number).padStart(12, "0")}`;
-const rows = Array.from({ length: 330 }, (_, index) => ({ id: id(index), user_id: "student", started_at: "2026-10-14T10:00:00.123456+00:00", status: "completed", station_slug: "why-medicine", title: "Why medicine?", university_slug: null, preparation_seconds: 0, station_seconds: 180, questions: ["Private question"], answers: [{ answer: "Private answer" }], metrics: {}, feedback_score: 75 }));
+const rows = Array.from({ length: 330 }, (_, index) => ({ platform: "medicine", id: id(index), user_id: "student", started_at: "2026-10-14T10:00:00.123456+00:00", status: "completed", station_slug: "why-medicine", title: "Why medicine?", university_slug: null, preparation_seconds: 0, station_seconds: 180, questions: ["Private question"], answers: [{ answer: "Private answer" }], metrics: {}, feedback_score: 75 }));
 
 function harness({ user = "student", unavailable = false, sourceRows = rows } = {}) {
   const queries = [];
@@ -71,7 +71,7 @@ test("older saved history remains reachable after 300 attempts, including identi
   assert.equal(second.nextCursor, null);
   assert.equal(new Set([...first.attempts, ...second.attempts].map(attempt => attempt.id)).size, 330);
   for (const query of api.queries) {
-    assert.deepEqual(query.filters, [["user_id", "student"]]);
+    assert.deepEqual(query.filters, [["user_id", "student"], ["platform", "medicine"]]);
     assert.doesNotMatch(query.columns, /questions|answers|user_id/);
     assert.equal(query.count, 301);
   }
@@ -87,7 +87,7 @@ test("Progress retrieves older paused work separately from hundreds of newer com
   assert.equal(unfinished.attempts.length, 1);
   assert.equal(unfinished.attempts[0].id, older.id);
   assert.equal(unfinished.attempts[0].metrics.pausedAt, pausedAt);
-  assert.deepEqual(api.queries[1].filters, [["user_id", "student"], ["status", "in_progress"]]);
+  assert.deepEqual(api.queries[1].filters, [["user_id", "student"], ["platform", "medicine"], ["status", "in_progress"]]);
   assert.doesNotMatch(api.queries[1].columns, /answers|questions/);
 });
 

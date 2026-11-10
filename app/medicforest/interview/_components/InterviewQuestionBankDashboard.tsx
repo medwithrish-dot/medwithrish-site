@@ -1,5 +1,8 @@
 "use client";
 
+import { medicForestPublicHref } from "@/utils/medicforest/public-navigation";
+import { useInterviewPlatform } from "../_lib/platform-context";
+import { questionsForPlatform } from "@/utils/interviews/catalogue";
 import { requestFeatureAccess } from "@/utils/medicforest/feature-access";
 
 import {
@@ -90,6 +93,7 @@ function CategoryCard({
   category: InterviewQuestionCategorySummary;
   onOpen: () => void;
 }) {
+  const platform = useInterviewPlatform();
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
   const remaining = category.total - category.completed;
@@ -102,7 +106,7 @@ function CategoryCard({
     <button
       type="button"
       onClick={onOpen}
-      aria-label={`Open ${category.title} Med interview questions`}
+      aria-label={`Open ${category.title} ${platform === "dentistry" ? "dentistry" : "Med"} interview questions`}
       className="group relative flex h-[276px] w-full flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] text-left shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
@@ -724,6 +728,8 @@ export function InterviewQuestionBankDashboard({
   initialSubcategoryIndex?: number;
   initialQuestionId?: string;
 }) {
+  const platform = useInterviewPlatform();
+  const bank = questionsForPlatform(platform);
   const [query, setQuery] = useState("");
   const [syncPending, setSyncPending] = useState(false);
   const supabaseReady = hasSupabaseConfig();
@@ -742,9 +748,9 @@ export function InterviewQuestionBankDashboard({
   const categoriesWithStats = useMemo(
     () =>
       categories.map((category) =>
-        withQuestionStats(category, questionStatusById)
-      ),
-    [questionStatusById]
+        withQuestionStats(platform === "medicine" ? category : { ...category, subcategories: [...new Set(bank.filter(q => q.category === category.title).map(q => q.subcategory))] }, questionStatusById, bank)
+      ).filter(category => category.total > 0),
+    [questionStatusById, bank, platform]
   );
   const savedResponseQuestionIds = useMemo(
     () => new Set(savedResponsesByQuestionId.keys()),
@@ -943,7 +949,7 @@ export function InterviewQuestionBankDashboard({
   ) => {
     if (typeof window === "undefined") return;
 
-    const url = buildQuestionBankUrl(nextState);
+    const url = medicForestPublicHref(window.location.pathname, buildQuestionBankUrl(nextState));
 
     if (mode === "replace") {
       window.history.replaceState(null, "", url);
@@ -1250,7 +1256,7 @@ export function InterviewQuestionBankDashboard({
                   Question Bank
                 </h1>
                 <p className="mt-2 text-sm font-medium text-[#4a6370]">
-                  Explore {totals.total}+ Med interview questions across{" "}
+                  Explore {totals.total}+ {platform === "dentistry" ? "dentistry" : "Med"} interview questions across{" "}
                   {categoriesWithStats.length} categories.
                 </p>
               </div>

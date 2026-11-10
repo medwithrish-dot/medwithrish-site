@@ -1,3 +1,5 @@
+import type { InterviewPlatform } from "@/utils/interviews/platform";
+import { DentistryPathway } from "./DentistryPathway";
 import Link from "@/app/medicforest/_components/MedicForestLink";
 import { ArrowRight, ArrowUpRight, CheckCircle2, Mic, Sparkles, TrendingUp } from "lucide-react";
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
@@ -18,9 +20,11 @@ function practiceDuration(minutes: number) {
 }
 
 export function InterviewDashboard({
+  platform = "medicine",
   data,
   pathway,
 }: {
+  platform?: InterviewPlatform;
   data: DashboardData;
   pathway: PathwayData;
 }) {
@@ -40,7 +44,7 @@ export function InterviewDashboard({
           <p className="mt-3 max-w-2xl text-sm leading-6 text-[#bdd5d0]">{nextAction.description}</p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <Link href={nextAction.href} className="inline-flex min-h-11 items-center gap-3 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-bold text-[#042724] hover:bg-white">{nextAction.reason === "resume" ? "Continue Med interview" : "Start next step"}<ArrowRight className="h-4 w-4" /></Link>
-            <Link href={`${base}/ai-interviews`} className="inline-flex min-h-11 items-center gap-2 text-xs font-bold text-[#b8d9d2] hover:text-white">See all Med interview options <ArrowUpRight className="h-3.5 w-3.5" /></Link>
+            <Link href={`${base}/ai-interviews`} className="inline-flex min-h-11 items-center gap-2 text-xs font-bold text-[#b8d9d2] hover:text-white">See all {platform === "dentistry" ? "dentistry" : "Med"} interview options <ArrowUpRight className="h-3.5 w-3.5" /></Link>
           </div>
         </div>
         <div className="flex flex-col justify-center border-t border-white/10 bg-white/[0.035] p-6 lg:border-l lg:border-t-0">
@@ -70,21 +74,21 @@ export function InterviewDashboard({
         <div className="flex items-start justify-between gap-4">
           <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#08787b]">Your pathway</p><h2 id="pathway-preview-title" className="mt-2 text-lg font-bold text-[#173d3d]">Build confidence, station by station</h2><p className="mt-2 text-xs leading-6 text-[#687d80]">Read the guides, practise the questions and check your readiness before moving on. Your progress carries over each day.</p></div>
         </div>
-        <InterviewPathwayChecklist
+        {platform === "dentistry" ? <DentistryPathway rows={data.questionProgress} /> : <InterviewPathwayChecklist
           key={pathway.userId ?? "guest"}
           userId={pathway.userId}
           initialCompleted={pathway.completedTaskIds}
           available={pathway.available}
-        />
+        />}
         <Link href={`${base}/plan`} className="mt-5 inline-flex items-center gap-2 border-t border-[#e6edec] pt-4 text-xs font-bold text-[#08787b]">Continue your pathway <ArrowRight className="h-3.5 w-3.5" /></Link>
       </section>
 
       <div className="space-y-5">
-        <InterviewQuestionProgressMini rows={data.questionProgress} signedIn={signedIn} available={data.questionProgressAvailable} />
+        <InterviewQuestionProgressMini platform={platform} rows={data.questionProgress} signedIn={signedIn} available={data.questionProgressAvailable} />
 
         <section className={`${panel} p-5`} aria-labelledby="latest-title">
           <div className="flex items-center justify-between gap-3"><h2 id="latest-title" className="flex items-center gap-2 text-sm font-bold text-[#173d3d]"><TrendingUp className="h-4 w-4 text-[#08787b]" /> Latest progress</h2><Link href={`${base}/reports`} className="text-[10px] font-bold text-[#08787b]">All reports</Link></div>
-          {latest ? <Link href={latest.href} className="mt-4 flex items-center gap-3 rounded-xl bg-[#f3f8f6] p-4"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#08787b]"><Mic className="h-4 w-4" /></span><span className="min-w-0 flex-1"><strong className="block truncate text-xs text-[#284b4c]">{latest.title}</strong><span className="mt-1 block text-[10px] text-[#748789]">{new Date(latest.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}</span></span><strong className="text-lg text-[#08787b]">{latest.score === null ? "View" : `${latest.score}%`}</strong></Link> : <div className="mt-4 flex items-center gap-3 rounded-xl bg-[#f5f9f8] p-4"><CheckCircle2 className="h-5 w-5 shrink-0 text-[#8eaaa6]" /><p className="text-[10px] leading-5 text-[#718486]">Complete a Med interview to see your latest score and feedback here.</p></div>}
+          {latest ? <Link href={latest.href} className="mt-4 flex items-center gap-3 rounded-xl bg-[#f3f8f6] p-4"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#08787b]"><Mic className="h-4 w-4" /></span><span className="min-w-0 flex-1"><strong className="block truncate text-xs text-[#284b4c]">{latest.title}</strong><span className="mt-1 block text-[10px] text-[#748789]">{new Date(latest.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}</span></span><strong className="text-lg text-[#08787b]">{latest.score === null ? "View" : `${latest.score}%`}</strong></Link> : <div className="mt-4 flex items-center gap-3 rounded-xl bg-[#f5f9f8] p-4"><CheckCircle2 className="h-5 w-5 shrink-0 text-[#8eaaa6]" /><p className="text-[10px] leading-5 text-[#718486]">Complete a {platform === "dentistry" ? "dentistry" : "Med"} interview to see your latest score and feedback here.</p></div>}
           {analytics.latestFeedback && <p className="mt-3 border-l-2 border-[#a6cec2] pl-3 text-[10px] leading-5 text-[#617a76]">{analytics.latestFeedback}</p>}
         </section>
       </div>
@@ -95,7 +99,7 @@ export function InterviewDashboard({
       <Link href={`${base}/question-bank`} className="hover:text-[#08787b]">Question bank</Link>
       <Link href={`${base}/universities`} className="hover:text-[#08787b]">University formats</Link>
       <Link href={`${base}/progress`} className="hover:text-[#08787b]">Detailed progress</Link>
-      <Link href={`${base}/groups`} className="hover:text-[#08787b]">Study groups</Link>
+      {platform === "medicine" && <Link href={`${base}/groups`} className="hover:text-[#08787b]">Study groups</Link>}
     </nav>
   </div>;
 }
