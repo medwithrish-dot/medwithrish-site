@@ -1,5 +1,6 @@
 import { INTERVIEW_QUESTIONS } from "../_data/interviewQuestionBank";
 import { DATA_INTERPRETATION_STATION_QUESTIONS } from "../_data/data-interpretation-station";
+import { DENTISTRY_QUESTIONS } from "../_data/dentistry-question-bank";
 import { WHY_MEDICINE_PROMPT } from "./why-medicine-challenge";
 
 export type InterviewerVoice = "female" | "male";
@@ -129,17 +130,23 @@ const questionNumberByText = new Map<string, number>([
   ...addedQuestions.map((question, index) => [question.text, addedBankAudioStart + index + 1] as const),
 ]);
 
+// Dentistry uses its own stable IDs so adding questions cannot renumber recordings.
+const dentistryById = new Map(DENTISTRY_QUESTIONS.map(question => [question.id, question]));
+const dentistryByText = new Map(DENTISTRY_QUESTIONS.map(question => [question.text, question]));
+
 export function getInterviewQuestionAudioSrc(
   questionId: string | null | undefined,
   questionText: string,
   voice: InterviewerVoice,
 ) {
   if (questionText === WHY_MEDICINE_PROMPT) return `/audio/${voice}/why-medicine.mp3`;
+  const dentalQuestion = questionId ? dentistryById.get(questionId) : undefined;
+  if (dentalQuestion?.text === questionText) return `/audio/${voice}/${dentalQuestion.id}.mp3`;
   // Older saved attempts keep their original wording. Do not read a rewritten
   // recording over a different question; browser speech can read the exact text.
   const questionNumber = (questionId && recordedTextById.get(questionId) === questionText ? questionNumberById.get(questionId) : undefined)
     ?? questionNumberByText.get(questionText);
-  return questionNumber
-    ? `/audio/${voice}/q${String(questionNumber).padStart(3, "0")}.mp3`
-    : undefined;
+  if (questionNumber) return `/audio/${voice}/q${String(questionNumber).padStart(3, "0")}.mp3`;
+  const dentalByText = dentistryByText.get(questionText);
+  return dentalByText ? `/audio/${voice}/${dentalByText.id}.mp3` : undefined;
 }

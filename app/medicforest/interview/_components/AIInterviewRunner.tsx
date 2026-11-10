@@ -873,8 +873,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       interviewerVoice={interviewerVoice} setInterviewerVoice={setInterviewerVoice}
       voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else {
-        const sample = platform === "dentistry" ? "What interests you about a career in dentistry?" : "What has influenced your decision to pursue a career in medicine?";
-        void speech.speak(sample, undefined, platform === "dentistry" ? undefined : getInterviewQuestionAudioSrc("iq-01-001-motivation-for-medicine", sample, interviewerVoice));
+        const sample = platform === "dentistry" ? "Why do you want to study dentistry?" : "What has influenced your decision to pursue a career in medicine?";
+        void speech.speak(sample, undefined, getInterviewQuestionAudioSrc(platform === "dentistry" ? "dq-01-001" : "iq-01-001-motivation-for-medicine", sample, interviewerVoice));
       } }}
       speechSupported={speech.supported}
       isPremium={isPremium} busy={Boolean(busy)} onStart={beginRoom}

@@ -20,6 +20,14 @@ Medicine preparation profiles keep their existing primary key and support older 
 
 The application requires the new schema for platform-filtered attempts and progress. A code-only deployment is insufficient. If rolling application code back after dentistry has been used, keep the schema and data; older unfiltered application readers need platform filtering before they can safely display mixed-platform attempt tables.
 
+## Question audio
+
+All 110 fixed dentistry questions have female and male Google Chirp 3 HD recordings, using the same Aoede and Charon UK voices as medicine. Stable question IDs map to `public/audio/{female,male}/dq-*.mp3`; existing medicine recording numbers are unchanged. The room and its voice-test button use these recordings. Newly generated follow-ups retain the existing speech endpoint and browser fallback.
+
+Run `node scripts/generate-dentistry-audio.mjs` to generate missing files using local ADC or the configured server service-account credential. It skips existing recordings. Scan with `python scripts/audit-interview-audio.py --output <report.json>`, then regenerate flagged dentistry files with `node scripts/generate-dentistry-audio.mjs --audit <report.json>` and scan again.
+
+On 10 November 2026, all 1,568 recordings passed decoding, clipping, silence and volume-spike checks, including all 220 new dentistry recordings. None required regeneration. [Dentistry measurements and file hashes](dentistry-audio-audit.json) record the results. These are automated waveform checks, not a pronunciation or listening verdict.
+
 ## iPhone speech
 
 The shared speech hook uses single-utterance recognition on iPhone/iPad and restarts after a normal recognition end while retaining the transcript. It avoids starting a second microphone capture for volume monitoring. Question-bank voice practice also avoids simultaneous audio recording on these devices and explains that audio replay is unavailable; desktop recording remains available. This addresses the WebKit capture conflict described in [WebKit issue 220133](https://bugs.webkit.org/show_bug.cgi?id=220133).

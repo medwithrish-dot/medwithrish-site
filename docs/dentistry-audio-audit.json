@@ -1,0 +1,1996 @@
+{
+  "checkedOn": "2026-11-10",
+  "method": "scripts/audit-interview-audio.py",
+  "totalRecordingsScanned": 1568,
+  "dentistryRecordingsScanned": 220,
+  "flaggedRecordings": 0,
+  "regeneratedRecordings": 0,
+  "checks": {
+    "decode": "Every recording decoded successfully",
+    "clipping": "Flag when more than 0.1% of decoded samples reach magnitude 0.99",
+    "volumeSpike": "Flag when peak 20ms RMS exceeds six times median voiced RMS",
+    "silence": "Flag when no 20ms frame exceeds RMS 0.01"
+  },
+  "dentistryRecordings": [
+    {
+      "file": "public/audio/female/dq-01-001.mp3",
+      "seconds": 2.088,
+      "peak": 0.8326,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.92,
+      "flags": [],
+      "sha256": "b8a2ea9870d6df45b5d3051cb509d340c65f867dc1a1ce32f753d57f9fcc0568"
+    },
+    {
+      "file": "public/audio/female/dq-01-002.mp3",
+      "seconds": 3.024,
+      "peak": 0.8178,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.96,
+      "flags": [],
+      "sha256": "18b4155627bf250e06afd885f996467d55e288287b8eaec03b7ad8afc44b2659"
+    },
+    {
+      "file": "public/audio/female/dq-01-003.mp3",
+      "seconds": 3.096,
+      "peak": 0.6922,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.73,
+      "flags": [],
+      "sha256": "1368a46598f513e75c34c847971c55388959b07b0d3f019649af66e02bfb0ed8"
+    },
+    {
+      "file": "public/audio/female/dq-01-004.mp3",
+      "seconds": 3.744,
+      "peak": 0.7315,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.5,
+      "flags": [],
+      "sha256": "6e6ea966ee8e469926ed38f755f797db18cfda59eeb8148d400a04e4abaa0546"
+    },
+    {
+      "file": "public/audio/female/dq-01-005.mp3",
+      "seconds": 2.976,
+      "peak": 0.7548,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.27,
+      "flags": [],
+      "sha256": "df998f0e9d9d50bb42e0e10aad5e97a0275a576a6d84e2f0ca87935ee6690f46"
+    },
+    {
+      "file": "public/audio/female/dq-01-006.mp3",
+      "seconds": 3.288,
+      "peak": 0.7216,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.79,
+      "flags": [],
+      "sha256": "70192f5a94f5de0d47429c23aa168c550b3839d21a12aa8970701c5152166d18"
+    },
+    {
+      "file": "public/audio/female/dq-01-007.mp3",
+      "seconds": 3.768,
+      "peak": 0.6692,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "41c9e338789da67a03ca79f14e041a03a9d1ec75a4368db6d192878703ea7a35"
+    },
+    {
+      "file": "public/audio/female/dq-01-008.mp3",
+      "seconds": 5.544,
+      "peak": 0.9332,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.0,
+      "flags": [],
+      "sha256": "ffc33d49fd75ce7e883d3d5b664a0e34aeca51f5b5c4073a734b0369ef376673"
+    },
+    {
+      "file": "public/audio/female/dq-01-009.mp3",
+      "seconds": 3.528,
+      "peak": 0.844,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.1,
+      "flags": [],
+      "sha256": "0f93b0c2bd9d70c93ef440d07e45451a5d52293d857c05a58ec139a6b43a8a49"
+    },
+    {
+      "file": "public/audio/female/dq-01-010.mp3",
+      "seconds": 4.488,
+      "peak": 0.8423,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.31,
+      "flags": [],
+      "sha256": "09f267eda8901d92d8ce8e6ef8c511e183c9f958fc137947fb897ed1f7ea6d31"
+    },
+    {
+      "file": "public/audio/female/dq-02-001.mp3",
+      "seconds": 3.024,
+      "peak": 0.7426,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.01,
+      "flags": [],
+      "sha256": "a6c47cee35347995fc6894fc0e0cb6d6fd1fab8f5a165b94f7ea568ffb790fd4"
+    },
+    {
+      "file": "public/audio/female/dq-02-002.mp3",
+      "seconds": 3.528,
+      "peak": 0.789,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.42,
+      "flags": [],
+      "sha256": "f463f56c49db12deb29133cbd113b9367c52355f6a468c84baf21e563072276c"
+    },
+    {
+      "file": "public/audio/female/dq-02-003.mp3",
+      "seconds": 3.888,
+      "peak": 0.9028,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.41,
+      "flags": [],
+      "sha256": "1c2d6df7b512bd4aa99bfd5eb6b61fdb31079d1c7a15ea8a7896ab70d3752c41"
+    },
+    {
+      "file": "public/audio/female/dq-02-004.mp3",
+      "seconds": 3.864,
+      "peak": 0.8022,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.98,
+      "flags": [],
+      "sha256": "0d51e8d3cc5053eaaefc5289a513f1f256da4be085dbe120c713db2f972e4cb7"
+    },
+    {
+      "file": "public/audio/female/dq-02-005.mp3",
+      "seconds": 3.984,
+      "peak": 0.6392,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.92,
+      "flags": [],
+      "sha256": "6811786fe85b9e64d5cc2e9c822db6d3ab22de9bab74628aa1b802cc97336cc2"
+    },
+    {
+      "file": "public/audio/female/dq-02-006.mp3",
+      "seconds": 2.928,
+      "peak": 0.898,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.92,
+      "flags": [],
+      "sha256": "a61e82533572b4155caf4507b59f249fde593e541fc0e6192529f66ccc5c1e99"
+    },
+    {
+      "file": "public/audio/female/dq-02-007.mp3",
+      "seconds": 3.528,
+      "peak": 0.773,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.47,
+      "flags": [],
+      "sha256": "e6c4ff1efaca46890f64973eda4e7d420268609cffceb8629b240f516f04df69"
+    },
+    {
+      "file": "public/audio/female/dq-02-008.mp3",
+      "seconds": 3.528,
+      "peak": 0.6948,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.9,
+      "flags": [],
+      "sha256": "fa11c3814910768264be0bc67a935474e9929c9726ec4edd13f4bab668b1ade3"
+    },
+    {
+      "file": "public/audio/female/dq-02-009.mp3",
+      "seconds": 3.624,
+      "peak": 0.7111,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.06,
+      "flags": [],
+      "sha256": "83b59f2f9c799999f04f22e51ae8f3b357ee77fdb1d0e9b4d149747ced8d8301"
+    },
+    {
+      "file": "public/audio/female/dq-02-010.mp3",
+      "seconds": 4.056,
+      "peak": 0.9063,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.17,
+      "flags": [],
+      "sha256": "2c46159c1853f8d14a8baeb454c5213eadb9762fa5c0d0d2d4d91ac8ab25061d"
+    },
+    {
+      "file": "public/audio/female/dq-03-001.mp3",
+      "seconds": 4.176,
+      "peak": 0.8001,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.17,
+      "flags": [],
+      "sha256": "37c8873965e7ade80c1545d7812f32cc640f9c78a8886df5a86522b855aa04c0"
+    },
+    {
+      "file": "public/audio/female/dq-03-002.mp3",
+      "seconds": 5.376,
+      "peak": 0.7837,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.15,
+      "flags": [],
+      "sha256": "227cb961d3d62ce003b3b1cf0be305c7f59e6fda857042bc762077ae35298ee9"
+    },
+    {
+      "file": "public/audio/female/dq-03-003.mp3",
+      "seconds": 4.488,
+      "peak": 0.8905,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.27,
+      "flags": [],
+      "sha256": "15a81ebab431609a9a522399891ad19307f4cef72a251f77a061591ede95bde5"
+    },
+    {
+      "file": "public/audio/female/dq-03-004.mp3",
+      "seconds": 4.536,
+      "peak": 0.7476,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.02,
+      "flags": [],
+      "sha256": "f838a75bf6f1bb746ac4ef4febe0a85820a09f894423afb54a9cf4a667e2d65a"
+    },
+    {
+      "file": "public/audio/female/dq-03-005.mp3",
+      "seconds": 3.144,
+      "peak": 0.9214,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.93,
+      "flags": [],
+      "sha256": "f1d2a3d05201a0096993be334dde01bc38c66be81f2c0c253d9133782b25f05f"
+    },
+    {
+      "file": "public/audio/female/dq-03-006.mp3",
+      "seconds": 4.416,
+      "peak": 0.9572,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.04,
+      "flags": [],
+      "sha256": "f04034b40db5142e487bbea65458409c86784f0e8e31b773411aee37fb696164"
+    },
+    {
+      "file": "public/audio/female/dq-03-007.mp3",
+      "seconds": 4.104,
+      "peak": 0.8947,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.89,
+      "flags": [],
+      "sha256": "69ef1dd6541930017708d2c0f08f96597d34ac9b808572ac553705786571b434"
+    },
+    {
+      "file": "public/audio/female/dq-03-008.mp3",
+      "seconds": 3.144,
+      "peak": 0.577,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.88,
+      "flags": [],
+      "sha256": "bd2cec757aa5e021a6f86bf0e9b41f3f59234d86dfe478f8c1b1ab8b0579c239"
+    },
+    {
+      "file": "public/audio/female/dq-03-009.mp3",
+      "seconds": 3.864,
+      "peak": 0.8206,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.91,
+      "flags": [],
+      "sha256": "29d22204ab2ce82f69a423313528dc348742f2b25373d9c996fc54bed9f574d3"
+    },
+    {
+      "file": "public/audio/female/dq-03-010.mp3",
+      "seconds": 4.584,
+      "peak": 0.8881,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.78,
+      "flags": [],
+      "sha256": "75ab48c9ff499380d31ade64c8386666cdbb36f0e241e80cb2f49f7cf8610106"
+    },
+    {
+      "file": "public/audio/female/dq-04-001.mp3",
+      "seconds": 5.088,
+      "peak": 0.9117,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.68,
+      "flags": [],
+      "sha256": "2e7e20cc0a94dc016af88a4ec4822837a302518c622f16a218447e350a888876"
+    },
+    {
+      "file": "public/audio/female/dq-04-002.mp3",
+      "seconds": 3.576,
+      "peak": 0.8573,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.79,
+      "flags": [],
+      "sha256": "d03afd2d858fb2a795ac8d1ecb02a3346f789632f891a12e8909dcad8e68db0f"
+    },
+    {
+      "file": "public/audio/female/dq-04-003.mp3",
+      "seconds": 5.136,
+      "peak": 0.6475,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.76,
+      "flags": [],
+      "sha256": "97885695cf5828fb1998f514f96a2a5a4fb92831068090298e76103bef2a956a"
+    },
+    {
+      "file": "public/audio/female/dq-04-004.mp3",
+      "seconds": 3.984,
+      "peak": 0.9496,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.01,
+      "flags": [],
+      "sha256": "7b41efeb5ab030508a972b527e9ef5a5a3a83120d0c5c649e4f915d7329be4c7"
+    },
+    {
+      "file": "public/audio/female/dq-04-005.mp3",
+      "seconds": 4.368,
+      "peak": 0.8541,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.89,
+      "flags": [],
+      "sha256": "1727726bc548ad5467930b66b606a34e4875d833bdf58f4d11074c42a75e0cb3"
+    },
+    {
+      "file": "public/audio/female/dq-04-006.mp3",
+      "seconds": 3.864,
+      "peak": 0.9128,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.06,
+      "flags": [],
+      "sha256": "04dc6922e7959cc5ad9653e250bf7e11180a122b0e51b7e7a8c105865722a452"
+    },
+    {
+      "file": "public/audio/female/dq-04-007.mp3",
+      "seconds": 5.184,
+      "peak": 0.7957,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.88,
+      "flags": [],
+      "sha256": "357cb5b9e65fa5c0d639177159de214cd3abff73dc836c96554cd0a78d531fdb"
+    },
+    {
+      "file": "public/audio/female/dq-04-008.mp3",
+      "seconds": 3.264,
+      "peak": 0.5989,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.87,
+      "flags": [],
+      "sha256": "df816fd40660241be5f54896c8ef2b0f55842b24396fe2659e7232009b0c5fa7"
+    },
+    {
+      "file": "public/audio/female/dq-04-009.mp3",
+      "seconds": 5.544,
+      "peak": 0.8562,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "7f2513c418a1972264ef8c0319e67b2b0e4b81ad056e131f9b38659505e4a0ff"
+    },
+    {
+      "file": "public/audio/female/dq-04-010.mp3",
+      "seconds": 4.896,
+      "peak": 0.8683,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.88,
+      "flags": [],
+      "sha256": "d4bc9477230744f4160eaa17fa63cbca05cf9a49b069d2515223d58b35c58e8b"
+    },
+    {
+      "file": "public/audio/female/dq-05-001.mp3",
+      "seconds": 3.288,
+      "peak": 0.8123,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.34,
+      "flags": [],
+      "sha256": "dfb59f5e82ac9105e2899a6e0ac060d7db7626d637a71cbdbcabdbf746c3d47d"
+    },
+    {
+      "file": "public/audio/female/dq-05-002.mp3",
+      "seconds": 5.088,
+      "peak": 0.7059,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.41,
+      "flags": [],
+      "sha256": "fe4f311412815ff95dbfa92b6128fb65f7fb1244d2323cf2001b4ce7a6a1abb6"
+    },
+    {
+      "file": "public/audio/female/dq-05-003.mp3",
+      "seconds": 6.384,
+      "peak": 0.7101,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.83,
+      "flags": [],
+      "sha256": "1166b5471bd6e6c85371df586233579e7f5c0a25b4e301a0c1dce16da214228f"
+    },
+    {
+      "file": "public/audio/female/dq-05-004.mp3",
+      "seconds": 5.184,
+      "peak": 0.862,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.33,
+      "flags": [],
+      "sha256": "7bc381ecae6c1b359369a90468fe0646cdc7a90c53dd43177f9fcfc45609749b"
+    },
+    {
+      "file": "public/audio/female/dq-05-005.mp3",
+      "seconds": 5.736,
+      "peak": 0.855,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.25,
+      "flags": [],
+      "sha256": "f8ada2968fc5bd5e4b391e05a9eba22ef6f05ee02599e2170b15e315c2f1b99b"
+    },
+    {
+      "file": "public/audio/female/dq-05-006.mp3",
+      "seconds": 7.104,
+      "peak": 0.785,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.51,
+      "flags": [],
+      "sha256": "2779fbd3dccdb9b0b298f8827946e964342fb2148ba14cf0c18b8cf8ced2c2ec"
+    },
+    {
+      "file": "public/audio/female/dq-05-007.mp3",
+      "seconds": 5.304,
+      "peak": 0.764,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.53,
+      "flags": [],
+      "sha256": "cf484284d926604330054f09f74d28c50cdf135a80c2cdc946eb2067616ab8ac"
+    },
+    {
+      "file": "public/audio/female/dq-05-008.mp3",
+      "seconds": 4.896,
+      "peak": 0.8806,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.62,
+      "flags": [],
+      "sha256": "c04a7eacda5609753f8fbbc6b52cb36b2748dc09dbbc9d59c6c5984a0f6aff65"
+    },
+    {
+      "file": "public/audio/female/dq-05-009.mp3",
+      "seconds": 5.976,
+      "peak": 0.8254,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.74,
+      "flags": [],
+      "sha256": "c819b823afd2564c0818866ce4be1c35e099dfff5cf0445ee80c1b9b013303d1"
+    },
+    {
+      "file": "public/audio/female/dq-05-010.mp3",
+      "seconds": 3.744,
+      "peak": 0.8009,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.65,
+      "flags": [],
+      "sha256": "d90c4084bd9a0e6483a9fdf3c71b324575a7c1a88510a26dee5b2d09c13ece46"
+    },
+    {
+      "file": "public/audio/female/dq-06-001.mp3",
+      "seconds": 2.976,
+      "peak": 0.8258,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.88,
+      "flags": [],
+      "sha256": "4107a632a50937645c550271d3f9c456c436079560a3211fa577fdbfc3ab40a1"
+    },
+    {
+      "file": "public/audio/female/dq-06-002.mp3",
+      "seconds": 4.536,
+      "peak": 0.7767,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.62,
+      "flags": [],
+      "sha256": "dbbbd20743107445154ed35cebc840eb94b2908786dbbd4a3a5e06e95297d129"
+    },
+    {
+      "file": "public/audio/female/dq-06-003.mp3",
+      "seconds": 3.024,
+      "peak": 0.8404,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.2,
+      "flags": [],
+      "sha256": "21f2c9ab3e5fd8bcaab4773891a026d7966ac7b1d59959d894394f83439f3708"
+    },
+    {
+      "file": "public/audio/female/dq-06-004.mp3",
+      "seconds": 4.944,
+      "peak": 0.8831,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "39a62bbfb777804c5d8de3e512b31d83335c8a00e860d1be2c164856417e1512"
+    },
+    {
+      "file": "public/audio/female/dq-06-005.mp3",
+      "seconds": 3.384,
+      "peak": 0.8584,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.91,
+      "flags": [],
+      "sha256": "75573dba2b2b6b982b3a3d022125e43130255f64387972469aa098f8b51821dc"
+    },
+    {
+      "file": "public/audio/female/dq-06-006.mp3",
+      "seconds": 5.256,
+      "peak": 0.8635,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.6,
+      "flags": [],
+      "sha256": "961e82f4f12a725cdfa5fc1b447706667383c09868b88c9010dbf372e52b4d0a"
+    },
+    {
+      "file": "public/audio/female/dq-06-007.mp3",
+      "seconds": 3.144,
+      "peak": 0.6795,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.52,
+      "flags": [],
+      "sha256": "62513ba39ebe2e473751e6ffbd8db19a48076d8cc355988b5909303a3b0c8516"
+    },
+    {
+      "file": "public/audio/female/dq-06-008.mp3",
+      "seconds": 4.464,
+      "peak": 0.7238,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.43,
+      "flags": [],
+      "sha256": "f7df2e05b6f43900e74721d24d3dd03a7db73193a5de68d21a32ed81d3ad1e78"
+    },
+    {
+      "file": "public/audio/female/dq-06-009.mp3",
+      "seconds": 4.008,
+      "peak": 0.6945,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.8,
+      "flags": [],
+      "sha256": "f60b119bc7668248cbcbb362e437574ee954bbbca61b3ba64c2b3bcea20ae18b"
+    },
+    {
+      "file": "public/audio/female/dq-06-010.mp3",
+      "seconds": 4.368,
+      "peak": 0.9152,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.37,
+      "flags": [],
+      "sha256": "0797dc45f6171786066817eff649e4c9e60532057786919bc7a2e89b8229083b"
+    },
+    {
+      "file": "public/audio/female/dq-07-001.mp3",
+      "seconds": 3.648,
+      "peak": 0.8891,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.33,
+      "flags": [],
+      "sha256": "57fa8b7464554d2fc7daf4f8e2bd6fabf5e154b92ea8babf14f9f3b862ab567e"
+    },
+    {
+      "file": "public/audio/female/dq-07-002.mp3",
+      "seconds": 3.528,
+      "peak": 0.6646,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.27,
+      "flags": [],
+      "sha256": "4d4eecf62c60d036a2ae9a7ebb5f2d188b62ebc35cbd1b1045c30d5700f3963b"
+    },
+    {
+      "file": "public/audio/female/dq-07-003.mp3",
+      "seconds": 4.104,
+      "peak": 0.7224,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.34,
+      "flags": [],
+      "sha256": "78d6b7f7d1859007e71f23b747e8b3419b38a9714ca7df5b481dad5251a55d61"
+    },
+    {
+      "file": "public/audio/female/dq-07-004.mp3",
+      "seconds": 4.008,
+      "peak": 0.7316,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.97,
+      "flags": [],
+      "sha256": "6cc1e5dd37be66e0b9bfc583d98bb05c0444b0a31f1e20f4c93a0ba4faa1d295"
+    },
+    {
+      "file": "public/audio/female/dq-07-005.mp3",
+      "seconds": 4.824,
+      "peak": 0.6944,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.09,
+      "flags": [],
+      "sha256": "7c302c9fb7952a488bb071abc1b4bc5bfe3f4cd155b647147cc74f837e093855"
+    },
+    {
+      "file": "public/audio/female/dq-07-006.mp3",
+      "seconds": 3.624,
+      "peak": 0.7045,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.49,
+      "flags": [],
+      "sha256": "df916fe89b912c952b0f3895cfeb90a43d075e1e5c1cb90321c3ee4176833bdd"
+    },
+    {
+      "file": "public/audio/female/dq-07-007.mp3",
+      "seconds": 6.456,
+      "peak": 0.7811,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.56,
+      "flags": [],
+      "sha256": "d534ceccae9c26648e55d699e634456915e4a2a2f97b55c4b1be51d0c3d77f67"
+    },
+    {
+      "file": "public/audio/female/dq-07-008.mp3",
+      "seconds": 2.928,
+      "peak": 0.7348,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.85,
+      "flags": [],
+      "sha256": "83ed2557c2ab9f3f47ca53e61d93e5e3d779cb1761c828bf07108017f89b9903"
+    },
+    {
+      "file": "public/audio/female/dq-07-009.mp3",
+      "seconds": 4.584,
+      "peak": 0.9896,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.53,
+      "flags": [],
+      "sha256": "a9adca4393f65ee5153cd9ef47abf30e5012e5905cb9ec80dd5688b84b302661"
+    },
+    {
+      "file": "public/audio/female/dq-07-010.mp3",
+      "seconds": 4.344,
+      "peak": 0.671,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.6,
+      "flags": [],
+      "sha256": "267cf0568bddac4ad0adb5d250f431dcaa235528bdc9c5df43b1481d6de6c04c"
+    },
+    {
+      "file": "public/audio/female/dq-08-001.mp3",
+      "seconds": 4.176,
+      "peak": 0.8019,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.77,
+      "flags": [],
+      "sha256": "5b61d6db5101ae8152a810db6e44deebbfab3fe0c3c0eeda01a37a1451f5c92f"
+    },
+    {
+      "file": "public/audio/female/dq-08-002.mp3",
+      "seconds": 4.128,
+      "peak": 0.8886,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.2,
+      "flags": [],
+      "sha256": "2a2cb8b694514df45cd939be0b4d9473f803bbc6494ad3351d37458c9d2b2626"
+    },
+    {
+      "file": "public/audio/female/dq-08-003.mp3",
+      "seconds": 3.864,
+      "peak": 0.9415,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.17,
+      "flags": [],
+      "sha256": "0c8977cb04db68790cd9e32e1e159af769cf426a0efd1f185df1401b45503255"
+    },
+    {
+      "file": "public/audio/female/dq-08-004.mp3",
+      "seconds": 4.584,
+      "peak": 0.8043,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.25,
+      "flags": [],
+      "sha256": "70240cc734f2df22c880c8fec547485af96d1a0ce0f1d7adbbca98bb18e19924"
+    },
+    {
+      "file": "public/audio/female/dq-08-005.mp3",
+      "seconds": 4.176,
+      "peak": 0.9231,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.06,
+      "flags": [],
+      "sha256": "a314e1f4fbb2c627cef7a94d8535e30a28c6b92d1d39d88d687a6021ac61abce"
+    },
+    {
+      "file": "public/audio/female/dq-08-006.mp3",
+      "seconds": 4.008,
+      "peak": 0.8483,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.4,
+      "flags": [],
+      "sha256": "0321c6d44ba12bf1e2700b22a2ef8d09edbe3d9e2deac1eacda720fbbfa3ec34"
+    },
+    {
+      "file": "public/audio/female/dq-08-007.mp3",
+      "seconds": 4.296,
+      "peak": 0.9991,
+      "clippedFraction": 1.5e-05,
+      "spikeRatio": 3.64,
+      "flags": [],
+      "sha256": "452b27140de53b28bf30462bc6635b5085e2f89842f18d4537ce2d3dcd1b8442"
+    },
+    {
+      "file": "public/audio/female/dq-08-008.mp3",
+      "seconds": 5.328,
+      "peak": 0.8606,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.16,
+      "flags": [],
+      "sha256": "292f55fced3fa4312c4e111473ed4119fd694496444f247a64ea61d5f382b048"
+    },
+    {
+      "file": "public/audio/female/dq-08-009.mp3",
+      "seconds": 3.984,
+      "peak": 0.7924,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.06,
+      "flags": [],
+      "sha256": "6da39c6a098b5ba2bf4836ca61dc755e253b9ed4adc0e980667f067c5e600ba1"
+    },
+    {
+      "file": "public/audio/female/dq-08-010.mp3",
+      "seconds": 4.704,
+      "peak": 0.8383,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.47,
+      "flags": [],
+      "sha256": "f9913809c3ad01e45f2a3c8b5df91375b52ecc434c3031e2d978ad75a7a92eb1"
+    },
+    {
+      "file": "public/audio/female/dq-09-001.mp3",
+      "seconds": 2.544,
+      "peak": 0.7437,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.99,
+      "flags": [],
+      "sha256": "4fed2460f02a2f5d51b3f8a07c3c1aefc402a7b9376f3119385b88fc1913ae9e"
+    },
+    {
+      "file": "public/audio/female/dq-09-002.mp3",
+      "seconds": 3.696,
+      "peak": 0.7603,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.79,
+      "flags": [],
+      "sha256": "522122bc449220fb0c1535f2bfa84250297a839f274a3108af72fabcc1cf6531"
+    },
+    {
+      "file": "public/audio/female/dq-09-003.mp3",
+      "seconds": 3.264,
+      "peak": 0.7405,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.08,
+      "flags": [],
+      "sha256": "0d378d66f1916f6c9397e0051f3e9b997857ee0d2073578f2d94f48a14c87221"
+    },
+    {
+      "file": "public/audio/female/dq-09-004.mp3",
+      "seconds": 4.104,
+      "peak": 0.9962,
+      "clippedFraction": 3e-05,
+      "spikeRatio": 4.46,
+      "flags": [],
+      "sha256": "53ce6ad1a3609c0c464c28c7994cbd37af172cd209857c882ba25fba05b42560"
+    },
+    {
+      "file": "public/audio/female/dq-09-005.mp3",
+      "seconds": 3.936,
+      "peak": 0.8412,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.85,
+      "flags": [],
+      "sha256": "823d65f8c896e43064d6f76df8f8602310f8f7beaf2d1c75a2a3b06aa1282cf7"
+    },
+    {
+      "file": "public/audio/female/dq-09-006.mp3",
+      "seconds": 2.976,
+      "peak": 0.9504,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "498f083b12ec6ef7831990d55237bf3568d02b10c6169cf7ffe1a8aeeb74e5c2"
+    },
+    {
+      "file": "public/audio/female/dq-09-007.mp3",
+      "seconds": 3.528,
+      "peak": 0.7379,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.53,
+      "flags": [],
+      "sha256": "b815ed9aabb06decfeca70d5ad832ae8050cd51a5fdee5eec031c06eaf74130f"
+    },
+    {
+      "file": "public/audio/female/dq-09-008.mp3",
+      "seconds": 3.408,
+      "peak": 0.8439,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.99,
+      "flags": [],
+      "sha256": "f95b68c0af729bf7426045653e4aca485432633309c8cf9fe3aa5cf760bd8773"
+    },
+    {
+      "file": "public/audio/female/dq-09-009.mp3",
+      "seconds": 4.104,
+      "peak": 0.7938,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.97,
+      "flags": [],
+      "sha256": "75d71d5f43cf412152d8794d1460ac890eecfda0a550b80941997ceb2172c2da"
+    },
+    {
+      "file": "public/audio/female/dq-09-010.mp3",
+      "seconds": 4.248,
+      "peak": 0.7713,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.46,
+      "flags": [],
+      "sha256": "8f983502b7b255afbf984052bdb6a25259807f7f5429554a930cad7acab41a7e"
+    },
+    {
+      "file": "public/audio/female/dq-10-001.mp3",
+      "seconds": 4.128,
+      "peak": 0.8829,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.8,
+      "flags": [],
+      "sha256": "08ab8140f9d012033d9ef061dcee108c17931e86bb1fb7434ca3a595b533f22e"
+    },
+    {
+      "file": "public/audio/female/dq-10-002.mp3",
+      "seconds": 3.528,
+      "peak": 0.8806,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.53,
+      "flags": [],
+      "sha256": "bbe39f0676ad2621d843cc48e07c4abeb668869b9e4eb77f7e91a6ba2f916086"
+    },
+    {
+      "file": "public/audio/female/dq-10-003.mp3",
+      "seconds": 3.744,
+      "peak": 0.803,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.63,
+      "flags": [],
+      "sha256": "734e0b5bbe2b24760072aba548234b9918eed690e1c23b6bc616c6b1fa799340"
+    },
+    {
+      "file": "public/audio/female/dq-10-004.mp3",
+      "seconds": 4.344,
+      "peak": 0.7262,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.08,
+      "flags": [],
+      "sha256": "4f061c60266c4e1eead257d882f6417cbba6c096623feebd637bd45d12754d34"
+    },
+    {
+      "file": "public/audio/female/dq-10-005.mp3",
+      "seconds": 3.888,
+      "peak": 0.7118,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.61,
+      "flags": [],
+      "sha256": "dcaa77955fe9ea323f1c024ccdff7b767c598d4b28ac5a2f98603d87951d5fa9"
+    },
+    {
+      "file": "public/audio/female/dq-10-006.mp3",
+      "seconds": 4.056,
+      "peak": 0.9486,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.35,
+      "flags": [],
+      "sha256": "ad39617e7ab88097e32cbf8431e671d4ee176fd55ff9fe820abec6d388d009a1"
+    },
+    {
+      "file": "public/audio/female/dq-10-007.mp3",
+      "seconds": 3.696,
+      "peak": 0.8517,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.53,
+      "flags": [],
+      "sha256": "93cf0967f63651fb137a91ad06acc4fe482d233dd0a726a0a87885496e6b503a"
+    },
+    {
+      "file": "public/audio/female/dq-10-008.mp3",
+      "seconds": 4.416,
+      "peak": 0.7629,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.79,
+      "flags": [],
+      "sha256": "c4ab85912146668d5eb20ae6c3751f45c12e9f884f13bb7a082170d38fc89308"
+    },
+    {
+      "file": "public/audio/female/dq-10-009.mp3",
+      "seconds": 3.744,
+      "peak": 0.7602,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.27,
+      "flags": [],
+      "sha256": "f7034857d53e316d876e612d8252ff89590847d059a24976510ecf55f9756a0d"
+    },
+    {
+      "file": "public/audio/female/dq-10-010.mp3",
+      "seconds": 3.576,
+      "peak": 0.8276,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.11,
+      "flags": [],
+      "sha256": "80a63e22f7070bfcd13fc6c6521f6ef372e9d53a18043767c47cb357e3794be8"
+    },
+    {
+      "file": "public/audio/female/dq-11-001.mp3",
+      "seconds": 5.784,
+      "peak": 0.8193,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.45,
+      "flags": [],
+      "sha256": "6df5e24f3801b627cbe6d9752992209232398051c88ee2fb39e910c396f3824e"
+    },
+    {
+      "file": "public/audio/female/dq-11-002.mp3",
+      "seconds": 8.208,
+      "peak": 0.8999,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "8b0aafbf034c2a67bc9c83a3d2aba9b7e3a44d32f5c34c0cad284604a59b9505"
+    },
+    {
+      "file": "public/audio/female/dq-11-003.mp3",
+      "seconds": 4.296,
+      "peak": 0.8407,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.82,
+      "flags": [],
+      "sha256": "6301800de0e48c3d0b3fbbfca73af476bae80ed65131cedc57aed0a08bc39ca8"
+    },
+    {
+      "file": "public/audio/female/dq-11-004.mp3",
+      "seconds": 6.936,
+      "peak": 0.8287,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.04,
+      "flags": [],
+      "sha256": "3276b8a60f1b77ea203d4c40bcc622c6934467b747145c35f36938c3e9259f75"
+    },
+    {
+      "file": "public/audio/female/dq-11-005.mp3",
+      "seconds": 4.296,
+      "peak": 0.6655,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.37,
+      "flags": [],
+      "sha256": "7637a2fbfd8887f494d643c8017782668f44affb9c817f604d889de34f05b88d"
+    },
+    {
+      "file": "public/audio/female/dq-11-006.mp3",
+      "seconds": 5.328,
+      "peak": 0.7352,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.27,
+      "flags": [],
+      "sha256": "405da4bf0e5e64e042f605bd08f1e520e654eb5969b66c9cc0a920a946af0819"
+    },
+    {
+      "file": "public/audio/female/dq-11-007.mp3",
+      "seconds": 5.928,
+      "peak": 0.7212,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.54,
+      "flags": [],
+      "sha256": "a6739aeca39eb419b1b266f41f186687c888872de1ce6b71b38d384fc52a6a2e"
+    },
+    {
+      "file": "public/audio/female/dq-11-008.mp3",
+      "seconds": 3.456,
+      "peak": 0.8354,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.43,
+      "flags": [],
+      "sha256": "f8b9bec8565c3e55a076a477da4559fdbc248503761448f3cfc811635a97fc63"
+    },
+    {
+      "file": "public/audio/female/dq-11-009.mp3",
+      "seconds": 4.104,
+      "peak": 0.8011,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.33,
+      "flags": [],
+      "sha256": "e9ceadba5c9a559d41fd2123fdb1a59dfa14b256b88de859e34d4c90fab171a1"
+    },
+    {
+      "file": "public/audio/female/dq-11-010.mp3",
+      "seconds": 6.624,
+      "peak": 0.6864,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.1,
+      "flags": [],
+      "sha256": "e1d26deb3633983a22753e4706f6978ad30f32087c5ace9b1fdf8fed1f1c08f9"
+    },
+    {
+      "file": "public/audio/male/dq-01-001.mp3",
+      "seconds": 2.184,
+      "peak": 0.8584,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.52,
+      "flags": [],
+      "sha256": "fbf0da701b5129f9e427ddf0e4bff454036e0179e0f079ed73d835df7d7772de"
+    },
+    {
+      "file": "public/audio/male/dq-01-002.mp3",
+      "seconds": 3.024,
+      "peak": 0.7308,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.08,
+      "flags": [],
+      "sha256": "04da7b5d051ad389d17b48a6d9d66871cd07a37cb78793af35d2e9747a6ee316"
+    },
+    {
+      "file": "public/audio/male/dq-01-003.mp3",
+      "seconds": 2.928,
+      "peak": 0.9853,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.8,
+      "flags": [],
+      "sha256": "759edcccd0f0aa472161a9d5d0f80c1c59483275ddc3446509a954a9b4fe114a"
+    },
+    {
+      "file": "public/audio/male/dq-01-004.mp3",
+      "seconds": 3.504,
+      "peak": 0.9353,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.13,
+      "flags": [],
+      "sha256": "7967ee263dd57dabeddfdbd4c4de189817531bb9856a15086726079c867ad425"
+    },
+    {
+      "file": "public/audio/male/dq-01-005.mp3",
+      "seconds": 3.168,
+      "peak": 0.8216,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.07,
+      "flags": [],
+      "sha256": "5c14d50f94144afaf4f0b697a735a4c7bd49dac5001b1078681df826dda4f833"
+    },
+    {
+      "file": "public/audio/male/dq-01-006.mp3",
+      "seconds": 4.056,
+      "peak": 0.8689,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.6,
+      "flags": [],
+      "sha256": "bc0b5d62fe52a633d2790353a9e8a7d97e86f1973b1c751998b4d6ddde0b61e6"
+    },
+    {
+      "file": "public/audio/male/dq-01-007.mp3",
+      "seconds": 3.816,
+      "peak": 0.8708,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.75,
+      "flags": [],
+      "sha256": "c9738b910684b64971c3de1eef4237c36415ea52cda4b743864bddbe21b48b84"
+    },
+    {
+      "file": "public/audio/male/dq-01-008.mp3",
+      "seconds": 5.976,
+      "peak": 0.7215,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.74,
+      "flags": [],
+      "sha256": "612ba51232d55a62b96b1a4ef0e8e61c3a8f7f861f5517c5d8eaff6ca0064059"
+    },
+    {
+      "file": "public/audio/male/dq-01-009.mp3",
+      "seconds": 4.104,
+      "peak": 0.8931,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.09,
+      "flags": [],
+      "sha256": "0fc56762ac6e64141127e11342cbdbddb4e4f72fac82fca96adfd5c87de19548"
+    },
+    {
+      "file": "public/audio/male/dq-01-010.mp3",
+      "seconds": 4.464,
+      "peak": 0.9289,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.49,
+      "flags": [],
+      "sha256": "c2bfe654e764b6c5cd4d18dc36db00c262d6b4c08ed67a187189049df6f16f80"
+    },
+    {
+      "file": "public/audio/male/dq-02-001.mp3",
+      "seconds": 2.736,
+      "peak": 0.952,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.6,
+      "flags": [],
+      "sha256": "8800e26a63e1a411a9cffdd9d6b02745aa2d9aab94fbaa6279a61619f3b96d5f"
+    },
+    {
+      "file": "public/audio/male/dq-02-002.mp3",
+      "seconds": 3.264,
+      "peak": 1.0024,
+      "clippedFraction": 1.9e-05,
+      "spikeRatio": 3.68,
+      "flags": [],
+      "sha256": "54ec74ffaa2a1f7b59f41daa789db0949e176c169770888ffc9938672a209a0b"
+    },
+    {
+      "file": "public/audio/male/dq-02-003.mp3",
+      "seconds": 3.744,
+      "peak": 1.0056,
+      "clippedFraction": 1.7e-05,
+      "spikeRatio": 4.39,
+      "flags": [],
+      "sha256": "e0cc03ff4633b8413d18f84f0431553d4004240d3fdc23bc3b95c1f5e666d499"
+    },
+    {
+      "file": "public/audio/male/dq-02-004.mp3",
+      "seconds": 3.864,
+      "peak": 0.8141,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.89,
+      "flags": [],
+      "sha256": "14382f32b446f3e338d45e08734c662d511899dc408f140c9baf4b98bcea4a59"
+    },
+    {
+      "file": "public/audio/male/dq-02-005.mp3",
+      "seconds": 3.648,
+      "peak": 0.803,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.13,
+      "flags": [],
+      "sha256": "67808f029ec62a2f49c64b353db0c4a8fec44fc24a8a01a4c0c7945356ed3370"
+    },
+    {
+      "file": "public/audio/male/dq-02-006.mp3",
+      "seconds": 3.144,
+      "peak": 0.825,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "a23c7cd539ac00eb97471be3125dd1863f6bcec549b9b51535caa74297937323"
+    },
+    {
+      "file": "public/audio/male/dq-02-007.mp3",
+      "seconds": 3.528,
+      "peak": 0.7476,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.05,
+      "flags": [],
+      "sha256": "381969eb4d95951f661e75e7c58edcfc4ba35b82d873fdc92f426765903dbf64"
+    },
+    {
+      "file": "public/audio/male/dq-02-008.mp3",
+      "seconds": 3.504,
+      "peak": 0.8975,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.94,
+      "flags": [],
+      "sha256": "acc619d337f4ebb56d0b00604aad9a8ef8d7dfbfef0ac4866509218ead732c47"
+    },
+    {
+      "file": "public/audio/male/dq-02-009.mp3",
+      "seconds": 3.384,
+      "peak": 0.864,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "2be800b977b8d5974bb9b54c95a87ceb7629d116fe46a69f4cbd1481614aaa2f"
+    },
+    {
+      "file": "public/audio/male/dq-02-010.mp3",
+      "seconds": 3.888,
+      "peak": 0.9677,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.19,
+      "flags": [],
+      "sha256": "39eeecad4317bd5f4b868bbaae57c9886331ba79df23bcdf8e9a1c3fdb55257d"
+    },
+    {
+      "file": "public/audio/male/dq-03-001.mp3",
+      "seconds": 4.056,
+      "peak": 0.7795,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.27,
+      "flags": [],
+      "sha256": "6cc466e0c974deb931959f1ee3ea82461410ce7d448e3a66b48f6abc756cdf38"
+    },
+    {
+      "file": "public/audio/male/dq-03-002.mp3",
+      "seconds": 5.784,
+      "peak": 0.9455,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.44,
+      "flags": [],
+      "sha256": "0952236f29694e2d07708d7aee01d1764940cf007d8a6e9767cdbec7734d1f04"
+    },
+    {
+      "file": "public/audio/male/dq-03-003.mp3",
+      "seconds": 4.416,
+      "peak": 0.8748,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.2,
+      "flags": [],
+      "sha256": "5e1a886e97afc2804adf7f7e9fe61c51e14ec88a08cf068c1c912d8c118bd061"
+    },
+    {
+      "file": "public/audio/male/dq-03-004.mp3",
+      "seconds": 4.536,
+      "peak": 0.972,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.68,
+      "flags": [],
+      "sha256": "d5f529a22eb8137780bae1a1078f52c3e78e81ad527a5cf8f6bc5294c2400d78"
+    },
+    {
+      "file": "public/audio/male/dq-03-005.mp3",
+      "seconds": 3.864,
+      "peak": 0.8963,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.92,
+      "flags": [],
+      "sha256": "a4c4278e7408cc6d3ab6d9d0fd565fb947c718353b9a03ca8fcd6ed62f910b91"
+    },
+    {
+      "file": "public/audio/male/dq-03-006.mp3",
+      "seconds": 4.608,
+      "peak": 0.8161,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.49,
+      "flags": [],
+      "sha256": "33642d1df6d146712f5fa545b158573e1f4ea62c950d2b4eea9d056d90f0d2f1"
+    },
+    {
+      "file": "public/audio/male/dq-03-007.mp3",
+      "seconds": 4.224,
+      "peak": 0.8555,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.0,
+      "flags": [],
+      "sha256": "f969759b64eb05ce9f58c738001cc4a8c753096ac0918f15f0e777838c3fe33d"
+    },
+    {
+      "file": "public/audio/male/dq-03-008.mp3",
+      "seconds": 2.808,
+      "peak": 0.7678,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.45,
+      "flags": [],
+      "sha256": "a64bc5d561c01dafc0cb131f6d736bd04db9abbbeb5137578d3ae4c66bfa7bac"
+    },
+    {
+      "file": "public/audio/male/dq-03-009.mp3",
+      "seconds": 4.056,
+      "peak": 0.9341,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "d9cfbed9033e0503a9ccb25422f72a6f06757110db69ece11c3bb42a94cb2256"
+    },
+    {
+      "file": "public/audio/male/dq-03-010.mp3",
+      "seconds": 5.184,
+      "peak": 0.9496,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.85,
+      "flags": [],
+      "sha256": "bbd7ca557edde9b7e05fac55d2c0c998f59175b4345309841e3e771a7732205d"
+    },
+    {
+      "file": "public/audio/male/dq-04-001.mp3",
+      "seconds": 5.256,
+      "peak": 0.8707,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.4,
+      "flags": [],
+      "sha256": "91ec6cc479933890b3653fefb5942665ac4f00d3e83fa4e41c22fed431964887"
+    },
+    {
+      "file": "public/audio/male/dq-04-002.mp3",
+      "seconds": 3.264,
+      "peak": 0.7521,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.9,
+      "flags": [],
+      "sha256": "0d765891667c0e869bbd6b26f40aa9c6c7a2cde636738bb482f2a783d8dd0b47"
+    },
+    {
+      "file": "public/audio/male/dq-04-003.mp3",
+      "seconds": 4.728,
+      "peak": 0.8986,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.51,
+      "flags": [],
+      "sha256": "64b5285a035f11509e8c45755bc3c3d5392fc710955219095bf0866fc978bf81"
+    },
+    {
+      "file": "public/audio/male/dq-04-004.mp3",
+      "seconds": 4.104,
+      "peak": 0.8362,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "262164cfc7abd0115d041ddd6f508722943a6606573a917036be37c7e1f1950b"
+    },
+    {
+      "file": "public/audio/male/dq-04-005.mp3",
+      "seconds": 3.936,
+      "peak": 1.0046,
+      "clippedFraction": 6.4e-05,
+      "spikeRatio": 3.24,
+      "flags": [],
+      "sha256": "aa820ddff243bd31e1fa4d63f5ef79320327fdf04c20a531f10cd2ec11a87b8c"
+    },
+    {
+      "file": "public/audio/male/dq-04-006.mp3",
+      "seconds": 3.936,
+      "peak": 0.9764,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.28,
+      "flags": [],
+      "sha256": "a51cf570139106e960c66fa84b132b249d210c31c8b2cca95b39e656570ebd6d"
+    },
+    {
+      "file": "public/audio/male/dq-04-007.mp3",
+      "seconds": 4.704,
+      "peak": 0.8276,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.81,
+      "flags": [],
+      "sha256": "96b08b9e51d856d5442e3df2700d9bf4f5e9f641fdb251a0ea084dc780249e1c"
+    },
+    {
+      "file": "public/audio/male/dq-04-008.mp3",
+      "seconds": 3.408,
+      "peak": 0.7361,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.27,
+      "flags": [],
+      "sha256": "c00f204c8dfe2908405084b3c282b860f55e8854eebd4e9ca2bcbc820f38e63b"
+    },
+    {
+      "file": "public/audio/male/dq-04-009.mp3",
+      "seconds": 5.016,
+      "peak": 0.9785,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.75,
+      "flags": [],
+      "sha256": "9e20c8b81bc9c2f0f5c93b4864488e53e726d272f3458b119f1f42102793d267"
+    },
+    {
+      "file": "public/audio/male/dq-04-010.mp3",
+      "seconds": 4.944,
+      "peak": 0.8583,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.38,
+      "flags": [],
+      "sha256": "bc21fba00c10934c673460583d6ed401d241f60ba99ff137fc80b9fa43545d23"
+    },
+    {
+      "file": "public/audio/male/dq-05-001.mp3",
+      "seconds": 2.976,
+      "peak": 0.7082,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.03,
+      "flags": [],
+      "sha256": "d6720e0a03706c7c7b3b367bcd90bd7457113790db2c8240d0c9bb6d109dbb1e"
+    },
+    {
+      "file": "public/audio/male/dq-05-002.mp3",
+      "seconds": 5.496,
+      "peak": 0.9109,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.4,
+      "flags": [],
+      "sha256": "6357d10ae9fb44bb87f71256ba08eabf9bf007b89028877e69018aaa5ce0643d"
+    },
+    {
+      "file": "public/audio/male/dq-05-003.mp3",
+      "seconds": 7.368,
+      "peak": 0.9116,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.6,
+      "flags": [],
+      "sha256": "480e137ebcb662ec5cbfc2f820b701abf8bf31aea13ee7c705dc8ec33da658bd"
+    },
+    {
+      "file": "public/audio/male/dq-05-004.mp3",
+      "seconds": 5.016,
+      "peak": 0.8654,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.42,
+      "flags": [],
+      "sha256": "243834ef04e645bdfe63abfc39d24399baab6feac2c84b7aac57023fa0c69dc2"
+    },
+    {
+      "file": "public/audio/male/dq-05-005.mp3",
+      "seconds": 6.144,
+      "peak": 0.879,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.51,
+      "flags": [],
+      "sha256": "1ec3ffb222c414e1f8892edd43d28626fdba9a85c3f1c915c6153d95c96f74f0"
+    },
+    {
+      "file": "public/audio/male/dq-05-006.mp3",
+      "seconds": 7.584,
+      "peak": 0.9668,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.36,
+      "flags": [],
+      "sha256": "ef4aaa05ab867061f74904606f9ae39e3656b6439144b57bc903db2ac278057d"
+    },
+    {
+      "file": "public/audio/male/dq-05-007.mp3",
+      "seconds": 4.488,
+      "peak": 0.8831,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.64,
+      "flags": [],
+      "sha256": "22e5c30c11d91a17de7ae386bc2f9cefa0207d96c4b770d3adaec9c832878adf"
+    },
+    {
+      "file": "public/audio/male/dq-05-008.mp3",
+      "seconds": 4.584,
+      "peak": 0.7701,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.94,
+      "flags": [],
+      "sha256": "221fe010798be7d11fb791dcd01edbe3c2187aeec429e59125f0a02b54efb94f"
+    },
+    {
+      "file": "public/audio/male/dq-05-009.mp3",
+      "seconds": 5.856,
+      "peak": 0.9625,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.13,
+      "flags": [],
+      "sha256": "ace01b3d2868e1379aae99ac9ebf2a9099cc6a32f377f3505b81e6995e49e4f8"
+    },
+    {
+      "file": "public/audio/male/dq-05-010.mp3",
+      "seconds": 4.056,
+      "peak": 0.9808,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.92,
+      "flags": [],
+      "sha256": "65a420ff4b664eab485d279f1409d42021cb55e9bd3af0ca36cd0ee1c2046886"
+    },
+    {
+      "file": "public/audio/male/dq-06-001.mp3",
+      "seconds": 3.648,
+      "peak": 0.9094,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.64,
+      "flags": [],
+      "sha256": "891a7c14741d5f8c83db4837b5b4a51420900810cb6834599b2c83486294b024"
+    },
+    {
+      "file": "public/audio/male/dq-06-002.mp3",
+      "seconds": 5.496,
+      "peak": 0.9273,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.78,
+      "flags": [],
+      "sha256": "c20f048b5890aa6f358a146c5d451f2357e370dec4616a706fdd7618552ed938"
+    },
+    {
+      "file": "public/audio/male/dq-06-003.mp3",
+      "seconds": 3.096,
+      "peak": 0.945,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "ae2476df23ab04d13386fdb291bbaa06e10482a2da97b2dafe34b76c01f5e977"
+    },
+    {
+      "file": "public/audio/male/dq-06-004.mp3",
+      "seconds": 5.016,
+      "peak": 0.9677,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.14,
+      "flags": [],
+      "sha256": "1b9cebffaa1ae4d8e6e1e2bf48becb5b2b7151d96fadd38f991a54e23b3dd4bb"
+    },
+    {
+      "file": "public/audio/male/dq-06-005.mp3",
+      "seconds": 3.408,
+      "peak": 0.8263,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.94,
+      "flags": [],
+      "sha256": "b973de3e2cf193832c1d3a9f58f17be2bb71d2dd44e44872a5b528bbf82d2761"
+    },
+    {
+      "file": "public/audio/male/dq-06-006.mp3",
+      "seconds": 5.424,
+      "peak": 0.8344,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.48,
+      "flags": [],
+      "sha256": "d211c9a20b38d6870de48780b2450ce4bd4f8916f0a3f637ddeaff0eedcc057e"
+    },
+    {
+      "file": "public/audio/male/dq-06-007.mp3",
+      "seconds": 3.288,
+      "peak": 0.8388,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.18,
+      "flags": [],
+      "sha256": "f705eda72f3e6536da21e2f769a85c6b582ce891c494dd9fc61822dfe1d01da5"
+    },
+    {
+      "file": "public/audio/male/dq-06-008.mp3",
+      "seconds": 5.184,
+      "peak": 0.8856,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.8,
+      "flags": [],
+      "sha256": "9474f1ef4f8a37dec5a8dd028fe7a1d776311347d9cceb009aff9dc2140c4308"
+    },
+    {
+      "file": "public/audio/male/dq-06-009.mp3",
+      "seconds": 4.056,
+      "peak": 0.9007,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.32,
+      "flags": [],
+      "sha256": "25fb75b18b32d1f97a660c371f8be61b27efc7a096b36b5a386cc4c57f8f07ce"
+    },
+    {
+      "file": "public/audio/male/dq-06-010.mp3",
+      "seconds": 4.344,
+      "peak": 0.9424,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.47,
+      "flags": [],
+      "sha256": "1e50b89e404b058c5c7260ee648fd0e91ebf093aa68edb0d73f1e7e30a29865b"
+    },
+    {
+      "file": "public/audio/male/dq-07-001.mp3",
+      "seconds": 3.816,
+      "peak": 0.961,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.21,
+      "flags": [],
+      "sha256": "75fc5383510df3830d5ad9872dd94faafe9b47d999ca661b2c1fb094c965a4c2"
+    },
+    {
+      "file": "public/audio/male/dq-07-002.mp3",
+      "seconds": 3.456,
+      "peak": 0.8059,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.91,
+      "flags": [],
+      "sha256": "2df42ef10ca6383a8087acea36dee23435fe54572f6e6d7909615c32ba152580"
+    },
+    {
+      "file": "public/audio/male/dq-07-003.mp3",
+      "seconds": 3.864,
+      "peak": 0.8705,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.29,
+      "flags": [],
+      "sha256": "44e7f0b22392aa6c205c8eb801051bb3c50377136b6a3acb1bd166e4c4d687f8"
+    },
+    {
+      "file": "public/audio/male/dq-07-004.mp3",
+      "seconds": 4.056,
+      "peak": 0.8952,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.07,
+      "flags": [],
+      "sha256": "368c27bad8903c971b3b7da1e4d1b4568d29d78d5e9014ccd78e3641b7d067c2"
+    },
+    {
+      "file": "public/audio/male/dq-07-005.mp3",
+      "seconds": 4.584,
+      "peak": 0.8721,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.3,
+      "flags": [],
+      "sha256": "53cf0ea228cda5fef50f8b8b94343ff2622767efcc049d07befbc867aba64af3"
+    },
+    {
+      "file": "public/audio/male/dq-07-006.mp3",
+      "seconds": 4.056,
+      "peak": 0.7523,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.75,
+      "flags": [],
+      "sha256": "6e56e25785e16f37e122e224b4b545e3a1ca1ec806aa5345975d5c4e7a9ddf01"
+    },
+    {
+      "file": "public/audio/male/dq-07-007.mp3",
+      "seconds": 6.744,
+      "peak": 0.9834,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.92,
+      "flags": [],
+      "sha256": "783b480068edbb26a7a42bb690d39f11158ed71ccb2c94090f1d54b7c96ca840"
+    },
+    {
+      "file": "public/audio/male/dq-07-008.mp3",
+      "seconds": 2.688,
+      "peak": 0.9573,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.14,
+      "flags": [],
+      "sha256": "59f161f5219b1ce0d2bde5985b4ee7e285787ec9dc1a2e24a962b52f4d6ce1d5"
+    },
+    {
+      "file": "public/audio/male/dq-07-009.mp3",
+      "seconds": 4.944,
+      "peak": 0.9255,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.57,
+      "flags": [],
+      "sha256": "cbb098a3ec0acc6d9121a6a9f1c8ab8cac66bf45482922699582406cfcef9e30"
+    },
+    {
+      "file": "public/audio/male/dq-07-010.mp3",
+      "seconds": 4.056,
+      "peak": 0.9649,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.09,
+      "flags": [],
+      "sha256": "4bafd23e8c1a39ee216d50815ed678f63aef738899b436908345197c1d9cebd1"
+    },
+    {
+      "file": "public/audio/male/dq-08-001.mp3",
+      "seconds": 4.584,
+      "peak": 0.7637,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.45,
+      "flags": [],
+      "sha256": "98d6fce8d6b2ec0cd4a06f6c35aafa08842ea2050e03b3dc88fb209053f87de5"
+    },
+    {
+      "file": "public/audio/male/dq-08-002.mp3",
+      "seconds": 3.936,
+      "peak": 0.9584,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.26,
+      "flags": [],
+      "sha256": "ea95973eb71d9240c8dc8aa7b611e08ff18d6667c2d83acace5fdd33ee6347c1"
+    },
+    {
+      "file": "public/audio/male/dq-08-003.mp3",
+      "seconds": 3.456,
+      "peak": 0.9491,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.73,
+      "flags": [],
+      "sha256": "640439449c9f874cf56b007e1ba167f10f3ae169eeff512b01171c8362da54b5"
+    },
+    {
+      "file": "public/audio/male/dq-08-004.mp3",
+      "seconds": 4.536,
+      "peak": 0.9294,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.69,
+      "flags": [],
+      "sha256": "d5202a49b99c9abcc069c1b9220dd4efa49743fde55fb83e8809ca7159676e36"
+    },
+    {
+      "file": "public/audio/male/dq-08-005.mp3",
+      "seconds": 4.896,
+      "peak": 1.023,
+      "clippedFraction": 1.3e-05,
+      "spikeRatio": 4.49,
+      "flags": [],
+      "sha256": "8cc517388857979ca5cdc31120d2bb5347d779e8301e7f6a62b0912f2b88222b"
+    },
+    {
+      "file": "public/audio/male/dq-08-006.mp3",
+      "seconds": 4.056,
+      "peak": 0.9245,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.41,
+      "flags": [],
+      "sha256": "cbc70580052fd618510aeb132a74716012c0f4ea9d04f4264f0347502e555f4c"
+    },
+    {
+      "file": "public/audio/male/dq-08-007.mp3",
+      "seconds": 3.984,
+      "peak": 0.9209,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.53,
+      "flags": [],
+      "sha256": "521bc20a88abdb916fcca583fe702ea3f36c9178b23f8a770c653dcfdab9d398"
+    },
+    {
+      "file": "public/audio/male/dq-08-008.mp3",
+      "seconds": 5.256,
+      "peak": 0.9213,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.37,
+      "flags": [],
+      "sha256": "320e50a0f080db040abfdb653e7c6ff360d1596da9e0ca99b06f51332c6e18a4"
+    },
+    {
+      "file": "public/audio/male/dq-08-009.mp3",
+      "seconds": 3.816,
+      "peak": 0.8372,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.56,
+      "flags": [],
+      "sha256": "13ec9c077c0784edefe8c3df17fed69b69fc7afcdb3610736718351db1587aaa"
+    },
+    {
+      "file": "public/audio/male/dq-08-010.mp3",
+      "seconds": 4.656,
+      "peak": 0.9009,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.95,
+      "flags": [],
+      "sha256": "d77809f67a21bb6450d5d32b9bfc1e8949482a23767204b98862f45580d4f221"
+    },
+    {
+      "file": "public/audio/male/dq-09-001.mp3",
+      "seconds": 2.616,
+      "peak": 0.8631,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.2,
+      "flags": [],
+      "sha256": "a0efaee1c0198d384e87c1a1a01271d75896129cbc91e223928c50c0eb4e825b"
+    },
+    {
+      "file": "public/audio/male/dq-09-002.mp3",
+      "seconds": 3.528,
+      "peak": 0.6902,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.66,
+      "flags": [],
+      "sha256": "727208cd563e968ebad7d02d0b2e49dee4c00a5d7c6698096e266b8908be26fd"
+    },
+    {
+      "file": "public/audio/male/dq-09-003.mp3",
+      "seconds": 3.408,
+      "peak": 0.6956,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.94,
+      "flags": [],
+      "sha256": "91a42e008bef5a29811862ca9b419a2ede0563cf117c8f6a9629d3423534397e"
+    },
+    {
+      "file": "public/audio/male/dq-09-004.mp3",
+      "seconds": 4.176,
+      "peak": 0.9417,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.67,
+      "flags": [],
+      "sha256": "328de520bcb25096b0e16cfe307d9df5ecc64d85899dd2550dfd446d44480f76"
+    },
+    {
+      "file": "public/audio/male/dq-09-005.mp3",
+      "seconds": 3.456,
+      "peak": 0.7214,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.57,
+      "flags": [],
+      "sha256": "fd99618b4dab59b22d78b442c9fad9f90cfee65bf926b864f3a50eb45fa63f7b"
+    },
+    {
+      "file": "public/audio/male/dq-09-006.mp3",
+      "seconds": 3.096,
+      "peak": 0.9701,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.59,
+      "flags": [],
+      "sha256": "c608c4eda5e34a66e4eed918f6f67daaf9c0fbd69c6763d326d04e9a9634b346"
+    },
+    {
+      "file": "public/audio/male/dq-09-007.mp3",
+      "seconds": 3.768,
+      "peak": 0.8972,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.61,
+      "flags": [],
+      "sha256": "9ef8436290ccc38811979e325c9254436c0447ed1dcdb9e399f8cee71a416909"
+    },
+    {
+      "file": "public/audio/male/dq-09-008.mp3",
+      "seconds": 3.288,
+      "peak": 0.8282,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.43,
+      "flags": [],
+      "sha256": "0e01bdd11197ee9dc304131f3740f8cb723c8b14bce0561bdbeea2ac357a811c"
+    },
+    {
+      "file": "public/audio/male/dq-09-009.mp3",
+      "seconds": 4.224,
+      "peak": 0.9729,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.59,
+      "flags": [],
+      "sha256": "963424b33593fba969ee9d9d22cdb94fed813231abbdb1995aedc4624b6c47b7"
+    },
+    {
+      "file": "public/audio/male/dq-09-010.mp3",
+      "seconds": 3.768,
+      "peak": 0.896,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.53,
+      "flags": [],
+      "sha256": "31a96ead6662cd94d343314bcc9dca42bd1bb27037704524cd433fc1c8de9857"
+    },
+    {
+      "file": "public/audio/male/dq-10-001.mp3",
+      "seconds": 4.296,
+      "peak": 0.911,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.58,
+      "flags": [],
+      "sha256": "7a7c4e2bb0215afed77985be553edaea5854177678f8377a3096d962397d74f8"
+    },
+    {
+      "file": "public/audio/male/dq-10-002.mp3",
+      "seconds": 3.864,
+      "peak": 0.9817,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.96,
+      "flags": [],
+      "sha256": "304d989b9e7f43500af891ed29a582b8b23d717074ffa1e73c470e4ba5ac2841"
+    },
+    {
+      "file": "public/audio/male/dq-10-003.mp3",
+      "seconds": 3.768,
+      "peak": 0.9041,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.54,
+      "flags": [],
+      "sha256": "54156b8b4b883271411627cf9f55fb96941b89f46d6bf6c8c65fc0fae7287916"
+    },
+    {
+      "file": "public/audio/male/dq-10-004.mp3",
+      "seconds": 3.936,
+      "peak": 0.785,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.73,
+      "flags": [],
+      "sha256": "3e210f5761f4844ede856a97acac1b71b1af0671aa3f886fb409df5bc5476729"
+    },
+    {
+      "file": "public/audio/male/dq-10-005.mp3",
+      "seconds": 3.864,
+      "peak": 0.969,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.29,
+      "flags": [],
+      "sha256": "cb2e70f1f7477bfc2c309535b224b7df5bb8da2235508a9e9317b7d521276466"
+    },
+    {
+      "file": "public/audio/male/dq-10-006.mp3",
+      "seconds": 3.888,
+      "peak": 0.9396,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.11,
+      "flags": [],
+      "sha256": "c941f8826a767cef1eb864ab896aa50bb2ee64dd443abbd8b95b7d6ecef2829a"
+    },
+    {
+      "file": "public/audio/male/dq-10-007.mp3",
+      "seconds": 3.264,
+      "peak": 0.8684,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.2,
+      "flags": [],
+      "sha256": "86fc2fe0c0ca98fc55d3b2ed9aff5565893a20510fe4eab41fa18424eed1df0f"
+    },
+    {
+      "file": "public/audio/male/dq-10-008.mp3",
+      "seconds": 4.728,
+      "peak": 0.9683,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.83,
+      "flags": [],
+      "sha256": "03501d5c2fbbaeea397fdf7b1c01eb368674cfc10935c29d8bec248e5df6cbfe"
+    },
+    {
+      "file": "public/audio/male/dq-10-009.mp3",
+      "seconds": 3.936,
+      "peak": 0.7792,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.32,
+      "flags": [],
+      "sha256": "dc67097c76bd6427877b745ddf1893dac5ec0ac0413f2ba6df4404c3fcdba900"
+    },
+    {
+      "file": "public/audio/male/dq-10-010.mp3",
+      "seconds": 3.384,
+      "peak": 0.8854,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.76,
+      "flags": [],
+      "sha256": "dfe360256adeb73b41a2615008fbcfb1679119f7b621fe15c9493987cd02f2da"
+    },
+    {
+      "file": "public/audio/male/dq-11-001.mp3",
+      "seconds": 6.096,
+      "peak": 1.0042,
+      "clippedFraction": 2.1e-05,
+      "spikeRatio": 4.74,
+      "flags": [],
+      "sha256": "02c6f2135de8c3bd7fe7767ac0631b546167b0ce3fe3dc149de71f7c170ca65a"
+    },
+    {
+      "file": "public/audio/male/dq-11-002.mp3",
+      "seconds": 8.736,
+      "peak": 0.9102,
+      "clippedFraction": 0.0,
+      "spikeRatio": 5.46,
+      "flags": [],
+      "sha256": "27aea52607d65118c39e970b50466c3337ab7ffd88ec24a184c974eca917e6e5"
+    },
+    {
+      "file": "public/audio/male/dq-11-003.mp3",
+      "seconds": 4.416,
+      "peak": 0.9506,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.96,
+      "flags": [],
+      "sha256": "2bee14ffa5dda03be68703f0697c8430119ad0d8e555c87bdca393582e2b3edf"
+    },
+    {
+      "file": "public/audio/male/dq-11-004.mp3",
+      "seconds": 6.456,
+      "peak": 0.9444,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.61,
+      "flags": [],
+      "sha256": "142312cd320fc2d87d3bfbbef744e11d36c9a0ad8cef26c56569e56f9ad7b229"
+    },
+    {
+      "file": "public/audio/male/dq-11-005.mp3",
+      "seconds": 3.744,
+      "peak": 0.7661,
+      "clippedFraction": 0.0,
+      "spikeRatio": 2.53,
+      "flags": [],
+      "sha256": "8bbdc3f88d4258fc2723c6db2a09ed89b5236fa1b5b6be57f409fffbdc3e71b5"
+    },
+    {
+      "file": "public/audio/male/dq-11-006.mp3",
+      "seconds": 5.616,
+      "peak": 0.9539,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.46,
+      "flags": [],
+      "sha256": "57e503e93addc9e07bf8e43e0df2e516fbaf8153a484029466b48026d6bd8e32"
+    },
+    {
+      "file": "public/audio/male/dq-11-007.mp3",
+      "seconds": 6.336,
+      "peak": 0.9827,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.76,
+      "flags": [],
+      "sha256": "db05c8b8bb00c001b81971ccddc0b4b1fad8d4c5859c6cbdf871a2c882b4479c"
+    },
+    {
+      "file": "public/audio/male/dq-11-008.mp3",
+      "seconds": 3.504,
+      "peak": 0.9802,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.8,
+      "flags": [],
+      "sha256": "fb634abad89e7c6063ac82c9938b9e501e21cb7f1ec30a7e8ccc7eab0bf8c4f4"
+    },
+    {
+      "file": "public/audio/male/dq-11-009.mp3",
+      "seconds": 4.416,
+      "peak": 0.713,
+      "clippedFraction": 0.0,
+      "spikeRatio": 4.9,
+      "flags": [],
+      "sha256": "f6181dbed62a9c3b1a9b791949cf023be855bc7d97b9a94d8348585b792e4eb7"
+    },
+    {
+      "file": "public/audio/male/dq-11-010.mp3",
+      "seconds": 6.096,
+      "peak": 0.8443,
+      "clippedFraction": 0.0,
+      "spikeRatio": 3.8,
+      "flags": [],
+      "sha256": "1209201ee5015dbfda93d90d1fd92e6f2da47922ed13bac383b58f38b820f3b1"
+    }
+  ]
+}

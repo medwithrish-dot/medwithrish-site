@@ -26,6 +26,7 @@ function loadTypeScript(filename) {
 }
 
 const { INTERVIEW_QUESTIONS } = loadTypeScript(resolve(root, "app/medicforest/interview/_data/interviewQuestionBank.ts"));
+const { DENTISTRY_QUESTIONS } = loadTypeScript(resolve(root, "app/medicforest/interview/_data/dentistry-question-bank.ts"));
 const { getInterviewQuestionAudioSrc, INTERVIEW_AUDIO_QUESTION_COUNT } = loadTypeScript(resolve(root, "app/medicforest/interview/_lib/interview-question-audio.ts"));
 
 function readQuestionCsv() {
@@ -65,6 +66,18 @@ test("questions.csv remains aligned with bank IDs and every recorded voice file"
 
 test("unknown generated follow-up questions retain a browser-voice fallback", () => {
   assert.equal(getInterviewQuestionAudioSrc(null, "A newly generated follow-up?", "female"), undefined);
+});
+
+test("every dentistry question resolves to an existing recording in both voices", () => {
+  for (const question of DENTISTRY_QUESTIONS) {
+    for (const voice of ["female", "male"]) {
+      const src = `/audio/${voice}/${question.id}.mp3`;
+      assert.equal(getInterviewQuestionAudioSrc(question.id, question.text, voice), src);
+      assert.ok(getInterviewQuestionAudioSrc(null, question.text, voice), "Text-only playback also finds recorded audio");
+      assert.ok(statSync(resolve(root, `public${src}`)).size > 1000);
+      assert.notEqual(getInterviewQuestionAudioSrc(question.id, "Older wording of this question?", voice), src);
+    }
+  }
 });
 
 test("an older saved data prompt never plays the recording for its rewritten wording", () => {
